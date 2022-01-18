@@ -767,6 +767,7 @@ predictive distribution (blue histogram).
 
 ## A Few Options to Quantify Your Prior Information
 
+
 Having to choose a prior distribution is portrayed both as a burden and
 as a blessing. We choose to affirm that is a necessity, if you are not
 choosing your priors someone else is doing it for you. Letting others
