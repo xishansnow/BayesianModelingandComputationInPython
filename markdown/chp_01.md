@@ -9,10 +9,7 @@ and the barrier of necessary mathematical and computational skills has
 been lowered. Additionally, the iterative modeling process has become,
 in many aspects, much easier to perform and more relevant than ever. The
 popularization of very powerful computer methods is really great but
-also demands an increased level of responsibility. Even if expressing
-statistical methods is easier than ever, statistics is a field full of
-subtleties that do not magically disappear by using powerful
-computational methods. Therefore having a good background about
+also demands an increased level of responsibility. Even if expressing statistical methods is easier than ever, statistics is a field full of subtleties that do not magically disappear by using powerful computational methods. Therefore having a good background about
 theoretical aspects, especially those relevant in practice, is extremely
 useful to effectively apply statistical methods. In this first chapter,
 we introduce these concepts and methods, many, which will be further
@@ -22,23 +19,11 @@ explored and expanded throughout the rest of the book.
 
 ## Bayesian Modeling
 
-A conceptual model is a representation of a system, made of the
-composition of concepts that are used to help people know, understand,
-or simulate the object or process the model represents
-{cite:p}`wikipedia_model_2020`. Additionally, models are human-designed
-representations with very specific goals in mind. As such, it is
-generally more convenient to talk about the adequacy of the model to a
-given problem than its intrinsic correctness. Models exist solely as an
-aid to a further goal.
+A conceptual model is a representation of a system, made of the composition of concepts that are used to help people know, understand,or simulate the object or process the model represents
+{cite:p}`wikipedia_model_2020`. Additionally, models are human-designed representations with very specific goals in mind. As such, it is generally more convenient to talk about the adequacy of the model to a given problem than its intrinsic correctness. Models exist solely as an aid to a further goal.
 
 When designing a new car, a car company makes a physical model to help
-others understand how the product will look when it is built. In this
-case, a sculptor with prior knowledge of cars, and a good estimate of
-how the model will be used, takes a supply of raw material such as clay,
-uses hand tools to sculpt a physical model. This physical model can help
-inform others about various aspects of the design, such as whether the
-appearance is aesthetically pleasing, or if the shape of the car is
-aerodynamic. It takes a combination of domain expertise and sculpting
+others understand how the product will look when it is built. In this case, a sculptor with prior knowledge of cars, and a good estimate of how the model will be used, takes a supply of raw material such as clay, uses hand tools to sculpt a physical model. This physical model can help inform others about various aspects of the design, such as whether the appearance is aesthetically pleasing, or if the shape of the car is aerodynamic. It takes a combination of domain expertise and sculpting
 expertise to achieve a useful result. The modeling process often
 requires building more than one model, either to explore different
 options or because the models are iteratively improved and expanded as a
@@ -57,16 +42,11 @@ usefulness of the result. Data is the raw material, and statistical
 distributions are the main mathematical tools to shape the statistical
 model. It takes a combination of domain expertise and statistical
 expertise to achieve a useful result. Bayesian practitioners also build
-more than one model in an iterative fashion, the first of which is
-primarily useful for the practitioner themselves to identify gaps in
-their thinking, or shortcomings in their models. These first sets of
-models are then used to build subsequent improved and expanded models.
+more than one model in an iterative fashion, the first of which is primarily useful for the practitioner themselves to identify gaps in their thinking, or shortcomings in their models. These first sets of models are then used to build subsequent improved and expanded models.
+
 Additionally, the use of one inference mechanism does not obviate the
 utility for all others, just as a physical model of a car does not
-obviate the utility of a digital model. In the same way, the modern
-Bayesian practitioner has many ways to express their ideas, generate
-results, and share the outputs, allowing a much wider distribution of
-positive outcomes for the practitioner and their peers.
+obviate the utility of a digital model. In the same way, the modern Bayesian practitioner has many ways to express their ideas, generate results, and share the outputs, allowing a much wider distribution of positive outcomes for the practitioner and their peers.
 
 (bayesian-models)=
 
@@ -76,30 +56,30 @@ Bayesian models, computational or otherwise, have two defining
 characteristics:
 
 -   Unknown quantities are described using probability distributions
-    [^1]. We call these quantities parameters [^2].
+  [^1]. We call these quantities parameters [^2].
 
 -   Bayes' theorem is used to update the values of the parameters
-    conditioned on the data. We can also see this process as a
-    reallocation of probabilities.
+  conditioned on the data. We can also see this process as a
+  reallocation of probabilities.
 
 At a high-level we can describe the process of constructing Bayesian
 modeling in 3 steps.
 
 1.  Given some data and some assumptions on how this data could have
-    been generated, we design a model by combining and transforming
-    random variables.
+  been generated, we design a model by combining and transforming
+  random variables.
 
 2.  We use Bayes' theorem to condition our models to the available data.
-    We call this process **inference**, and as a result we obtain a
-    posterior distribution. We hope the data reduces the uncertainty for
-    possible parameter values, though this is not a guaranteed of any
-    Bayesian model.
+  We call this process **inference**, and as a result we obtain a
+  posterior distribution. We hope the data reduces the uncertainty for
+  possible parameter values, though this is not a guaranteed of any
+  Bayesian model.
 
 3.  We criticize the model by checking whether the model makes sense
-    according to different criteria, including the data and our
-    expertise on the domain-knowledge. Because we generally are
-    uncertain about the models themselves, we sometimes compare several
-    models.
+  according to different criteria, including the data and our
+  expertise on the domain-knowledge. Because we generally are
+  uncertain about the models themselves, we sometimes compare several
+  models.
 
 If you are familiar with other forms of modeling, you will recognize the
 importance of criticizing models and the necessity of performing these 3
@@ -147,10 +127,7 @@ arbitrary prior, likelihood and the resulting posterior [^4].
 Left panel. A hypothetical prior indicating that the value
 $\theta = 0.5$ is more likely and the plausibility of the rest of the
 values decreases linearly and symmetrically (black). A likelihood
-showing that the value $\theta = 0.2$ is the one that better agrees with
-the hypothetical data (gray) and the resulting posterior (blue), a
-compromise between prior and likelihood. We have omitted the values of
-the y-axis to emphasize that we only care about relative values. Right
+showing that the value is the one that better agrees with the hypothetical data (gray) and the resulting posterior (blue), a compromise between prior and likelihood. We have omitted the values of the y-axis to emphasize that we only care about relative values. Right
 panel, the same functions as in the left panel but the y-axis is in the
 log-scale. Notice that the information about relative values is
 preserved, for example, the location of the maxima and minima is the
@@ -215,7 +192,7 @@ One nice feature of Bayesian statistics is that the posterior is
 (always) a distribution. This fact allows us to make probabilistic
 statements about the parameters, like the probability of a parameter
 $\boldsymbol{\tau}$ being positive is 0.35. Or the most likely value of
-$\boldsymbol{\phi}$ is 12 with a 50% chance of being between 10 and 15.
+$\boldsymbol{\phi}$ is 12 with a $50\%$ chance of being between 10 and 15.
 Moreover, we can think of the posterior distribution as the logical
 consequence of combining a model with the data, and thus the
 probabilistic statements derived from them are guaranteed to be
@@ -327,10 +304,9 @@ computed this way will incorporate the uncertainty about our estimates.
 Because posteriors are derived from the model and the observed data only, we are not making
 statements based on non-observed, but potentially observed realizations
 of the underlying data-generating process. Inferring on non-observed is
-generally done by the so called frequentists methods. Nevertheless, if
-we use posterior predictive samples to check our models we are
-(partially) embracing the frequentist idea of thinking about
-non-observed but potentially observable data. We are not only
+generally done by the so called frequentists methods. Nevertheless, if we use posterior predictive samples to check our models we are (partially) embracing the frequentist idea of thinking about non-observed but potentially observable data. 
+
+We are not only
 comfortable with this idea, we will see many examples of this procedure
 in this book. We think it is one honking great idea --- let us do more
 of these!
@@ -380,22 +356,22 @@ The Metropolis-Hasting algorithm is defined as follows:
 1.  Initialize the value of the parameter $\boldsymbol{X}$ at $x_i$
 
 2.  Use a proposal distribution [^10] $q(x_{i + 1} \mid x_i)$ to
-    generate a new value $x_{i + 1}$ from the old one $x_i$.
+  generate a new value $x_{i + 1}$ from the old one $x_i$.
 
 3.  Compute the probability of accepting the new value as:
 
-    ```{math}
-    :label: acceptance_prob
-    p_a (x_{i + 1} \mid x_i) = \min \left (1, \frac{p(x_{i + 1}) \;
-    q(x_i \mid x_{i + 1})} {p(x_i) \; q (x_{i + 1} \mid x_i)} \right)
+   ```{math}
+   :label: acceptance_prob
+  p_a (x_{i + 1} \mid x_i) = \min \left (1, \frac{p(x_{i + 1}) \;
+  q(x_i \mid x_{i + 1})} {p(x_i) \; q (x_{i + 1} \mid x_i)} \right)
 
-    ```
+   ```
 
 4.  If $p_a > R$ where $R \sim \mathcal{U}(0, 1)$, save the new value,
-    otherwise save the old one.
+  otherwise save the old one.
 
 5.  Iterate 2 to 4 until a *sufficiently large* sample of values has
-    been generated
+  been generated
 
 The Metropolis algorithm is very general and can be used in non-Bayesian
 applications but for what we care in this book, $p(x_i)$ is the
@@ -430,8 +406,8 @@ as:
 :label: eq:beta_binomial
 
 \begin{split}
-    \theta \sim &\; \text{Beta}(\alpha, \beta) \\
-    Y \sim &\; \text{Bin}(n=1, p=\theta)
+  \theta \sim &\; \text{Beta}(\alpha, \beta) \\
+  Y \sim &\; \text{Bin}(n=1, p=\theta)
 
 \end{split}
 ```
@@ -450,7 +426,7 @@ Metropolis-Hastings algorithm into Python code in order to get an
 approximate answer. We will do it with the help of SciPy statistical
 functions:
 
-```{code-block} python
+```{code-block} ipython3
 :name: metropolis_hastings_sampler
 :caption: metropolis_hastings_sampler
 def post(θ, Y, α=1, β=1):
@@ -466,7 +442,7 @@ def post(θ, Y, α=1, β=1):
 We also need data, so we will generate some random fake data for this
 purpose.
 
-```{code-block} python
+```{code-block} ipython3
 :name: metropolis_hastings_sampler_rvs
 :caption: metropolis_hastings_sampler_rvs
 Y = stats.bernoulli(0.7).rvs(20)
@@ -475,7 +451,7 @@ Y = stats.bernoulli(0.7).rvs(20)
 And finally we run our implementation of the Metropolis-Hastings
 algorithm:
 
-```{code-block} python
+```{code-block} ipython3
 :name: metropolis_hastings
 :caption: metropolis_hastings
 :linenos:
@@ -547,7 +523,7 @@ distributions. For example, we can use the code in Code Block
 [diy_trace_plot](diy_trace_plot) to plot
 {numref}`fig:traceplot` [^11]:
 
-```{code-block} python
+```{code-block} ipython3
 :name: diy_trace_plot
 :caption: diy_trace_plot
 _, axes = plt.subplots(1,2, sharey=True)
@@ -589,8 +565,8 @@ az.summary(trace, kind="stats", round_to=2)
 
 
 ArviZ's function `summary` computes the mean, standard deviation and the
-highest density interval (HDI) 94% of our parameter $\theta$. The HDI is
-the shortest interval containing a given probability density, 94% for
+highest density interval (HDI) $94\%$ of our parameter $\theta$. The HDI is
+the shortest interval containing a given probability density, $94\%$ for
 this particular example [^12]. {numref}`fig:plot_posterior`, generated
 with `az.plot_posterior(trace)` is a close visual equivalent of the
 above summary in {numref}`tab:posterior_summary`. We
@@ -605,12 +581,12 @@ computations.
 :width: 4in
 Posterior plot visualizing the samples generated from Code Block
 [metropolis_hastings](metropolis_hastings). The posterior distribution is represented using
-a KDE, the mean and the limits of the HDI 94% are represented in the
+a KDE, the mean and the limits of the HDI $94\%$ are represented in the
 figure.
 ```
 
 The HDI is a common choice in Bayesian statistics and *round* values
-like 50% or 95% are commonplace. But ArviZ uses 94% (or 0.94) as the
+like $50\%$ or 95% are commonplace. But ArviZ uses $94\%$ (or 0.94) as the
 default value as seen in both the summary
 {numref}`tab:posterior_summary` and
 {numref}`fig:plot_posterior`. The reason for this choice is that 94 is
@@ -642,7 +618,7 @@ In this book we will use PyMC3 {cite:p}`Salvatier2016` and TensorFlow
 Probability {cite:p}`dillon2017tensorflow`. Let us write the model from
 Equation {eq}`eq:beta_binomial` using PyMC3:
 
-```{code-block} python
+```{code-block} ipython3
 :name: beta_binom
 :caption: beta_binom
 # Declare a model in PyMC3
@@ -694,9 +670,10 @@ samples from the prior and posterior predictive distributions are
 represented in the top and bottom panel, respectively, from
 {numref}`fig:quartet`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: predictive_distributions
 :caption: predictive_distributions
+
 pred_dists = (pm.sample_prior_predictive(1000, model)["y_obs"],
               pm.sample_posterior_predictive(idata, 1000, model)["y_obs"])
 ```
@@ -879,7 +856,7 @@ In the limit of infinite data, the posteriors (irrespective of priors
 used to compute those posteriors) will have all its density at
 $\hat \theta = \frac{y}{n}$.
 
-```{code-block} python
+```{code-block} ipython3
 :name: binomial_update
 :caption: binomial_update
 
@@ -1043,11 +1020,6 @@ Which is a u-shaped distribution as shown in the left-top panel of
 
 For Bob the JP is:
 
-```{math}
-:label: fig:bob_prior
-p(\kappa) \propto \kappa^{-0.5} (1 + \kappa)^{-1}
-
-```
 
 This is a half-u-shaped distribution, defined in the $[0, \infty)$
 interval, see top-right panel in {numref}`fig:Jeffrey_priors`. Saying
@@ -1128,17 +1100,14 @@ constraint that we know the mean value of the distribution. In this
 example the mean value is 1.5). Under this constraint we get an
 Exponential-like distribution. The last one in yellow-green was obtained
 under the restriction that the value 3 and 4 are known to appear with a
-probability of 0.8. If you check Code Block [max_ent_priors](max_ent_priors) you will see all
-distributions were computed under two constraints that probabilities can
-only take values in the interval $[0, 1]$ and that the total probability
-must be 1. As these are general constraints for valid probability
+probability of 0.8. If you check Code Block [max_ent_priors](max_ent_priors) you will see all distributions were computed under two constraints that probabilities can only take values in the interval $[0, 1]$ and that the total probability must be 1. As these are general constraints for valid probability
 distribution we can think of them as *intrinsic* or even *ontological*
 constraints. For that reason we say that the purple distribution in
 {numref}`fig:max_entropy` was obtained under no-constraint.
 
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: max_ent_priors
 :caption: max_ent_priors
 cons = [[{"type": "eq", "fun": lambda x: np.sum(x) - 1}],
@@ -1180,7 +1149,7 @@ have a total probability of 0.2 which is evenly distributed (0.05 for
 each value). Now take a look at the Exponential-like curve, which
 certainly does not look very flat, but once again notice that other
 choices will be less flat and more concentrated, for example, obtaining
-1 and 2 with 50% chance each (and thus zero change for the values 3 to
+1 and 2 with $50\%$ chance each (and thus zero change for the values 3 to
 6), which will also have 1.5 as the expected value.
 
 ```python
@@ -1230,21 +1199,21 @@ The distributions with the largest entropy under the following
 constraints are [^19]:
 
 -   No constraints: Uniform (continuous or discrete, according to the
-    type of variable)
+  type of variable)
 
 -   A positive mean, with support $[0, \infty)$: Exponential
 
 -   An absolute value mean, with support $(-\infty, \infty)$: Laplace
-    (also known as double Exponential)
+  (also known as double Exponential)
 
 -   A given mean and variance, with support $(-\infty, \infty)$: Normal
-    distribution
+  distribution
 
 -   A given mean and variance, with support $[-\pi, \pi]$: Von Mises
 
 -   Only two unordered outcomes and a constant mean: Binomial, or the
-    Poisson if we have rare events (the Poisson can be seen as a special
-    case of the binomial)
+  Poisson if we have rare events (the Poisson can be seen as a special
+  case of the binomial)
 
 It is interesting to note that many of the generalized linear models
 like the ones described in Chapter [3](chap2) are traditionally
@@ -1302,8 +1271,7 @@ model and model context. An uninformative prior in one context can
 become highly informative in another {cite:p}`LikehoodandPrior`. For instance
 if modeling the mean height of adult humans in meters, a prior of
 $\mathcal{N}(2,1)$ can be considered uninformative, but if estimating
-the height of giraffes that same prior becomes highly informative as in
-reality giraffe heights differ greatly than human heights.
+the height of giraffes that same prior becomes highly informative as in reality giraffe heights differ greatly than human heights.
 
 ```{figure} figures/prior_informativeness_spectrum.png
 :name: fig:prior_informativeness_spectrum
@@ -1412,16 +1380,16 @@ reptile. How does this change your previous calculations?
 values could be for the following cases:
 
 1.  The number of people visiting your local cafe assuming Poisson
-    distribution
+  distribution
 
 2.  The weight of adult dogs in kilograms assuming a Uniform
-    distribution
+  distribution
 
 3.  The weight of adult elephants in kilograms assuming Normal
-    distribution
+  distribution
 
 4.  The weight of adult humans in pounds assuming skew Normal
-    distribution
+  distribution
 
 **1E6.** For each example in the previous exercise, use SciPy
 to specify the distribution in Python. Pick parameters that you believe
@@ -1448,8 +1416,8 @@ value of `can_sd` and run the Metropolis-Hastings sampler. Try values
 like 0.001 and 1.
 
 1.  Compute the mean, SD, and HDI and compare the values with those in
-    the book (computed using `can_sd=0.05`). How different are the
-    estimates?
+  the book (computed using `can_sd=0.05`). How different are the
+  estimates?
 
 2.  Use the function `az.plot_posterior`.
 
@@ -1495,19 +1463,19 @@ posterior predictive distributions which distribution would help answer
 each of these questions. Some items may have multiple answers.
 
 1.  How do we think is the distribution of parameters values before
-    seeing any data?
+  seeing any data?
 
 2.  What observed values do we think we could see before seeing any
-    data?
+  data?
 
 3.  After estimating parameters using a model what do we predict we will
-    observe next?
+  observe next?
 
 4.  What parameter values explain the observed data after conditioning
-    on that data?
+  on that data?
 
 5.  Which can be used to calculate numerical summaries, such as the
-    mean, of the parameters?
+  mean, of the parameters?
 
 6.  Which can can be used to to visualize a Highest Density Interval?
 
@@ -1555,10 +1523,10 @@ model that will make these estimation. Start with Code Block
 priors as needed. After doing so then
 
 1.  Sample from the prior predictive. Generate a visualization and
-    numerical summary of the prior predictive distribution
+  numerical summary of the prior predictive distribution
 
 2.  Using the outputs from (a) to justify your choices of priors and
-    likelihoods
+  likelihoods
 
 **1M20.** From domain knowledge you have that a given
 parameter can not be negative, and has a mean that is roughly between 3
@@ -1574,8 +1542,8 @@ customer makes a purchase. Assume we know $\theta$ and the prior for $n$
 is $\text{Pois}(4.5)$.
 
 1.  Use PyMC3 to compute the posterior distribution of $n$ for all
-    combinations of $Y \in {0, 5, 10}$ and $\theta \in {0.2, 0.5}$. Use
-    `az.plot_posterior` to plot the results in a single plot.
+  combinations of $Y \in {0, 5, 10}$ and $\theta \in {0.2, 0.5}$. Use
+  `az.plot_posterior` to plot the results in a single plot.
 
 2.  Summarize the effect of $Y$ and $\theta$ on the posterior
 
@@ -1602,74 +1570,74 @@ call $\theta$ the probability that a seedling germinates. Assuming
 $\text{Beta}(1, 1)$ prior distribution for $\theta$.
 
 1.  Use pen and paper to compute the posterior mean and standard
-    deviation. Verify your calculations using SciPy.
+  deviation. Verify your calculations using SciPy.
 
-2.  Use SciPy to compute the equal-tailed and highest density 94%
-    posterior intervals.
+2.  Use SciPy to compute the equal-tailed and highest density $94\%$
+  posterior intervals.
 
 3.  Use SciPy to compute the posterior predictive probability that at
-    least one seedling will germinate if you plant another 12 seedlings.
+  least one seedling will germinate if you plant another 12 seedlings.
 
 After obtaining your results with SciPy repeat this exercise using PyMC3
 and ArviZ
 
 [^1]: If you want to be more general you can even say that everything is
-    a probability distribution as a quantity you assume to know with
-    arbitrary precision that can be described by a Dirac delta function.
+  a probability distribution as a quantity you assume to know with
+  arbitrary precision that can be described by a Dirac delta function.
 
 [^2]: Some authors call these quantities latent variables and reserve
-    the name parameter to identify fixed, but unknown, quantities.
+  the name parameter to identify fixed, but unknown, quantities.
 
 [^3]: Alternatively you can think of this in terms of certainty or
-    information, depending if you are a glass half empty or glass half
-    full person.
+  information, depending if you are a glass half empty or glass half
+  full person.
 
 [^4]: Sometimes the word *distribution* will be implicit, this commonly
-    occurs when discussing these topics.
+  occurs when discussing these topics.
 
 [^5]: Here we are using experiment in the broad sense of any procedure
-    to collect or generate data.
+  to collect or generate data.
 
 [^6]: <https://xkcd.com/2117/>
 
 [^7]: Technically we should talk about the expectation of a random
-    variable. See Section {ref}`expectations` for details.
+  variable. See Section {ref}`expectations` for details.
 
 [^8]: See detailed balance at Sections {ref}`markov_chains` and {ref}`sec_metropolis_hastings`.
 
 [^9]: For a more extensive discussion about inference methods you should
-    read Section [{ref}`inference_methods` and references
-    therein.
+  read Section [{ref}`inference_methods` and references
+  therein.
 
 [^10]: This is sometimes referred to as a kernel in other Universal
-    Inference Engines.
+  Inference Engines.
 
 [^11]: You can use ArviZ `plot_trace` function to get a similar plot.
-    This is how we will do in the rest of the book.
+  This is how we will do in the rest of the book.
 
 [^12]: Notice that in principle the number of possible intervals
-    containing a given proportion of the total density is infinite.
+  containing a given proportion of the total density is infinite.
 
 [^13]: For more examples check
-    <https://en.wikipedia.org/wiki/Conjugate_prior#Table_of_conjugate_distributions>
+  <https://en.wikipedia.org/wiki/Conjugate_prior#Table_of_conjugate_distributions>
 
 [^14]: Except, the ones happening in your brain.
 
 [^15]: For example, a regularized linear regression with a L2
-    regularization is the same as using a Gaussian prior on the
-    coefficient.
+  regularization is the same as using a Gaussian prior on the
+  coefficient.
 
 [^16]: For example, if we have samples from the posterior, then we can
-    plug those samples of $\theta$ into
-    $\kappa = \frac{\theta}{1-\theta}$.
+  plug those samples of $\theta$ into
+  $\kappa = \frac{\theta}{1-\theta}$.
 
 [^17]: <https://en.wikipedia.org/wiki/Likelihood_principle>
 
 [^18]: See Section {ref}`entropy` for more details.
 
 [^19]: Wikipedia has a longer list at
-    <https://en.wikipedia.org/wiki/Maximum_entropy_probability_distribution#Other_examples>
+  <https://en.wikipedia.org/wiki/Maximum_entropy_probability_distribution#Other_examples>
 
 [^20]: Even when the definition of such priors will require more context
-    than the one provided, we still think the example conveys a useful
-    intuition, that will be refined as we progress through this book.
+  than the one provided, we still think the example conveys a useful
+  intuition, that will be refined as we progress through this book.

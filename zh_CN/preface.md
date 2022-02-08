@@ -1,77 +1,178 @@
+---
+jupytext:
+  formats: ipynb,md:myst
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.11.5
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
 (preface)= 
-# Preface 
-The name Bayesian statistics is attributed to Thomas Bayes (1702--1761), a Presbyterian minister, and amateur mathematician, who for the first time derived what we now know as Bayes' theorem, which was published (posthumously) in 1763. However, one of the first people to really develop Bayesian methods was Pierre-Simon Laplace (1749--1827), so perhaps it would be a bit more correct to talk about Laplacian Statistics. Nevertheless, we will honor Stigler's law of eponymy and also stick to tradition and keep talking about Bayesian approaches for the rest of this book. From the pioneering days of Bayes and Laplace (and many others) to the present day, a lot has happened - new ideas were developed, many of which were motivated and or being enabled by computers. The intent of this book is to provide a modern perspective on the subject, from the fundamentals in order to build a solid foundation into the application of a modern Bayesian workflow and tooling.
- We write this book to help beginner Bayesian practitioners to become intermediate modelers. We do not claim this will automatically happen after you finish reading this book, but we hope the book can guide you in a fruitful direction specially if you read it thoroughly, do the exercises, apply the ideas in the book to your own problems and continue to learn from others.
- Specifically stated this book targets the Bayesian practitioners who are interested in applying Bayesian models to solve data analysis problems.
-Often times a distinction is made between academia and industry. This book makes no such distinction, as it will be equally useful for a student in a university as it is for a machine learning engineer at a company.
- It is our intent that upon completion of this book you will not only be familiar with **Bayesian Inference** but also feel comfortable performing **Exploratory Analysis of Bayesian Models**, including model comparison, diagnostics, evaluation and communication of the results. It is also our intent to teach all this from a modern and computational perspective. For us, Bayesian statistics is better understood and applied if we take a **computational** approach, this means, for example, that we care more about empirically checking how our assumptions are violated than trying to prove assumptions to be right.
-This also means we use many visualizations (if we do not do more is to avoid having a 1000 pages book). Other implications of the modeling approach will become clear as we progress through the pages.
- Finally, as stated in the book's title, we use the Python programming language in this book. More specifically, we will mainly focus on PyMC3 {cite:p}`Salvatier2016` and TensorFlow Probability (TFP) {cite:p}`dillon2017tensorflow`, as the main probabilistic programming languages (PPLs) for model building and inference, and use ArviZ as the main library for exploratory analysis of Bayesian models {cite:p}`Kumar2019`. We do not intend to give an exhaustive survey and comparison of all Python PPLs in this book, as there are many choices, and they rapidly evolve.
-We instead focus on the practical aspects of Bayesian analysis.
-Programming languages and libraries are merely bridges to get where we want to go.
- Even though our programming language of choice for this book is Python, with few selected libraries, the statistical and modeling concepts we cover are language and library agnostic and available in many computer programming languages such as R, Julia, and Scala among others. A motivated reader with knowledge of these languages but not Python can still benefit from reading the book, especially if they find the suitable packages that support, or code, the equivalent functionality in their language of choice to gain hands on practice. Furthermore, the authors encourage others to translate the code examples in this work to other languages or frameworks. Please get in touch if you like to do so.
- (prior-knowledge)= 
-## Prior knowledge 
-As we write this book to help beginners to become intermediate practitioners, we assume prior exposure, but not mastery, of the basic ideas from Bayesian statistics such as priors, likelihoods and posteriors as well as some basic statistical concepts like random variables, probability distributions, expectations. For those of you that are a little bit rusty, we provide a whole section inside Chapter [11](app), with a refresher about basic statistical concepts.
-A couple of good books explaining these concepts in more depth are Understanding Advanced Statistical Methods {cite:p}`WestfallUnderstandingAdvancedStatistical2013` and Introduction to Probability {cite:p}`blitzstein_2019`. The latter is a little bit more theoretical, but both keep application in mind.
- If you have a good understanding of statistics, either by practice or formal training, but you have never being exposed to Bayesian statistics, you may still use this book as an introduction to the subject, the pace at the start (mostly the first two chapters) will be a bit rapid, and may require a couple read-throughs.
- We expect you to be familiar with some mathematical concepts like integrals, derivatives, and properties of logarithms. The level of writing will be the one generally taught at a technical high school or maybe the first year of college in science, technology, engineering, and mathematics careers. For those who need a refresher of such mathematical concepts we recommend the series of videos from 3Blue1Brown [^1]. We will not ask you to solve many mathematical exercises instead, we will primarily ask you to use code and an interactive computing environment to understand and solve problems. Mathematical formulas throughout the text are used only when they help to provide a better understanding of Bayesian statistical modeling.
- This book assumes that the reader comes with some knowledge of scientific computer programming. Using the Python language we will also use a number of specialized packages, in particular Probabilistic Programming Languages. It will help, but is not necessary, to have fit at least one model in a Probabilistic Programming language prior to reading this book. For a reference on how to setup the computation environment needed for this book, read [environment](https://github.com/BayesianModelingandComputationInPython/BookCode_Edition1#environment-installation) installation.
- (how-to-read-this-book)= 
-## How to read this book 
-We will use toy models to understand important concepts without the data obscuring the main concepts and then use real datasets to approximate real practical problems such as sampling issues, reparametrization, prior/posterior calibration, etc. We encourage you to run these models in an interactive code environment while reading the book.
- We strongly encourage you to read and use the online documentation for the various libraries. While we do our best to keep this book self-contained, there is an extensive amount of documentation on these tools online and referring it will aid in both learning this book, as well as utilizing the tools on your own.
- [Chapter 1](chap1) offers a refresher or a quick introduction to the basic and central notions in Bayesian inference. The concepts from this chapter are revisited and applied in the rest of the book.
- [Chapter 2](chap1bis) offers an introduction to Exploratory Analysis of Bayesian models. Namely introduces many of the concepts that are part of the Bayesian workflow but are not inference itself. We apply and revisit the concepts from this chapter in the rest of the book.
- [Chapter 3](chap2) is the first chapter dedicated to a specific model architecture. It offers an introduction to Linear Regression models and establishes the basic groundwork for the next 5 chapters. Chapter 3 also fully introduces the primary probabilistic programming languages used in the book, PyMC3 and TensorFlow Probability.
- [Chapter 4](chap3) extends Linear Regression models and discusses more advanced topics like robust regression, hierarchical models and model reparametrization. This chapter uses PyMC3 and TensorFlow Probability.
- [Chapter 5](chap3_5) introduces basis functions and in particular splines as an extension to linear models that allows us to build more flexible models.
-This chapter uses PyMC3.
- [Chapter 6](chap4) focuses on time series models, from modeling time series as a regression to more complex model like ARIMA and linear Gaussian State Space model. This chapter uses TensorFlow Probability.
- [Chapter 7](chap6) offers an introduction to Bayesian additive regression trees a non-parametric model. We discuss the interpretability of this model and variable importance. This Chapter use PyMC3.
- [Chapter 8](chap8) brings the attention to the Approximate Bayesian Computation (ABC) framework, which is useful for problems where we do not have an explicit formulation for the likelihood. This chapter uses PyMC3.
- [Chapter 9](chap9)  gives an overview of end-to-end Bayesian workflows. It showcases both an observational study in a business setting and an experimental study in a research setting. This chapter uses PyMC3.
- [Chapter 10](chap10)  provides a deep dive on Probabilistic Programming Languages.
-Various different Probabilistic Programming languages are shown in this chapter.
- [Chapter 11](app) serves as a support when reading other chapters, as the topics inside it are loosely related to each other, and you may not want to read linearly.
+# 前言
+
+<style>p{text-indent:2em;2}</style>
+
+`贝叶斯统计`这个名字归功于长老会牧师兼业余数学家`托马斯·贝叶斯（Thomas Bayes，1702--1761）`，他第一次推导出了被后人所知的贝叶斯定理，该定理于其死后的 $1763$ 年发表。但真正开发贝叶斯方法的第一人是 `Pierre-Simon Laplace (1749--1827)`，因此我们将之称为拉普拉斯统计也许更合理一些。尽管如此，我们将尊重斯蒂格勒的同名法则并坚持传统，在本书的其余部分中以贝叶斯方法命名。
+
+从贝叶斯和拉普拉斯（以及许多其他人）的开创性时代至今，发生了很多事情，特别是开发了很多新想法，其中大部分是由计算机技术推动和/或实现的。本书的目的是提供一个关于此主题的现代视角，从 “打基础的基本知识” 到 “现代贝叶斯工作流和工具的使用”。
+
+我们写这本书是为了帮助初学的贝叶斯从业者成为中级建模者。我们并不是说这在你读完本书后会自动发生，但我们希望这本书能够引导你朝着一个富有成效的方向发展。
+
+特别指出，本书面向对应用贝叶斯模型解决实际数据分析问题感兴趣的贝叶斯从业者。通常，学术界和工业界是有区别的。但本书没有做这样的区分，因为它对大学的学生和公司的机器学习工程师同样有用。
+
+我们的目标是：在完成本书后，你不仅能够熟悉 **贝叶斯推断**，而且还能轻松地进行 **贝叶斯模型的探索性分析**，包括模型比较、模型诊断、模型评估和结果交流等。
+
+我们计划从现代计算的角度教授这些内容。对我们来说，如果采用**计算**方法，贝叶斯统计会被更好地理解和应用。举例来说，我们更关注经验主义地检查假设被推翻的原因，而不是试图从理论上证明假设是正确的。这也意味着我们会使用许多可视化的表达手段。随着逐页阅读，建模方法的其他含义将会逐步变清晰。
+
+我们在书中使用 Python 编程语言。更具体地说，我们将主要使用 `PyMC3` {cite:p}`Salvatier2016` 和 `TensorFlow Probability (TFP)` {cite:p}`dillon2017tensorflow` 作为模型构建和推断的主要概率编程语言，并使用 `ArviZ` 作为贝叶斯模型探索性分析的主要软件库 {cite:p}`Kumar2019`。我们不打算对本书中的所有 Python 概率编程语言进行详尽调研和比较，因为选择较多，而且发展迅速。相反，我们会专注于贝叶斯分析的实践方面。
+
+编程语言和软件库只是通往目的地的桥梁。
+
+虽然我们为本书选择的编程语言是 Python，但选择的软件库很少，并且书中涵盖的统计和建模概念与编程语言和库无关，可以应用于许多计算机编程语言，例如 R、Julia 和 Scala 等。具有这些语言基础而不了解 Python 的读者，仍然可以从阅读本书中受益，如果能够找到了自身熟悉语言中等效功能的软件包进行实践最好。此外，作者鼓励其他人将这项工作中的代码示例转换为其他语言或框架。
+
+(prior-knowledge)= 
+## 预先知识储备
+
+当我们撰写本书以帮助初学者向中级从业者转变时，假设读者事先接触过贝叶斯统计的基本思想（ 如先验、似然和后验 ），以及一些基本统计概念（ 如随机变量、概率分布、期望等 ）。对于那些有点生疏的人，我们在 [第 11 章](app) 中提供了一个完整的摘要，对基本统计概念进行了复习。
+
+几本更深入地解释这些概念的好书是 《 Understanding Advanced Statistical Methods 》 {cite:p}`WestfallUnderstandingAdvancedStatistical2013` 和 《Introduction to Probability》 {cite:p}`blitzstein_2019`。后者更具理论性，但两者都比较重视应用。
+
+如果你对统计学有很好的理解，但从未接触过贝叶斯统计学，那么你也可以将本书作为对该主题的简介，只是开始的几章（ 主要是前两章 ）的节奏会有点快，可能需要通读几次。
+
+我们希望你熟悉一些数学概念，例如积分、导数和对数性质。写作最好能够在科学、技术、工程和数学等学科领域中达到普通技术高中或大学第一学年时的水平。对于那些需要复习这些数学概念的人，我们推荐 `3Blue1Brown` [^1] 的系列视频。我们不会要求你做许多数学练习，而是主要要求你使用代码和交互式计算环境来理解和解决问题。只有当它们有助于更好地理解贝叶斯统计建模时，才会使用贯穿全文的数学公式。
+
+本书假定读者具备一定的计算机编程知识。使用 Python 语言，我们还将使用许多专门的包，特别是概率编程语言。在阅读本书之前，至少将一个模型拟合到概率编程语言中会有所帮助，但不是必须的。有关如何设置本书所需计算环境的参考，请阅读 [环境安装](https://github.com/BayesianModelingandComputationInPython/BookCode_Edition1#environment-installation) 。
+
+(how-to-read-this-book)= 
+## 阅读方法 
+
+我们将使用玩具模型来理解重要概念，而不会让数据模糊主要概念，然后使用真实数据集来逼近真实的实际问题，例如采样问题、重参数化、先验/后验校准等。我们鼓励你以交互方式运行这些模型。
+
+我们强烈建议你阅读和使用各种库的在线文档。尽管我们尽最大努力使本书自成一体，但在线上有大量关于这些工具的文档，参考这些文档将有助于学习本书，并帮助你使用这些工具。
+
+[第 1 章](chap1) 提供了对贝叶斯推断中基本和核心概念的复习或快速介绍。该章中的概念将在本书其余部分进行重新审视和应用。
+
+[第 2 章](chap1bis) 介绍了贝叶斯模型的探索性分析。即介绍了许多属于贝叶斯工作流但并非推断本身的概念。我们将在本书其余部分应用并重新审视该章中的概念。
+
+[第 3 章](chap2) 是第一个介绍特定模型架构的章节。它介绍了线性回归模型，并为接下来的第 5 章奠定了基础。第 3 章还全面介绍了本书中使用的主要概率编程语言 `PyMC3` 和 `TensorFlow Probability`。
+
+[第 4 章](chap3)  扩展了线性回归模型，并讨论了更高级的主题，如鲁棒回归、分层模型和模型重参数化。本章会使用 `PyMC3` 和 `TensorFlow Probability`。
+
+[第 5 章](chap3_5) 介绍了基函数，特别是样条作为线性模型的扩展，使我们能够构建更灵活的模型。本章使用 `PyMC3`。
+
+[第 6 章](chap4) 侧重于时间序列模型，从将时间序列建模为回归模型,到更复杂的模型，如 `ARIMA` 和`线性高斯状态空间模型`。本章使用 `TensorFlow Probability` 。
+
+[第 7 章](chap6) 介绍了贝叶斯加性回归树的`非参数模型`。我们讨论了这个模型的可解释性和变量的重要性。本章使用 `PyMC3` 。
+
+[第 8 章](chap8) 将注意力集中在近似贝叶斯计算框架上，该框架对于没有明确似然表达式的问题很有用。本章使用 `PyMC3` 。
+
+[第 9 章](chap9) 概述了端到端的贝叶斯工作流程。它展示了商业应用中的观测性研究和科研环境中的实验性研究。本章使用 `PyMC3`。
+
+[第 10 章](chap10) 深入探讨了概率编程语言。本章展示了各种不同的概率编程语言。
+
+[第 11 章](app) 为阅读其他章节提供辅助作用，因为其中的主题彼此松散相关，你可能不想串行地阅读。
  
 (text-highlights)= 
-### Text Highlights 
-Text in this book will be emphasized with **bold** or *italics*. **Bold text** will highlight new concepts or emphasis of a concept. *Italic text* will indicate a colloquial or non-rigorous expression. When a specific code is mentioned they are also highlighted: `pm.sample`.
- (code)= 
-### Code 
-Blocks of code in the book are marked by a shaded box with the lines numbers on the left. And are referenced using the chapter number followed by the number of the Code Block. For example: 
-```python for i in range(3):     print(i**2) ``` 
-```none 0 1 4 ``` 
-Every time you see a code block look for a result. Often times it is a figure, a number, code output, or a table. Conversely most figures in the book have an associated code block, sometimes we omit code blocks in the book to save space, but you can still access them at the [GitHub repository](https://github.com/BayesianModelingandComputationInPython).
-The repository also includes additional material for some exercises. The notebooks in that repository may also include additional figures, code, or outputs not seen in the book, but that were used to develop the models seen in the book. Also included in GitHub are instructions for how to create a standard computation environment on whatever equipment you have.
- (boxes)= 
-### Boxes 
-We use boxes to provide a quick reference for statistical, mathematical, or (Python) Programming concepts that are important for you to know. We also provide references for you to continue learning about the topic.
- :::{admonition} Central Limit Theorem 
-In probability theory, the central limit theorem establishes that, in some situations, when independent random variables are added, their properly normalized sum tends toward a normal distribution even if the original variables themselves are not normally distributed.
- Let $X_1, X_2, X_3, ...$ be i.i.d. with mean $\mu$ and standard deviation $\sigma$. As $n \rightarrow \infty$, we got: 
+### 高亮文本
+ 
+本书中的文字将用**粗体**或*斜体*突出强调。 **粗体字**将突出新概念或概念的重点。 *斜体文字*表示口语或不严谨的表达方式。当提到特定代码时，也会突出显示，例如：`pm.sample`。
+
+(code)= 
+### 源代码 
+
+书中的代码块用阴影框标记，左侧有行号。并使用章节编号后跟代码块编号进行引用。
+
+例如：
+
+```python
+for i in range(3):
+    print(i**2)
+``` 
+
+```none
+ 0 1 4
+``` 
+
+每次看到代码块时都会想查看运行结果。这通常会体现为一张图、一个数字、一份代码输出或一个表格。反之，书中大部分图都有相关的代码块，有时我们会省略书中的代码块以节省篇幅，但你可以在 [GitHub 存储库](https://github.com/BayesianModelingandComputationInPython) 中访问完整代码。
+
+该存储库还包括一些练习用的附加材料。该存储库中的 notebook 还可能包含书中未见但用于开发书中所见模型的其他图形、代码或输出。 GitHub 中还包含如何创建标准计算环境的说明。
+
+(boxes)= 
+### 方框
+
+我们使用方框来提供关于重要的统计、数学或编程概念的快速参考。我们还会提供参考资料供你继续学习该主题。例如：
+
+:::{admonition} 中心极限定理
+
+在概率论中，中心极限定理确定，在某些情况下，当添加独立随机变量时，即使原始变量本身不是正态分布，它们的适当归一化总和也会趋于正态分布。
+
+设 $X_1, X_2, X_3, ...$ 独立同分布，均值为 $\mu$ ，标准差为 $\sigma$。当 $n \rightarrow \infty$ 时，有：
+
 ```{math} 
- \sqrt{n} \left(\frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{\text{d}} \mathcal{N}(0, 1) ``` 
-The book Introduction to Probability {cite:p}`blitzstein_2019` is a good resource for learning many theoretical aspects of probability that are useful in practice.
+\sqrt{n} \left(\frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{\text{d}} \mathcal{N}(0, 1)
+``` 
+
+《 Introduction to Probability 》 {cite:p}`blitzstein_2019` 这本书是学习概率基础理论的好资源，其内容在实践中很有用。
+
 ::: 
+
 (code-imports)= 
-### Code Imports 
-In this book we use the following conventions when importing Python packages.
- ```python # Basic import numpy as np from scipy import stats import pandas as pd from patsy import bs, dmatrix import matplotlib.pyplot as plt 
-# Exploratory Analysis of Bayesian Models import arviz as az 
-# Probabilistic programming languages import bambi as bmb import pymc3 as pm import tensorflow_probability as tfp 
+### import 代码 
+
+在本书中，我们导入 Python 包时使用以下约定：
+
+```python 
+# Basic 
+
+import numpy as np 
+from scipy import stats 
+import pandas as pd 
+from patsy import bs, dmatrix 
+import matplotlib.pyplot as plt
+
+# Exploratory Analysis of Bayesian Models 
+import arviz as az 
+
+# Probabilistic programming languages 
+import bambi as bmb 
+import pymc3 as pm 
+import tensorflow_probability as tfp 
+
 tfd = tfp.distributions 
-# Computational Backend import theano import theano.tensor as tt import tensorflow as tf ``` 
-We also use the ArviZ style `az.style.use("arviz-grayscale")` 
+
+# Computational Backend 
+import theano 
+import theano.tensor as tt 
+import tensorflow as tf
+``` 
+
+我们还会使用 `ArviZ` 的一些预定义风格 `az.style.use("arviz-grayscale")` 。
+
+
 (how-to-interact-with-this-book)= 
-### How to interact with this book 
-As our audience is not a *Bayesian reader*, but a Bayesian practitioner.
-We will be providing the materials to practice Bayesian inference and exploratory analysis of Bayesian models. As leveraging computation and code is a core skill required for modern Bayesian practitioners, we will provide you with examples that can be played around with to build intuition over many tries. Our expectation is that the code in this book is read, executed, modified by the reader, and executed again many times. We can only show so many examples in this book, but you can make an infinite amount of examples for yourself using your computer. This way you learn not only the statistical concepts, but how to use your computer to generate value from those concepts.
- Computers will also remove you from the limitations of printed text, for example lack of colors, lack of animation, and side-by-side comparisons.
-Modern Bayesian practitioners leverage the flexibility afforded by monitors and quick computational "double checks" and we have specifically created our examples to allow for the same level of interactivity. We have included exercises to test your learning and extra practice at the end of each chapter as well. Exercises are labeled Easy (E), Medium (M), and Hard (H). Solutions are available on request.
- (acknowledgments)= 
-## Acknowledgments 
-We are grateful to our friends and colleagues that have been kind enough to provide their time and energy to read early drafts and propose and provide useful feedback that helps us to improve the book and also helps us to fix many bugs in the book. Thank you: 
-Oriol Abril-Pla, Alex Andorra, Paul Anzel, Dan Becker, Tomás Capretto, Allen Downey, Christopher Fonnesbeck, Meenal Jhajharia, Will Kurt, Asael Matamoros, Kevin Murphy, and Aki Vehtari.
- [^1]: <https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw>, we     recommend these videos even if you do not need a refresher.
+### 与本书交互
+ 
+我们的观众不仅仅是*贝叶斯读者*，更是贝叶斯实践者。
+
+我们将提供材料来练习贝叶斯推断和贝叶斯模型的探索性分析。由于利用计算和代码是现代贝叶斯从业者所需的核心技能，因此我们将为你提供可以在多次尝试中建立直觉的示例。
+
+我们的期望是本书代码被读者阅读、执行、修改，并再次执行多次。我们只能在本书中展示有限示例，但你可以使用计算机为自己制作无限数量的示例。通过这种方式，你不仅可以学习统计概念，还可以学习如何使用计算机让这些概念产生价值。
+
+计算机还将使你摆脱印刷文本的限制，例如缺乏颜色、缺乏动画和并排比较。
+
+现代贝叶斯从业者利用监视器和快速可计算“双重检查”提供的灵活性，我们专门创建了示例以允许相同级别的交互性。我们在每一章的末尾都包含了测试你学习和实践的练习。练习标记为`简单 (E)`、`中等 (M)` 和`困难 (H)`，可根据需要酌情提供解答。
+
+(acknowledgments)= 
+## 致谢 
+
+感谢我们的朋友和同事，他们提供了大量时间和精力来阅读早期书稿，提出并提供了有用的反馈，帮助我们改进了本书，也帮助我们修复了书中的许多错误。非常感谢：
+
+Oriol Abril-Pla、Alex Andorra、Paul Anzel、Dan Becker、Tomás Capretto、Allen Downey、Christopher Fonnesbeck、Meenal Jhajharia、Will Kurt、Asael Matamoros、Kevin Murphy 和 Aki Vehtari。
+
+
+[^1]: <https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw>, 即使你不需要复习，也推荐你看一下这些视频。

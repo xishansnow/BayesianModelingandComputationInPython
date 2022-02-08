@@ -181,7 +181,7 @@ about closed form solutions. All that is needed is an expression of the
 function itself and the computer can automatically calculate the
 gradient, as implied by "auto\" in autograd.
 
-```{code-block} python
+```{code-block} ipython3
 :name: jax_grad_small
 :caption: jax_grad_small
 
@@ -203,7 +203,7 @@ thousands of times. We show one such calculation in Code Block
 [jax_model_grad](jax_model_grad) using JAX for a small
 "hand built\" model.
 
-``` {code-block} python
+```{code-block} ipython3
 :name: jax_model_grad
 :caption: jax_model_grad
 
@@ -234,7 +234,7 @@ For comparison we can make the same calculation using a PyMC3 model and
 computing the gradient using Theano in Code Block
 [pymc3_model_grad](pymc3_model_grad).
 
-``` {code-block} python
+```{code-block} ipython3
 :name: pymc3_model_grad
 :caption: pymc3_model_grad
 
@@ -267,7 +267,7 @@ the company wants to ensure it does not block cards with a low number of
 events and wants to be able to set priors for different customers to
 control the sensitivity. It is decided that the users accounts will be
 disabled when mean of the posterior distribution is above a probability
-threshold of 50%. In this near real time scenario inference needs to be
+threshold of $50\%$. In this near real time scenario inference needs to be
 performed in less than a second so fraudulent activity can be detected
 before the transaction clears. The statistician recognizes that this can
 be analytically expressed using a conjugate model which she then writes
@@ -279,11 +279,11 @@ directly compute the posterior parameters.
 ```{math} 
 :label: eq:conjugate_beta_fraud
 \begin{split}
-    \alpha_{post} &= \alpha_{prior} + fraud\_observations \\
-    \beta_{post} &=  \beta_{prior} + non\_fraud\_observations \\
+  \alpha_{post} &= \alpha_{prior} + fraud\_observations \\
+  \beta_{post} &=  \beta_{prior} + non\_fraud\_observations \\
    % p(\theta)  &= Beta(fraud\_prior, non\_fraud\_prior) \\
-    p(\theta \mid y)  &= Beta(\alpha_{post}, \beta_{post}) \\
-    \mathop{\mathbb{E}}[p(\theta \mid y)] &= \frac{\alpha_{post}}{\alpha_{post} + \beta_{post}}
+  p(\theta \mid y)  &= Beta(\alpha_{post}, \beta_{post}) \\
+  \mathop{\mathbb{E}}[p(\theta \mid y)] &= \frac{\alpha_{post}}{\alpha_{post} + \beta_{post}}
 
 \end{split}
 ```
@@ -507,7 +507,7 @@ PyMC3 syntax in Code Block [pymc3_schools](pymc3_schools)
 and the now, defunct [^8] PyMC4 syntax in Code Block
 [pymc4_schools](pymc4_schools).
 
-```{code-block} python
+```{code-block} ipython3
 :name: pymc3_schools
 :caption: pymc3_schools
 
@@ -518,7 +518,7 @@ with pm.Model() as eight_schools_pymc3:
     obs = pm.Normal("obs", mu=theta, sigma=sigma, observed=y)
 ```
 
-``` {code-block} python
+```{code-block} ipython3
 :name: pymc4_schools
 :caption: pymc4_schools
 @pm.model
@@ -569,7 +569,7 @@ and $y_1$, their joint probability is:
 ```{math} 
 :label: eq:expanded_likelihood
 p(y_0, y_1 \mid \boldsymbol{\theta}) = p(y_0 \mid \boldsymbol{\theta})p(y_1 \mid \boldsymbol{\theta})
-    
+  
 ```
 
 To give a specific situation let us say we observed the value 2 twice
@@ -580,13 +580,13 @@ We can specify our model by expanding Equation
 ```{math} 
 :label: eq:expanded_likelihood_normal
 \mathcal{N}(2, 2 \mid \mu=0,\sigma=1) = \mathcal{N}(2 \mid 0,1)\mathcal{N}(2 \mid 0,1)
-    
+ 
 ```
 
 Being computational statisticians we can now calculate this value with a
 little bit of code.
 
-```{code-block} python
+```{code-block} ipython3
 :name: two_observed
 :caption: two_observed
 
@@ -609,7 +609,7 @@ us assume we see a total of 1000 observations, all of the same value of
 we have an issue, Python reports a joint probability density of 0.0,
 which cannot be true.
 
-```{code-block} python
+```{code-block} ipython3
 :name: thousand_observed
 :caption: thousand_observed
 
@@ -630,7 +630,7 @@ user [^9], although in certain cases the user is exposed to the lack of
 precision, as shown in Code Block
 [imperfect_subtract](imperfect_subtract)
 
-```{code-block} python
+```{code-block} ipython3
 :name: imperfect_subtract
 :caption: imperfect_subtract
 
@@ -650,7 +650,7 @@ PPLs perform a log transformation of probability often abbreviated to
 ```{math} 
 :label: eq:expanded_loglikelihood
 \log (p(y_0, y_1 \mid \boldsymbol{\theta})) = \log (p(y_0 \mid \boldsymbol{\theta}))+ \log (p(y_1 \mid \boldsymbol{\theta}))
-    
+  
 ```
 
 This has two effects, it makes small numbers relatively large, and due
@@ -659,7 +659,7 @@ sum. Using the same example but performing the calculation in log space,
 we see a more numerically stable result in Code Block
 [log_transform](log_transform).
 
-```{code-block} python
+```{code-block} ipython3
 :name: log_transform
 :caption: log_transform
 
@@ -709,13 +709,13 @@ $-\infty$ and $\infty$ respectively, and the values in between are
 ```{math} 
 :label: eq:interval_transform
 \begin{split}
-    x_t =& \log (x - a) - \log(b-x)\\
-    x =& a + \frac{1}{1 + e^{-x_t}} (b-a)
-    
+  x_t =& \log (x - a) - \log(b-x)\\
+  x =& a + \frac{1}{1 + e^{-x_t}} (b-a)
+  
 \end{split}
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: interval_transform
 :caption: interval_transform
 
@@ -736,7 +736,7 @@ to a PyMC3 model and inspecting the variable and the underlying
 distribution in the model object, as shown in Code Block
 [uniform_transform](uniform_transform).
 
-```{code-block} python
+```{code-block} ipython3
 :name: uniform_transform
 :caption: uniform_transform
 
@@ -760,7 +760,7 @@ obtain a finite logp value. Also note the logp returned from the
 and 1, and how when we call `logp` the Jacobian adjustment is made
 automatically.
 
-```{code-block} python
+```{code-block} ipython3
 :name: uniform_transform_logp
 :caption: uniform_transform_logp
 
@@ -793,7 +793,7 @@ allows users to define complicated transformation using trainable
 bijectors (e.g., a neural network {cite:p}`papamakarios2019normalizing`) like
 `tfb.MaskedAutoregressiveFlow`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: bijector_lognormal
 :caption: bijector_lognormal
 
@@ -824,7 +824,7 @@ deviation and model is specified in Code Block
 [case_study_transform](case_study_transform).
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: case_study_transform
 :caption: case_study_transform
 
@@ -857,7 +857,7 @@ transformed. This is reflected both in the model API, as well as when
 inspecting the models free variables. Subsequent sampling sampling
 reports 423 divergences.
 
-```{code-block} python
+```{code-block} ipython3
 :name: case_study_no_transform
 :caption: case_study_no_transform
 
@@ -892,10 +892,10 @@ that graph. To illustrate what this means let us define a computation:
 ```{math} 
 :label: eq:basic_arithmetic
 \begin{split}
-    x=3 \\
-    y=1 \\
-    x*(y/x) + 0
-    
+  x=3 \\
+  y=1 \\
+  x*(y/x) + 0
+  
 \end{split}
 ```
 
@@ -913,7 +913,7 @@ a *symbolic* representation of the computation as shown in Code Block
 [unoptimized_symbolic_algebra](unoptimized_symbolic_algebra).
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: unoptimized_symbolic_algebra
 :caption: unoptimized_symbolic_algebra
 
@@ -980,7 +980,7 @@ optimized operation graph is shown in
 {numref}`fig:optimized_symbolic_algebra`.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: optimized_symbolic_algebra
 :caption: optimized_symbolic_algebra
 
@@ -1005,7 +1005,7 @@ Theano can then calculate the answer when the optimized function is
 called with the numerical inputs as shown in Code Block
 [optimized_symbolic_algebra_calc](optimized_symbolic_algebra_calc).
 
-```{code-block} python
+```{code-block} ipython3
 :name: optimized_symbolic_algebra_calc
 :caption: optimized_symbolic_algebra_calc
 
@@ -1031,7 +1031,7 @@ Code Block [aesara_debug](aesara_debug) where a one line
 PyMC3 model is turned into multi line computation graph at the operation
 level.
 
-```{code-block} python
+```{code-block} ipython3
 :name: aesara_debug
 :caption: aesara_debug
 
@@ -1126,7 +1126,7 @@ backend. Again consider the model in Equation
 [tfp_vs_numpyro](tfp_vs_numpyro) we import the libraries
 and write the model:
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_vs_numpyro
 :caption: tfp_vs_numpyro
 
@@ -1161,7 +1161,7 @@ instruction. For example, in Code Block
 we draw prior samples from both models, and evaluate the log probability
 on the same prior samples (that returned by the TFP model).
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_vs_numpyro_prior_sample
 :caption: tfp_vs_numpyro_prior_sample
 
@@ -1193,7 +1193,7 @@ model, for example, in Code Block
 condition `z = .01` and then sample from the model.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_vs_numpyro_condition
 :caption: tfp_vs_numpyro_condition
 
@@ -1220,7 +1220,7 @@ where we conditioned random variable $z = .01$, draw a sample from $x$,
 and construct conditional distribution $p(y \mid x, z)$ and sample from
 it.
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_vs_numpyro_condition_distribution
 :caption: tfp_vs_numpyro_condition_distribution
 
@@ -1338,7 +1338,7 @@ drawing some samples from a $\mathcal{N}(1, 2)$ distribution and
 evaluate their log probability:
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: scipy_stats
 :caption: scipy_stats
 
@@ -1358,7 +1358,7 @@ Normal distribution with fixed parameters as shown in Code Block
 [scipy_stats2](scipy_stats2).
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: scipy_stats2
 :caption: scipy_stats2
 random_variable_x = stats.norm(loc=1.0, scale=2.0)
@@ -1382,7 +1382,7 @@ Code Block
 raises an exception because `scipy.stats.norm` is expecting the input to
 be a NumPy array [^19].
 
-```{code-block} python
+```{code-block} ipython3
 :name: simple_model_not_working_scipy
 :caption: simple_model_not_working_scipy
 
@@ -1404,13 +1404,13 @@ of API design choices and other decision to make Code Block
 work. Specifically we want:
 
 1.  A representation of random variables that could be used to
-    initialize another random variable;
+  initialize another random variable;
 
 2.  To be able to condition the random variable on some specific values
-    (e.g., the observed data);
+  (e.g., the observed data);
 
 3.  The graphical model, generated by a collection of random variables,
-    to behave in a consistent and predictable way.
+  to behave in a consistent and predictable way.
 
 Getting Item 1 to work is actually pretty straightforward with a Python
 class that could be recognized by NumPy as an array. We do this in Code
@@ -1421,13 +1421,13 @@ specific the model in Equation {eq}`eq:simple_normal_model`.
 :label: eq:simple_normal_model
 
 \begin{split}
-    x \sim& \mathcal{N}(1, 2) \\
-    z \sim& \mathcal{HN}(1) \\
-    y \sim& \mathcal{N}(x, z)
+  x \sim& \mathcal{N}(1, 2) \\
+  z \sim& \mathcal{HN}(1) \\
+  y \sim& \mathcal{N}(x, z)
 \end{split}
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: scipy_rv0
 :caption: scipy_rv0
 
@@ -1462,7 +1462,7 @@ conditioned the random variable to some value, with a `log_prob` method,
 we have in Code Block [scipy_rv1](scipy_rv1) a toy
 implementation of a more functional `RandomVariable`:
 
-```{code-block} python
+```{code-block} ipython3
 :name: scipy_rv1
 :caption: scipy_rv1
 
@@ -1498,7 +1498,7 @@ of its dependencies in Code Block
 to match the expected behavior. In Code Block below note how `y` is much
 closer to `x` if we set `z` to a small value.
 
-```{code-block} python
+```{code-block} ipython3
 :name: scipy_rv1_value
 :caption: scipy_rv1_value
 
@@ -1537,7 +1537,7 @@ the random variable. For example, in Code Block
 [scipy_rv1_posterior](scipy_rv1_posterior) we generate the
 posterior distribution for `x` and `z` when we observe `y = 5.0`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: scipy_rv1_posterior
 :caption: scipy_rv1_posterior
 
@@ -1556,7 +1556,7 @@ We can validate it with an explicit implementation of the posterior
 density function, as shown in Code Block
 [scipy_posterior](scipy_posterior):
 
-```{code-block} python
+```{code-block} ipython3
 :name: scipy_posterior
 :caption: scipy_posterior
 
@@ -1618,7 +1618,7 @@ model in Equation {eq}`eq:simple_normal_model`, but for prior samples we
 need to again rewrite it a bit, shown in Code Block
 [scipy_prior](scipy_prior):
 
-```{code-block} python
+```{code-block} ipython3
 :name: scipy_prior
 :caption: scipy_prior
 
@@ -1663,7 +1663,7 @@ it. Distribution in `scipy.stats` has a `size` keyword argument to allow
 us to draw iid samples easily, with a small modification in Code Block
 [prior_batch](prior_batch) we have:
 
-```{code-block} python
+```{code-block} ipython3
 :name: prior_batch
 :caption: prior_batch
 
@@ -1693,7 +1693,7 @@ Consider another example in Code Block
 model, we implemented `lm_prior_sample0` to draw one set of prior
 samples, and `lm_prior_sample` to draw a batch of prior samples.
 
-```{code-block} python
+```{code-block} ipython3
 :name: prior_lm_batch
 :caption: prior_lm_batch
 
@@ -1727,17 +1727,17 @@ function to handle arbitrary sample shape, we need to make a few changes
 in `lm_prior_sample`:
 
 -   Supply `size` keyword argument to the sample call of root random
-    variables only;
+  variables only;
 
 -   Supply `size + (n_feature,)` keyword argument to the sample call of
-    `beta` due to API limitations, which is a length `n_feature` vector
-    of regression coefficient. We need to additionally make sure `size`
-    is a tuple in the function so that it could be combined with the
-    original shape of `beta`;
+  `beta` due to API limitations, which is a length `n_feature` vector
+  of regression coefficient. We need to additionally make sure `size`
+  is a tuple in the function so that it could be combined with the
+  original shape of `beta`;
 
 -   Shape handling by appending a dimension to `beta`, `intercept`, and
-    `sigma`, and squeezing of the matrix multiplication result so that
-    they are broadcast-able.
+  `sigma`, and squeezing of the matrix multiplication result so that
+  they are broadcast-able.
 
 As you can see, there is a lot of room for error and flexibility of how
 you might go about to implementing a "shape-safe\" prior sample
@@ -1757,12 +1757,12 @@ conceptually partitions a Tensor's shape into three groups:
 -   *Sample shape* that describes iid draws from the distribution.
 
 -   *Batch shape* that describes independent, not identically
-    distributed draws. Usually it is a set of (different)
-    parameterizations to the same distribution.
+  distributed draws. Usually it is a set of (different)
+  parameterizations to the same distribution.
 
 -   *Event shape* that describes the shape of a single draw (event
-    space) from the distribution. For example, samples from multivariate
-    distributions have non-scalar event shape.
+  space) from the distribution. For example, samples from multivariate
+  distributions have non-scalar event shape.
 
 Explicit batch shape is a powerful concept in TFP, which can be
 considered roughly along the line of *independent copy of the same thing
@@ -1787,7 +1787,7 @@ Code Block [prior_lm_batch](prior_lm_batch) into Code
 Block [jd_lm_batch](jd_lm_batch) using
 `tfd.JointDistributionSequential`:
 
-```{code-block} python
+```{code-block} ipython3
 :name: jd_lm_batch
 :caption: jd_lm_batch
 :linenos:
@@ -1946,92 +1946,92 @@ NumPyro already provides this functionality with
 `numpyro.handlers.reparam`.
 
 [^1]: With the prerequisite that basic ingredients like APIs to specify
-    probability distribution and random variables, basic numerical
-    transformations are already implemented.
+  probability distribution and random variables, basic numerical
+  transformations are already implemented.
 
 [^2]: Even Wikipedia only contains a partial list
-    <https://en.wikipedia.org/wiki/Probabilistic_programming#List_of_probabilistic_programming_languages>.
+  <https://en.wikipedia.org/wiki/Probabilistic_programming#List_of_probabilistic_programming_languages>.
 
 [^3]: *An Introduction to Probabilistic Programming* by van de Meent et
-    al {cite:p}`van2018introduction` is a good starting point if you are
-    interested in both PPL development and usage.
+  al {cite:p}`van2018introduction` is a good starting point if you are
+  interested in both PPL development and usage.
 
 [^4]: <https://github.com/stripe/rainier>. A more in-depth reflection of
-    the development of Rainer is described in a podcast
-    <https://www.learnbayesstats.com/episode/22-eliciting-priors-and-doing-bayesian-inference-at-scale-with-avi-bryant>
+  the development of Rainer is described in a podcast
+  <https://www.learnbayesstats.com/episode/22-eliciting-priors-and-doing-bayesian-inference-at-scale-with-avi-bryant>
 
 [^5]: See Section {ref}`inference_methods` for a discussion of
-    some of more prevalent posterior computation methods.
+  some of more prevalent posterior computation methods.
 
 [^6]: In terms of effective samples per second.
 
 [^7]: The Zen of Python detai the philosophy behind this idea of
-    pythonic design<https://www.python.org/dev/peps/pep-0020/>
+  pythonic design<https://www.python.org/dev/peps/pep-0020/>
 
 [^8]: <https://pymc-devs.medium.com/the-future-of-pymc3-or-theano-is-dead-long-live-theano-d8005f8a0e9b.>
-    contains more details about the decision and future road map of
-    PyMC3
+  contains more details about the decision and future road map of
+  PyMC3
 
 [^9]: <https://docs.Python.org/3/tutorial/floatingpoint.html>
 
 [^10]: <https://mc-stan.org/docs/2_25/reference-manual/variable-transforms-chapter.html>
 
 [^11]: In fact, this is how `tfd.LogNormal` is implemented in TFP, with
-    some additional overwrite of class method to make computation more
-    stable.
+  some additional overwrite of class method to make computation more
+  stable.
 
 [^12]: In Greek mythology Aesara is the daughter of Theano, hence the
-    fitting name.
+  fitting name.
 
 [^13]: <https://theano-pymc.readthedocs.io/en/latest/optimizations.html?highlight=o1#optimizations>
 
 [^14]: <https://github.com/pymc-devs/symbolic-pymc>
 
 [^15]: The default behavior of a Pyro model is to sample from the
-    distribution, but not in NumPyro.
+  distribution, but not in NumPyro.
 
 [^16]: <https://pyro.ai/examples/effect_handlers.html>
 
 [^17]: <https://docs.scipy.org/doc/scipy/reference/stats.html>
 
 [^18]: We will go into more details about random variable in Chapter
-    [11](app).
+  [11](app).
 
 [^19]: To be more precise, a Python object with a `__array__` method.
 
 [^20]: Getting the shape right, minimizing unwanted side effects, to
-    name a few.
+  name a few.
 
 [^21]: The graphical representation of a Bayesian Model is a central
-    concept in PPL, but in many cases they are implicit.
+  concept in PPL, but in many cases they are implicit.
 
 [^22]: <https://github.com/blei-lab/edward>
 
 [^23]: The API of TensorFlow changed significantly between v1 and the
-    current version (v2).
+  current version (v2).
 
 [^24]: For example, <https://github.com/jmschrei/pomegranate> for
-    Bayesian Network.
+  Bayesian Network.
 
 [^25]: See the Python documentation for a complete explanation
-    <https://docs.python.org/3/library/trace.html>
+  <https://docs.python.org/3/library/trace.html>
 
 [^26]: Also see mcx <https://github.com/rlouf/mcx> that use Python AST
-    to do function rewrite; and oryx
-    <https://www.tensorflow.org/probability/oryx> that make use of the
-    JAX tracing for function transformation
+  to do function rewrite; and oryx
+  <https://www.tensorflow.org/probability/oryx> that make use of the
+  JAX tracing for function transformation
 
 [^27]: If you are interested in more details about PPL development in
-    Python, take a look at this PyData Talk:
-    <https://www.youtube.com/watch?v=WHoS1ETYFrw>
+  Python, take a look at this PyData Talk:
+  <https://www.youtube.com/watch?v=WHoS1ETYFrw>
 
 [^28]: See also
-    <https://www.tensorflow.org/probability/examples/TensorFlow_Distributions_Tutorial>
+  <https://www.tensorflow.org/probability/examples/TensorFlow_Distributions_Tutorial>
 
 [^29]: See
-    <https://ericmjl.github.io/blog/2019/5/29/reasoning-about-shapes-and-probability-distributions/>.
-    Luciano Paz also wrote an excellent introduction on shape handling
-    in PPLs in *PyMC3 shape handling*
-    <https://lucianopaz.github.io/2019/08/19/pymc3-shape-handling/>
+  <https://ericmjl.github.io/blog/2019/5/29/reasoning-about-shapes-and-probability-distributions/>.
+  Luciano Paz also wrote an excellent introduction on shape handling
+  in PPLs in *PyMC3 shape handling*
+  <https://lucianopaz.github.io/2019/08/19/pymc3-shape-handling/>
 
 [^30]: <https://en.wikipedia.org/wiki/Block_diagram>

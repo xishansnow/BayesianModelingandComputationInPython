@@ -70,12 +70,12 @@ Mathematically we can say that a $g$ decision tree is completely defined
 by two sets:
 
 -   $\mathcal{T}$ the set of edges and nodes (the squares, rounded
-    squares and the lines joining them in {numref}`fig:decision_tree`)
-    together with the decision rules associated with the internal nodes.
+  squares and the lines joining them in {numref}`fig:decision_tree`)
+  together with the decision rules associated with the internal nodes.
 
 -   $\mathcal{M} = \{\mu_1, \mu_2, \dots, \mu_b\}$ denotes a set of
-    parameter values associated with each of the terminal nodes of
-    $\mathcal{T}$.
+  parameter values associated with each of the terminal nodes of
+  $\mathcal{T}$.
 
 Then $g(X; \mathcal{T},  \mathcal{M})$ is the function which assigns
 $\mu_i \in M$ to $X$. For example, in {numref}`fig:decision_tree` the
@@ -179,15 +179,15 @@ $\mathbb{E}(Y \mid \boldsymbol{X})$ equals to the sum of all the leaf
 node parameters $\mu_{ij}$, thus:
 
 -   When a tree depends on a single variable (like
-    {numref}`fig:decision_tree_reg`) each such $\mu_{ij}$ represents a
-    main effect
+  {numref}`fig:decision_tree_reg`) each such $\mu_{ij}$ represents a
+  main effect
 
 -   When a tree depends on more than one variable (like
-    {numref}`fig:decision_tree`) each such $\mu_{ij}$ represents an
-    interaction effect. Notice for example how returning a triangle
-    requires the interaction of $X_1$ and $X_2$ as the condition of the
-    child node ($X_2 > c_2$) is predicated on the condition of the
-    parent node ($X_1 > c_1$).
+  {numref}`fig:decision_tree`) each such $\mu_{ij}$ represents an
+  interaction effect. Notice for example how returning a triangle
+  requires the interaction of $X_1$ and $X_2$ as the condition of the
+  child node ($X_2 > c_2$) is predicated on the condition of the
+  parent node ($X_1 > c_1$).
 
 As the size of the trees is variable we can use trees to model
 interaction effects of varying orders. As a tree gets deeper the chance
@@ -304,18 +304,18 @@ The prior for the tree structure $\mathcal{T}_j$ is specified by three
 aspects:
 
 -   The probability that a node at depth $d=(0, 1, 2, \dots)$ is
-    non-terminal, given by $\alpha^{d}$. $\alpha$ it is recommended to
-    be $\in [0, 0.5)$ {cite:p}`Rockova2018` [^3]
+  non-terminal, given by $\alpha^{d}$. $\alpha$ it is recommended to
+  be $\in [0, 0.5)$ {cite:p}`Rockova2018` [^3]
 
 -   The distribution over the splitting variable. That is which
-    covariate is included in the tree ($X_i$ in
-    {numref}`fig:decision_tree`). Most commonly this is Uniform over the
-    available covariates.
+  covariate is included in the tree ($X_i$ in
+  {numref}`fig:decision_tree`). Most commonly this is Uniform over the
+  available covariates.
 
 -   The distribution over the splitting rule. That is, once we choose a
-    splitting variable which value we use to make a decision ($c_i$ in
-    {numref}`fig:decision_tree`). This is usually Uniform over the
-    available values.
+  splitting variable which value we use to make a decision ($c_i$ in
+  {numref}`fig:decision_tree`). This is usually Uniform over the
+  available values.
 
 
 
@@ -392,9 +392,9 @@ in [5](chap3_5). The model will be:
 ```{math} 
 \begin{aligned}
 \begin{split}
-    \mu \sim& \; \text{BART}(m=50) \\
-    \sigma \sim& \; \mathcal{HN}(1) \\
-    Y \sim& \; \mathcal{N}(\mu, \sigma)
+  \mu \sim& \; \text{BART}(m=50) \\
+  \sigma \sim& \; \mathcal{HN}(1) \\
+  Y \sim& \; \mathcal{N}(\mu, \sigma)
 \end{split}\end{aligned}
 ```
 
@@ -408,15 +408,15 @@ section.
 Having made all these clarifications the model in PyMC3 looks as
 follows:
 
-``` {code-block} python
+```{code-block} ipython3
 :name: bart_model_gauss
 :caption: bart_model_gauss
 
 with pm.Model() as bart_g:
-    σ = pm.HalfNormal("σ", Y.std())
-    μ = pm.BART("μ", X, Y, m=50)
-    y = pm.Normal("y", μ, σ, observed=Y)
-    idata_bart_g = pm.sample(2000, return_inferencedata=True)
+  σ = pm.HalfNormal("σ", Y.std())
+  μ = pm.BART("μ", X, Y, m=50)
+  y = pm.Normal("y", μ, σ, observed=Y)
+  idata_bart_g = pm.sample(2000, return_inferencedata=True)
 ```
 
 Before showcasing the end result of fitted model we are going to explore
@@ -459,7 +459,7 @@ HDI.
 :name: fig:bart_bikes
 :width: 8.00in
 Bikes data (black dots) fitted using BARTs (specifically `bart_model`).
-The shaded curve represents the 94% HDI interval (of the mean) and the
+The shaded curve represents the $94\%$ HDI interval (of the mean) and the
 blue curve represents the mean trend. Compare with
 {numref}`fig:bikes_data2`.
 ```
@@ -488,15 +488,15 @@ model with Gaussian likelihood from Code Block
 [bart_model_gauss](bart_model_gauss) as reference we see
 that differences are small:
 
-```{code-block} python
+```{code-block} ipython3
 :name: bart_model_bern
 :caption: bart_model_bern
 
 with pm.Model() as model:
-    μ = pm.BART("μ", X, Y, m=50,
-                inv_link="logistic")
-    y = pm.Bernoulli("y", p=μ, observed=Y)
-    trace = pm.sample(2000, return_inferencedata=True)
+  μ = pm.BART("μ", X, Y, m=50,
+        inv_link="logistic")
+  y = pm.Bernoulli("y", p=μ, observed=Y)
+  trace = pm.sample(2000, return_inferencedata=True)
 ```
 
 First we no longer need to define the $\sigma$ parameter as the
@@ -511,7 +511,7 @@ regression).
 Code Block [bart_model_bern](bart_model_bern) with 4
 values for $m$, namely (2, 10, 20, 50) using LOO. And
 {numref}`fig:BART_space_flu_fit` shows the data plus the fitted function
-and HDI 94% bands. We can see that according to LOO $m=10$ and $m=20$
+and HDI $94\%$ bands. We can see that according to LOO $m=10$ and $m=20$
 provides good fits. This is in qualitative agreement with a visual
 inspection, as $m=2$ is a clear underfit (the value of the ELPD is low
 but the difference between the in-sample and out-of-sample ELPD is not
@@ -608,7 +608,7 @@ counterfactual device.
 :width: 8.00in
 Partial dependence plot. Partial contribution to $Y$ from each variable
 $X_i$ while marginalizing the contributions from the rest of the
-variables ($X_{-i}$). The gray bands represent the HDI 94%. Both the
+variables ($X_{-i}$). The gray bands represent the HDI $94\%$. Both the
 mean and HDI bands has been smoothed (see `plot_ppd` function). The
 rugplot, the black bars at the bottom of each subplot, shows the
 observed values for each covariate.
@@ -651,7 +651,7 @@ conditions.
 Partial dependence plot. Partial contribution to the number of rented
 bikes from the variables, hour, temperature, humidity and windspeed
 while marginalizing the contributions from the rest of the variables
-($X_{-i}$). The gray bands represent the HDI 94%. Both the mean and HDI
+($X_{-i}$). The gray bands represent the HDI $94\%$. Both the mean and HDI
 bands have been smoothed (see `plot_ppd` function). The rugplot, the
 black bars at the bottom of each subplot, shows the observed values for
 each covariate.
@@ -786,21 +786,21 @@ is not yet well understood {cite:p}`Liu2020`.
 different datasets from known generative processes.
 
 -   $Y \sim \mathcal{N}(0, 1)$ $X_{0} \sim \mathcal{N}(Y, 0.1)$ and
-    $X_{1} \sim \mathcal{N}(Y, 0.2)$
-    $\boldsymbol{X}_{2:9} \sim \mathcal{N}(0, 1)$. Only the first 2
-    independent variables are unrelated to the predictor, and the first
-    is more related than the second.
+  $X_{1} \sim \mathcal{N}(Y, 0.2)$
+  $\boldsymbol{X}_{2:9} \sim \mathcal{N}(0, 1)$. Only the first 2
+  independent variables are unrelated to the predictor, and the first
+  is more related than the second.
 
 -   $Y = 10 \sin(\pi X_0 X_1 ) + 20(X_2 - 0.5)^2 + 10X_3 + 5X_4 + \epsilon$
-    Where $\epsilon \sim \mathcal{N}(0, 1)$ and
-    $\boldsymbol{X}_{0:9} \sim \mathcal{U}(0, 1)$ This is usually called
-    the Friedman's five dimensional test function {cite:p}`Friedman2001`.
-    Notice that while the first five random variables are related to $Y$
-    (to different extend) the last 5 are not.
+  Where $\epsilon \sim \mathcal{N}(0, 1)$ and
+  $\boldsymbol{X}_{0:9} \sim \mathcal{U}(0, 1)$ This is usually called
+  the Friedman's five dimensional test function {cite:p}`Friedman2001`.
+  Notice that while the first five random variables are related to $Y$
+  (to different extend) the last 5 are not.
 
 -   $\boldsymbol{X}_{0:9} \sim \mathcal{N}(0, 1)$ and
-    $Y \sim \mathcal{N}(0, 1)$. All variables are unrelated to the
-    response variable.
+  $Y \sim \mathcal{N}(0, 1)$. All variables are unrelated to the
+  response variable.
 
 ```{figure} figures/bart_vi_toy.png
 :name: fig:bart_vi_toy
@@ -847,16 +847,16 @@ alternative methods have been proposed {cite:p}`Carlson2020, Bleich2014`. One
 of such methods can be summarized as follow:
 
 1.  Fit a model many times (around 50) using a small value of $m$, like
-    25 [^9]. Record the root mean squared error.
+  25 [^9]. Record the root mean squared error.
 
 2.  Eliminate the least informative variable across all 50 runs.
 
 3.  Repeat 1 and 2, each time with one less variable in the model. Stop
-    once you reach a given number of covariates in the model (not
-    necessarily 1).
+  once you reach a given number of covariates in the model (not
+  necessarily 1).
 
 4.  Finally, select the model with the lowest average root mean square
-    error.
+  error.
 
 According to Carlson {cite:p}`Carlson2020` this procedure seems to almost
 always return the same result as just creating a figure like
@@ -975,7 +975,7 @@ model with m=50. Plot the fit, including the data. Describe the fit.
 1.  `x = np.linspace(-1, 1., 200)` and `y = np.random.normal(2*x, 0.25)`
 
 2.  `x = np.linspace(-1, 1., 200)` and
-    `y = np.random.normal(x**2, 0.25)`
+  `y = np.random.normal(x**2, 0.25)`
 
 3.  pick a function you like
 
@@ -993,14 +993,14 @@ the observed number of rented bikes is close to zero). To fix this issue
 and improve our models we can try with other likelihoods:
 
 1.  use a Poisson likelihood (hint you will need to use an inverse link
-    function, check `pm.Bart` docstring). How the fit differs from the
-    example in the book. Is this a better fit? In what sense?
+  function, check `pm.Bart` docstring). How the fit differs from the
+  example in the book. Is this a better fit? In what sense?
 
 2.  use a NegativeBinomial likelihood, how the fit differs from the
-    previous two? Could you explain the result.
+  previous two? Could you explain the result.
 
 3.  how this result is different from the one in Chapter
-    [5](chap3_5)? Could you explain the difference?
+  [5](chap3_5)? Could you explain the difference?
 
 **7M10.** Use BART to redo the first penguin classification
 examples we performed in Section {ref}`classifying_penguins` (i.e. use
@@ -1032,41 +1032,41 @@ variable importance. Compare the results with the PDPs from the previous
 exercise.
 
 [^1]: Maybe you have heard about its non-Bayesian cousin: Random Forest
-    {cite:p}`BreimanForests2001`
+  {cite:p}`BreimanForests2001`
 
 [^2]: for alternatives see
-    {cite:p}`BalogMondrianProcessMachine2015, royMondrianProcess`
+  {cite:p}`BalogMondrianProcessMachine2015, royMondrianProcess`
 
 [^3]: Node depth is defined as distance from the root. Thus, the root
-    itself has depth 0, its first child node has depth 1, etc.
+  itself has depth 0, its first child node has depth 1, etc.
 
 [^4]: In principle we can go fully Bayesian and estimate the number of
-    tree $m$ from the data, but there are reports showing this is not
-    always the best approach. More research is likely needed in this
-    area.
+  tree $m$ from the data, but there are reports showing this is not
+  always the best approach. More research is likely needed in this
+  area.
 
 [^5]: The same literature generally shows that using cross-validation to
-    tune the number of trees and/or the prior over the depth of the tree
-    can be further beneficial.
+  tune the number of trees and/or the prior over the depth of the tree
+  can be further beneficial.
 
 [^6]: Other implementations are less flexible or require adjustments
-    under the hood to make this work.
+  under the hood to make this work.
 
 [^7]: This notation means the variables ($X_0$, $X_2$), that is,
-    excluding $X_1$
+  excluding $X_1$
 
 [^8]: The mean of the ICE curves and the mean partial dependence curve
-    are slightly different. This is due to internal details on how these
-    plots were made including the order in which we average over the
-    posterior samples or over the observations. What really matter is
-    the general features, for instance in this case that both curves are
-    essentially flat. Also, to speed up computation we evaluate $X_1$
-    over 10 equally separated points for partial dependence plots and we
-    subsample $X_{0,2}$ for computing the individual conditional
-    expectation plot
+  are slightly different. This is due to internal details on how these
+  plots were made including the order in which we average over the
+  posterior samples or over the observations. What really matter is
+  the general features, for instance in this case that both curves are
+  essentially flat. Also, to speed up computation we evaluate $X_1$
+  over 10 equally separated points for partial dependence plots and we
+  subsample $X_{0,2}$ for computing the individual conditional
+  expectation plot
 
 [^9]: The original proposal suggests 10, but our experience with the
-    BART implementation in PyMC3 is that values of $m$ below 20 or 25
-    could be problematic.
+  BART implementation in PyMC3 is that values of $m$ below 20 or 25
+  could be problematic.
 
 [^10]: This is likely to be added in the future versions of PyMC3.

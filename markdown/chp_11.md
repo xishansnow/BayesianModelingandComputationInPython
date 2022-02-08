@@ -30,7 +30,7 @@ to some of the central concepts in probability theory[^2] imagining a
 integer from 1 to 6 without preference of one over another. Using Python
 we can program a die like this in the following way:
 
-``` {code-block} python
+```{code-block} ipython3
 :name: die
 :caption: die
 
@@ -44,7 +44,7 @@ this possibility? A scientific way to answer this question is to collect
 data and analyze it. Using Python we can simulate the data collection as
 in Code Block [experiment](experiment).
 
-``` {code-block} python
+```{code-block} ipython3
 :name: experiment
 :caption: experiment
 
@@ -122,7 +122,7 @@ can write:
 ```{math} 
 :label: eq:sample_space_dice
 \mathcal{X} = \{1, 2, 3, 4, 5, 6\}
-    
+  
 ```
 
 We may define the event $A$ as any subset of $\mathcal{X}$, for example,
@@ -434,7 +434,7 @@ Block [scipy_unif](scipy_unif) shows how we can use Scipy
 to define a distribution and then compute useful quantities such as the
 PMF, CDF, and moments (see Section {ref}`expectations`).
 
-``` {code-block} python
+```{code-block} ipython3
 :name: scipy_unif
 :caption: scipy_unif
 
@@ -548,21 +548,21 @@ generally used when there are a large number of trials, each with a
 small probability of success. For example
 
 -   Radioactive decay, the number of atoms in a given material is huge,
-    the actual number that undergo nuclear fission is low compared to
-    the total number of atoms.
+  the actual number that undergo nuclear fission is low compared to
+  the total number of atoms.
 
 -   The daily number of car accidents in a city. Even when we may
-    consider this number to be high relative to what we would prefer, it
-    is low in the sense that every maneuver that the driver performs,
-    including turns, stopping at lights, and parking, is an independent
-    trial where an accident could occur.
+  consider this number to be high relative to what we would prefer, it
+  is low in the sense that every maneuver that the driver performs,
+  including turns, stopping at lights, and parking, is an independent
+  trial where an accident could occur.
 
 The PMF of a Poisson is defined as:
 
 ```{math} 
 :label: eq:poisson_pmf
 P(X = x)  = \frac{\mu^{x} e^{-\mu}}{x!}, x = 0, 1, 2, \dots
-    
+  
 ```
 
 Notice that the support of this PMF are all the natural numbers, which
@@ -726,7 +726,7 @@ $\sigma=1$ is known as the **standard Gaussian distribution**.
 ```{math} 
 :label: eq:gaussian_pdf
 
-    p (x \mid \mu, \sigma) = \frac {1} {\sigma \sqrt {2 \pi}} e^{-\frac {(x -\mu)^2} {2 \sigma^2}}
+  p (x \mid \mu, \sigma) = \frac {1} {\sigma \sqrt {2 \pi}} e^{-\frac {(x -\mu)^2} {2 \sigma^2}}
 ```
 
 On the left panel of {numref}`fig:normal_pdf_cdf` we have the PDF, and
@@ -1022,7 +1022,7 @@ If we do not know the CDF $F_X$ but we have samples from $X$ we can
 approximate it with the empirical CDF. {numref}`fig:pit` shows example
 of this property generated with Code Block [pit](pit)
 
-```{code-block} python
+```{code-block} ipython3
 :name: pit
 :caption: pit
 
@@ -1305,10 +1305,7 @@ different sample.
 
 #### The Central Limit Theorem
 
-The central limit theorem states that if we sample $n$ values
-independently from an arbitrary distribution the mean $\bar X$ of those
-values will distribute approximately as a Gaussian as
-${n \rightarrow \infty}$:
+The central limit theorem states that if we sample $n$ values independently from an arbitrary distribution the mean $\bar X$ of those values will distribute approximately as a Gaussian as ${n \rightarrow \infty}$:
 
 ```{math} 
 :label: eq:central_limit
@@ -1639,7 +1636,7 @@ We will now show how to compute entropy in Python using Code Block
 [entropy_dist](entropy_dist), with the result shown in
 {numref}`fig:entropy`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: entropy_dist
 :caption: entropy_dist
 
@@ -1772,7 +1769,7 @@ for the KL divergence and plot them., We are going to use the same
 distributions as in {numref}`fig:entropy`.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: kl_varies_dist
 :caption: kl_varies_dist
 
@@ -2606,7 +2603,7 @@ We can implement this in a few lines of Python code as in Code Block
 estimated value of $\pi$ and the error of the approximation is shown in
 {numref}`fig:monte_carlo`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: montecarlo
 :caption: montecarlo
 
@@ -2650,7 +2647,7 @@ of points inside drops rapidly. In a sense in higher dimensions all the
 volume of the hypercube is at the corners [^24].
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: inside_out
 :caption: inside_out
 
@@ -2759,7 +2756,7 @@ model, the grid approximation is:
 Code Block [grid_method](grid_method) computes the
 posterior the Beta-Binomial model:
 
-```{code-block} python
+```{code-block} ipython3
 :name: grid_method
 :caption: grid_method
 
@@ -3082,7 +3079,7 @@ indicates how long to integrate for and `step_size` how large each
 integration step should be. As a result we obtain a new position and
 momentum as output of the function `leapfrog`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: leapfrog
 :caption: leapfrog
 
@@ -3112,7 +3109,7 @@ probability to sample from, `initial_position` the initial position to
 start sampling, `path_len`, `step_size`, as a result we obtain sample
 from the target distribution.
 
-```{code-block} python
+```{code-block} ipython3
 :name: hamiltonian_mc
 :caption: hamiltonian_mc
 
@@ -3153,8 +3150,20 @@ same 2D normal distribution. For practical sampling we do not want the
 trajectories to be circular, because they will arrive at the same
 position that we started at. Instead we want to move as far as possible
 from our starting point, for example, by avoiding U-turns in the
-trajectory, and hence the name of one of the most popular dynamic HMC
-method No U-Turn Sampling (NUTS).
+trajectory, and hence the ```{code-block} ipython3 
+:name: hamiltonian_mc
+:caption: hamiltonian_mc 
+
+def hamiltonian_monte_carlo(     n_samples, negative_log_prob, initial_position,      path_len, step_size):     # autograd magic     dVdq = jax.grad(negative_log_prob) 
+
+    # collect all our samples in a list     samples = [initial_position] 
+
+    # Keep a single object for momentum resampling     momentum = stats.norm(0, 1)     # If initial_position is a 10d vector and n_samples is 100, we want     # 100 x 10 momentum draws. We can do this in one call to momentum.rvs, and     # iterate over rows     size = (n_samples,) + initial_position.shape[:1]     for p0 in momentum.rvs(size=size):         # Integrate over our path to get a new position and momentum         q_new, p_new = leapfrog(             samples[-1], p0, dVdq, path_len=path_len, step_size=step_size,         ) 
+
+        # Check Metropolis acceptance criterion         start_log_p = negative_log_prob(samples[-1]) - np.sum(momentum.logpdf(p0))         new_log_p = negative_log_prob(q_new) - np.sum(momentum.logpdf(p_new))         if np.log(np.random.rand()) < start_log_p - new_log_p:             samples.append(q_new)         else:             samples.append(np.copy(samples[-1])) 
+
+    return np.array(samples[1:])
+```(NUTS).
 
 ```{figure} figures/normal_leapfrog.png
 :name: fig:normal_leapgrog
@@ -3389,7 +3398,7 @@ Block [vi_in_tfp](vi_in_tfp) shows a simple example of
 using VI in TFP, with two different types of surrogate posterior
 distributions. The result is shown in {numref}`fig:vi_in_tfp`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: vi_in_tfp
 :caption: vi_in_tfp
 

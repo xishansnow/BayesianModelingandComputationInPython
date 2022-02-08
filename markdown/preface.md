@@ -91,10 +91,7 @@ subject, the pace at the start (mostly the first two chapters) will be a
 bit rapid, and may require a couple read-throughs.
 
 We expect you to be familiar with some mathematical concepts like
-integrals, derivatives, and properties of logarithms. The level of
-writing will be the one generally taught at a technical high school or
-maybe the first year of college in science, technology, engineering, and
-mathematics careers. For those who need a refresher of such mathematical
+integrals, derivatives, and properties of logarithms. The level of writing will be the one generally taught at a technical high school or maybe the first year of college in science, technology, engineering, and mathematics careers. For those who need a refresher of such mathematical
 concepts we recommend the series of videos from 3Blue1Brown [^1]. We
 will not ask you to solve many mathematical exercises instead, we will
 primarily ask you to use code and an interactive computing environment

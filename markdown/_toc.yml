@@ -1,0 +1,19 @@
+root: chp_01
+entries:
+- file: chp_02
+- file: chp_03
+- file: chp_04
+- file: chp_05
+- file: chp_06
+- file: chp_07
+- file: chp_08
+- file: chp_09
+- file: chp_10
+- file: chp_11
+- file: dedication
+- file: foreword
+- file: glossary
+- file: preface
+- file: references
+- file: symbollist
+

@@ -6,9 +6,7 @@
 This is true when dutch politician Karl Kristian Steincke allegedly said
 this sometime in the 1940s [^1], and it is still true today especially
 if you are working on time series and forecasting problems. There are
-many applications of time series analysis, from making predictions with
-forecasting, to understanding what were the underlying latent factors in
-the historical trend. In this chapter we will discuss some Bayesian
+many applications of time series analysis, from making predictions with forecasting, to understanding what were the underlying latent factors in the historical trend. In this chapter we will discuss some Bayesian
 approaches to this problem. We will start by considering time series
 modeling as a regression problem, with the design matrices parsed from
 the timestamp information. We will then explore the approaches to model
@@ -30,23 +28,23 @@ addition to the observation itself, the timestamp information can be
 quite informative when:
 
 -   There is a temporal **trend**, for example, regional population,
-    global GDP, annual CO₂ emissions in the US. Usually this is an
-    overall pattern which we intuitively label as "growth\" or
-    "decline\".
+  global GDP, annual CO₂ emissions in the US. Usually this is an
+  overall pattern which we intuitively label as "growth\" or
+  "decline\".
 
 -   There is some recurrent pattern correlated to time, called
-    **seasonality** [^2]. For example, changes in monthly temperature
-    (higher in the summer and lower in the winter), monthly rainfall
-    amounts (in many regions of the world this is lower in winter and
-    higher during summer), daily coffee consumption in a given office
-    building (higher in the weekdays and lower in the weekends), hourly
-    number of bike rentals(higher in the day than during the night),
-    like we saw in Chapter [5](chap3_5).
+  **seasonality** [^2]. For example, changes in monthly temperature
+  (higher in the summer and lower in the winter), monthly rainfall
+  amounts (in many regions of the world this is lower in winter and
+  higher during summer), daily coffee consumption in a given office
+  building (higher in the weekdays and lower in the weekends), hourly
+  number of bike rentals(higher in the day than during the night),
+  like we saw in Chapter [5](chap3_5).
 
 -   The current data point informs the next data point in some way. In
-    other words where noise or **residuals** are correlated [^3]. For
-    example, the daily number of cases resolved at a help desk, stock
-    price, hourly temperature, hourly rainfall amounts.
+  other words where noise or **residuals** are correlated [^3]. For
+  example, the daily number of cases resolved at a help desk, stock
+  price, hourly temperature, hourly rainfall amounts.
 
 It is thus quite natural and useful to consider the decomposition of a
 time series into:
@@ -54,7 +52,7 @@ time series into:
 ```{math} 
 :label: eq:generic_time_series
 
-    y_t = \text{Trend}_t + \text{Seasonality}_t + \text{Residuals}_t
+  y_t = \text{Trend}_t + \text{Seasonality}_t + \text{Residuals}_t
 ```
 
 Most of the classical time series models are based on this
@@ -89,7 +87,7 @@ blue) set. We can see a strong upward trend and seasonality pattern in
 the data.
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: load_co2_data
 :caption: load_co2_data
 
@@ -112,7 +110,7 @@ regression we can state the likelihood as follows:
 ```{math} 
 :label: eq:regression_model
 
-    Y \sim \mathcal{N}(\mathbf{X} \beta, \sigma)
+  Y \sim \mathcal{N}(\mathbf{X} \beta, \sigma)
 ```
 
 Considering the seasonality effect, we can use the month of the year
@@ -137,7 +135,7 @@ and 1 representing the time and the linear growth. The rest of the rows
 goes from black for 1 to light gray for 0.
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: generate_design_matrix
 :caption: generate_design_matrix
 
@@ -169,7 +167,7 @@ resolution:
 -   Day of the month (1, 2, ..., 31)
 
 -   Holiday effect (New year's day, Easter holiday, International
-    Workers' Day, Christmas day, etc)
+  Workers' Day, Christmas day, etc)
 
 -   Month of the year (1, 2, ..., 12)
 
@@ -187,7 +185,7 @@ problem, using `tfd.JointDistributionCoroutine`, using the same
 `tfd.JointDistributionCoroutine` API and TFP Bayesian modeling methods
 we introduced in Chapter [3](chap2).
 
-```{code-block} python
+```{code-block} ipython3
 :name: regression_model_for_timeseries
 :caption: regression_model_for_timeseries
 
@@ -233,7 +231,7 @@ workflow. To draw prior and prior predictive samples, we can call the
 shown in {numref}`fig:fig3_prior_predictive1`).
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: prior_predictive
 :caption: prior_predictive
 
@@ -262,7 +260,7 @@ into an `az.InferenceData` object in Code Block
 [inference_of_regression_model](inference_of_regression_model).
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: inference_of_regression_model
 :caption: inference_of_regression_model
 
@@ -298,7 +296,7 @@ with the result displayed in
 seasonality components and in {numref}`fig:fig5_posterior_predictive1`
 for the overall model fit and forecast.
 
-```{code-block} python
+```{code-block} ipython3
 :name: posterior_predictive_with_component
 :caption: posterior_predictive_with_component
 
@@ -339,13 +337,13 @@ Looking at the out of sample prediction in
 {numref}`fig:fig5_posterior_predictive1`, we notice that:
 
 1.  The linear trend does not perform well when we forecast further into
-    the future and gives forecast consistently lower than the actual
-    observed. Specifically the atmospheric CO₂ does not increase
-    linearly with a constant slope over the years [^4]
+  the future and gives forecast consistently lower than the actual
+  observed. Specifically the atmospheric CO₂ does not increase
+  linearly with a constant slope over the years [^4]
 
 2.  The range of uncertainty is almost constant (sometimes also referred
-    to as the forecast cone), where intuitively we expect the
-    uncertainty to increase when we forecast farther into the future.
+  to as the forecast cone), where intuitively we expect the
+  uncertainty to increase when we forecast farther into the future.
 
 (design-matrices-for-time-series)=
 
@@ -378,7 +376,7 @@ context we specify this idea mathematically in Equation
 ```{math} 
 :label: eq:step_linear_function
 
-    g(t) = (k + \mathbf{A}\delta) t + (m + \mathbf{A} \gamma)
+  g(t) = (k + \mathbf{A}\delta) t + (m + \mathbf{A} \gamma)
 ```
 
 where $k$ is the (global) growth rate, $\delta$ is a vector of rate
@@ -395,7 +393,7 @@ for an example of a randomly generated step linear function and its
 breakdown in {numref}`fig:fig6_step_linear_function`.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: step_linear_function_for_trend
 :caption: step_linear_function_for_trend
 
@@ -455,7 +453,7 @@ that can be used for approximating arbitrary smooth seasonal effects
 ```{math} 
 :label: eq:Fourier_basis_functions
 
-    s(t) = \sum^N_{n=1} \left[a_n \text{cos}\left(\frac{2 \pi nt}{P} \right) + b_n \text{sin}\left(\frac{2 \pi nt}{P}\right) \right]
+  s(t) = \sum^N_{n=1} \left[a_n \text{cos}\left(\frac{2 \pi nt}{P} \right) + b_n \text{sin}\left(\frac{2 \pi nt}{P}\right) \right]
 ```
 
 where $P$ is the regular period the time series has (e.g. $P = 365.25$
@@ -465,7 +463,7 @@ shown in Code Block
 [fourier_basis_as_seasonality](fourier_basis_as_seasonality),
 and visualize it in {numref}`fig:fig7_fourier_basis`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: fourier_basis_as_seasonality
 :caption: fourier_basis_as_seasonality
 
@@ -521,7 +519,7 @@ measure is trending upward in general. This gives prior predictive
 samples in a similar range of what is actually being observed (see
 {numref}`fig:fig8_prior_predictive2`).
 
-```{code-block} python
+```{code-block} ipython3
 :name: gam
 :caption: gam
 
@@ -614,7 +612,7 @@ of previous observations. Consider a first-order autoregressive model
 ```{math} 
 :label: eq:ar1
 
-    y_t \sim \mathcal{N}(\alpha + \rho y_{t-1}, \sigma)
+  y_t \sim \mathcal{N}(\alpha + \rho y_{t-1}, \sigma)
 ```
 
 The distribution of $y_t$ follows a Normal distribution with the
@@ -628,7 +626,7 @@ values of $\rho$. The result is shown in
 {numref}`fig:fig10_ar1_process`.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: ar1_with_forloop
 :caption: ar1_with_forloop
 
@@ -690,7 +688,7 @@ $y_{t-1}$ directly shown in Code Block
 function `ar1_fun` applies the backshift operation and generates the
 distribution for the next step.
 
-```{code-block} python
+```{code-block} ipython3
 :name: ar1_without_forloop
 :caption: ar1_without_forloop
 
@@ -717,7 +715,7 @@ AR(1) process as likelihood. But before we do that let us rewrite the
 GAM in Code Block [gam](gam) slightly differently into
 Code Block [gam_alternative](gam_alternative).
 
-```{code-block} python
+```{code-block} ipython3
 :name: gam_alternative
 :caption: gam_alternative
 
@@ -764,21 +762,21 @@ Comparing Code Block [gam_alternative](gam_alternative)
 with Code Block [gam](gam), we see two major differences:
 
 1.  We split out the construction of the trend and seasonality
-    components (with their priors) into a separate function, and in the
-    `tfd.JointDistributionCoroutine` model block we use a `yield from`
-    statement so we get the identical `tfd.JointDistributionCoroutine`
-    model in both Code Blocks;
+  components (with their priors) into a separate function, and in the
+  `tfd.JointDistributionCoroutine` model block we use a `yield from`
+  statement so we get the identical `tfd.JointDistributionCoroutine`
+  model in both Code Blocks;
 
 2.  We wrap the `tfd.JointDistributionCoroutine` in another Python
-    function so it is easier to condition on both the training and
-    testing set.
+  function so it is easier to condition on both the training and
+  testing set.
 
 Code Block [gam_alternative](gam_alternative) is a much
 more modular approach. We can write down a GAM with an AR(1) likelihood
 by just changing the likelihood part. This is what we do in Code Block
 [gam_with_ar_likelihood](gam_with_ar_likelihood).
 
-```{code-block} python
+```{code-block} ipython3
 :name: gam_with_ar_likelihood
 :caption: gam_with_ar_likelihood
 
@@ -837,7 +835,7 @@ series model by adding a latent AR component to the linear prediction.
 This is the `gam_with_latent_ar` model in Code Block
 [gam_with_latent_ar](gam_with_latent_ar).
 
-```{code-block} python
+```{code-block} ipython3
 :name: gam_with_latent_ar
 :caption: gam_with_latent_ar
 
@@ -937,8 +935,7 @@ y_i & \sim \mathcal{N}(z_i,  \sigma_{y}^2)
 
 The GRW here is the same as an AR(1) process with $\rho = 1$. By placing
 different prior on $\sigma_{z}$ and $\sigma_{y}$ in Equation
-{eq}`eq:gw_formulation1`, we can emphasize how much of the variance in
-the observed data should be accounted for in the GRW, and how much is
+{eq}`eq:gw_formulation1`, we can emphasize how much of the variance in the observed data should be accounted for in the GRW, and how much is
 iid *noise*. We can also compute the ratio
 $\alpha = \frac{\sigma_{y}^2}{\sigma_{z}^2 + \sigma_{y}^2}$, where
 $\alpha$ is in the range $[0, 1]$ that can be interpret as the degree of
@@ -965,7 +962,7 @@ black solid dots in {numref}`fig:fig14_smoothing_with_gw`, with the
 fitted latent Random Walk displayed in the same Figure. As you can see
 we can approximate the underlying function pretty well.
 
-```{code-block} python
+```{code-block} ipython3
 :name: gw_tfp
 :caption: gw_tfp
 
@@ -986,7 +983,7 @@ def smoothing_grw():
 Simulated observations from $y \sim \text{Normal}(f(x), 1)$ with
 $f(x) = e^{1 + x^{0.5} - e^{\frac{x}{15}}}$, and the inferred latent
 Gaussian Random Walk. The gray semi-transparent region is the posterior
-94% HDI interval of the latent Gaussian Random Walk $z$, with the
+$94\%$ HDI interval of the latent Gaussian Random Walk $z$, with the
 posterior mean plot in dash blue line.
 ```
 
@@ -1019,8 +1016,7 @@ examples of these models are
 -   Autoregressive conditional heteroscedasticity (ARCH) model, where
     the scale of the residuals vary over time;
 
--   Moving average (MA) model, which is a linear combination of previous
-    residuals are added to the mean of the series.
+-   Moving average (MA) model, which is a linear combination of previous residuals are added to the mean of the series.
 
 Some of these classical time series models could be combined into more
 complex models, one of such extensions is the Seasonal AutoRegressive
@@ -1099,7 +1095,7 @@ We will start with a $\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}$ model. First
 we load and pre-process the observed time series in Code Block
 [sarima_preprocess](sarima_preprocess).
 
-```{code-block} python
+```{code-block} ipython3
 :name: sarima_preprocess
 :caption: sarima_preprocess
 
@@ -1135,7 +1131,7 @@ flow to check whether some of the indexes are valid (e.g, we cannot
 index to $t-1$ and $t-period-1$ when $t=0$), we pad the time series with
 zeros.
 
-```{code-block} python
+```{code-block} ipython3
 :name: sarima_likelihood
 :caption: sarima_likelihood
 
@@ -1187,7 +1183,7 @@ posterior density function for inference. This is shown in Code Block
 `target_log_prob_fn` that we sample from in Code Block
 [sarima_posterior](sarima_posterior) [^11].
 
-```{code-block} python
+```{code-block} ipython3
 :name: sarima_posterior
 :caption: sarima_posterior
 
@@ -1269,8 +1265,8 @@ the observable space [^12]:
 \begin{split}
 X_0 & \sim p(X_0) \\
 \text{for t in 0...T:} \\
-    Y_t & \sim p^{\psi}(Y_t \mid X_t) \\
-    X_{t+1} & \sim p^{\theta}(X_{t+1} \mid X_{t})
+  Y_t & \sim p^{\psi}(Y_t \mid X_t) \\
+  X_{t+1} & \sim p^{\theta}(X_{t+1} \mid X_{t})
 \end{split}
 ```
 
@@ -1283,8 +1279,7 @@ measurement at time $t$ conditioned on the latent states.
 
 ::: {admonition}  Implementation of state space model for efficient computation
 
-There is a harmony between mathematical formulation and computation implementation
-of a State Space model with API like `tf.while_loop` or `tf.scan`.
+There is a harmony between mathematical formulation and computation implementationof a State Space model with API like `tf.while_loop` or `tf.scan`.
 Unlike using a Python `for` loop or `while` loop, they require compiling
 the loop body into a function that takes the same structure of tensors
 as input and outputs. This functional style of implementation is useful
@@ -1320,16 +1315,16 @@ are in a sequential analysis framework that typically includes tasks
 like filtering and smoothing:
 
 -   Filtering: computing the marginal distribution of the latent state
-    $X_k$, conditioned on observations up to that time step $k$:
-    $p(X_k \mid y_{0:k}), k = 0,...,T$; $\circ$ Prediction: a forecast
-    distribution of the latent state, extending the filtering
-    distribution into the future for $n$ steps:
-    $p(X_k+n \mid y_{0:k}), k = 0,...,T, n=1, 2,...$
+  $X_k$, conditioned on observations up to that time step $k$:
+  $p(X_k \mid y_{0:k}), k = 0,...,T$; $\circ$ Prediction: a forecast
+  distribution of the latent state, extending the filtering
+  distribution into the future for $n$ steps:
+  $p(X_k+n \mid y_{0:k}), k = 0,...,T, n=1, 2,...$
 
 -   Smoothing: similar to filtering where we try to compute the marginal
-    distribution of the latent state at each time step $X_k$, but
-    conditioned on all observations: :
-    $p(X_k \mid y_{0:T}), k = 0,...,T$.
+  distribution of the latent state at each time step $X_k$, but
+  conditioned on all observations: :
+  $p(X_k \mid y_{0:T}), k = 0,...,T$.
 
 notice how the subscript of $y_{0:\dots}$ is different in filtering and
 smoothing: for filtering it is conditioned on $y_{0:k}$ and for
@@ -1388,7 +1383,7 @@ State Space Model:
 
 \begin{split}
 X_t \sim p(X_t \mid X_{t-1}) & \equiv \mathcal{N}(\mathbf{F}_{t} X_{t-1}, \mathbf{Q}_{t}) \\
-    Y_t \sim p(Y_t \mid X_t) & \equiv \mathcal{N}(\mathbf{H}_t X_t, \mathbf{R}_t)
+  Y_t \sim p(Y_t \mid X_t) & \equiv \mathcal{N}(\mathbf{H}_t X_t, \mathbf{R}_t)
 \end{split}
 ```
 
@@ -1432,27 +1427,27 @@ The parameters of the distributions above in Equation
 and update steps:
 
 -   Prediction
-    ```{math} 
-    :label: eq:kalman_fitler_preddict_step
+   ```{math} 
+   :label: eq:kalman_fitler_preddict_step
 
-        \begin{split}
-        m_{t \mid t-1} & = \mathbf{F}_{t} m_{t-1 \mid t-1} \\
-        \mathbf{P}_{t \mid t-1} & = \mathbf{F}_{t} \mathbf{P}_{t-1 \mid t-1} \mathbf{F}_{t}^T + \mathbf{Q}_{t}
-        \end{split}
-    ```
+   \begin{split}
+   m_{t \mid t-1} & = \mathbf{F}_{t} m_{t-1 \mid t-1} \\
+   \mathbf{P}_{t \mid t-1} & = \mathbf{F}_{t} \mathbf{P}_{t-1 \mid t-1} \mathbf{F}_{t}^T + \mathbf{Q}_{t}
+   \end{split}
+   ```
 
 -   Update
-    ```{math} 
-    :label: eq:kalman_fitler_update_step
+   ```{math} 
+   :label: eq:kalman_fitler_update_step
 
-        \begin{split}
-        z_t & = Y_t - \mathbf{H}_t m_{t \mid t-1} \\
-        \mathbf{S}_t & = \mathbf{H}_t \mathbf{P}_{t \mid t-1} \mathbf{H}_t^T + \mathbf{R}_t \\
-        \mathbf{K}_t & = \mathbf{P}_{t \mid t-1} \mathbf{H}_t^T \mathbf{S}_t^{-1} \\
-        m_{t \mid t} & = m_{t \mid t-1} + \mathbf{K}_t z_t \\
-        \mathbf{P}_{t \mid t} & = \mathbf{P}_{t \mid t-1} - \mathbf{K}_t \mathbf{S}_t \mathbf{K}_t^T
-        \end{split}
-    ```
+   \begin{split}
+   z_t & = Y_t - \mathbf{H}_t m_{t \mid t-1} \\
+   \mathbf{S}_t & = \mathbf{H}_t \mathbf{P}_{t \mid t-1} \mathbf{H}_t^T + \mathbf{R}_t \\
+   \mathbf{K}_t & = \mathbf{P}_{t \mid t-1} \mathbf{H}_t^T \mathbf{S}_t^{-1} \\
+   m_{t \mid t} & = m_{t \mid t-1} + \mathbf{K}_t z_t \\
+   \mathbf{P}_{t \mid t} & = \mathbf{P}_{t \mid t-1} - \mathbf{K}_t \mathbf{S}_t \mathbf{K}_t^T
+   \end{split}
+   ```
 
 The proof of deriving the Kalman filter equations is an application of
 the joint multivariate Gaussian distribution. In practice, there are
@@ -1470,7 +1465,7 @@ Gaussian latent state. We will demonstrate with a simple linear growth
 time series as the first example (see Chapter 3 of Bayesian Filtering
 and Smoothing {cite:p}`sarkka2013bayesian`:
 
-```{code-block} python
+```{code-block} ipython3
 :name: linear_growth_model
 :caption: linear_growth_model
 
@@ -1519,7 +1514,7 @@ y_t = \theta_0 + \theta_1 * t = \left[\begin{array}{ccc}
 
 Expressed with the `tfd.LinearGaussianStateSpaceModel` API, we have:
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfd_lgssm_linear_growth
 :caption: tfd_lgssm_linear_growth
 
@@ -1551,7 +1546,7 @@ linear_growth_model = tfd.LinearGaussianStateSpaceModel(
 we can apply the Kalman filter to obtain the posterior distribution of
 $\theta_0$ and $\theta_1$:
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfd_lgssm_linear_growth_filter
 :caption: tfd_lgssm_linear_growth_filter
 
@@ -1679,7 +1674,7 @@ the model in TFP. For example, in Code Block
 defines a ARMA(2,1) model with $\phi = [-0.1, 0.5]$, $\theta = -0.25$,
 and $\sigma = 1.25$, and draw one random time series.
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfd_lgssm_arma_simulate
 :caption: tfd_lgssm_arma_simulate
 
@@ -1731,7 +1726,7 @@ We show the resulting trace plot of the posterior samples in
 {numref}`fig:fig17_arma_lgssm_inference_result`.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfd_lgssm_arma_with_prior
 :caption: tfd_lgssm_arma_with_prior
 
@@ -1841,7 +1836,7 @@ state space models for time series problems could be found in {cite:t}`durbin201
 ### Bayesian Structural Time Series
 
 A linear Gaussian state space representation of a time series model has
-another advantage that it is easily extendable, especially with other
+another advantage that it is easily extendable with other
 linear Gaussian state space models. To combine two models, we follow the
 same idea of concatenating two normal random variables in the latent
 space. We generate a block diagonal matrix using the 2 covariance
@@ -1897,7 +1892,7 @@ series with a local linear trend component and a seasonal component to
 account for the monthly pattern in Code Block
 [tfp_sts_example2](tfp_sts_example2).
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_sts_example2
 :caption: tfp_sts_example2
 
@@ -1922,7 +1917,7 @@ target_log_prob_fn = birth_model.joint_log_prob(observed_time_series=observed)
 
 We can inspect each component in `birth_model`:
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_sts_model
 :caption: tfp_sts_model
 
@@ -1940,7 +1935,7 @@ part of the latent state $X_t$, but might parameterize the prior that
 generates $X_t$. For example, we can check the parameters of the
 seasonal component:
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_sts_model_component
 :caption: tfp_sts_model_component
 
@@ -1992,7 +1987,7 @@ inspect each inferred component with Code Block
 [tfp_sts_example2_result](tfp_sts_example2_result). The
 result is shown in {numref}`fig:fig19_bsts_lgssm_result`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_sts_example2_result
 :caption: tfp_sts_example2_result
 
@@ -2234,7 +2229,7 @@ series. Try generating the following design matrix for the year 2021.
 Hint: use Code Block [timerange_2021](timerange_2021) to
 generate all time stamps for 2021:
 
-```{code-block} python
+```{code-block} ipython3
 :name: timerange_2021
 :caption: timerange_2021
 
@@ -2246,12 +2241,12 @@ datetime_index = pd.date_range(start="2021-01-01", end="2021-12-31", freq='D')
 -   A design matrix for weekday vs weekend effect.
 
 -   Company G pay their employee on the 25th of every month, and if the
-    25th falls on a weekend, the payday is moved up to the Friday
-    before. Try to create a design matrix to encode the pay day of 2021.
+  25th falls on a weekend, the payday is moved up to the Friday
+  before. Try to create a design matrix to encode the pay day of 2021.
 
 -   A design matrix for the US Federal holiday effect [^18] in 2021.
-    Create the design matrix so that each holiday has their individual
-    coefficient.
+  Create the design matrix so that each holiday has their individual
+  coefficient.
 
 **6E2.** In the previous exercise , the design matrix for
 holiday effect treat each holiday separately. What if we consider all
@@ -2263,11 +2258,11 @@ time series model.
 `"monthly_mauna_loa_co2.csv"` dataset:
 
 -   A plain regression with an intercept and slope, using linear time as
-    predictor.
+  predictor.
 
 -   A covariate adjusted regression like the square root predictor in
-    the baby example in Chapter [4](chap3) Code Block
-    [babies_transformed](babies_transformed).
+  the baby example in Chapter [4](chap3) Code Block
+  [babies_transformed](babies_transformed).
 
 Explain what these models are missing compared to Code Block
 [regression_model_for_timeseries](regression_model_for_timeseries).
@@ -2282,17 +2277,17 @@ number of the following design matrix of the same rank using
 `numpy.linalg.cond`:
 
 -   Dummy coded design matrix `seasonality_all` from Code Block
-    [generate_design_matrix](generate_design_matrix).
+  [generate_design_matrix](generate_design_matrix).
 
 -   Fourier basis function design matrix `X_pred` from Code Block
-    [gam](gam).
+  [gam](gam).
 
 -   An array of the same shape as `seasonality_all` with values drawn
-    from a Normal distribution.
+  from a Normal distribution.
 
 -   An array of the same shape as `seasonality_all` with values drawn
-    from a Normal distribution *and* one of the column being identical
-    to another.
+  from a Normal distribution *and* one of the column being identical
+  to another.
 
 **6M6.** The `gen_fourier_basis` function from Code Block
 [fourier_basis_as_seasonality](fourier_basis_as_seasonality)
@@ -2302,7 +2297,7 @@ data monthly from 2019 January for 36 months, we can code the time index
 in 2 equivalent ways as shown below in Code Block
 [exercise_chap4_e6](exercise_chap4_e6):
 
-```{code-block} python
+```{code-block} ipython3
 :name: exercise_chap4_e6
 :caption: exercise_chap4_e6
 
@@ -2324,16 +2319,16 @@ What if we are observing the data daily? How would you change the Code
 Block [exercise_chap4_e6](exercise_chap4_e6) to:
 
 -   Make `time_index` represent day of the year instead of month of the
-    year.
+  year.
 
 -   Modify the function signature to `gen_fourier_basis` in line 8 and
-    10 so that the resulting design matrices coded for the month of the
-    year effect.
+  10 so that the resulting design matrices coded for the month of the
+  year effect.
 
 -   How does the new `design_matrix0` and `design_matrix1` differ? How
-    is the differences would impact the model fitting? Hint: validate
-    your reasoning by multiplying them with the same random regression
-    coefficient.
+  is the differences would impact the model fitting? Hint: validate
+  your reasoning by multiplying them with the same random regression
+  coefficient.
 
 **6E7.** In Section {ref}`chap4_ar` we introduced the backshift
 operator $\mathbf{B}$. You might have already noticed that applying the
@@ -2366,16 +2361,16 @@ starts on Sunday June 6 2021. Generate 4 synthetic datasets that
 include:
 
 1.  An additive weekend effect where weekends have 2x more volume than
-    weekdays.
+  weekdays.
 
 2.  An additive sinusoidal effect of sin(2x).
 
 3.  An additive AR(1) latent process with autoregressive coefficient of
-    your choice and a noise scale $\sigma = 0.2$.
+  your choice and a noise scale $\sigma = 0.2$.
 
 4.  A time series with weekend and sinusoidal effect from (1) and (2),
-    and an AR(1) process on the mean of the time series with the same
-    autoregressive coefficient as in (3)
+  and an AR(1) process on the mean of the time series with the same
+  autoregressive coefficient as in (3)
 
 **6E10.** Adapt the model in Code Block
 [gam_with_ar_likelihood](gam_with_ar_likelihood) to model
@@ -2430,7 +2425,7 @@ take at look at Chapter 4 in Särkkä's book {cite:p}`sarkka2013bayesian`.
 -   Identify the input and output of one Kalman filter step;
 
 -   Compute one step of the Kalman filter predict and update step using
-    the input;
+  the input;
 
 -   Assert that your computation is the same as the indexed output.
 
@@ -2440,8 +2435,8 @@ take at look at Chapter 4 in Särkkä's book {cite:p}`sarkka2013bayesian`.
 -   How many hyperparameters does a seasonal SSM contains?
 
 -   How does it parameterized the latent states and what kind of
-    regularization effect does the prior has? Hint: draw connection to
-    the Gaussian Random Walk prior in Chapter [5](chap3_5).
+  regularization effect does the prior has? Hint: draw connection to
+  the Gaussian Random Walk prior in Chapter [5](chap3_5).
 
 **6M20.** Study the documentation and implementation of
 `tfp.sts.LinearRegression` and `tfp.sts.Seasonal`, and reason about the
@@ -2449,63 +2444,63 @@ differences of SSM they represent when modeling a day of the week
 pattern:
 
 -   How is the day of the week coefficient represented? Are they part of
-    the latent states?
+  the latent states?
 
 -   How is the model fit different between the two SSMs? Validate your
-    reasoning with simulations.
+  reasoning with simulations.
 
 [^1]: <https://quoteinvestigator.com/2013/10/20/no-predict/>
 
 [^2]: There is also a subtlety that not all periodic patterns in the
-    time series should be considered seasonal. A useful distinction to
-    make is between cyclic and seasonal behavior. You can find a nice
-    summary in <https://robjhyndman.com/hyndsight/cyclicts/>.
+  time series should be considered seasonal. A useful distinction to
+  make is between cyclic and seasonal behavior. You can find a nice
+  summary in <https://robjhyndman.com/hyndsight/cyclicts/>.
 
 [^3]: This makes the observation not iid and not exchangeable. You can
-    also see in Chapter [4](chap3) where we define residuals
+  also see in Chapter [4](chap3) where we define residuals
 
 [^4]: Which, it is unfortunate for our model and for our planet.
 
 [^5]: A series is stationary if its characteristic properties such as
-    means and covariances remain invariant across time.
+  means and covariances remain invariant across time.
 
 [^6]: <https://facebook.github.io/prophet/>.
 
 [^7]: A demo of the design matrix used in Facebook Prophet could be
-    found in <http://prophet.mbrouns.com> from a PyMCon 2020
-    presentation.
+  found in <http://prophet.mbrouns.com> from a PyMCon 2020
+  presentation.
 
 [^8]: That is why is called autoregressive, it applies a linear
-    regression to itself. Hence the similar naming to the
-    autocorrelation diagnostic introduced in Section {ref}`autocorr_plot`.
+  regression to itself. Hence the similar naming to the
+  autocorrelation diagnostic introduced in Section {ref}`autocorr_plot`.
 
 [^9]: Actually, the AR example in this section *is* a Gaussian Process.
 
 [^10]: The Stan implementation of SARIMA can be found in e.g.
-    <https://github.com/asael697/bayesforecast>.
+  <https://github.com/asael697/bayesforecast>.
 
 [^11]: For brevity, we omitted the MCMC sampling code here. You can find
-    the details in the accompanying Jupyter Notebook.
+  the details in the accompanying Jupyter Notebook.
 
 [^12]: It might be useful to first consider "space" here being some
-    multi-dimensional Euclidean spaces, so $X_t$ and $Y_t$ is some
-    multi-dimensional array/tensor when we do computations in Python.
+  multi-dimensional Euclidean spaces, so $X_t$ and $Y_t$ is some
+  multi-dimensional array/tensor when we do computations in Python.
 
 [^13]: This also gives a nice example of a non-stationary observation
-    matrix $\mathbf{H}$.
+  matrix $\mathbf{H}$.
 
 [^14]: Note that this is not the only way to express ARMA model in a
-    state-space form, for more detail see lecture note
-    <http://www-stat.wharton.upenn.edu/~stine/stat910/lectures/14_state_space.pdf>.
+  state-space form, for more detail see lecture note
+  <http://www-stat.wharton.upenn.edu/~stine/stat910/lectures/14_state_space.pdf>.
 
 [^15]: Nothing more puts George E. P. Box's famous quote: "All models
-    are wrong, but some are useful" into perspective, than reading
-    through his seminal book and working on forecasting problems.
+  are wrong, but some are useful" into perspective, than reading
+  through his seminal book and working on forecasting problems.
 
 [^16]: For a demonstration see
-    <https://mc-stan.org/loo/articles/loo2-lfo.html>.
+  <https://mc-stan.org/loo/articles/loo2-lfo.html>.
 
 [^17]: Note that in practice we usually parameterize Equation
-    {eq}`eq:horse_shoe` a little bit differently.
+  {eq}`eq:horse_shoe` a little bit differently.
 
 [^18]: <https://en.wikipedia.org/wiki/Federal_holidays_in_the_United_States#List_of_federal_holidays>

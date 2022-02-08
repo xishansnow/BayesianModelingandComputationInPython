@@ -97,8 +97,7 @@ are indicating, how to summarize results, what conclusion to
 communicate. The answers to each of these affect whether the analysis
 will be useful to your audience or will just collect digital dust in a
 hard drive. And equally as important how much time and effort is
-worthwhile in pursuit of the answer.
-
+worthwhile in pursuiA
 All too often data practitioners, given an idea of a question, decide it
 needs an answer and instantly reach for the most complex and nuanced
 statistical tools, spending little to no time understanding the need.
@@ -283,11 +282,11 @@ the parameters of the distribution inclusion vector.
 ```{math} 
 :label: eq:missing_data
 \begin{split}
-    Y_{obs} &= {(i,j):  \boldsymbol{I}_{ij}=1} \\
-     Y_{mis} &= {(i,j): \boldsymbol{I}_{ij}=0}  \\
-         p(\boldsymbol{\theta}, \boldsymbol{\phi} \mid  Y_{obs},I) &\propto  p(Y_{obs}, I \mid \boldsymbol{\theta}, \boldsymbol{\phi})p(\boldsymbol{\theta}, \boldsymbol{\phi})
-    \end{split}
-    
+  Y_{obs} &= {(i,j):  \boldsymbol{I}_{ij}=1} \\
+   Y_{mis} &= {(i,j): \boldsymbol{I}_{ij}=0}  \\
+   p(\boldsymbol{\theta}, \boldsymbol{\phi} \mid  Y_{obs},I) &\propto  p(Y_{obs}, I \mid \boldsymbol{\theta}, \boldsymbol{\phi})p(\boldsymbol{\theta}, \boldsymbol{\phi})
+  \end{split}
+  
 ```
 
 Even if missing data is not explicitly modeled it is prudent to remain
@@ -361,16 +360,16 @@ suggest using Formula {eq}`eq:missing_data` and thinking through each
 parameter individually
 
 -   $p(Y)$: (Likelihood) What distribution describes the observed data
-    given X?
+  given X?
 
 -   $p(X)$: (Covariates) What is the structure of the latent data
-    generating process?
+  generating process?
 
 -   $p(\boldsymbol{I})$: (Ignorability) Do we need to model the data
-    collection process?
+  collection process?
 
 -   $p(\boldsymbol{\theta})$: (Priors) Before seeing any data what is a
-    reasonable set of parameters?
+  reasonable set of parameters?
 
 Additionally since we are computational Bayesians we must also answer
 another set of questions
@@ -378,7 +377,7 @@ another set of questions
 -   Can I express my model in a Probabilistic Programming framework?
 
 -   Can we estimate the posterior distributions in a reasonable amount
-    of time?
+  of time?
 
 -   Does the posterior computation show any deficiencies?
 
@@ -437,7 +436,7 @@ sense of its distribution using Code Block
 in {numref}`fig:ArrivalDistributions`.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: plot_flight_data
 :caption: plot_flight_data
 
@@ -508,7 +507,7 @@ forward with the Normal and Gumbel likelihood in Code Block
 [plane_likelihoods](plane_likelihoods), leaving the
 Skew-Normal likelihood model as an exercise for the reader.
 
-```{code-block} python
+```{code-block} ipython3
 :name: plane_likelihoods
 :caption: plane_likelihoods
 
@@ -588,7 +587,7 @@ specify a parameterization and plot the prior predictive to ensure
 consistency with our domain knowledge, shown in Code Block
 [airline_model_definition](airline_model_definition).
 
-```{code-block} python
+```{code-block} ipython3
 :name: airline_model_definition
 :caption: airline_model_definition
 
@@ -658,7 +657,7 @@ raised. If some were raised however, this would indicate that further
 exploration should be done such as the steps we performed in Section {ref}`model_geometry`.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: airline_model_inference
 :caption: airline_model_inference
 
@@ -754,12 +753,12 @@ We can take many additional steps, like for example generating posterior
 predictive distributions if any of the following are desired.
 
 -   We want to use posterior predictive checks to evaluate our model
-    calibration.
+  calibration.
 
 -   We want to obtain predictions or perform counterfactual analyses
 
 -   We want to be able to communicate our results in the units of the
-    observed data, and not in term of the parameters of our model.
+  observed data, and not in term of the parameters of our model.
 
 We specified the mathematical definition for a posterior predictive
 distribution in Equation [eq:post_pred_dist](eq:post_pred_dist).
@@ -783,7 +782,7 @@ model shown in Code Block
 [posterior_predictive_airlines](posterior_predictive_airlines).
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: posterior_predictive_airlines
 :caption: posterior_predictive_airlines
 
@@ -822,6 +821,7 @@ of fitting the median of flight delays.
 ```{figure} figures/Arrival_Test_Statistics_for_Gumbel_Posterior_Predictive.png
 :name: fig:Arrival_Test_Statistics_for_Gumbel_Posterior_Predictive
 :width: 8.00in
+
 Posterior predictive checks with test statistics for Gumbel model. On
 the left we see the estimated distribution of on time proportion
 compared to the observed proportion. On the right is the test statistic
@@ -853,7 +853,7 @@ delays well, particularly compared to the Gumbel distribution. We can
 verify this observation using the comparison method in ArviZ:
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: delays_comparison
 :caption: delays_comparison
 
@@ -942,7 +942,7 @@ when considering the uncertainty in LOO the Gumbel model is better
 representation of the data than the Normal model.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: delays_comparison_plot
 :caption: delays_comparison_plot
 
@@ -1048,7 +1048,7 @@ convert this statement into a reward function in Code Block
 [current_revenue](current_revenue).
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: current_revenue
 :caption: current_revenue
 
@@ -1066,7 +1066,7 @@ estimate of expected revenue as shown in Code Block
 both an array of revenue for each late flight, and the average estimate.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: reward_calculator
 :caption: reward_calculator
 
@@ -1135,8 +1135,7 @@ predictive distribution is exactly the same as in
 {numref}`fig:Late_fee_current_structure_hist`. It is simply the change
 in reward function which makes this plot differ.
 ```
-
-In the new cost structure you estimate that on average the airport will
+Aructure you estimate that on average the airport will
 make 2921.97 dollars per late flight, which is less than the current
 penalty pricing structure. We again can plot the distribution of
 estimated late flight revenue in
@@ -1527,7 +1526,11 @@ characteristics can be estimated from this one test. In this experiment
 the focus was on ultimate strength, or in other words, the maximum load
 before total material failure. As part of a research project [^9] one of
 the authors manufactured 2 sets, of 8 samples each, that were identical
-in every way except for the weave of the reinforcing fibers. In one the
+in every way except for 
+```{list-table}  Percentages of expected revenue from each fee category. There are so few late flights in the \$30000 fee category that it is essentially negligible.
+
+:name: table:late_flight_revenue * - **Late Fee**   - **Revenue** * - \$1000   - 52% * - \$5000   - 47% * - \$30000   - .03%
+```the weave of the reinforcing fibers. In one the
 fibers were flat on top of each other referred to as unidirectional
 weave. In the other the fibers were woven together into an interlocking
 pattern referred to as a bidirectional weave.
@@ -1579,7 +1582,7 @@ data needed to reach conclusions. Something especially important when
 each data point requires a great deal of time and cost to obtain, like
 in this experiment.
 
-```{code-block} python
+```{code-block} ipython3
 :name: uni_model
 :caption: uni_model
 
@@ -1606,7 +1609,7 @@ az.plot_posterior(uni_data)
 ```{figure} figures/Posterior_Uni.png
 :name: fig:uni_sd_posterior_plot
 :width: 8.00in
-Posterior Plot of all parameters with 94% HDI and point statistic
+Posterior Plot of all parameters with $94\%$ HDI and point statistic
 ```
 
 Our research question however, was about the differences in the ultimate
@@ -1618,7 +1621,7 @@ model., We can leverage John Kruschke's model framework as defined in
 this "one and done\" comparison as shown in Code Block
 [comparison_model](comparison_model).
 
-```{code-block} python
+```{code-block} ipython3
 :name: comparison_model
 :caption: comparison_model
 
@@ -1669,7 +1672,7 @@ being stronger and perhaps even being a little bit more reliable.
 ```{figure} figures/Posterior_Forest_Plot.png
 :name: fig:composite_forest_plot
 :width: 8.00in
-Forest plot of the means of each group. The 94% HDI is separated
+Forest plot of the means of each group. The $94\%$ HDI is separated
 indicating a difference in the means.
 ```
 
@@ -1732,10 +1735,10 @@ you would collect the data
 1.  A medical trial for for a new drug treatment for cancer patients
 
 2.  An estimate of the most popular ice cream flavors for a local
-    newspaper article
+  newspaper article
 
 3.  An estimate of which parts needed for a factory have the longest
-    delivery lead times
+  delivery lead times
 
 **9E2.** What kind likelihood is suited for these types of
 data? Justify your choice. What other information would be useful to
@@ -1765,8 +1768,8 @@ an inference run using the Gumbel model in Code Block
 1.  Are any errors raised by the sampler?
 
 2.  For the completed inference run generate post sampling diagnostics
-    such as autocorrelation plots. What are the results? Would you
-    consider the run to be a successful inference run?
+  such as autocorrelation plots. What are the results? Would you
+  consider the run to be a successful inference run?
 
 **9E5.** For our airline delays model we initially included
 arrivals from the MSP and DTW airports. We are now asked to include
@@ -1783,15 +1786,15 @@ the following ways. Be sure to include specific numbers. You may need to
 run the examples to obtain them. Justify which model you chose and why
 
 1.  A 1 minute verbal explanation without visual aid to data scientist
-    colleague
+  colleague
 
 2.  A 3 slide presentation for an non-statistician executive.
 
 3.  Use a Jupyter notebook for a software engineering colleague who
-    wants to productionize the model as well.
+  wants to productionize the model as well.
 
 4.  Write a half page document for a general internet audience. Be sure
-    to include at least one figure.
+  to include at least one figure.
 
 **9E7.** As the airport statistician your boss asks you to
 rerun the fee revenue analysis with a different cost function than the
@@ -1820,16 +1823,16 @@ per hour?
 Write a reward function specifically to estimate both situations above.
 
 1.  What is the mean projected revenue per day? What would be reasonable
-    upper and lower estimates?
+  upper and lower estimates?
 
 2.  Does the estimated mean and revenue seem reasonable? Note any issues
-    you see and explain you may fix them? (Don't actually make any
-    changes)
+  you see and explain you may fix them? (Don't actually make any
+  changes)
 
 3.  Now assume that the rental company is proposing that from the hours
-    of 0 to 5 bike rentals are reduced to 1.5 dollars, but it is
-    projected rentals will increase 20% due to the reduced cost. What is
-    the expected revenue per day?
+  of 0 to 5 bike rentals are reduced to 1.5 dollars, but it is
+  projected rentals will increase 20% due to the reduced cost. What is
+  the expected revenue per day?
 
 **9M10.** For the airline delay model replace the likelihood
 in Code Block
@@ -1847,28 +1850,28 @@ under `CoinFlips.csv`. Fit a model that estimates the proportion of coin
 tosses that will come up heads from each student.
 
 1.  Generate 5000 posterior predictive samples for each student. What is
-    the expected distribution of heads for each student?
+  the expected distribution of heads for each student?
 
 2.  From the posterior predictive samples which student is the worst at
-    biasing coin towards heads?
+  biasing coin towards heads?
 
 3.  The bet is changed to 1.5 dollars for you if heads comes up, and 1
-    dollar of tails comes up. Assuming the students don't change their
-    behavior, which student do you play against and what is your
-    expected earnings?
+  dollar of tails comes up. Assuming the students don't change their
+  behavior, which student do you play against and what is your
+  expected earnings?
 
 **9H12.** Make an interactive plot of the posterior airline
 flights using Jupyter Notebook and Bokeh. You will need to install Bokeh
 into your environment and using external documentation as needed.
 
 1.  Compare this to the static Matplotlib in terms of understanding the
-    plotted values, and in terms of story telling.
+  plotted values, and in terms of story telling.
 
 2.  Craft a 1 minute explanation posterior for general audience that
-    isn't familiar statistics using Matplotlib static visualization.
+  isn't familiar statistics using Matplotlib static visualization.
 
 3.  Craft a 1 minute explanation to the same audience using the Bokeh
-    plot, incorporating the additional interactivity allowed by Bokeh.
+  plot, incorporating the additional interactivity allowed by Bokeh.
 
 [^1]: <https://en.wikipedia.org/wiki/Newsvendor_model>
 
@@ -1877,24 +1880,24 @@ into your environment and using external documentation as needed.
 [^3]: See <https://bost.ocks.org/mike/algorithms/>
 
 [^4]: See
-    <https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/>
+  <https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/>
 
 [^5]: See
-    <https://www.nytimes.com/interactive/2020/11/03/us/elections/forecast-president.html>
+  <https://www.nytimes.com/interactive/2020/11/03/us/elections/forecast-president.html>
 
 [^6]: See <http://presidential-plinko.com/>
 
 [^7]: <https://chi-feng.github.io/mcmc-demo/app.html>
 
 [^8]: Docker is one method to create fully reproducible environments
-    that has become quite popular
+  that has become quite popular
 
 [^9]: Much gratitude to Dr. Mehrdad Haghi and Dr. Winny Dong for funding
-    and facilitating this research
+  and facilitating this research
 
 [^10]: A recordings of the tests are available
-    <https://www.youtube.com/watch?v=u_XDUWgzs_Y>
+  <https://www.youtube.com/watch?v=u_XDUWgzs_Y>
 
 [^11]: This is in an ideal situation. Factors other than ultimate
-    strength can limit the true load bearing capacity in real world
-    situations.
+  strength can limit the true load bearing capacity in real world
+  situations.

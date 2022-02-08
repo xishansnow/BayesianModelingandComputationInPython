@@ -1,736 +1,1274 @@
+---
+jupytext:
+  formats: ipynb,md:myst
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.11.5
+kernelspec:
+  display_name: Python 3
+  language: python3
+  name: python3
+---
+
 (chap2)= 
 
-# Chapter 3: Linear Models and Probabilistic Programming Languages 
+# 第三章：线性模型与概率编程语言 
 
-With the advent of Probabilistic Programming Languages, modern Bayesian modeling can be as simple as coding a model and "pressing a button\".
+<style>p{text-indent:2em;2}</style>
 
-However, effective model building and analysis usually takes more work.
+随着概率编程语言的出现，现代贝叶斯建模只需要编码一个模型和 "按一个按钮 "那样简单。
 
-As we progress through this book we will be building many different types of models but in this chapter we will start with the humble linear model. Linear models are a broad class of models where the expected value of a given observation is the linear combination of the associated predictors. A strong understanding of how to fit and interpret linear models is a strong foundation for the models that will follow. This will also help us to consolidate the fundamentals of Bayesian inference (Chapter [1](chap1)) and exploratory analysis of Bayesian models (Chapter [2](chap1bis)) and apply them with different PPLs.
+然而，有效模型的建立和分析通常需要更多的工作。
 
-This chapter introduces the two PPLs we will use for the majority of this book, PyMC3, which you have briefly seen, as well as TensorFlow Probability (TFP). While we are building models in these two PPLs, focusing on how the same underlying statistical ideas are mapped to implementation in each PPL. We will first fit an intercept only model, that is a model with no covariates, and then we will add extra complexity by adding one or more covariates, and extend to generalized linear models. By the end of this chapter you will be more comfortable with linear models, more familiar with many of the steps in a Bayesian workflow, and more comfortable conducting Bayesian workflows with PyMC3, TFP and ArviZ.
+随着本书的推进，我们将建立许多不同类型的模型，但在本章中我们将从简单的线性模型开始。线性模型是一类广泛的模型，其中一个给定观测值（ 响应变量 ）的期望值是相关预测因子（ 预测变量 ）的线性组合。深刻理解拟合和解释线性模型的方法，是后续模型的坚实基础；并将有助于我们巩固『贝叶斯推断（第 [1](chap1) 章）』和『贝叶斯模型的探索性分析（第 [2](chap1bis) 章）』的基本知识。
 
- (comparing_distributions)= 
+本章将介绍在本书大部分内容中使用的两种概率编程语言：`PyMC3` 和 `TensorFlow Probability (TFP)`。当我们使用这两种概率编程语言 中构建模型时，应当重点关注同样一种基础统计思想在两种概率编程语言 中是如何实现的。
 
-## Comparing Two (or More) Groups 
+我们将首先拟合一个仅包含截距的模型（ 即没有预测变量的模型 ），然后通过添加一个或多个预测变量来增加复杂性，并扩展到广义线性模型。
 
-If you are looking for something to compare it is hard to beat penguins.
+在本章结束时，你将更加理解线性模型，更加熟悉贝叶斯工作流程中的常用步骤，并且更轻松地使用 `PyMC3`、`TFP` 和 `ArviZ` 进行贝叶斯工作流程。
 
-After all, what is not to like about these cute flightless birds? Our first question may be "What is the average mass of each penguin species?\", or may be "How different are those averages?\", or in statistics parlance "What is the dispersion of the average?\" Luckily Kristen Gorman also likes studying penguins, so much so that she visited 3 Antarctic islands and collected data about Adelie, Gentoo and Chinstrap species, which is compiled into the Palmer Penguins dataset {cite:p}`PalmerPenguins`. The observations consist of physical characteristics of the penguin mass, flipper length, and sex, as well as geographic characteristics such as the island they reside on.
+(comparing_distributions)= 
 
- We start by loading the data and filtering out any rows where data is missing in Code Block [penguin_load](penguin_load). This is called a complete case analysis where, as the name suggests, we only use the rows where all observations are present. While it is possible to handle the missing values in another way, either through data imputation, or imputation during modeling, we will opt to take the simplest approach for this chapter.
+## 3.1 比较两个或多个组 
 
- ```{code-block} python 
-:name: penguin_load :caption: penguin_load 
+如果你正在寻找一些可以比较的东西，那么企鹅是最合适不过的了。
 
-penguins = pd.read_csv("../data/penguins.csv") # Subset to the columns needed missing_data = penguins.isnull()[     ["bill_length_mm", "flipper_length_mm", "sex", "body_mass_g"] ].any(axis=1) # Drop rows with any missing data penguins = penguins.loc[~missing_data] ``` 
+我们的第一个问题可能是 “每个企鹅物种的平均质量是多少？”，或者可能是“这些平均质量有什么不同？”，或者用统计学术语来说 “平均值的离散度是多少？” 。
 
-We can then calculate the empirical mean of the mass `body_mass_g` in Code Block [penguin_mass_empirical](penguin_mass_empirical) with just a little bit of code, the results of which are in {numref}`tab:penguin_mass_parameters_point_estimates` 
+`Kristen Gorman` 很喜欢研究企鹅，她访问了 $3$ 个南极岛屿并收集了有关 `Adelie`、`Gentoo` 和 `Chinstrap` 物种的数据，这些数据被编撰进了 `Palmer Penguins 数据集`中 {cite:p}`PalmerPenguins`。观测数据包括企鹅的质量、鳍状肢的长度、性别的物理特征、所居住的岛屿等。
 
-```{code-block} python 
-:name: penguin_mass_empirical :caption: penguin_mass_empirical summary_stats = (penguins.loc[:, ["species", "body_mass_g"]]                          .groupby("species")                          .agg(["mean", "std", "count"])) ``` 
+我们首先通过代码 [penguin_load](penguin_load) 加载数据，并过滤掉存在缺失数据的行。这种方式被称为**完整案例分析**，顾名思义，我们只使用所有观测值都存在的行。虽然有一些处理缺失数据的成熟方法，但此处我们将采用最简单的剔除法。
 
- ```{list-table} Empirical mean and standard deviation of penguin mass. The count column indicates the observed number of penguins per species.
+```{code-block} ipython3 
+:name: penguin_load
+:caption: penguin_load
 
-:name: tab:penguin_mass_parameters_point_estimates * - **species**   - **mean (grams)**   - **std (grams)**   - **count** * - **Adelie**   - 3706   -  459   -  146 * - **Chinstrap**   - 3733   - 384   - 68 * - **Gentoo**   - 5092   - 501   - 119 ``` 
+penguins = pd.read_csv("../data/penguins.csv")
+# Subset to the columns needed
+missing_data = penguins.isnull()[
+    ["bill_length_mm", "flipper_length_mm", "sex", "body_mass_g"]
+].any(axis=1)
+# Drop rows with any missing data
+penguins = penguins.loc[~missing_data]
+``` 
 
-Now we have point estimates for both the mean and the dispersion, but we do not know the uncertainty of those statistics. One way to get estimates of uncertainty is by using Bayesian methods. In order to do so we need to conjecture a relationship of observations to parameters as example: 
+然后，我们可以用代码 [penguin_mass_empirical](penguin_mass_empirical) 计算企鹅质量的经验平均值  `body_mass_g` ，其结果展示在 {numref}`tab:penguin_mass_parameters_point_estimates` 中。
+
+```{code-block} ipython3 
+:name: penguin_mass_empirical
+:caption: penguin_mass_empirical
+summary_stats = (penguins.loc[:, ["species", "body_mass_g"]]
+                         .groupby("species")
+                         .agg(["mean", "std", "count"]))
+``` 
+
+```{list-table} 企鹅质量的经验均值和标准差。计数栏表示观测到的各物种企鹅数量。
+:name: tab:penguin_mass_parameters_point_estimates
+
+* - **species**
+  - **mean (grams)**
+  - **std (grams)**
+  - **count**
+* - **Adelie**
+  - 3706
+  -  459
+  -  146
+* - **Chinstrap**
+  - 3733
+  - 384
+  - 68
+* - **Gentoo**
+  - 5092
+  - 501
+  - 119
+``` 
+
+现在我们有了均值和离散性的点估计，但并不知道这些统计数据的不确定性。获得不确定性估计的方法之一就是贝叶斯方法。为此，需要推测观测与参数之间的关系，例如：
 
 ```{math} 
-:label: eq:gaussian_bayes \overbrace{p(\mu, \sigma \mid Y)}^{Posterior} \propto \overbrace{\mathcal{N}(Y \mid \mu, \sigma)}^{Likelihood}\;  \overbrace{\underbrace{\mathcal{N}(4000, 3000)}_{\mu}      \underbrace{\mathcal{H}\text{T}(100, 2000)}_{\sigma}}^{Prior} 
+:label: eq:gaussian_bayes 
+
+\overbrace{p(\mu, \sigma \mid Y)}^{Posterior} \propto \overbrace{\mathcal{N}(Y \mid \mu, \sigma)}^{Likelihood}\;  \overbrace{\underbrace{\mathcal{N}(4000, 3000)}_{\mu}
+   \underbrace{\mathcal{H}\text{T}(100, 2000)}_{\sigma}}^{Prior}
+``` 
+
+公式 {eq}`eq:gaussian_bayes` 是公式 [eq:proportional_bayes](eq:proportional_bayes) 的重述，其中明确列出了本例中的每个参数。由于我们没有特定理由选择信息性先验，因此对 $\mu$ 和 $\sigma$ 使用宽的无信息先验。目前情况下，先验是根据观测数据的经验均值和标准差来选择的。
+
+我们首先从 `Adelie 种企鹅` 的质量开始，而不是估计所有物种的质量。一般而言，高斯是企鹅质量（ 以及其他生物质量 ）似然函数的合理选择，因此我们采用它，并将公式 {eq}`eq:gaussian_bayes` 转换为如下计算模型：
+
+```{code-block} ipython3 
+:name: penguin_mass
+:caption: penguin_mass
+
+adelie_mask = (penguins["species"] == "Adelie")
+adelie_mass_obs = penguins.loc[adelie_mask, "body_mass_g"].values
+
+with pm.Model() as model_adelie_penguin_mass:
+    σ = pm.HalfStudentT("σ", 100, 2000)
+    μ = pm.Normal("μ", 4000, 3000)
+    mass = pm.Normal("mass", mu=μ, sigma=σ, observed=adelie_mass_obs)
+
+    prior = pm.sample_prior_predictive(samples=5000)
+    trace = pm.sample(chains=4)
+    inf_data_adelie_penguin_mass = az.from_PyMC3(prior=prior, trace=trace)
+``` 
+
+在开始计算后验分布之前，我们有必要先检查一下先验。特别是，我们需要检查并确认模型采样（ 因为大多数情况采用蒙特卡洛近似推断方法 ）在计算上是否可行，并确认基于领域知识选择的先验是否合理。
+
+我们在 {numref}`fig:SingleSpecies_Prior_Predictive` 中绘制了先验样本。通过图形，我们可以判断该模型并没有“明显的”计算问题，例如，形状问题、错误指定的随机变量、错误指定的似然等。从先验样本可以看出，我们并没有过度限制企鹅可能的质量，尽管实际上我们可能会受到先验的限制，因为质量均值的先验目前还包括不合理的负值。
+
+然而，这是一个简单的模型，并且有相当数量的观测结果，因此我们将只留意这种情况但不去处理它，而是继续估计后验分布。
+
+```{figure} figures/SingleSpecies_Prior_Predictive.png 
+:name: fig:SingleSpecies_Prior_Predictive 
+:width: 7.00in 
+
+在代码 [penguin_mass](penguin_mass) 中生成的先验样本。可以看出，企鹅质量的均值和标准差的分布估计，涵盖了广泛的可能性。
+``` 
+
+从模型中做后验采样后，我们可以创建 {numref}`fig:single_penguins_rank_kde_plot`，其中包括 $4$ 个子图，右边的两个是秩图，左边是参数的 `KDE`，每条线为一个链。我们还可以参考 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的数值诊断来确认我们对链收敛的信念。使用在第 [2](chap1bis) 章中建立的直觉，我们大致能够判断这些拟合可以接受，并继续进行分析。
+
+
+```{list-table} 企鹅质量的均值 (μ) 和标准差 (σ) 的贝叶斯估计，以及采样诊断。
+:name: tab:penguin_mass_parameters_bayesian_estimates
+
+* -
+  - **mean**
+  - **sd**
+  - **hdi_3%**
+  - **hdi_97%**
+  - **mcse_mean**
+  - **mcse_sd**
+  - **ess_bulk**
+  - **ess_tail**
+  - **r_hat**
+* - $\mu$
+  - 3707
+  - 38
+  - 3632
+  - 3772
+  - 0.6
+  - 0.4
+  - 3677.0
+  - 2754.0
+  - 1.0
+* - $\sigma$
+  - 463
+  - 27
+  - 401
+  - 511
+  - 0.5
+  - 0.3
+  - 3553.0
+  - 2226.0
+  - 1.0
+``` 
+
+```{figure} figures/SingleSpecies_KDE_RankPlot.png
+:name: fig:single_penguins_rank_kde_plot 
+:width: 7.00in 
+
+企鹅质量的代码 [penguin_mass](penguin_mass) 中贝叶斯模型后验的 KDE 和秩图。该图用作采样的可视化诊断，以辅助判断在跨多个链的采样过程中是否存在问题。
+``` 
+
+为了理解拟合结果，我们在 {numref}`fig:SingleSpecies_Mass_PosteriorPlot` 中绘制了一个结合所有链的后验图；并将来自 {numref}`tab:penguin_mass_parameters_point_estimates` 的均值和标准差的点估计值与贝叶斯估计值进行比较。
+
+```{figure} figures/SingleSpecies_Mass_PosteriorPlot.png
+:name: fig:SingleSpecies_Mass_PosteriorPlot 
+:width: 7.00in 
+
+Adelie 种企鹅质量的代码 [penguin_mass](penguin_mass) 中，贝叶斯模型的后验分布图，其中，垂直线是经验均值和标准差。
+``` 
+
+通过贝叶斯估计，我们得到了合理参数的分布。使用表 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的摘要信息，来自 {numref}`fig:single_penguins_rank_kde_plot` 中相同的后验分布，从 $3632$ 到 $3772$ 克的均值相当合理。
+
+注意，边缘后验分布的标准差也有很大差异。请记住，后验分布不是单个企鹅质量的分布，而是描述企鹅质量的高斯分布的参数。
+
+如果想要个体企鹅质量的分布估计，我们需要生成一个后验预测分布。目前，它是以 $\mu$ 和 $\sigma$ 的后验为条件的一个高斯分布。
+
+现在我们已经描述了 Adelie 种企鹅的质量，可以对其他物种做同样的事情。我们可以通过编写另外两个模型来做到这一点，但我们也可以只运行一个模型，其中包含 $3$ 个独立的组，每个物种对应一个组。
+
+```{code-block} ipython3
+:name: nocovariate_mass
+:caption: nocovariate_mass
+# pd.categorical makes it easy to index species below
+all_species = pd.Categorical(penguins["species"])
+
+with pm.Model() as model_penguin_mass_all_species:
+    # Note the addition of the shape parameter
+    σ = pm.HalfStudentT("σ", 100, 2000, shape=3)
+    μ = pm.Normal("μ", 4000, 3000, shape=3)
+    mass = pm.Normal("mass",
+                     mu=μ[all_species.codes],
+                     sigma=σ[all_species.codes],
+                     observed=penguins["body_mass_g"])
+
+    trace = pm.sample()
+    inf_data_model_penguin_mass_all_species = az.from_PyMC3(
+        trace=trace,
+        coords={"μ_dim_0": all_species.categories,
+                "σ_dim_0": all_species.categories})
+```
+
+我们在每个参数中使用可选的形状参数，并在似然中添加一个索引，以指示 `PyMC3` 我们想要独立地调节每个物种的后验。在编程语言设计中，使表达思想更加无缝的小技巧被称为**语法糖**。概率编程开发人员也使用一些语法糖；概率编程语言努力让表达模型更容易且错误更少。
+
+运行模型后，我们再次检查 `KDE` 和秩图，请参阅 {numref}`fig:all_penguins_rank_kde_plot`。与 {numref}`fig:single_penguins_rank_kde_plot` 相比，你将看到 $4$ 个额外的图，每个物种添加的参数有 $2$ 个。花点时间将均值的估计值与 {numref}`tab:penguin_mass_parameters_point_estimates` 中每个物种的汇总均值进行比较。为了更好地可视化每个物种分布之间的差异，我们使用代码 [mass_forest_plot](mass_forest_plot) 在森林图中再次绘制后验图。
+
+{numref}`fig:forest_plot_means` 使我们更容易比较对不同物种的估计，并注意到 `Gentoo 种企鹅`似乎比 `Adelie 种` 或 `Chinstrap 种` 有更大的质量。
+
+```{figure} figures/AllSpecies_KDE_RankPlot.png
+:name: fig:all_penguins_rank_kde_plot
+:width: 7.00in
+
+`penguins_masses` 模型中的每种企鹅质量分布参数后验估计的 `KDE` 和秩图 。注意每个物种都有自己的一对估计值。
+```
+
+```{code-block} ipython3
+:name: mass_forest_plot
+:caption: mass_forest_plot
+
+az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["μ"])
+```
+
+```{figure} figures/Independent_Model_ForestPlotMeans.png
+:name: fig:forest_plot_means
+:width: 7.00in
+
+`model_penguin_mass_all_species` 中每个物种组的质量均值的森林图。每条线代表采样器中的一条链，点代表点估计，目前情况下为均值，细线是后验的 $25\%$ 到 $75\%$ 四分位数范围，粗线是 $94\%$ 最高密度区间 ( HDPI )。
+```
+{numref}`fig:forest_plot_means` 让我们更容易比较估计结果，并且很容易注意到 Gentoo 种企鹅的质量比 Adelie 种或 Chinstrap 种企鹅更大。让我们也看看 {numref}`fig:forest_plot_sigma` 中的标准差。后验的 $94\%$ 最高密度区间报告了大约 $100$ 克的不确定性。
+
+```{code-block} ipython3
+az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"]) 
+```   
+
+```{figure} figures/Independent_Model_ForestPlotSigma.png 
+:name: fig:forest_plot_sigma 
+:width: 7.00in 
+
+`model_penguin_mass_all_species` 中每个物种组的质量标准差的森林图。该图描述了我们对企鹅质量离散性的估计，例如，给定 Gentoo 种企鹅分布的平均估计值，相关标准差可能在 $450$ 克到 $550$ 克之间。
 
 ``` 
 
-Equation {eq}`eq:gaussian_bayes` is a restatement of Equation [eq:proportional_bayes](eq:proportional_bayes) where each parameter is explicitly listed. Since we have no specific reason to choose an informative prior, we will use wide priors for both $\mu$ and $\sigma$.
+(comparing-two-PPLs)= 
 
-In this case, the priors are chosen based on the empirical mean and standard deviation of the observed data. And lastly instead of estimating the mass of all species we will first start with the mass of the Adelie penguin species. A Gaussian is a reasonable choice of likelihood for penguin mass and biological mass in general, so we will go with it. Let us translate Equation {eq}`eq:gaussian_bayes` into a computational model.
+### 3.1.1 比较两种概率编程语言 
 
- ```{code-block} python 
-:name: penguin_mass :caption: penguin_mass adelie_mask = (penguins["species"] == "Adelie") adelie_mass_obs = penguins.loc[adelie_mask, "body_mass_g"].values 
+在进一步扩展统计和建模思想之前，我们将花点时间讨论概率编程语言，并介绍将在本书中使用的另一种概率编程语言：`TensorFlow Probability (TFP)`。我们在代码 [nocovariate_mass](nocovariate_mass) 中，将 `PyMC3` 的截距模型转换为 `TFP` 来介绍这一点。
 
-with pm.Model() as model_adelie_penguin_mass:     σ = pm.HalfStudentT("σ", 100, 2000)     μ = pm.Normal("μ", 4000, 3000)     mass = pm.Normal("mass", mu=μ, sigma=σ, observed=adelie_mass_obs) 
+学习不同的概率编程语言似乎没有必要。然而，在本书中我们选择使用两个概率编程语言而不是一个有特殊原因。在不同的概率编程语言中看到相同的工作流程将使你对计算贝叶斯建模有更透彻的理解，帮助你将计算细节与统计思想分开，并使你成为一个更强大的建模者。此外，不同的概率编程语言有不同的实力和重点。 `PyMC3` 是更高级别的概率编程语言，可以更轻松地用更少的代码表达模型，而 TFP 为可堆肥建模和推断提供更低级别的概率编程语言。另一个是并非所有概率编程语言都能够像彼此一样容易地表达所有模型。例如，时间序列模型（第 [6] 章（第 4 章））在 TFP 中更容易定义，而贝叶斯加性回归树在 `PyMC3` 中更容易表达（第 [7] 章（第 6 章））。通过这种对多种语言的接触，你将对贝叶斯建模的基本元素以及它们如何在计算上实现有更深入的了解。
 
-    prior = pm.sample_prior_predictive(samples=5000)     trace = pm.sample(chains=4)     inf_data_adelie_penguin_mass = az.from_pymc3(prior=prior, trace=trace) ``` 
+概率编程语言（强调语言）由原语组成。编程语言中的原语是可用于构建更复杂程序的最简单元素。你可以认为基元就像自然语言中的单词，可以形成更复杂的结构，比如句子。由于不同的语言使用不同的词，不同的概率编程语言 使用不同的原语。这些原语主要用于表达模型、执行推断或表达工作流的其他部分。在 `PyMC3` 中，与模型构建相关的原语包含在命名空间“pm”下。例如，在代码 [penguin_mass](penguin_mass) 中，我们看到“pm.HalfStudentT(.)”和“pm.Normal(.)”，其中代表一个随机变量。 `with pm.Model() as .` 语句调用 Python 上下文管理器，`PyMC3` 使用它通过收集上下文管理器中的随机变量来构建模型 `model_adelie_penguin_mass`。然后我们使用 pm.sample_prior_predictive(.) 和 pm.sample(.) 分别从先验预测分布和后验分布中获取样本。
 
-Before computing the posterior we are going to check the prior. In particular we are first checking that sampling from our model is computationally feasible and that our choice of priors is reasonable based on our domain knowledge. We plot the samples from the prior in {numref}`fig:SingleSpecies_Prior_Predictive`. Since we can get a plot at all we know our model has no "obvious\" computational issues, such as shape problems or mispecified random variables or likelihoods. From the prior samples themselves it is evident we are not overly constraining the possible penguin masses, we may in fact be under constraining the prior as the prior for the mean of the mass includes negative values.
+类似地，TFP 为用户提供了在 `tfp.distributions`、运行 MCMC (`tfp.mcmc`) 等中指定分布和模型的原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 `tfd.JointDistribution` {cite:p}`piponi2020joint` API 的原语。在本章和本书的其余部分中，我们主要使用 `tfd.JointDistributionCoroutine`，但还有 `tfd.JointDistribution` 的其他变体可能更适合你的用例 [^1]。由于基本数据导入和统计量与代码 [penguin_load](penguin_load) 和 [penguin_mass_empirical](penguin_mass_empirical) 保持相同，我们可以专注于模型构建和推断。
 
-However, since this is a simple model and we have a decent number of observations we will just note this aberration and move onto estimating the posterior distribution.
+`model_penguin_mass_all_species` 以 TFP 表示，如下面的代码 [penguin_mass_tfp](penguin_mass_tfp) 所示
 
- ```{figure} figures/SingleSpecies_Prior_Predictive.png :name: fig:SingleSpecies_Prior_Predictive :width: 7.00in Prior samples generated in Code Block [penguin_mass](penguin_mass). The distribution estimates of both the mean and standard deviation for the mass distribution cover a wide range of possibilities.
+```{code-block} ipython3
+:name: penguin_mass_tfp
+:caption: penguin_mass_tfp
 
+import tensorflow as tf
+import tensorflow_probability as tfp
+
+tfd = tfp.distributions
+root = tfd.JointDistributionCoroutine.Root
+
+species_idx = tf.constant(all_species.codes, tf.int32)
+body_mass_g = tf.constant(penguins["body_mass_g"], tf.float32)
+
+@tfd.JointDistributionCoroutine
+def jd_penguin_mass_all_species():
+    σ = yield root(tfd.Sample(
+            tfd.HalfStudentT(df=100, loc=0, scale=2000),
+            sample_shape=3,
+            name="sigma"))
+    μ = yield root(tfd.Sample(
+            tfd.Normal(loc=4000, scale=3000),
+            sample_shape=3,
+            name="mu"))
+    mass = yield tfd.Independent(
+        tfd.Normal(loc=tf.gather(μ, species_idx, axis=-1),
+                   scale=tf.gather(σ, species_idx, axis=-1)),
+        reinterpreted_batch_ndims=1,
+        name="mass")
+```
+
+由于这是我们第一次遇到用 TFP 编写的贝叶斯模型，所以让我们花几段时间来详细介绍一下 API。原语是 `tfp.distributions` 中的分布类，我们为其分配一个较短的别名 `tfd = tfp.distributions`。 `tfd` 包含常用的分布，例如 `tfd.Normal(.)`。我们还使用了 `tfd.Sample`，它返回基本分布的多个独立副本（从概念上讲，我们实现了与在 `PyMC3` 中使用语法糖 `shape=(.)` 类似的目标）。 `tfd.Independent` 用于指示分布包含多个副本，我们希望在计算对数似然时在某个轴上求和，这由 `reinterpreted_batch_ndims` 函数参数指定。通常我们用 `tfd.Independent` [^2] 包装与观测相关的分布。你可以在 {ref}`shape_PPL` 部分阅读更多关于 TFP 和概率编程语言 中的形状处理的信息。
+
+`tfd.JointDistributionCoroutine` 模型的一个有趣的签名，顾名思义，就是在 Python 中使用协程。无需过多介绍生成器和协程，这里的分布的 `yield` 语句会为你提供模型函数内部的一些随机变量。你可以将 `y = yield Normal(.)` 视为 $y \sim \text{Normal(.)}$ 的表达方式。此外，我们需要通过用 `tfd.JointDistributionCoroutine.Root` 包装它们来将没有依赖关系的随机变量识别为根节点。该模型被编写为没有输入参数和返回值的 Python 函数。最后，将 `@tfd.JointDistributionCoroutine` 放在 Python 函数之上作为装饰器可以方便地直接获取模型（即 `tfd.JointDistribution`）。
+
+生成的 `jd_penguin_mass_all_species` 是 TFP 中重述的代码 [nocovariate_mass](nocovariate_mass) 中的仅截距回归模型。它具有与其他 `tfd.Distribution` 类似的方法，我们可以在贝叶斯工作流程中使用这些方法。例如，要绘制先验和先验预测样本，我们可以调用 `.sample(.)` 方法，该方法返回类似于 `namedtuple` 的自定义嵌套 Python 结构。在代码 [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive) 中，我们绘制了 1000 个先验和先验预测样本。
+
+```{code-block} ipython3
+:name: penguin_mass_tfp_prior_predictive
+:caption: penguin_mass_tfp_prior_predictive
+
+prior_predictive_samples = jd_penguin_mass_all_species.sample(1000)
+```
+
+`tfd.JointDistribution` 的 `.sample(.)` 方法也可以绘制条件样本，这是我们将用来绘制后验预测样本的机制。你可以运行代码 [penguin_mass_tfp_prior_predictive2](penguin_mass_tfp_prior_predictive2) 并检查输出以查看如果你将模型中的某些随机变量设置为某些特定值，随机样本如何变化。总的来说，我们在调用 `.sample(.)` 时会调用 *forward* 生成过程。
+
+```{code-block} ipython3
+:name: penguin_mass_tfp_prior_predictive2
+:caption: penguin_mass_tfp_prior_predictive2
+jd_penguin_mass_all_species.sample(sigma=tf.constant([.1, .2, .3]))
+jd_penguin_mass_all_species.sample(mu=tf.constant([.1, .2, .3]))
 ``` 
 
-After sampling from our model, we can create {numref}`fig:single_penguins_rank_kde_plot` which includes 4 subplots, the two on the right are the rank plots and the left the KDE of each parameter, one line for each chain. We also can reference the numerical diagnostics in {numref}`tab:penguin_mass_parameters_bayesian_estimates` to confirm our belief that the chains converged. Using the intuition we built in Chapter [2](chap1bis) we can judge that these fits are acceptable and we will continue with our analysis.
+一旦我们将生成模型“jd_penguin_mass_all_species”调整为观测到的企鹅体重，我们就可以获得后验分布。
 
- 
+从计算的角度来看，我们希望生成一个函数，该函数返回在输入处评估的后验对数概率（直到某个常数）。这可以通过创建 Python 函数闭包或使用 `.experimental_pin` 方法来完成，如代码 [tfp_posterior_generation](tfp_posterior_generation) 所示：
 
-```{list-table} Bayesian estimates of the mean (μ) and standard deviation (σ) of Adelie penguin mass. Sampling diagnostics also included :name: tab:penguin_mass_parameters_bayesian_estimates * -   - **mean**   - **sd**   - **hdi_3%**   - **hdi_97%**   - **mcse_mean**   - **mcse_sd**   - **ess_bulk**   - **ess_tail**   - **r_hat** * - $\mu$   - 3707   - 38   - 3632   - 3772   - 0.6   - 0.4   - 3677.0   - 2754.0   - 1.0 * - $\sigma$   - 463   - 27   - 401   - 511   - 0.5   - 0.3   - 3553.0   - 2226.0   - 1.0 ``` 
+```{code-block} ipython3
+:name: tfp_posterior_generation
+:caption: tfp_posterior_generation
 
-```{figure} figures/SingleSpecies_KDE_RankPlot.png :name: fig:single_penguins_rank_kde_plot :width: 7.00in KDE and rank plot of the posterior of the Bayesian model in Code Block [penguin_mass](penguin_mass) of Adelie penguin mass. This plot serves as a visual diagnostic of the sampling to help judge if there were any issues during sampling across the multiple sampling chains.
+target_density_function = lambda *x: jd_penguin_mass_all_species.log_prob(
+    *x, mass=body_mass_g)
 
+jd_penguin_mass_observed = jd_penguin_mass_all_species.experimental_pin(
+    mass=body_mass_g)
+target_density_function = jd_penguin_mass_observed.unnormalized_log_prob
+```
+
+推断是使用 `target_density_function` 完成的，例如，我们可以找到函数的最大值，这给出了**最大后验概率**（MAP）估计。我们还可以使用 `tfp.mcmc` {cite:p}`lao2020tfpmcmc` 中的方法从后验采样。或者更方便的是，使用类似于 `PyMC3` [^3] 中当前使用的标准采样例程，如代码 [tfp_posterior_inference](tfp_posterior_inference) 所示：
+
+```{code-block} ipython3
+:name: tfp_posterior_inference
+:caption: tfp_posterior_inference
+
+run_mcmc = tf.function(
+    tfp.experimental.mcmc.windowed_adaptive_nuts,
+    autograph=False, jit_compile=True)
+mcmc_samples, sampler_stats = run_mcmc(
+    1000, jd_penguin_mass_all_species, n_chains=4, num_adaptation_steps=1000,
+    mass=body_mass_g)
+
+inf_data_model_penguin_mass_all_species2 = az.from_dict(
+    posterior={
+        # TFP mcmc returns (num_samples, num_chains, ...), we swap
+        # the first and second axis below for each RV so the shape
+        # is what ArviZ expected.
+        k:np.swapaxes(v, 1, 0)
+        for k, v in mcmc_samples._asdict().items()},
+    sample_stats={
+        k:np.swapaxes(sampler_stats[k], 1, 0)
+        for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]}
+)
 ``` 
 
-Comfortable with the fit we plot a posterior plot in {numref}`fig:SingleSpecies_Mass_PosteriorPlot` that combines all the chains. Compare the point estimates from {numref}`tab:penguin_mass_parameters_point_estimates` of the mean and standard deviation with our Bayesian estimates as shown in {numref}`fig:SingleSpecies_Mass_PosteriorPlot`.
+在代码 [tfp_posterior_inference](tfp_posterior_inference) 中，我们运行了 4 个 MCMC 链，每个链在 1000 个适应步骤后有 1000 个后验样本。在内部，它通过使用观测到的（附加关键字参数“mass=body_mass_g”最后）调节模型（作为参数传递给函数）来调用“experimental_pin”方法。
 
- ```{figure} figures/SingleSpecies_Mass_PosteriorPlot.png :name: fig:SingleSpecies_Mass_PosteriorPlot :width: 7.00in Posterior plot of the posterior of the Bayesian model in Code Block [penguin_mass](penguin_mass) of Adelie penguins mass. The vertical lines are the empirical mean and standard deviation.
+第 8-18 行将采样结果解析为 ArviZ InferenceData，我们现在可以在 ArviZ 中对贝叶斯模型进行诊断和探索性分析。我们还可以在下面的代码 [tfp_idata_additional](tfp_idata_additional) 中以透明的方式将先验和后验预测样本和数据对数似然添加到`inf_data_model_penguin_mass_all_species2`。请注意，我们使用了 `tfd.JointDistribution` 的 `sample_distributions` 方法，该方法抽取样本*并*生成以后验样本为条件的分布。
 
-``` 
+```{code-block} ipython3
+:name: tfp_idata_additional
+:caption: tfp_idata_additional
 
-With the Bayesian estimate however, we also get the distribution of plausible parameters. Using the tabular summary in Table {numref}`tab:penguin_mass_parameters_bayesian_estimates` from the same posterior distribution in {numref}`fig:single_penguins_rank_kde_plot` values of the mean from 3632 to 3772 grams are quite plausible. Note that the standard deviation of the marginal posterior distribution varies quite a bit as well. And remember the posterior distribution is not the distribution of an individual penguin mass but rather possible parameters of a Gaussian distribution that we assume describes penguin mass. If we wanted the estimated distribution of individual penguin mass we would need to generate a posterior predictive distribution. In this case it will be the same Gaussian distribution conditioned on the posterior of $\mu$ and $\sigma$.
-
- Now that we have characterized the Adelie penguin's mass, we can do the same for the other species. We could do so by writing two more models but instead let us just run one model with 3 separated groups, one per species.
-
- ```{code-block} python 
-:name: nocovariate_mass :caption: nocovariate_mass # pd.categorical makes it easy to index species below all_species = pd.Categorical(penguins["species"]) 
-
-with pm.Model() as model_penguin_mass_all_species:     # Note the addition of the shape parameter     σ = pm.HalfStudentT("σ", 100, 2000, shape=3)     μ = pm.Normal("μ", 4000, 3000, shape=3)     mass = pm.Normal("mass",                      mu=μ[all_species.codes],                      sigma=σ[all_species.codes],                      observed=penguins["body_mass_g"]) 
-
-    trace = pm.sample()     inf_data_model_penguin_mass_all_species = az.from_pymc3(         trace=trace,         coords={"μ_dim_0": all_species.categories,                 "σ_dim_0": all_species.categories}) ``` 
-
-We use the optional shape argument in each parameter and add an index in our likelihood indicating to PyMC3 that we want to condition the posterior estimate for each species individually. In programming language design small tricks that make expressing ideas more seamless are called **syntactic sugar**, and probabilistic programming developers include these as well. Probabilistic Programming Languages strive to allow expressing models with ease and with less errors.
-
- After we run the model we once again inspect the KDE and rank plots, see {numref}`fig:all_penguins_rank_kde_plot`. Compared to {numref}`fig:single_penguins_rank_kde_plot` you will see 4 additional plots, 2 each for the additional parameters added. Take a moment to compare the estimate of the mean with the summary mean shows for each species in {numref}`tab:penguin_mass_parameters_point_estimates`. To better visualize the differences between the distributions for each species, we plot the posterior again in a forest plot using Code Block [mass_forest_plot](mass_forest_plot).
-
-{numref}`fig:forest_plot_means` makes it easier to compare our estimates across species and note that the Gentoo penguins seem to have more mass than Adelie or Chinstrap penguins.
-
- ```{figure} figures/AllSpecies_KDE_RankPlot.png :name: fig:all_penguins_rank_kde_plot :width: 7.00in KDE and rank plot for posterior estimates of parameters of masses for each species of penguins from the `penguins_masses` model. Note how each species has its own pair of estimates for each parameter.
-
-``` 
-
-```{code-block} python 
-:name: mass_forest_plot :caption: mass_forest_plot 
-
-az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["μ"]) ``` 
-
-```{figure} figures/Independent_Model_ForestPlotMeans.png :name: fig:forest_plot_means :width: 7.00in Forest plot of the mean of mass of each species group in `model_penguin_mass_all_species`. Each line represents one chain in the sampler, the dot is a point estimate, in this case the mean, the thin line is the interquartile range from 25% to 75% of the posterior and the thick line is the 94% Highest Density Interval.
-
-``` 
-
-{numref}`fig:forest_plot_means` makes it easier to compare our estimates and easily note that the Gentoo penguins have more mass than Adelie or Chinstrap penguins. Let us also look at the standard deviation in {numref}`fig:forest_plot_sigma`. The 94% highest density interval of the posterior is reporting uncertainty in the order of 100 grams.
-
-     az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"]) 
-
-```{figure} figures/Independent_Model_ForestPlotSigma.png :name: fig:forest_plot_sigma :width: 7.00in Forest plot of the standard deviations of the mass for each species group in `model_penguin_mass_all_species`. This plot depicts our estimation of the dispersion of penguin mass, so for example, given a mean estimate of the Gentoo penguin distribution, the associated standard deviation is plausibly anywhere between 450 grams to 550 grams.
-
-``` 
-
-(comparing-two-ppls)= 
-
-### Comparing Two PPLs 
-
-Before expanding on the statistical and modeling ideas further, we will take a moment to talk about the probabilistic programming languages and introduce another PPL we will be using in this book, TensorFlow Probability (TFP). We will do so by translating the PyMC3 intercept only model in Code Block [nocovariate_mass](nocovariate_mass) into TFP.
-
- It may seem unnecessary to learn different PPLs. However, there are specific reasons we chose to use two PPLs instead of one in this book.
-
-Seeing the same workflow in different PPLs will give you a more thorough understanding of computational Bayesian modeling, help you separate computational details from statistical ideas, and make you a stronger modeler overall. Moreover, different PPLs have different strength and focus. PyMC3 is a higher level PPL that makes it easier to express models with less code, whereas TFP provides a lower level PPL for compostable modeling and inference. Another is that not all PPLs are able to express all models as easily as each other. For instance Time Series models (Chapter [6](chap4)) are more easily defined in TFP whereas Bayesian Additive Regression Trees are more easily expressed in PyMC3 (Chapter [7](chap6)). Through this exposure to multiple languages you will come out with a stronger understanding of both the fundamental elements of Bayesian modeling and how they are implemented computationally.
-
- Probabilistic Programming Languages (emphasis on language) are composed of primitives. The primitives in a programming language are the simplest elements available to construct more complex programs. You can think of primitives are like words in natural languages which can form more complex structures, like sentences. And as different languages use different words, different PPLs use different primitives. These primitives are mainly used to express models, perform inference, or express other parts of the workflow. In PyMC3, model building related primitives are contained under the namespace `pm.` For example, in Code Block [penguin_mass](penguin_mass) we see `pm.HalfStudentT(.)`, and `pm.Normal(.)`, which represent a random variable. The `with pm.Model() as .` statement evokes a Python context manager, which PyMC3 uses to build the model `model_adelie_penguin_mass` by collecting the random variables within the context manager. We then use `pm.sample_prior_predictive(.)` and `pm.sample(.)` to obtain samples from the prior predictive distribution and from the posterior distribution, respectively.
-
- Similarly, TFP provides primitives for user to specify distributions and model in `tfp.distributions`, running MCMC (`tfp.mcmc`), and more. For example, to construct a Bayesian model, TensorFlow provides multiple primitives under the name `tfd.JointDistribution` {cite:p}`piponi2020joint` API. In this chapter and the remaining of the book we mostly use `tfd.JointDistributionCoroutine`, but there are other variants of `tfd.JointDistribution` which may better suit your use case [^1]. Since basic data import and summary statistics stays the same as Code Block [penguin_load](penguin_load) and [penguin_mass_empirical](penguin_mass_empirical) we can focus on the model building and inference.
-
-`model_penguin_mass_all_species` expressed in TFP which is shown in Code Block [penguin_mass_tfp](penguin_mass_tfp) below 
-
-```{code-block} python 
-:name: penguin_mass_tfp :caption: penguin_mass_tfp 
-
-import tensorflow as tf import tensorflow_probability as tfp 
-
-tfd = tfp.distributions root = tfd.JointDistributionCoroutine.Root 
-
-species_idx = tf.constant(all_species.codes, tf.int32) body_mass_g = tf.constant(penguins["body_mass_g"], tf.float32) 
-
-@tfd.JointDistributionCoroutine def jd_penguin_mass_all_species():     σ = yield root(tfd.Sample(             tfd.HalfStudentT(df=100, loc=0, scale=2000),             sample_shape=3,             name="sigma"))     μ = yield root(tfd.Sample(             tfd.Normal(loc=4000, scale=3000),             sample_shape=3,             name="mu"))     mass = yield tfd.Independent(         tfd.Normal(loc=tf.gather(μ, species_idx, axis=-1),                    scale=tf.gather(σ, species_idx, axis=-1)),         reinterpreted_batch_ndims=1,         name="mass") ``` 
-
-Since this is our first encounter with a Bayesian model written in TFP, let us spend a few paragraphs to detail the API. The primitives are distribution classes in `tfp.distributions`, which we assign a shorter alias `tfd = tfp.distributions`. `tfd` contains commonly used distributions like `tfd.Normal(.)`. We also used `tfd.Sample`, which returns multiple independent copies of the base distribution (conceptually we achieve the similar goal as using the syntactic sugar `shape=(.)` in PyMC3). `tfd.Independent` is used to indicate that the distribution contains multiple copies that we would like to sum over some axis when computing the log-likelihood, which specified by the `reinterpreted_batch_ndims` function argument. Usually we wrap the distributions associated with the observation with `tfd.Independent` [^2]. You can read a bit more about shape handling in TFP and PPL in Section {ref}`shape_ppl`.
-
- An interesting signature of a `tfd.JointDistributionCoroutine` model is, as the name suggests, the usage of Coroutine in Python. Without getting into too much detail about Generators and Coroutines, here a `yield` statement of a distribution gives you some random variable inside of your model function. You can view `y = yield Normal(.)` as the way to express $y \sim \text{Normal(.)}$. Also, we need to identify the random variables without dependencies as root nodes by wrapping them with `tfd.JointDistributionCoroutine.Root`. The model is written as a Python function with no input argument and no return value. Lastly, it is convenient to put `@tfd.JointDistributionCoroutine` on top of the Python function as a decorator to get the model (i.e., a `tfd.JointDistribution`) directly.
-
- The resulting `jd_penguin_mass_all_species` is the intercept only regression model in Code Block [nocovariate_mass](nocovariate_mass) restated in TFP. It has similar methods like other `tfd.Distribution`, which we can utilize in our Bayesian workflow. For example, to draw prior and prior predictive samples, we can call the `.sample(.)` method, which returns a custom nested Python structure similar to a `namedtuple`. In Code Block [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive) we draw 1000 prior and prior predictive samples.
-
- ```{code-block} python 
-:name: penguin_mass_tfp_prior_predictive :caption: penguin_mass_tfp_prior_predictive 
-
-prior_predictive_samples = jd_penguin_mass_all_species.sample(1000) ``` 
-
-The `.sample(.)` method of a `tfd.JointDistribution` can also draw conditional samples, which is the mechanism we will make use of to draw posterior predictive samples. You can run Code Block [penguin_mass_tfp_prior_predictive2](penguin_mass_tfp_prior_predictive2) and inspect the output to see how random samples change if you condition some random variables in the model to some specific values. Overall, we invoke the *forward* generative process when calling `.sample(.)`.
-
- ```{code-block} python 
-:name: penguin_mass_tfp_prior_predictive2 :caption: penguin_mass_tfp_prior_predictive2 jd_penguin_mass_all_species.sample(sigma=tf.constant([.1, .2, .3])) jd_penguin_mass_all_species.sample(mu=tf.constant([.1, .2, .3])) ``` 
-
-Once we condition the generative model `jd_penguin_mass_all_species` to the observed penguin body mass, we can get the posterior distribution.
-
-From the computational perspective, we want to generate a function that returns the posterior log-probability (up to some constant) evaluated at the input. This could be done by creating a Python function closure or using the `.experimental_pin` method, as shown in Code Block [tfp_posterior_generation](tfp_posterior_generation): 
-
-```{code-block} python 
-:name: tfp_posterior_generation :caption: tfp_posterior_generation 
-
-target_density_function = lambda *x: jd_penguin_mass_all_species.log_prob(     *x, mass=body_mass_g) 
-
-jd_penguin_mass_observed = jd_penguin_mass_all_species.experimental_pin(     mass=body_mass_g) target_density_function = jd_penguin_mass_observed.unnormalized_log_prob ``` 
-
-Inference is done using `target_density_function`, for example, we can find the maximum of the function, which gives the **maximum a posteriori probability** (MAP) estimate. We can also use methods in `tfp.mcmc` {cite:p}`lao2020tfpmcmc` to sample from the posterior. Or more conveniently, using a standard sampling routine similar to what is currently used in PyMC3 [^3] as shown in Code Block [tfp_posterior_inference](tfp_posterior_inference): 
-
-```{code-block} python 
-:name: tfp_posterior_inference :caption: tfp_posterior_inference 
-
-run_mcmc = tf.function(     tfp.experimental.mcmc.windowed_adaptive_nuts,     autograph=False, jit_compile=True) mcmc_samples, sampler_stats = run_mcmc(     1000, jd_penguin_mass_all_species, n_chains=4, num_adaptation_steps=1000,     mass=body_mass_g) 
-
-inf_data_model_penguin_mass_all_species2 = az.from_dict(     posterior={         # TFP mcmc returns (num_samples, num_chains, ...), we swap         # the first and second axis below for each RV so the shape         # is what ArviZ expected.
-
-        k:np.swapaxes(v, 1, 0)         for k, v in mcmc_samples._asdict().items()},     sample_stats={         k:np.swapaxes(sampler_stats[k], 1, 0)         for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]} ) ``` 
-
-In Code Block [tfp_posterior_inference](tfp_posterior_inference) we ran 4 MCMC chains, each with 1000 posterior samples after 1000 adaptation steps. Internally it invokes the `experimental_pin` method by conditioning the model (pass into the function as an argument) with the observed (additional keyword argument `mass=body_mass_g` at the end).
-
-Lines 8-18 parse the sampling result into an ArviZ InferenceData, which we can now run diagnostics and exploratory analysis of Bayesian models in ArviZ. We can additionally add prior and posterior predictive samples and data log-likelihood to `inf_data_model_penguin_mass_all_species2` in a transparent way in Code Block [tfp_idata_additional](tfp_idata_additional) below. Note that we make use of the `sample_distributions` method of a `tfd.JointDistribution` that draws samples *and* generates a distribution conditioned on the posterior samples.
-
- ```{code-block} python 
-:name: tfp_idata_additional :caption: tfp_idata_additional 
-
-prior_predictive_samples = jd_penguin_mass_all_species.sample([1, 1000]) dist, samples = jd_penguin_mass_all_species.sample_distributions(     value=mcmc_samples) ppc_samples = samples[-1] ppc_distribution = dist[-1].distribution data_log_likelihood = ppc_distribution.log_prob(body_mass_g) 
+prior_predictive_samples = jd_penguin_mass_all_species.sample([1, 1000])
+dist, samples = jd_penguin_mass_all_species.sample_distributions(
+    value=mcmc_samples)
+ppc_samples = samples[-1]
+ppc_distribution = dist[-1].distribution
+data_log_likelihood = ppc_distribution.log_prob(body_mass_g)
 
 # Be careful not to run this code twice during REPL workflow.
+inf_data_model_penguin_mass_all_species2.add_groups(
+    prior=prior_predictive_samples[:-1]._asdict(),
+    prior_predictive={"mass": prior_predictive_samples[-1]},
+    posterior_predictive={"mass": np.swapaxes(ppc_samples, 1, 0)},
+    log_likelihood={"mass": np.swapaxes(data_log_likelihood, 1, 0)},
+    observed_data={"mass": body_mass_g}
+)
+```
 
-inf_data_model_penguin_mass_all_species2.add_groups(     prior=prior_predictive_samples[:-1]._asdict(),     prior_predictive={"mass": prior_predictive_samples[-1]},     posterior_predictive={"mass": np.swapaxes(ppc_samples, 1, 0)},     log_likelihood={"mass": np.swapaxes(data_log_likelihood, 1, 0)},     observed_data={"mass": body_mass_g} ) ``` 
+我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是*以贝叶斯为中心*，哪些概念是*以概率编程语言为中心*。在本章的剩余部分和下一章中，我们将在 `PyMC3` 和 TFP 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。
 
-This concludes our whirlwind tour of TensorFlow Probability. Like any language you likely will not gain fluency in your initial exposure. But by comparing the two models you should now have a better sense of what concepts are *Bayesian centric* and what concepts are *PPL centric*. For the remainder of this chapter and the next we will switch between PyMC3 and TFP to continue helping you identify this difference and see more worked examples. We include exercises to translate Code Block examples from one to the other to aid your practice journey in becoming a PPL polyglot.
+(linear-regression)= 
 
- (linear-regression)= 
+## 3.2 线性回归 
 
-## Linear Regression 
+在上一节中，我们通过在高斯分布的均值和标准差上设置先验分布来模拟企鹅质量的分布。重要的是，我们假设质量不随数据中的其他特征而变化。然而，我们希望其他观测数据点可以提供有关预期企鹅质量的信息。直观地说，如果我们看到两只企鹅，一只长鳍，一只短鳍，我们会认为较大的企鹅，即长鳍的企鹅，即使我们手头没有秤来精确测量它们的质量，也会有更大的质量。估计观测到的鳍状肢长度与估计质量的关系的最简单方法之一是拟合线性回归模型，其中平均值*有条件*建模为其他变量的线性组合。
 
-In the previous section we modeled the distribution of penguin mass by setting prior distributions over the mean and standard deviation of a Gaussian distribution. Importantly we assumed that the mass did not vary with other features in the data. However, we would expect that other observed data points could provide information about expected penguins mass. Intuitively if we see two penguins, one with long flippers and one with short flippers, we would expect the larger penguin, the one with long flippers, to have more mass even if we did not have a scale on hand to measure their mass precisely. One of the simplest ways to estimate this relationship of observed flipper length on estimated mass is to fit a linear regression model, where the mean is *conditionally* modeled as a linear combination of other variables 
+```{math}
+:label: eq:expanded_regression
+
+\begin{split}
+  \mu =& \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m \\
+Y \sim& \mathcal{N}(\mu, \sigma)
+\end{split}
+```
+其中系数，也称为预测变量，由参数 $\beta_i$ 表示。例如，$\beta_0$ 是线性模型的截距。 $X_i$ 称为预测变量或自变量，$Y$ 通常称为目标、输出、响应或因变量。重要的是要注意 $\boldsymbol{X}$ 和 $Y$ 都是观测数据，并且它们是成对的 $\{y_j, x_j\}$。也就是说，如果我们改变 $Y$ 的顺序而不改变 $X$，我们将破坏数据中的一些信息。
+
+我们称之为线性回归，因为参数（不是预测变量）以线性方式进入模型。同样对于具有单个预测变量的模型，我们可以将此模型视为将一条线拟合到 $(X, y)$ 数据，对于更高维度的平面或更一般的超平面。
+
+或者，我们可以使用矩阵表示法表示公式 {eq}`eq:expanded_regression`：
 
 ```{math} 
-:label: eq:expanded_regression 
+:label: eq:linear_model_matrix 
 
-\begin{split}     \mu =& \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m \\ Y \sim& \mathcal{N}(\mu, \sigma) \end{split} ``` 
-
-where the coefficients, also referred to as covariates, are represented by the parameter $\beta_i$. For example, $\beta_0$ is the intercept of the linear model. $X_i$ is referred to predictors or independent variables, and $Y$ is usually referred to as target, output, response, or dependent variable. It is important to notice that both $\boldsymbol{X}$ and $Y$ are observed data and that they are paired $\{y_j, x_j\}$. That is, if we change the order of $Y$ without changing $X$ we will destroy some of the information in our data.
-
- We call this a linear regression because the parameters (not the covariates) enter the model in a linear fashion. Also for models with a single covariate, we can think of this model as fitting a line to the $(X, y)$ data, and for higher dimensions a plane or more generally a hyperplane.
-
- Alternatively we can express Equation {eq}`eq:expanded_regression` using matrix notation: 
-
-```{math} 
-:label: eq:linear_model_matrix \mu = \mathbf{X}\boldsymbol{\beta} 
-
+\mu = \mathbf{X}\boldsymbol{\beta} 
 ``` 
 
-where we are taking the matrix-vector product between the coefficient column vector $\beta$ and the matrix of covariates $\mathbf{X}$.
+这里我们取系数列向量 $\beta$ 和预测变量矩阵 $\mathbf{X}$ 之间的矩阵向量乘积。
 
- An alternative expression you might have seen in other (non-Bayesian) occasions is to rewrite Equation {eq}`eq:expanded_regression` as noisy observation of some linear prediction: 
+你可能在其他（非贝叶斯）场合看到的另一种表达方式是将公式 {eq}`eq:expanded_regression` 重写为对某些线性预测的噪声观测：
 
 ```{math} 
-:label: eq:linear_model_enginner 
+:label: eq:linear_model_engine 
 
-Y = \mathbf{X}\boldsymbol{\beta} + \epsilon,\; \epsilon \sim \mathcal{N}(0, \sigma) ``` 
+Y = \mathbf{X}\boldsymbol{\beta} + \epsilon,\; \epsilon \sim \mathcal{N}(0, \sigma)
+``` 
 
-The formulation in Equation {eq}`eq:linear_model_enginner` separates the deterministic part (linear prediction) and the stochastic part (noise) of linear regression. However, we prefer Equation {eq}`eq:expanded_regression` as it shows the generative process more clearly.
+公式 {eq}`eq:linear_model_engine` 中的公式将线性回归的确定性部分（线性预测）和随机部分（噪声）分开。然而，我们更喜欢公式 {eq}`eq:expanded_regression`，因为它更清楚地显示了生成过程。
 
- ::: {admonition} Design Matrix 
+::: {admonition} Design Matrix 
 
-The matrix $\mathbf{X}$ in Equation {eq}`eq:linear_model_matrix` is known as design matrix and is a matrix of values of explanatory variables of a given set of objects, plus an additional column of ones to represent the intercept. Each row represents an unique observation (e.g., a penguin), with the successive columns corresponding to the variables (like flipper length) and their specific values for that object.
+公式 {eq}`eq:linear_model_matrix` 中的矩阵 $\mathbf{X}$ 被称为设计矩阵，它是给定对象集的解释变量值的矩阵，加上一列表示截距的附加列。每行代表一个独特的观测结果（例如，企鹅），连续的列对应于变量（如 `鳍状肢长度（ Flipper Length ）` ）及其针对该对象的特定值。
 
- A design matrix is not limited to continuous covariates. For discrete covariates that represent categorical predictors (i.e., there are only a few categories), a common way to turn those into a design matrix is called dummy coding or one-hot coding. For example, in our intercept per penguin model (Code Block [mass_forest_plot](mass_forest_plot)), instead of `mu = μ[species.codes]` we can use `pandas.get_dummies` to parse the categorical information into a design matrix `mu = pd.get_dummies(penguins["species"]) @ μ`. where `@` is a Python operator for performing matrix multiplication. There are also few other functions to perform one hot encoding in Python, for example, `sklearn.preprocessing.OneHotEncoder`, as this is a very common data manipulation technique.
+设计矩阵不限于连续预测变量。对于类别型预测变量（ 即只有几个类别 ）的离散预测变量，将其转换为设计矩阵的常用方法称为虚拟编码（ Dummy Encoding ）或单热编码（ One Hot Encoding ）。例如，在企鹅截距模型（ 见代码 [mass_forest_plot](mass_forest_plot) ）中，我们并没有使用 `mu = μ[species.codes]` ，而是使用 `mu = pd.get_dummies(penguins["species"]) @ μ` 将类别变量转换成了设计矩阵，其中 `@` 是用于执行矩阵乘法的 Python 运算符。在 Python 中也有几个执行独热编码的函数，例如，`sklearn.preprocessing.OneHotEncoder`。
 
- Alternatively, categorical predictors could be encoded such that the resulting column and associated coefficient representing linear contrast. For example, different design matrix encoding of two categorical predictors are associated with Type I, II and III sums of squares in null-hypothesis testing setting for ANOVA.
+或者，可以对类别型预测变量进行编码，以使结果列和关联系数表示线性对比度。例如，两个类别型预测变量的不同设计矩阵编码与 `ANOVA` 的零假设检验设置中的 I、II 和 III 型平方和相关。
 
 ::: 
 
-If we plot Equation {eq}`eq:expanded_regression` in "three dimensions\" we get {numref}`fig:3d_linear_regression`, which shows how the estimated parameters of the likelihood distribution can change based on other observed data $x$. While in this one illustration, and in this chapter, we are using a linear relationship to model the relationship between $x$ and $Y$, and a Gaussian distribution as a likelihood, in other model architectures, we may opt for different choices as we will see in Chapter [4](chap3).
+如果在 “三维空间” 中绘制公式 {eq}`eq:expanded_regression`，我们会得到 {numref}`fig:3d_linear_regression`，它显示了似然函数的被估参数，如何根据观测数据 $x$ 发生变化。需要说明的是，在本章中，我们仅使用了线性关系来建模 $x$ 和 $Y$ 之间的关系，并使用高斯分布作为似然，但在很多其他模型架构中，更可能会选择不同的选择，这一点将在第 [4] 章（chap3）中有所体现。
 
- ```{figure} figures/3d_linear_regression.png :name: fig:3d_linear_regression :width: 7.00in A linear regression with the Gaussian likelihood function evaluated at 3 points. Note this plot only shows one possible Gaussian distribution at each value of $x$, where after fitting a Bayesian model we will end up with a distribution of Gaussian, whose parameters may follow a distribution other than Gaussian.
+```{figure} figures/3d_linear_regression.png
+:name: fig:3d_linear_regression 
+:width: 7.00in 
+
+在 $3$ 个点处评估使用了高斯似然的线性回归。请注意，此图仅显示了 $x$ 的每个值处可能的一种高斯分布，在完成整个贝叶斯模型拟合后，将最终得到高斯分布，该高斯分布的参数遵循的并非一定是高斯分布。
 
 ``` 
 
 (linear_regression_intro)= 
 
-### Linear Penguins 
+### 3.2.1 线性的企鹅模型
 
-If we recall our penguins we were interested using additional data to better estimate the mean mass of a group of penguins. Using linear regression we write the model in Code Block [non_centered_regression](non_centered_regression), which includes two new parameters $\beta_0$ and $\beta_1$ typically called the intercept and slope. For this example we set wide priors of $\mathcal{N}(0, 4000)$ to focus on the model, which also is the same as saying we assume no domain expertise. We subsequently run our sampler, which has now estimated three parameters $\sigma$, $\beta_1$ and $\beta_0$.
+如果回顾企鹅示例，我们对使用额外数据来估计企鹅的平均质量更感兴趣。我们在代码 [non_centered_regression](non_centered_regression) 中编写了一个线性回归模型，其中包括两个新参数 $\beta_0$ 和 $\beta_1$，通常称为截距和斜率。对于这个例子，我们设置了 $\mathcal{N}(0, 4000)$ 的宽泛先验，这也与我们没有领域知识的假设一致。随后运行采样器，它现在估计了三个参数 $\sigma$ 、$\beta_1$ 和 $\beta_0$。
 
- ```{code-block} python 
-:name: non_centered_regression :caption: non_centered_regression 
+```{code-block} ipython3
+:name: non_centered_regression
+:caption: non_centered_regression
 
-adelie_flipper_length_obs = penguins.loc[adelie_mask, "flipper_length_mm"] 
+adelie_flipper_length_obs = penguins.loc[adelie_mask, "flipper_length_mm"]
 
-with pm.Model() as model_adelie_flipper_regression:     # pm.Data allows us to change the underlying value in a later code block     adelie_flipper_length = pm.Data("adelie_flipper_length",                                     adelie_flipper_length_obs)     σ = pm.HalfStudentT("σ", 100, 2000)     β_0 = pm.Normal("β_0", 0, 4000)     β_1 = pm.Normal("β_1", 0, 4000)     μ = pm.Deterministic("μ", β_0 + β_1 * adelie_flipper_length) 
+with pm.Model() as model_adelie_flipper_regression:
+    # pm.Data allows us to change the underlying value in a later code block
+    adelie_flipper_length = pm.Data("adelie_flipper_length",
+                                    adelie_flipper_length_obs)
+    σ = pm.HalfStudentT("σ", 100, 2000)
+    β_0 = pm.Normal("β_0", 0, 4000)
+    β_1 = pm.Normal("β_1", 0, 4000)
+    μ = pm.Deterministic("μ", β_0 + β_1 * adelie_flipper_length)
 
-    mass = pm.Normal("mass", mu=μ, sigma=σ, observed = adelie_mass_obs) 
+    mass = pm.Normal("mass", mu=μ, sigma=σ, observed = adelie_mass_obs)
 
-    inf_data_adelie_flipper_regression = pm.sample(return_inferencedata=True) ``` 
+    inf_data_adelie_flipper_regression = pm.sample(return_inferencedata=True)
+```
 
-To save space in the book we are not going to show the diagnostics each time but you should neither trust us or your sampler blindly. Instead you should run the diagnostics to verify you have a reliable posterior approximation.
+为了节省篇幅，本书中不会每次都展示诊断程序，但你不应盲目相信采样器。相反，你应该将运行诊断程序作为工作流程中的固定步骤，以验证你是否有可靠的后验近似。
 
- ```{figure} figures/adelie_coefficient_posterior_plots.png :name: fig:adelie_coefficient_posterior_plots :width: 5in Estimates of the parameter value distributions of our linear regression coefficient from `model_adelie_flipper_regression`.
-
+```{figure} figures/adelie_coefficient_posterior_plots.png 
+:name: fig:adelie_coefficient_posterior_plots 
+:width: 5in 
+ 
+`model_adelie_flipper_regression` 中的线性回归系数的后验分布。
 ``` 
 
-After our sampler finishes running we can plot {numref}`fig:adelie_coefficient_posterior_plots` which shows a full posterior plot we can use to inspect $\beta_0$ and $\beta_1$. The coefficient $\beta_1$ expresses that for every millimeter change of Adelie flipper length we can nominally expect a change of 32 grams of mass, although anywhere between 22 grams to 41 grams could reasonably occur as well. Additionally, from {numref}`fig:adelie_coefficient_posterior_plots` we can note how the 94% highest density interval does not cross 0 grams. This supports our assumption that there is a relationship between mass and flipper length.
+在采样器完成运行后，我们可以绘制 {numref}`fig:adelie_coefficient_posterior_plots`，它显示了检查 $\beta_0$ 和 $\beta_1$ 的完整后验图。
 
-This observation is quite useful for interpreting how flipper length and mass correlate. However, we should be careful about not over-interpreting the coefficients or thinking a linear model necessarily implies a causal link. For example, if we perform a flipper extension surgery to a penguin this will not necessarily translate into a gain in mass, it could actually be the opposite due to stress or impediments of this penguin to get food. The opposite relation is not necessarily true either, providing more food to a penguin could help her to have a larger flipper, but it could also make it just a fatter penguin. Now focusing on $\beta_0$ however, what does it represent? From our posterior estimate we can state that if we saw an Adelie penguin with a 0 mm flipper length we would expect the mass of this impossible penguin to somewhere between -4213 and -546 grams. According to our model this statement is true, but negative mass does not make sense.
+系数 $\beta_1$ 表示，对于 `Adelie 种`来说，鳍状肢长度的每毫米变化，理论上上我们预计会产生 $32$ 克的质量变化，尽管在 $22$ 克到 $41$ 克之间的任何地方都是可能发生的变化。此外，从 {numref}`fig:adelie_coefficient_posterior_plots` 中可以看到 $$94\%$$ 的最高密度区间未覆盖 $0$ 克，这支持了我们的假设，即质量和鳍状肢长度之间存在关系。这一观察对于解释 “鳍状肢长度和质量之间如何相关” 非常有用。但我们应该注意：**不要过度解释系数或认为线性模型必然意味着因果关系**。例如，如果对一只企鹅进行脚蹼的扩展手术，这不一定会造成体重增加，而实际上由于企鹅获取食物的障碍，体重反而可能降低。相反的关系也不一定正确，给企鹅提供更多食物有助于其拥有更大的鳍状肢，但也可能使其成为一只更胖的企鹅。
 
-This is not necessarily an issue, there is no rule that every parameter in a model needs to be interpretable, nor that the model provide reasonable prediction at every parameter value. At this point in our journey the purpose of this particular model was to estimate the relationship between flipper length and penguin mass and with our posterior estimates, we have succeeded with that goal.
+现在看一下 $\beta_0$，它代表什么？根据后验估计结果，如果看到一只鳍状肢长度为 $0$ 毫米的`Adelie 种`企鹅，我们预计这只不可能的企鹅的质量在 $-4213$ 到 $-546$ 克之间。根据模型，这个陈述是正确的，但负的质量并没有意义。这不一定是问题，没有规定模型中的每个参数都必须可解释，也没有规定模型对每个参数值都必须提供合理预测。
 
- ::: {admonition} Models: A balance between math and reality 
+在我们整书旅程中的当下，上述特定模型的有限目的只是估计鳍状肢长度和`企鹅质量`之间的关系，而通过后验估计，我们已经成功实现了这个目标。
 
-In our penguin example it would not make sense if penguin mass was below 0 (or even close to it), even though the model allowed it. Because we fit the model using values for the masses that are far from 0, we should not be surprised that the model fails if we want to extrapolate conclusions for values close to 0 or below it. A model does not necessarily have to provide sensible predictions for all possible values, it just needs to provide sensible predictions for the purposes that we are building it for.
+::: {admonition} 模型: 数学和现实之间的平衡 
+
+在企鹅示例中，即使模型允许，企鹅质量低于 $0$（ 甚至接近 $0$ ）也是没有意义的。由于建模和拟合时使用了远离 $0$ 的质量值，所以当我们想要推断接近 $0$ 或低于 $0$ 的结果时，不应该对模型失败感到惊讶。模型不一定必须为所有可能的值提供合理预测，它只需要为构建它时的有限目的提供合理预测。
 
 ::: 
 
-We started on this section surmising that incorporating a covariate would lead to better predictions of penguin mass. We can verify this is the case by comparing the posterior estimates of $\sigma$ from our fixed mean model and with our linearly varying mean model in {numref}`fig:SingleSpecies_SingleRegression_Forest_Sigma_Comparison`, our estimate of the likelihood's standard deviation has dropped from a mean of around $\approx 460$ grams to $\approx 380$ grams.
+本节中，我们设想加入预测变量会更好地预测企鹅的质量。我们可以通过 {numref}`fig:SingleSpecies_SingleRegression_Forest_Sigma_Comparison` 比较固定均值模型和线性变化均值模型的 $\sigma$ 后验估计来验证此设想，我们对似然的标准差估计已经从平均约 $460$ 克降到了 $380$ 克。
 
- ```{figure} figures/SingleSpecies_SingleRegression_Forest_Sigma_Comparison.png :name: fig:SingleSpecies_SingleRegression_Forest_Sigma_Comparison :width: 7.00in By using the covariate of flipper length when estimating penguin mass the magnitude of the estimated error is reduced from a mean of slightly over 460 grams to around 380 grams. This intuitively makes sense as if we are given information about a quantity we are estimating, we can leverage that information to make better estimates.
+```{figure} figures/SingleSpecies_SingleRegression_Forest_Sigma_Comparison.png 
+:name: fig:SingleSpecies_SingleRegression_Forest_Sigma_Comparison  
+:width: 7.00in 
 
+ 
+在估计企鹅质量时,通过使用鳍状肢长度作为预测变量，估计误差从略高于 $460$ 克的均值减少到大约 $380$ 克。直觉上这是有道理的，就像我们得到了关于估计量的信息，可以利用这些信息来做出更好的估计。
 ``` 
 
-```{figure} figures/Flipper_length_mass_regression.png :name: fig:Flipper_length_mass_regression :width: 7.00in Observed Adelie data of flipper length vs mass as scatter plot, and mean estimate of the likelihood as black line, and 94% HDI of the mean as gray interval. Note how our mean estimate varies as flipper varies.
+```{figure} figures/Flipper_length_mass_regression.png 
+:name: fig:Flipper_length_mass_regression
+:width: 7.00in 
 
+观测到的鳍状肢长度与 `Adelie 种` 的质量数据作散点图，似然的平均值估计为黑线，平均值的 $94\%$ HDI 为灰色区间。请注意估计的均值如何随着鳍状肢长度变化而变化。
 ``` 
 
 (chp2_predictions)= 
 
-### Predictions 
+### 3.2.2 预测 
 
-In the {ref}`linear_regression_intro` we estimated a linear relationship between flipper length and mass. Another use of regression is to leverage that relationship in order to make predictions. In our case given the flipper length of a penguin, can we predict its mass? In fact we can. We will use our results from `model_adelie_flipper_regression` to do so. Because in Bayesian statistics we are dealing with distributions we do not end up with a single predicted value but instead a distribution of possible values. That is the posterior predictive distribution as defined in Equation [eq:post_pred_dist](eq:post_pred_dist). In practice, more often than not, we will not compute our predictions analytically but we will use a PPL to estimate them using our posterior samples. For example, if we had a penguin of average flipper length and wanted to predict the likely mass using `PyMC3` we would write Code Block [penguins_ppd](penguins_ppd): 
+在 {ref}`linear_regression_intro` 中，我们估计了鳍状肢长度和质量之间的线性关系。回归的另一用途是利用此关系进行预测。在本例中，给定企鹅的鳍状肢长度，我们能够预测它的质量吗？事实上可以。我们可以使用 `model_adelie_flipper_regression` 的结果来执行此预测操作。
 
-```{code-block} python 
-:name: penguins_ppd :caption: penguins_ppd 
+由于在贝叶斯统计中，我们处理的是都是分布，因此最终不会得到关于质量的单个预测值，而是所有可能质量值的分布。该分布就是公式 [eq:post_pred_dist](eq:post_pred_dist) 中定义的后验预测分布。
 
-with model_adelie_flipper_regression:     # Change the underlying value to the mean observed flipper length     # for our posterior predictive samples     pm.set_data({"adelie_flipper_length": [adelie_flipper_length_obs.mean()]})     posterior_predictions = pm.sample_posterior_predictive(         inf_data_adelie_flipper_regression.posterior, var_names=["mass", "μ"]) ``` 
+在实践中，我们通常不会（也可能无法）解析地计算预测，但使用概率编程语言，可以用后验分布样本来估计预测值的分布。例如，如果有一只平均鳍状肢长度的企鹅，并且想使用 `PyMC3` 预测其可能的质量，我们可以编写代码 [penguins_ppd](penguins_ppd)：
 
-In the first line of Code Block [penguins_ppd](penguins_ppd) we fix the value of our flipper length to the average observed flipper length. Then using the regression model `model_adelie_flipper_regression`, we can generate posterior predictive samples of the mass at that fixed value. In {numref}`fig:Flipper_length_mass_posterior_predictive` we plot the posterior predictive distribution of the mass for penguins of average flipper length, along the posterior of the mean.
+```{code-block} ipython3
+:name: penguins_ppd
+:caption: penguins_ppd
 
- ```{figure} figures/Flipper_length_mass_posterior_predictive.png :name: fig:Flipper_length_mass_posterior_predictive :width: 7.00in The posterior distribution of the mean, $\mu$, evaluated at the mean flipper length in blue and the posterior predictive distribution evaluated at the mean flipper length in black. The black curve is wider as it describes the distribution of the predicted data (for a given flipper length), while the blue curve represents the distribution of just the mean of the predicted data.
+with model_adelie_flipper_regression:
+    # Change the underlying value to the mean observed flipper length
+    # for our posterior predictive samples
+    pm.set_data({"adelie_flipper_length": [adelie_flipper_length_obs.mean()]})
+    posterior_predictions = pm.sample_posterior_predictive(
+        inf_data_adelie_flipper_regression.posterior, var_names=["mass", "μ"])
+```
 
+在代码 [penguins_ppd](penguins_ppd) 的第一行中，我们将鳍状肢长度的值固定为观测到的鳍状肢的平均长度。然后使用回归模型 `model_adelie_flipper_regression`，可以在该固定值处生成企鹅质量的后验预测样本。在 {numref}`fig:Flipper_length_mass_posterior_predictive` 中，我们绘制了具有平均鳍状肢长度的企鹅，其质量的后验预测分布，沿着均值的后验。
+
+```{figure} figures/Flipper_length_mass_posterior_predictive.png 
+:name: fig:Flipper_length_mass_posterior_predictive 
+:width: 7.00in 
+ 
+在平均鳍状肢长度处评估的均值参数 $\mu$ 的后验分布，标记为蓝色；同时，在平均鳍状肢长度处评估的企鹅质量的后验预测分布标记为黑色。可以看出，黑色曲线更宽，因为它描述了（给定鳍状肢长度时）所以可能预测结果的分布，而蓝色曲线仅表达了其中均值的分布。
 ``` 
 
-In short not only can we use our model in Code Block [non_centered_regression](non_centered_regression) to estimate the relationship between flipper length and mass, we also can obtain an estimate of the penguin mass at any arbitrary flipper length.
+简而言之，我们不仅可以使用代码 [non_centered_regression](non_centered_regression) 中的模型来估计鳍状肢长度和企鹅质量之间的关系，还可以在任意鳍状肢长度处获得其对应的企鹅质量估计值。
 
-In other words we can use the estimated $\beta_1$ and $\beta_0$ coefficients to make predictions of the mass of unseen penguins of any flipper length using posterior predictive distributions.
+换句话说，我们可以利用贝叶斯估计得出的 $\beta_1$ 和 $\beta_0$ 系数，通过后验预测分布来预测任意鳍状肢长度的企鹅质量。
 
- As such, the posterior predictive distribution is an especially powerful tool in a Bayesian context as it let us predict not just the most likely value, but a distribution of plausible values incorporating the uncertainty about our estimates, as seen from Equation [eq:post_pred_dist](eq:post_pred_dist).
+因此，后验预测分布在贝叶斯环境中是一个特别强大的工具，它让我们不仅可以预测最可能的值，还可以预测包含不确定性的合理值分布，如公式 [eq:post_pred_dist](eq:post_pred_dist) 。
 
- (centering)= 
+(centering)= 
 
-### Centering 
+### 3.2.3 中心化处理 
 
-Our model in Code Block [non_centered_regression](non_centered_regression) worked well for estimating the correlation between flipper length and penguin mass, and in predicting the mass of penguins at a given flipper length.
+我们在代码 [non_centered_regression](non_centered_regression) 中的模型在估计鳍状肢长度和企鹅质量之间的相关性以及预测给定鳍状肢长度下的企鹅质量方面效果很好。
 
-Unfortunately with the data and the model provided our estimate of $\beta_0$ was not particularly useful. However, we can use a transformation to make $\beta_0$ more interpretable. In this case we will opt for a centering transformation, which takes a set a value and centers its mean value at zero as shown in Code Block [flipper_centering](flipper_centering).
+遗憾的是，数据和模型提供的对 $\beta_0$ 的估计并不是特别有用。但我们可以通过数据转换来使 $\beta_0$ 更易于解释。通常我们会选择中心化处理，即采纳一组数据并将其均值中心化为零，如代码 [flipper_centering](flipper_centering) 所示。
 
- ```{code-block} python 
-:name: flipper_centering :caption: flipper_centering 
+```{code-block} ipython3
+:name: flipper_centering
+:caption: flipper_centering
 
-adelie_flipper_length_c = (adelie_flipper_length_obs -                            adelie_flipper_length_obs.mean()) ``` 
+adelie_flipper_length_c = (adelie_flipper_length_obs -
+                           adelie_flipper_length_obs.mean())
+```
 
-With our now centered covariate let us fit our model again, this time using TFP.
+使用中心化后的预测变量再次拟合模型，这次使用 `TFP`。
 
- ```{code-block} python 
-:name: tfp_penguins_centered_predictor :caption: tfp_penguins_centered_predictor 
+```{code-block} ipython3
+:name: tfp_penguins_centered_predictor
+:caption: tfp_penguins_centered_predictor
 
-def gen_adelie_flipper_model(adelie_flipper_length):     adelie_flipper_length = tf.constant(adelie_flipper_length, tf.float32) 
+def gen_adelie_flipper_model(adelie_flipper_length):
+    adelie_flipper_length = tf.constant(adelie_flipper_length, tf.float32)
 
-    @tfd.JointDistributionCoroutine     def jd_adelie_flipper_regression():         σ = yield root(             tfd.HalfStudentT(df=100, loc=0, scale=2000, name="sigma"))         β_1 = yield root(tfd.Normal(loc=0, scale=4000, name="beta_1"))         β_0 = yield root(tfd.Normal(loc=0, scale=4000, name="beta_0"))         μ = β_0[..., None] + β_1[..., None] * adelie_flipper_length         mass = yield tfd.Independent(             tfd.Normal(loc=μ, scale=σ[..., None]),             reinterpreted_batch_ndims=1,             name="mass") 
+    @tfd.JointDistributionCoroutine
+    def jd_adelie_flipper_regression():
+        σ = yield root(
+            tfd.HalfStudentT(df=100, loc=0, scale=2000, name="sigma"))
+        β_1 = yield root(tfd.Normal(loc=0, scale=4000, name="beta_1"))
+        β_0 = yield root(tfd.Normal(loc=0, scale=4000, name="beta_0"))
+        μ = β_0[..., None] + β_1[..., None] * adelie_flipper_length
+        mass = yield tfd.Independent(
+            tfd.Normal(loc=μ, scale=σ[..., None]),
+            reinterpreted_batch_ndims=1,
+            name="mass")
 
-    return jd_adelie_flipper_regression 
+    return jd_adelie_flipper_regression
 
-# If use non-centered predictor, this will give the same model as # model_adelie_flipper_regression jd_adelie_flipper_regression = gen_adelie_flipper_model(     adelie_flipper_length_c) 
+# If use non-centered predictor, this will give the same model as
+# model_adelie_flipper_regression
+jd_adelie_flipper_regression = gen_adelie_flipper_model(
+    adelie_flipper_length_c)
 
-mcmc_samples, sampler_stats = run_mcmc(     1000, jd_adelie_flipper_regression, n_chains=4, num_adaptation_steps=1000,     mass=tf.constant(adelie_mass_obs, tf.float32)) 
+mcmc_samples, sampler_stats = run_mcmc(
+    1000, jd_adelie_flipper_regression, n_chains=4, num_adaptation_steps=1000,
+    mass=tf.constant(adelie_mass_obs, tf.float32))
 
-inf_data_adelie_flipper_length_c = az.from_dict(     posterior={         k:np.swapaxes(v, 1, 0)         for k, v in mcmc_samples._asdict().items()},     sample_stats={         k:np.swapaxes(sampler_stats[k], 1, 0)         for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]} ) ``` 
+inf_data_adelie_flipper_length_c = az.from_dict(
+    posterior={
+        k:np.swapaxes(v, 1, 0)
+        for k, v in mcmc_samples._asdict().items()},
+    sample_stats={
+        k:np.swapaxes(sampler_stats[k], 1, 0)
+        for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]}
+)
+```
 
-```{figure} figures/SingleSpecies_MultipleRegression_Centered.png :name: fig:SingleSpecies_multipleRegression_Centered :width: 7.00in Estimates of coefficients from Code Block [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor).
+```{figure} figures/SingleSpecies_MultipleRegression_Centered.png 
+:name: fig:SingleSpecies_multipleRegression_Centered 
+:width: 7.00in 
 
-Notice that the distribution of $beta\_1$ is the same as in {numref}`fig:adelie_coefficient_posterior_plots`, but the distribution of $beta\_0$ has shifted. Because we centered the observations around the mean of flipper length $beta\_0$ now represents the mass distribution of the average flipper penguin.
-
+来自代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 的系数估计。
+注意，$beta\_1$ 的分布与 {numref}`fig:adelie_coefficient_posterior_plots` 中相同，但 $beta\_0$ 的分布发生了偏移。因为我们在鳍状肢长度的均值处做了中心化处理，$beta\_0$ 现在代表具有平均鳍状肢长度的企鹅的概率质量分布。
 ``` 
 
-The mathematical model we defined in Code Block [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) is identical to the PyMC3 model `model_adelie_flipper_regression` from Code Block [non_centered_regression](non_centered_regression), with sole difference being the centering of the predictor. PPL wise however, the structure of TFP necessitates the addition of `tensor_x[..., None]` in various lines to extend a batch of scalars so that they are broadcastable with a batch of vectors. Specifically `None` appends a new axis, which could also be done using `np.newaxis` or `tf.newaxis`. We also wrap the model in a function so we can easily condition on different predictors. In this case we use the centered flipper length, but could also use the non-centered predictor which will yield similar results to our previous model.
+在代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 中定义的数学模型与代码 [non_centered_regression](non_centered_regression) 中的 `PyMC3` 模型 `model_adelie_flipper_regression` 相同，唯一区别是对预测变量做的中心化处理。然而，在概率编程语言方面，`TFP` 的结构需要在各行中添加 `tensor_x[..., None]` 以扩展一批标量，以便它们能够与一批向量一起广播。具体来说，`None` 会添加一个新轴，这也可以使用 `np.newaxis` 或 `tf.newaxis` 来完成。此外，`TFP` 还将模型包装在一个函数中，以便轻松地以不同的预测变量作为条件。当然，此处使用中心化后的鳍状肢长度作为预测变量，但其实也可以项 `PyMC3` 一样使用非中心化的方式，两者结果是相似的。
 
- When we plot our coefficients again, $\beta_1$ is the same as our PyMC3 model but the distribution of $\beta_0$ has changed. Since we have centered our input data on its mean, the distribution of $\beta_0$ is the same as our prediction for the group mean with the non-centered dataset. By centering the data we now can directly interpret $\beta_0$ as the distribution of mean masses for Adelie penguins with a mean flipper length. The idea of transforming the input variables can also be performed at arbitrary values of choice. For example, we could subtract out the minimum flipper length and fit our model. In this transformation this would change the interpretation $\beta_0$ to the distribution of means for the smallest observed flipper length. For a greater discussion of transformations in linear regression we recommend Applied Regression Analysis and Generalized Linear Models {cite:p}`fox_fox_2016`.
+当我们再次绘制系数时，$\beta_1$ 与 `PyMC3` 模型相同，但 $\beta_0$ 的分布发生了变化。由于我们将输入的数据中心化到了其均值上，$\beta_0$ 的分布与我们对非中心化数据集的组均值的预测相同。通过将数据中心化，现在可以直接将 $\beta_0$ 解释为具有平均鳍状肢长度的 `Adelie 种`企鹅的平均质量分布。
 
- (multiple-linear-regression)= 
+转换输入变量的想法也可以在任意选择的值上执行。例如，我们可以减去最小鳍状肢长度后拟合模型。在这种转换中，会将 $\beta_0$ 的解释更改为观测到的最小鳍状肢长度的均值分布。
 
-## Multiple Linear Regression 
+为了更深入地讨论线性回归中的转换，我们推荐应用回归分析和广义线性模型 {cite:p}`fox_fox_2016`。
 
-In many species there is a dimorphism, or difference, between different sexes. The study of sexual dimorphism in penguins actually was the motivating factor for collecting the Palmer Penguin dataset {cite:p}`gorman_williams_fraser_2014`. To study penguin dimorphism more closely let us add a second covariate, this time sex, encoding it as a categorical variable and seeing if we can estimate a penguins mass more precisely.
+(multiple-linear-regression)= 
 
- ```{code-block} python 
-:name: penguin_mass_multi :caption: penguin_mass_multi 
+## 3.3 多元线性回归 
 
-# Binary encoding of the categorical predictor sex_obs = penguins.loc[adelie_mask ,"sex"].replace({"male":0, "female":1}) 
+在许多物种中，不同性别之间存在双态性或差异。企鹅性别双态性的研究实际上是收集 `Palmer Penguin 数据集` {cite:p}`gorman_williams_fraser_2014` 的出发点之一。为了更仔细地研究企鹅的双态性，我们添加第二个预测变量：性别，将其编码为类别型变量，看看我们是否可以更精确地估计企鹅的质量。
 
-with pm.Model() as model_penguin_mass_categorical:     σ = pm.HalfStudentT("σ", 100, 2000)     β_0 = pm.Normal("β_0", 0, 3000)     β_1 = pm.Normal("β_1", 0, 3000)     β_2 = pm.Normal("β_2", 0, 3000) 
+```{code-block} ipython3
+:name: penguin_mass_multi
+:caption: penguin_mass_multi
 
-    μ = pm.Deterministic(         "μ", β_0 + β_1 * adelie_flipper_length_obs + β_2 * sex_obs) 
+# Binary encoding of the categorical predictor
+sex_obs = penguins.loc[adelie_mask ,"sex"].replace({"male":0, "female":1})
 
-    mass = pm.Normal("mass", mu=μ, sigma=σ, observed=adelie_mass_obs) 
+with pm.Model() as model_penguin_mass_categorical:
+    σ = pm.HalfStudentT("σ", 100, 2000)
+    β_0 = pm.Normal("β_0", 0, 3000)
+    β_1 = pm.Normal("β_1", 0, 3000)
+    β_2 = pm.Normal("β_2", 0, 3000)
 
-    inf_data_penguin_mass_categorical = pm.sample(         target_accept=.9, return_inferencedata=True) ``` 
+    μ = pm.Deterministic(
+        "μ", β_0 + β_1 * adelie_flipper_length_obs + β_2 * sex_obs)
 
-You will notice a new parameter, $\beta_{2}$ contributing to the value of $\mu$. As sex is a categorical predictor (in this example just female or male), we encode it as 1 and 0, respectively. For the model this means that the value of $\mu$, for females, is a sum over 3 terms while for males is a sum of two terms (as the $\beta_2$ term will zero out).
+    mass = pm.Normal("mass", mu=μ, sigma=σ, observed=adelie_mass_obs)
 
- ```{figure} figures/adelie_sex_coefficient_posterior.png :name: fig:adelie_sex_coefficient_posterior :width: 7.00in Estimate of coefficient for sex covariate, $\beta_{2}$ in model. As male is encoded as 0, and female is encoded as 1, this indicates the additional mass we would expect between a male and female Adelie penguin with the same flipper length.
+    inf_data_penguin_mass_categorical = pm.sample(
+        target_accept=.9, return_inferencedata=True)
+```
 
-``` 
+你会注意到一个新参数 $\beta_{2}$ 对 $\mu$ 的值也有贡献。由于性别是一个类别型预测变量（ 本例中为“雄性”和“雌性”），我们将其分别编码为 $0$ 和 $1$。对于该模型，意味着对于雌性企鹅来说，$\mu$ 的值是 $3$ 个项的总和，而对于雄性企鹅来说，是两个项的总和（因为 $\beta_2$ 项将归零）。
+
+```{figure} figures/adelie_sex_coefficient_posterior.png
+:name: fig:adelie_sex_coefficient_posterior
+:width: 7.00in
+
+估计模型中的性别预测变量系数 $\beta_{2}$ 。雄性企鹅编码为 $0$，雌性企鹅编码为 $1$ ，这表示我们预计，具有相同鳍状肢长度的雄性和雌性 `Adelie 种` 企鹅之间存在额外的质量差别。
+```
 
 ::: {admonition} Syntactic Linear Sugar 
 
-Linear models are so widely used that specialized syntax, methods, and libraries have been written just for regression.
+线性模型的使用如此广泛，以至于有人为回归专门编写了语法、方法和库。其中一个典型库是 `Bambi`（ 贝叶斯模型构建接口，BAyesian Model-Building Interface 的缩写 ）{cite:p}`capretto2020`）。 `Bambi` 是一个 `Python` 包，使用形式化语法来拟合广义线性层次模型，类似于在 `R` 包中可以找到的内容，例如 `lme4 包` {cite:p}`lme4`、`nlme 包` {cite:p}`nlme`、`rstanarm 包` {cite:p}`gabry_goodrich_2020` 或 `brms 包` {cite:p}`brms`）。 `Bambi` 在底层使用 `PyMC3` 并提供更高级别的 API。要编写同一个模型，在忽略代码 [penguin_mass_multi](penguin_mass_multi) 中的先验 [^4] 时，可以用 `Bambi` 编程为：
 
-One such library is Bambi (BAyesian Model-Building Interface{cite:p}`capretto2020`). Bambi is a Python package for fitting generalized linear hierarchical models using a formula-based syntax, similar to what one might find in R packages, like lme4 {cite:p}`lme4`, nlme {cite:p}`nlme`, rstanarm {cite:p}`gabry_goodrich_2020` or brms {cite:p}`brms`). Bambi uses PyMC3 underneath and provides a higher level API. To write the same model, if disregarding the priors[^4] as the one in Code Block [penguin_mass_multi](penguin_mass_multi) in Bambi we would write: 
+```{code-block} ipython3
+:name: bambi_categorical
+:caption: bambi_categorical
 
-```{code-block} python 
-:name: bambi_categorical :caption: bambi_categorical 
+import bambi as bmb
+model = bmb.Model("body_mass_g ~ flipper_length_mm + sex",
+                  penguins[adelie_mask])
+trace = model.fit()
+```
 
-import bambi as bmb model = bmb.Model("body_mass_g ~ flipper_length_mm + sex",                   penguins[adelie_mask]) trace = model.fit() ``` 
-
-The priors are automatically assigned if not provided, as is the case in the code example above. Internally, Bambi stores virtually all objects generated by PyMC3, making it easy for users to retrieve, inspect, and modify those objects. Additionally Bambi returns an `az.InferenceData` object which can be directly used with ArviZ.
+如果不人为提供先验，软件包会像上述代码一样自动分配先验。在 `Bambi` 内部几乎存储了 `PyMC3` 生成的所有对象，使用户可以轻松检索、检查和修改这些对象。此外，`Bambi` 返回一个 `az.InferenceData` 对象，可以直接与 `ArviZ` 一起使用。
 
 ::: 
 
-Since we have encoded male as 0 this posterior from `model_penguin_mass_categorical` estimates the difference in mass compared to a female Adelie penguin *with the same flipper length*. This last part is quite important, by adding a second covariate we now have a multiple linear regression and we must use more caution when interpreting the coefficients. In this case, the coefficients provides the relationship of a covariate into the response variable, **if** all other covariates are held constant [^5].
+由于我们将 “雄性” 编码为 $0$，因此来自 `model_penguin_mass_categorical` 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的质量差异。最后一部分非常重要，通过添加第二个预测变量，我们现在有了一个多元线性回归，而同时在解释系数时必须更加小心。在这种情况下，系数通常提供了：**如果**所有其他预测变量保持不变的情况下，某个预测变量与响应变量之间的关系 [^5]。
 
- ```{figure} figures/Single_Species_Categorical_Regression.png :name: fig:Single_Species_Categorical_Regression :width: 7.00in Multiple regression for flipper length versus mass with male and female Adelie penguins coded as a categorical covariate. Note how the difference mass between male and female penguins is constant at every flipper length. This difference is equivalent to the magnitude of the $\beta_2$ coefficient.
-
+```{figure} figures/Single_Species_Categorical_Regression.png 
+:name: fig:Single_Species_Categorical_Regression  
+:width: 7.00in 
+ 
+使用类别型预测变量编码的雄性和雌性 `Adelie 种` 企鹅的鳍状肢长度与质量的多元回归。注意雄性和雌性企鹅之间的质量差异在每个鳍状肢长度上保持不变，该差异相当于 $\beta_2$ 系数的大小。
 ``` 
 
-We again can compare the standard deviations across our three models in {numref}`fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison` to see if we have reduced uncertainty in our estimate and once again the additional information has helped to improve the estimate. In this case our estimate of $\sigma$ has dropped a mean of 462 grams in our no covariate model defined in Code Block [penguin_mass](penguin_mass) to a mean value 298 grams from the linear model defined in Code Block [penguin_mass_multi](penguin_mass_multi) that includes flipper length and sex as a covariates. This reduction in uncertainty suggests that sex does indeed provide information for estimating a penguin's mass.
+我们可以再次在 {numref}`fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison` 中比较三个模型的标准差，看看是否减少了估计中的不确定性，可以看出，额外提供的信息进一步改进了估计。在当前情况下，我们对 $\sigma$ 的估计从无预测变量模型中的平均 $462$ 克下降到了多元线性模型中的平均 $298$ 克。这种不确定性的减少表明，性别确实为估计企鹅质量提供了有用信息。
 
- ```{code-block} python 
-:name: forest_multiple_models :caption: forest_multiple_models 
+```{code-block} ipython3
+:name: forest_multiple_models
+:caption: forest_multiple_models
 
-az.plot_forest([inf_data_adelie_penguin_mass,         inf_data_adelie_flipper_regression,         inf_data_penguin_mass_categorical],         var_names=["σ"], combined=True) ``` 
+az.plot_forest([inf_data_adelie_penguin_mass,
+        inf_data_adelie_flipper_regression,
+        inf_data_penguin_mass_categorical],
+        var_names=["σ"], combined=True)
+```
 
-```{figure} figures/SingleSpecies_MultipleRegression_Forest_Sigma_Comparison.png :name: fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison :width: 7.00in By incorporating sex as a covariate in `model_penguin_mass_categorical` the estimated distribution of $\sigma$ from this model is centered around 300 grams, which lower value than estimated by our fixed mean model and our single covariate model. This figure is generated from Code Block [forest_multiple_models](forest_multiple_models).
+```{figure} figures/SingleSpecies_MultipleRegression_Forest_Sigma_Comparison.png 
+:name: fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison 
+:width: 7.00in 
 
+将性别作为预测变量纳入 `model_penguin_mass_categorical` 中，该模型中 $\sigma$ 的估计分布以 $300$ 克为中心，低于无预测变量模型和单预测变量模型的估计值。该图由代码 [forest_multiple_models](forest_multiple_models) 生成。
 ``` 
 
 ::: {admonition} More covariates is not always better 
 
-All model fitting algorithms will find a signal, even if it is random noise. This phenomenon is called overfitting and it describes a condition where the algorithm can quite handily map covariates to outcomes in seen cases, but fails to generalize to new observations. In linear regressions we can show this by generating 100 random covariates, and fitting them to a random simulated dataset {cite:p}`mcelreath_2020`. Even though there is no relation, we would be led to believe our linear model is doing quite well.
+所有模型拟合算法都会找到一个信号，即使它是随机噪声。这种现象被称为过度拟合，它描述了一种情况，即算法可以很容易地将预测变量映射到已见案例中的结果，但无法推广到新的观测结果。在线性回归中，我们可以通过生成 100 个随机预测变量并将它们拟合到随机模拟数据集 {cite:p}`mcelreath_2020` 来证明这一点。即使没有关系，我们也会被引导相信我们的线性模型做得很好。
 
 ::: 
 
 (linear_counter_factuals)= 
 
-### Counterfactuals 
+### 3.3.1 反事实分析 
 
-In Code Block [penguins_ppd](penguins_ppd) we made a prediction using parameters fitted in a model with a single covariate and our target, and changing that covariate, flipper length, to get an estimate of mass at that fixed flipper length. In multiple regression, we can do something similar, where we take our regression, hold all covariates constant except one, and see how that change to that one covariate changes our expected outcome. This analysis is called a counterfactual analysis. Let us extend the multiple regression from the previous section (Code Block [penguin_mass_multi](penguin_mass_multi)), this time including bill length, and run a counterfactual analysis in TFP. The model building and inference is shown in Code Block [tfp_flipper_bill_sex](tfp_flipper_bill_sex).
+在代码 [penguins_ppd](penguins_ppd) 中，我们使用单预测变量模型拟合的参数进行预测，并调整鳍状肢长度以获得相应的质量估计。在多元回归中，我们可以做类似的工作。我们可以保持其他所有预测变量固定，然后查看剩下的那个预测变量如何改变预测结果。这种分析方法通常被称为**反事实分析**。
 
- ```{code-block} python 
-:name: tfp_flipper_bill_sex :caption: tfp_flipper_bill_sex 
+让我们扩展上一节代码 [penguin_mass_multi](penguin_mass_multi) 的多元回归，这次增加`喙长度（ Bill Length ）`，并在 `TFP` 中运行反事实分析。模型构建和推断见代码 [tfp_flipper_bill_sex](tfp_flipper_bill_sex) 。
 
-def gen_jd_flipper_bill_sex(flipper_length, sex, bill_length, dtype=tf.float32):     flipper_length, sex, bill_length = tf.nest.map_structure(         lambda x: tf.constant(x, dtype),         (flipper_length, sex, bill_length)     ) 
+```{code-block} ipython3
+:name: tfp_flipper_bill_sex
+:caption: tfp_flipper_bill_sex
 
-    @tfd.JointDistributionCoroutine     def jd_flipper_bill_sex():         σ = yield root(             tfd.HalfStudentT(df=100, loc=0, scale=2000, name="sigma"))         β_0 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_0"))         β_1 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_1"))         β_2 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_2"))         β_3 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_3"))         μ = (β_0[..., None]              + β_1[..., None] * flipper_length              + β_2[..., None] * sex              + β_3[..., None] * bill_length             )         mass = yield tfd.Independent(             tfd.Normal(loc=μ, scale=σ[..., None]),             reinterpreted_batch_ndims=1,             name="mass") 
+def gen_jd_flipper_bill_sex(flipper_length, sex, bill_length, dtype=tf.float32):
+    flipper_length, sex, bill_length = tf.nest.map_structure(
+        lambda x: tf.constant(x, dtype),
+        (flipper_length, sex, bill_length)
+    )
 
-    return jd_flipper_bill_sex 
+    @tfd.JointDistributionCoroutine
+    def jd_flipper_bill_sex():
+        σ = yield root(
+            tfd.HalfStudentT(df=100, loc=0, scale=2000, name="sigma"))
+        β_0 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_0"))
+        β_1 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_1"))
+        β_2 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_2"))
+        β_3 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_3"))
+        μ = (β_0[..., None]
+             + β_1[..., None] * flipper_length
+             + β_2[..., None] * sex
+             + β_3[..., None] * bill_length
+            )
+        mass = yield tfd.Independent(
+            tfd.Normal(loc=μ, scale=σ[..., None]),
+            reinterpreted_batch_ndims=1,
+            name="mass")
 
-bill_length_obs = penguins.loc[adelie_mask, "bill_length_mm"] jd_flipper_bill_sex = gen_jd_flipper_bill_sex(     adelie_flipper_length_obs, sex_obs, bill_length_obs) 
+    return jd_flipper_bill_sex
 
-mcmc_samples, sampler_stats = run_mcmc(     1000, jd_flipper_bill_sex, n_chains=4, num_adaptation_steps=1000,     mass=tf.constant(adelie_mass_obs, tf.float32)) ``` 
+bill_length_obs = penguins.loc[adelie_mask, "bill_length_mm"]
+jd_flipper_bill_sex = gen_jd_flipper_bill_sex(
+    adelie_flipper_length_obs, sex_obs, bill_length_obs)
 
-In this model you will note the addition of another coefficient `beta_3` to correspond to the addition of bill length as a covariate. After inference, we can simulate the mass of penguins with different fictional flipper lengths, while holding the sex constant at male, and the bill length at the observed mean of the dataset. This is done in Code Block [tfp_flipper_bill_sex_counterfactuals](tfp_flipper_bill_sex_counterfactuals) with the result shown in {numref}`fig:LinearCounterfactual`. Again since we wrap the model generation in a Python function (a functional programming style approach), it is easy to condition on new predictors, which useful for counterfactual analyses.
+mcmc_samples, sampler_stats = run_mcmc(
+    1000, jd_flipper_bill_sex, n_chains=4, num_adaptation_steps=1000,
+    mass=tf.constant(adelie_mass_obs, tf.float32))
+```
 
- ```{code-block} python 
-:name: tfp_flipper_bill_sex_counterfactuals :caption: tfp_flipper_bill_sex_counterfactuals 
+在该模型中，你会注意到添加了另一个系数 `beta_3` 以对应于预测变量`喙长度`。推断完成后，我们可以固定企鹅性别为`雄性`、喙长度为数据集均值，然后模拟具有不同鳍状肢长度的企鹅质量。这在代码 [tfp_flipper_bill_sex_counterfactuals](tfp_flipper_bill_sex_counterfactuals) 中实现，结果见 {numref}`fig:LinearCounterfactual` 。由于我们将模型生成过程封装在了 `Python` 函数中（ 一种函数式编程风格的方法 ），因此很容易在新预测变量上做条件化，这对于反事实分析也非常有用。
 
-mean_flipper_length = penguins.loc[adelie_mask, "flipper_length_mm"].mean() # Counterfactual dimensions is set to 21 to allow us to get the mean exactly counterfactual_flipper_lengths = np.linspace(     mean_flipper_length-20, mean_flipper_length+20, 21) sex_male_indicator = np.zeros_like(counterfactual_flipper_lengths) mean_bill_length = np.ones_like(     counterfactual_flipper_lengths) * bill_length_obs.mean() 
+```{code-block} ipython3
+:name: tfp_flipper_bill_sex_counterfactuals
+:caption: tfp_flipper_bill_sex_counterfactuals
 
-jd_flipper_bill_sex_counterfactual = gen_jd_flipper_bill_sex(     counterfactual_flipper_lengths, sex_male_indicator, mean_bill_length) ppc_samples = jd_flipper_bill_sex_counterfactual.sample(value=mcmc_samples) estimated_mass = ppc_samples[-1].numpy().reshape(-1, 21) ``` 
+mean_flipper_length = penguins.loc[adelie_mask, "flipper_length_mm"].mean()
+# Counterfactual dimensions is set to 21 to allow us to get the mean exactly
+counterfactual_flipper_lengths = np.linspace(
+    mean_flipper_length-20, mean_flipper_length+20, 21)
+sex_male_indicator = np.zeros_like(counterfactual_flipper_lengths)
+mean_bill_length = np.ones_like(
+    counterfactual_flipper_lengths) * bill_length_obs.mean()
 
-```{figure} figures/Linear_CounterFactual.png :name: fig:LinearCounterfactual :width: 7.00in Estimated counterfactual mass values for Adelie penguins from Code Block [tfp_flipper_bill_sex_counterfactuals](tfp_flipper_bill_sex_counterfactuals) where flipper length is varied holding all other covariates constant.
+jd_flipper_bill_sex_counterfactual = gen_jd_flipper_bill_sex(
+    counterfactual_flipper_lengths, sex_male_indicator, mean_bill_length)
+ppc_samples = jd_flipper_bill_sex_counterfactual.sample(value=mcmc_samples)
+estimated_mass = ppc_samples[-1].numpy().reshape(-1, 21)
+```
 
+```{figure} figures/Linear_CounterFactual.png 
+:name: fig:LinearCounterfactual 
+:width: 7.00in 
+
+来自代码 [tfp_flipper_bill_sex_counterfactuals](tfp_flipper_bill_sex_counterfactuals) 的 `Adelie 种` 企鹅的反事实法质量估计值，其中仅鳍状肢长度变化，所有其他预测变量都保持不变。
 ``` 
 
-Following McElreath{cite:p}`mcelreath_2020` {numref}`fig:LinearCounterfactual` is called a counterfactual plot. As the word counterfactual implies, we are evaluating a situation counter to the observed data, or facts. In other words, we are evaluating situations that have not happened. The simplest use of a counterfactual plot is to adjust a covariate and explore the result, exactly like we just did. This is great, as it enables us to explore *what-if* scenarios, that could be beyond our reach otherwise [^6]. However, we must be cautious when interpreting this trickery. The first trap is that counterfactual values may be impossible, for example, no penguin may ever exist with a flipper length larger than 1500mm but the model will happily give us estimates for this fictional penguin. The second is more insidious, we assumed that we could vary each covariate independently, but in reality this may not be possible. For example, as a penguin's flipper length increases, its bill length may as well. Counterfactuals are powerful in that they allow us to explore outcomes that have not happened, or that we at least did not observe happen. But they can easily generate estimates for situations that will *never* happen. It is the model that will not discern between the two, so you as a modeler must.
+遵循 McElreath{cite:p}`mcelreath_2020` 的提法， {numref}`fig:LinearCounterfactual` 被称为反事实图。正如“反事实”一词所暗示的那样，我们正在评估与观测数据或事实相反的情况。换句话说，我们正在评估尚未发生的情况。反事实图的最简单用途是调整预测变量并探索预测结果。这是一种很棒的方法，因为它使我们能够探索无法实现的 *what-if* 场景 [^6]。但是，我们在解释这种方法时必须谨慎。第一个陷阱是反事实值有可能根本不可能出现，例如，可能永远不会存在鳍状肢长度大于 $1500$ 毫米的企鹅，但该模型会机械地提供对这种情况的估计。第二个陷阱更隐蔽，我们假设可以独立地改变每个预测变量，但实际上这可能几乎不可能出现。例如，随着企鹅鳍状肢长度的增加，它的喙长度也会增加。反事实法的强大之处在于其允许我们探索尚未发生的结果，或者至少没有被观测到发生的结果。但是它们也可以很容易地为**永远**不会发生的情况生成估计值。模型本身无法区分两者，因此作为建模者，你必须得学会识别它们。
 
- ::: {admonition} Correlation vs Causality 
+::: {admonition} 相关性（ Correlation ）与因果性（ Causality ）
 
-When interpreting linear regressions it is tempting to say "An increase in $X$ **causes** and increase in $Y$\". This is not necessarily the case, in fact causal statements can not be made from a (linear) regression alone. Mathematically a linear model links two (or more variables) together but this link does not need to be causal. For example, increasing the amount of water we provide to a plant can certainly (and causally) increase the plant's growth (at least within some range), but nothing prevents us from inverting this relationship in a model and use the growth of plants to estimate the amount of rain, even when plant growth do not cause rain [^7]. The statistical sub-field of Causal Inference is concerned with the tools and procedures necessary to make causal statements either in the context of randomized experiments or observational studies (see Chapter [7](chap6) for a brief discussion) ::: 
+在解释线性回归时，很容易将其描述为 “$X$ 的增加**导致** $Y$ 的增加”，但情况并不一定如此。事实上因果陈述不能仅从回归中得出。在数学上，回归模型将两个（或更多变量）联系在一起，但这种联系不需要是因果关系。例如，增加为植物提供的水量当然可以（并且因果地）增加植物的生长（至少在一定范围内），但没有什么能阻止我们在模型中颠倒这种关系并使用植物的生长来估计降雨量，即使植物生长不会导致降雨 [^7]。因果推断的统计子领域涉及在随机实验或观测研究背景下做出因果陈述所必需的工具和程序（ 参见第 [7](chap6) 章进行的简要讨论 ）
+
+::: 
 
 (generalized-linear-models)= 
 
-## Generalized Linear Models 
+## 3.4 广义线性模型 
 
-All linear models discussed so far assumed the distribution of observations are conditionally Gaussian which works well in many scenarios. However, we may want to use other distributions. For example, to model things that are restricted to some interval, a number in the interval $[0, 1]$ like probabilities, or natural numbers $\{1, 2, 3, \dots \}$ like counting events. To do this we will take our linear function, $\mathbf{X} \mathit{\beta}$, and modify it using an inverse link function [^8] $\phi$ as shown in Equation {eq}`eq:generalized_linear_model`.
+到目前为止，我们讨论的所有线性模型都假设观测值的分布为高斯分布，这在许多情况下都能很好地工作。但有时我们可能需要使用其他分布。例如要对受限于某个区间的事物建模，区间 $[0, 1]$ 中的数字类似于概率，或者自然数 $\{1, 2, 3, \dots \}$ 类似于计数事件。为此，我们使用线性函数 $\mathbf{X} \mathit{\beta}$，并使用反向链接函数 [^8] $\phi$ 对其进行修改，如公式 {eq}`eq:generalized_linear_model` 所示： 
 
- ```{math} 
-:label: eq:generalized_linear_model \begin{split} \mu =& \phi(\mathbf{X} \beta) \\ Y \sim& \Psi (\mu, \theta) 
+```{math}
+:label: eq:generalized_linear_model
 
-\end{split} ``` 
+\begin{split}
+\mu =& \phi(\mathbf{X} \beta) \\
+Y \sim& \Psi (\mu, \theta)
+\end{split}
+```
 
-where $\Psi$ is some distribution parameterized by $\mu$ and $\theta$ indicating the data likelihood.
+其中 $\Psi$ 是一些由 $\mu$ 和 $\theta$ 参数化的分布，表示数据的似然。
 
- The specific purpose of the inverse link function is to map outputs from the range of real numbers $(-\infty, \infty)$ to a parameter range of the restricted interval. In other words the inverse link function is the specific "trick\" we need to take our linear models and generalize them to many more model architectures. We are still dealing a linear model here in the sense that the expectation of the distribution that generates the observation still follows a linear function of the parameter and the covariates but now we can generalize the use and application of these models to many more scenarios [^9].
+反向链接函数的具体目的是将实数范围 $(-\infty, \infty)$ 的输出映射到受限区间范围。换句话说，反向链接函数是我们将线性模型推广到更多模型架构所需的一种 “技巧”。我们在这里处理的仍然是线性模型，因为生成观测数据所使用的分布的期望仍然遵循参数和预测变量的线性函数，只不过现在我们可以将这些模型的使用和应用推广到更多场景 [^9]。
 
- (logistic-regression)= 
+(logistic-regression)= 
 
-### Logistic Regression 
+### 3.4.1 逻辑斯谛回归 
 
-One of the most common generalized linear model is the logistic regression. It is particularly useful in modeling data where there are only two possible outcomes, we observed either one thing or another thing. The probability of a head or tails outcome in a coin flip is the usual textbook example. More "real world\" examples includes the chance of a defect in manufacturing, a negative or positive cancer test, or the failure of a rocket launch {cite:p}`davidson-pilon_2015`. In a logistic regression the inverse link function is called, unsurprisingly, the logistic function, which maps $(-\infty, \infty)$ to the $(0,1)$ interval. This is handy because now we can map linear functions to the range we would expect for a parameter that estimates probability values, that must be in the range 0 and 1 by definition.
+最常见的广义线性模型之一是逻辑斯谛回归。它在只有两种可能结果之一的数据建模中特别有用。掷硬币中“正面”或“反面”结果的概率是常见的教科书示例。更多“现实世界”中的例子包括：生产中的缺陷可能性、癌症测试的阴性或阳性、火箭发射是否失败 {cite:p}`davidson-pilon_2015`。
 
- ```{math} 
-:label: eq:logistic p = \frac{1}{1+e^{-\mathbf{X}\beta}} 
+在逻辑斯谛回归中，反向链接函数被称为 `逻辑斯谛函数（ logistic function ）`，它将 $(-\infty, \infty)$ 映射到 $(0,1)$ 区间。这很方便，因为现在我们可以将线性函数映射到概率值的 $0$ 到 $1$ 范围内。
+
+```{math}
+:label: eq:logistic
+p = \frac{1}{1+e^{-\mathbf{X}\beta}}
 
 ``` 
 
-```{figure} figures/Logistic.png :name: fig:Logistic :width: 7.00in A plot of a sample logistic function. Note the response has been "squished\" into the interval (0,1).
+```{figure} figures/Logistic.png
+:name: fig:Logistic 
+:width: 7.00in 
+
+一个逻辑斯谛函数示例图。请注意，响应变量已被“压缩”到区间 (0,1) 中。
 
 ``` 
 
-With logistic regression we are able to use linear models to estimate probabilities of an event. Sometimes, instead we want to classify, or to predict, a specific class given some data. In order to do so we want to turn the continuous prediction in the interval $(-\infty, \infty)$ to one between 0 and 1. We can do this with a decision boundary to make a prediction in the set ${0,1}$. Let us assume we want our decision boundary set at a probability of 0.5. For a model with an intercept and one covariate we have: 
+通过逻辑斯谛回归，我们能够使用线性模型来估计事件的概率。有时，我们想要对给定数据进行分类或预测，此时我们希望将区间 $(-\infty, \infty)$ 内的某个连续预测值转换至 $0$ 到 $1$ 之间。然后，可以使用决策边界将其划分为集合 $\{0 ,1\}$ 中的某一个元素。假设将决策边界设置为 $0.5$ 的概率，则对于具有截距和单预测变量的模型，我们有：
+
+```{math}
+\begin{split}
+0.5 &= logistic(\beta_{0} + \beta_{1}*x) \\
+logit(0.5) &= \beta_{0} + \beta_{1}*x \\
+0 &= \beta_{0} + \beta_{1}*x \\
+x &= -\frac{\beta_{0}}{\beta_{1}} \\
+\end{split}
+```
+
+请注意，$logit$ 是 $logistic$ 的逆函数。也就是说，一旦拟合了逻辑斯谛模型，我们就可以使用系数 $\beta_0$ 和 $\beta_1$ 轻松计算出类概率大于 $0.5$ 的 $x$ 值。
+
+(classifying_penguins)= 
+
+### 3.4.2 对企鹅进行分类 
+
+在前面部分中，我们使用企鹅性别和喙长度来估计企鹅的质量。现在改变以下该问题：如果给定企鹅的质量、性别和喙长，我们能够预测其物种吗？
+
+让我们使用 `Adelie`和 `Chinstrap` 这两个企鹅物种来完成此二元任务。就像上次一样，首先使用一个简单模型，只有一个预测变量，即喙长度。我们在代码 [model_logistic_penguins_bill_length](model_logistic_penguins_bill_length) 中编写这个逻辑斯谛模型：
+
+```{code-block} ipython3
+:name: model_logistic_penguins_bill_length
+:caption: model_logistic_penguins_bill_length
+
+species_filter = penguins["species"].isin(["Adelie", "Chinstrap"])
+bill_length_obs = penguins.loc[species_filter, "bill_length_mm"].values
+species = pd.Categorical(penguins.loc[species_filter, "species"])
+
+with pm.Model() as model_logistic_penguins_bill_length:
+    β_0 = pm.Normal("β_0", mu=0, sigma=10)
+    β_1 = pm.Normal("β_1", mu=0, sigma=10)
+
+    μ = β_0 + pm.math.dot(bill_length_obs, β_1)
+
+    # A`PPL`ication of our sigmoid  link function
+    θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
+
+    # Useful for plotting the decision boundary later
+    bd = pm.Deterministic("bd", -β_0/β_1)
+
+    # Note the change in likelihood
+    yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
+
+    prior_predictive_logistic_penguins_bill_length = pm.sample_prior_predictive()
+    trace_logistic_penguins_bill_length = pm.sample(5000, chains=2)
+    inf_data_logistic_penguins_bill_length = az.from_PyMC3(
+        prior=prior_predictive_logistic_penguins_bill_length,
+        trace=trace_logistic_penguins_bill_length)
+```
+
+在广义线性模型中，从参数先验到响应值的映射有时难以理解，此时可以利用先验预测样本来帮助我们可视化预期的观测结果，这被称之为先验预测检查。
+
+在企鹅分类的例子中，通过先验预测检查可以发现：在看到任何数据之前，在所有喙长度上属于 `Gentoo 种` 和 `Adelie 种` 的预期都是合理的。我们通过先验预测检查可以双重检查先验设置和模型是否能够切实表达我们的建模意图。在看到数据之前， {numref}`fig:Prior_Predictive_Logistic` 中这些类大致上是均匀的，这也是我们所期望的。
+
+```{figure} figures/Prior_Predictive_Logistic.png
+:name: fig:Prior_Predictive_Logistic 
+:width: 7.00in 
+
+来自 `model_logistic_penguins_bill_length` 的 $5000$ 个关于类别预测的先验预测样本。这种似然是离散的，更具体地说是二值的，与之前模型中估计的连续型的企鹅质量有所不同。
+``` 
+
+在模型中拟合出参数后，我们可以使用 `az.summary(.)` 函数检查系数（ 参见 {numref}`table:logistic_penguins_bill_length` ）。你会发现，此模型的系数并不像线性回归那样可直接解释。在指定正值的 $\beta_1$ 系数（ 其  `HDI` 不过 $0$ ）时，我们可以看出喙长和物种存在某种关系。我们可以相当直接地解释决策边界，看到大约 $44$ 毫米喙长是两个物种之间的标称切分值。在 {numref}`fig:Logistic_bill_length` 中绘制回归的输出更加直观。图中可以看到随着类别变化从左侧 $0$ 逐步移动到右侧 $1$ 的逻辑斯谛曲线，以及在给定数据时的预期决策边界。
+
+```{figure} figures/Logistic_bill_length.png
+:name: fig:Logistic_bill_length 
+:width: 7.00in 
+
+拟合后的逻辑斯谛回归，显示 `model_logistic_penguins_bill_length` 的概率曲线、观测数据点和决策边界。仅从观测数据来看，两个物种的喙长似乎在 $45$ 毫米左右存在区分，我们的模型同样识别出围绕该值的这种区分。
+``` 
+
+```{list-table} Logistic regression coefficients for model_logistic_penguins_bill_length.
+:name: table:logistic_penguins_bill_length
+
+* -
+  - **mean**
+  - **sd**
+  - **hdi_3%**
+  - **hdi_97%**
+* - $\beta_0$
+  - -46.052
+  -   7.073
+  - -58.932
+  - -34.123
+* - $\beta_1$
+  - 1.045
+  - 0.162
+  - 0.776
+  - 1.347
+```
+
+现在尝试一些不同的东西，我们仍然想对企鹅进行分类，但这次使用企鹅的质量作为预测变量。代码 [model_logistic_penguins_mass](model_logistic_penguins_mass) 显示了该模型：
+
+```{code-block} ipython3
+:name: model_logistic_penguins_mass
+:caption: model_logistic_penguins_mass
+
+mass_obs = penguins.loc[species_filter, "body_mass_g"].values
+
+with pm.Model() as model_logistic_penguins_mass:
+    β_0 = pm.Normal("β_0", mu=0, sigma=10)
+    β_1 = pm.Normal("β_1", mu=0, sigma=10)
+
+    μ = β_0 + pm.math.dot(mass_obs, β_1)
+    θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
+    bd = pm.Deterministic("bd", -β_0/β_1)
+
+    yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
+
+    inf_data_logistic_penguins_mass = pm.sample(
+        5000, target_accept=.9, return_inferencedata=True)
+```
+
+```{list-table} Logistic regression coefficients for model_logistic_penguins_mass.
+:name: table:logistic_penguins_mass
+* -
+  - **mean**
+  - **sd**
+  - **hdi_3%**
+  - **hdi_97%**
+* - $\beta_0$
+  - -1.131
+  -  1.317
+  - -3.654
+  -  1.268
+* - $\beta_1$
+  - 0.000
+  - 0.000
+  - 0.000
+  - 0.001
+```
+
+在 {numref}`table:logistic_penguins_mass` 表格展示的摘要信息中， $\beta_1$ 被估计为 $0$ ，表明质量预测变量中并没有足够信息来区分两个物种。这不一定是坏事，只是表明模型在两个物种的质量之间没有发现明显的差异。
+
+一旦我们在 {numref}`fig:Logistic_mass` 中绘制数据和逻辑斯谛回归的拟合结果，这一点就会表现得非常明显。
+
+```{figure} figures/Logistic_mass.png
+:name: fig:Logistic_mass 
+:width: 7.00in 
+
+`model_logistic_penguins_mass` 的观测数据和逻辑斯谛回归图。与 {numref}`fig:Logistic_bill_length` 不同，数据看起来不可分离3。
+``` 
+
+我们不应该受到这种关系的缺失影响，因为有效的建模就包含一定的试错环节。这不意味着随意试错，以期能够“瞎猫碰个死耗子”，而是意味着可以使用计算工具为你提供进行下一步的线索。
+
+现在尝试同时使用喙长度和质量，在代码 [model_logistic_penguins_bill_length_mass](model_logistic_penguins_bill_length_mass) 中创建多元逻辑斯谛回归，并在 {numref}`fig:Decision_Boundary_Logistic_mass_bill_length` 中绘制决策边界。这次图中的坐标轴有点不同， Y 轴不再是分类概率，而是企鹅的质量。这样就可以明显地看到预测变量之间的决策边界。所有这些目视检查都是有帮助的，但也是主观的。我们可以使用一些诊断工具来量化拟合程度。
+
+```{code-block} ipython3
+:name: model_logistic_penguins_bill_length_mass
+:caption: model_logistic_penguins_bill_length_mass
+
+X = penguins.loc[species_filter, ["bill_length_mm", "body_mass_g"]]
+
+# Add a column of 1s for the intercept
+X.insert(0,"Intercept", value=1)
+X = X.values
+
+with pm.Model() as model_logistic_penguins_bill_length_mass:
+    β = pm.Normal("β", mu=0, sigma=20, shape=3)
+
+    μ = pm.math.dot(X, β)
+
+    θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
+    bd = pm.Deterministic("bd", -β[0]/β[2] - β[1]/β[2] * X[:,1])
+
+    yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
+
+    inf_data_logistic_penguins_bill_length_mass = pm.sample(
+        1000,
+        return_inferencedata=True)
+```
+
+```{figure} figures/Decision_Boundary_Logistic_mass_bill_length.png
+:name: fig:Decision_Boundary_Logistic_mass_bill_length 
+:width: 7.00in 
+
+针对喙长度和质量绘制的物种类别决策边界。可以看到大部分可分离性来自喙长度，尽管质量也添加了一些关于可分离性的额外信息，如线的斜率。
+``` 
+
+为了评估模型是否适合逻辑斯谛回归，可以使用`分离图` {cite:p}`separation_plot`，如代码 [separability_plot](separability_plot) 和 {numref}`fig:Penguins_Separation_Plot` 所示。分离图是一种评估二值观测数据模型校准的方法。它显示了每个类的预测排序，当两个类完美分离时，应当体现为两个不同颜色的矩形。在本示例中，可以看到我们的模型没有一个能够完美地分离两个物种，但包含喙长度的模型比仅包含质量的模型表现得更好。一般来说，完美校准不是贝叶斯分析的目标，使用分离图（以及其他校准评估方法，如 LOO-PIT）的目的是帮助我们比较模型并揭示改进它们的机会。
+
+```{code-block} ipython3
+:name: separability_plot
+:caption: separability_plot
+
+models = {"bill": inf_data_logistic_penguins_bill_length,
+          "mass": inf_data_logistic_penguins_mass,
+          "mass bill": inf_data_logistic_penguins_bill_length_mass}
+
+_, axes = plt.subplots(3, 1, figsize=(12, 4), sharey=True)
+for (label, model), ax in zip(models.items(), axes):
+    az.plot_separation(model, "p", ax=ax, color="C4")
+    ax.set_title(label)
+``` 
+
+```{figure} figures/Penguins_Separation_Plot.png
+:name: fig:Penguins_Separation_Plot 
+:width: 7.00in 
+
+三个企鹅模型的分离图。明暗值表示二分类标签。图中明显看出，仅含质量的模型在区分两个物种方面做得很差，而 `单喙长度` 模型和 `质量-喙` 模型表现更好。
+``` 
+
+我们还可以使用 `留一法（ LOO ）` 来比较刚创建的三个模型：单质量模型、单喙长度模型和代码 [penguin_model_loo](penguin_model_loo) 和 {numref}`tab:penguin_loo` 中的“质量+喙长度”二元预测模型。根据 `LOO`，单质量模型在分离物种方面表现最差，单喙长模型是中间候选模型，“质量+喙长度” 模型表现最好。上面分离图中的结果，现在得到了数值上的确认。
+
+```{code-block} ipython3
+:name: penguin_model_loo
+:caption: penguin_model_loo
+
+az.compare({"mass":inf_data_logistic_penguins_mass,
+            "bill": inf_data_logistic_penguins_bill_length,
+            "mass_bill":inf_data_logistic_penguins_bill_length_mass})
+```
+
+```{list-table} 模型比较的汇总。模型按照 ELPD ( loo 列 ) 值从低到高的排序。
+:name: tab:penguin_loo
+* -
+  - **rank**
+  - **loo**
+  - **p_loo**
+  - **d_loo**
+  - **weight**
+  - **se**
+  - **dse**
+  - **warning**
+  - **loo_scale**
+* - **mass_bill**
+  - 0
+  - -11.3
+  -  1.6
+  -  0.0
+  -  1.0
+  -  3.1
+  -  0.0
+  -  True
+  -  log
+* - **bill**
+  - 1
+  - -27.0
+  -   1.7
+  -  15.6
+  -   0.0
+  -   6.2
+  -   4.9
+  -  True
+  -  log
+* - **mass**
+  -  2
+  - -135.8
+  -  2.1
+  -  124.5
+  -   0.0
+  -  5.3
+  - 5.8
+  -  True
+  -  log
+```
+
+(log_odds)= 
+
+### 3.4.3 解读对数赔率（ Log Odds ）
+
+在逻辑斯谛回归中，斜率告诉你当 $x$ 增加一个单位时，增加了多少`对数赔率（log odds）`单位。赔率指事件发生的概率与不发生的概率之比。例如，在企鹅示例中，如果从 `Adelie 种`或 `Chinstrap 种` 企鹅中随机选择一只企鹅，那么我们选中 `Adelie 种`企鹅的概率将为 $0.68$，如代码 [adelie_prob](adelie_prob) 所示
+
+```{code-block} ipython3
+:name: adelie_prob
+:caption: adelie_prob
+
+# Class counts of each penguin species
+counts = penguins["species"].value_counts()
+adelie_count = counts["Adelie"],
+chinstrap_count = counts["Chinstrap"]
+adelie_count / (adelie_count + chinstrap_count)
+```
+
+```
+array([0.68224299])
+```
+
+对于同一事件，赔率将是 $2.14$：
+
+```{code-block} ipython3
+:name: adelie_odds
+:caption: adelie_odds
+
+adelie_count / chinstrap_count
+```
+
+```
+array([2.14705882])
+```
+
+赔率由与概率相同的组分组成，但以一种更直接地方式，解释了一个事件发生与另一个事件发生的比率。以赔率表示，如果从 `Adelie 种`和 `Chinstrap 种`企鹅中随机抽样，则根据代码 [adelie_odds](adelie_odds) 计算，我们预计最终得到的 `Adelie 种`企鹅的赔率比 `Chinstrap 种` 企鹅高 $2.14$。
+
+利用对赔率的了解，我们可以定义 `logit`。 `logit` 是赔率的自然对数，它是公式 {eq}`eq:logit` 中显示的分数。我们可以用 `logit` 重写公式 {eq}`eq:logistic` 中的逻辑斯谛回归。
 
 ```{math} 
-\begin{split} 0.5 &= logistic(\beta_{0} + \beta_{1}*x) \\ logit(0.5) &= \beta_{0} + \beta_{1}*x \\ 0 &= \beta_{0} + \beta_{1}*x \\ x &= -\frac{\beta_{0}}{\beta_{1}} \\ \end{split} ``` 
+:label: eq:logit 
 
-Note that $logit$ is the inverse of $logistic$. That is, once a logistic model is fitted we can use the coefficients $\beta_0$ and $\beta_1$ to easily compute the value of $x$ for which the probability of the class is greater than 0.5.
-
- (classifying_penguins)= 
-
-### Classifying Penguins 
-
-In the previous sections we used the sex, and bill length of a penguin to estimate the mass of a penguin. Lets now alter the question, if we were given the mass, sex, and bill length of a penguin can we predict the species? Let us use two species Adelie and Chinstrap to make this a binary task. Like last time we use a simple model first with just one covariate, bill length. We write this logistic model in Code Block [model_logistic_penguins_bill_length](model_logistic_penguins_bill_length) 
-
-```{code-block} python 
-:name: model_logistic_penguins_bill_length :caption: model_logistic_penguins_bill_length 
-
-species_filter = penguins["species"].isin(["Adelie", "Chinstrap"]) bill_length_obs = penguins.loc[species_filter, "bill_length_mm"].values species = pd.Categorical(penguins.loc[species_filter, "species"]) 
-
-with pm.Model() as model_logistic_penguins_bill_length:     β_0 = pm.Normal("β_0", mu=0, sigma=10)     β_1 = pm.Normal("β_1", mu=0, sigma=10) 
-
-    μ = β_0 + pm.math.dot(bill_length_obs, β_1) 
-
-    # Application of our sigmoid  link function     θ = pm.Deterministic("θ", pm.math.sigmoid(μ)) 
-
-    # Useful for plotting the decision boundary later     bd = pm.Deterministic("bd", -β_0/β_1) 
-
-    # Note the change in likelihood     yl = pm.Bernoulli("yl", p=θ, observed=species.codes) 
-
-    prior_predictive_logistic_penguins_bill_length = pm.sample_prior_predictive()     trace_logistic_penguins_bill_length = pm.sample(5000, chains=2)     inf_data_logistic_penguins_bill_length = az.from_pymc3(         prior=prior_predictive_logistic_penguins_bill_length,         trace=trace_logistic_penguins_bill_length) ``` 
-
-In generalized linear models, the mapping from parameter prior to response can sometimes be more challenging to understand. We can utilize prior predictive samples to help us visualize the expected observations.
-
-In our classifying penguins example we find it reasonable to equally expect a Gentoo penguin, as we would an Adelie penguin, at all bill lengths, prior to seeing any data. We can double-check our modeling intention has been represented correctly by our priors and model using the prior predictive distribution. The classes are roughly even in {numref}`fig:Prior_Predictive_Logistic` prior to seeing data which is what we would expect.
-
- ```{figure} figures/Prior_Predictive_Logistic.png :name: fig:Prior_Predictive_Logistic :width: 7.00in 5000 prior predictive samples of class prediction from the `model_logistic_penguins_bill_length`. This likelihood is discrete, more specifically binary, as opposed to the continuous distribution of mass that was being estimated in earlier models.
+\log \left(\frac{p}{1-p} \right) = \boldsymbol{X} \beta 
 
 ``` 
 
-After fitting the parameters in our model we can inspect the coefficients using `az.summary(.)` function (see {numref}`table:logistic_penguins_bill_length`).  While we can read the coefficients they are not as directly interpretable as in a linear regression. We can tell there is some relationship with bill length and species given the positive $\beta_1$ coefficient whose HDI does not cross zero. We can interpret the decision boundary fairly directly seeing that around 44 mm in bill length is the nominal cutoff for one species to another. Plotting the regression output in {numref}`fig:Logistic_bill_length` is much more intuitive. Here we see the now familiar logistic curve move from 0 on the left to 1 on the right as the classes change, and a decision boundary where one would expect it given the data.
+该替代公式让我们可以将逻辑斯谛回归的系数解释为对数赔率的变化。此时，如果给定喙长度的变化，我们可以计算出观测到 `Adelie 种` 到 `Chinstrap` 种企鹅的概率，如代码 [logistic_interpretation](logistic_interpretation) 所示。
 
- ```{figure} figures/Logistic_bill_length.png :name: fig:Logistic_bill_length :width: 7.00in Fitted logistic regression, showing probability curve, observed data points and decision boundary for `model_logistic_penguins_bill_length`.
+像这样的转换在数学上很有趣，而且在讨论统计结果时也非常实用，我们将在 {ref}`section_sharing_results` 中更深入地讨论这个主题。
 
-Looking at just the observed data it seems there is a separation around 45mm bill length for both species, and our model similarly discerned the separation around that value.
+```{code-block} ipython3
+:name: logistic_interpretation
+:caption: logistic_interpretation
 
+x = 45
+β_0 = inf_data_logistic_penguins_bill_length.posterior["β_0"].mean().values
+β_1 = inf_data_logistic_penguins_bill_length.posterior["β_1"].mean().values
+bill_length = 45
+
+val_1 = β_0 + β_1*bill_length
+val_2 = β_0 + β_1*(bill_length+1)
+
+f"""(Class Probability change from 45mm Bill Length to 46mm:
+{(special.expit(val_2) -  special.expit(val_1))*100:.0f}%)"""
+```
+
+```
+'Class Probability change from 45mm Bill Length to 46mm: 15%'
+```
+
+(picking-priors-in-regression-models)= 
+
+## 3.5 选择回归模型中的先验 
+
+熟悉了广义线性模型之后，现在让我们关注一下先验及其对后验估计的影响。我们将从 {cite:p}`ROS` 中借用一个例子，特别是其中一项父母吸引力与生女孩的概率之间关系研究{cite:p}`LikehoodandPrior`。在这项研究中，研究人员以五分制评估了美国青少年的吸引力。最终，这些受试者中许多人都有了孩子，其中每种吸引力类别对应的性别比例都在代码 [uninformative_prior_sex_ratio](uninformative_prior_sex_ratio) 中做了计算，其结果以数据点形式显示在 {numref}`fig:BeautyRatio` 中。在同一个代码块中，我们还编写了一个单变量回归模型。这一次重点关注如何一起评估先验和似然，而不是单独进行评估。
+
+```{figure} figures/BeautyRatio.png
+:name: fig:BeautyRatio 
+:width: 7.00in 
+
+父母的吸引力数据与子女的性别比例图。
 ``` 
 
- ```{list-table} Logistic regression coefficients for model_logistic_penguins_bill_length.
+```{code-block} ipython3
+:name: uninformative_prior_sex_ratio
+:caption: uninformative_prior_sex_ratio
 
-:name: table:logistic_penguins_bill_length * -   - **mean**   - **sd**   - **hdi_3%**   - **hdi_97%** * - $\beta_0$   - -46.052   -   7.073   - -58.932   - -34.123 * - $\beta_1$   - 1.045   - 0.162   - 0.776   - 1.347 ``` 
+x = np.arange(-2, 3, 1)
+y = np.asarray([50, 44, 50, 47, 56])
 
-Let us try something different, we still want to classify penguins but this time using mass as a covariate. Code Block [model_logistic_penguins_mass](model_logistic_penguins_mass) shows a model for that purpose.
+with pm.Model() as model_uninformative_prior_sex_ratio:
+    σ = pm.Exponential("σ", .5)
+    β_1 = pm.Normal("β_1", 0, 20)
+    β_0 = pm.Normal("β_0", 50, 20)
 
- ```{code-block} python 
-:name: model_logistic_penguins_mass :caption: model_logistic_penguins_mass 
+    μ = pm.Deterministic("μ", β_0 + β_1 * x)
 
-mass_obs = penguins.loc[species_filter, "body_mass_g"].values 
+    ratio = pm.Normal("ratio", mu=μ, sigma=σ, observed=y)
 
-with pm.Model() as model_logistic_penguins_mass:     β_0 = pm.Normal("β_0", mu=0, sigma=10)     β_1 = pm.Normal("β_1", mu=0, sigma=10) 
-
-    μ = β_0 + pm.math.dot(mass_obs, β_1)     θ = pm.Deterministic("θ", pm.math.sigmoid(μ))     bd = pm.Deterministic("bd", -β_0/β_1) 
-
-    yl = pm.Bernoulli("yl", p=θ, observed=species.codes) 
-
-    inf_data_logistic_penguins_mass = pm.sample(         5000, target_accept=.9, return_inferencedata=True) ``` 
-
- ```{list-table} Logistic regression coefficients for model_logistic_penguins_mass.
-
-:name: table:logistic_penguins_mass * -   - **mean**   - **sd**   - **hdi_3%**   - **hdi_97%** * - $\beta_0$   - -1.131   -  1.317   - -3.654   -  1.268 * - $\beta_1$   - 0.000   - 0.000   - 0.000   - 0.001 ``` 
-
-Our tabular summary in {numref}`table:logistic_penguins_mass` shows that $\beta_1$ is estimated to be 0 indicating there is not enough information in the mass covariate to separate the two classes. This is not necessarily a bad thing, just the model indicating to us that it does not find discernible difference in mass between these two species.
-
-This becomes quite evident once we plot the data and logistic regression fit in {numref}`fig:Logistic_mass`.
-
- ```{figure} figures/Logistic_mass.png :name: fig:Logistic_mass :width: 7.00in Plot of the observed data and logistic regression for `model_logistic_penguins_mass`. Unlike {numref}`fig:Logistic_bill_length` the data does not look very separable and our model did discern one as well.
-
+    prior_predictive_uninformative_prior_sex_ratio = pm.sample_prior_predictive(
+        samples=10000
+    )
+    trace_uninformative_prior_sex_ratio = pm.sample()
+    inf_data_uninformative_prior_sex_ratio = az.from_PyMC3(
+        trace=trace_uninformative_prior_sex_ratio,
+        prior=prior_predictive_uninformative_prior_sex_ratio
+    )
 ``` 
 
-We should not let this lack of relationship discourage us, effective modeling includes a dose of trial an error. This does not mean try random things and hope they work, it instead means that it is ok to use the computational tools to provide you clues to the next step.
+```{figure} figures/PosteriorUninformativeLinearRegression.png
+:name: fig:PosteriorUninformativeLinearRegression 
+:width: 7.00in 
 
- Let us now try using both bill length and mass to create a multiple logistic regression in Code Block [model_logistic_penguins_bill_length_mass](model_logistic_penguins_bill_length_mass) and plot the decision boundary again in {numref}`fig:Decision_Boundary_Logistic_mass_bill_length`. This time the axes of the figure are a little bit different. Instead of the probability of class on the Y-axis, we instead have mass. This way we can see the decision boundary between the dependent variables. All these visual checks have been helpful but subjective. We can quantify our fits numerically as well using diagnostics.
-
- ```{code-block} python 
-:name: model_logistic_penguins_bill_length_mass :caption: model_logistic_penguins_bill_length_mass 
-
-X = penguins.loc[species_filter, ["bill_length_mm", "body_mass_g"]] 
-
-# Add a column of 1s for the intercept X.insert(0,"Intercept", value=1) X = X.values 
-
-with pm.Model() as model_logistic_penguins_bill_length_mass:     β = pm.Normal("β", mu=0, sigma=20, shape=3) 
-
-    μ = pm.math.dot(X, β) 
-
-    θ = pm.Deterministic("θ", pm.math.sigmoid(μ))     bd = pm.Deterministic("bd", -β[0]/β[2] - β[1]/β[2] * X[:,1]) 
-
-    yl = pm.Bernoulli("yl", p=θ, observed=species.codes) 
-
-    inf_data_logistic_penguins_bill_length_mass = pm.sample(         1000,         return_inferencedata=True) ``` 
-
-```{figure} figures/Decision_Boundary_Logistic_mass_bill_length.png :name: fig:Decision_Boundary_Logistic_mass_bill_length :width: 7.00in Decision boundary of species class plotted against bill length and mass.
-
-We can see that most of the species separability comes from bill length although mass now adds some extra information in regards to class separability as indicated by the slope of the line.
-
+在模糊先验或宽先验的情况下，该模型表明，对于被评为有吸引力的父母，出生性别比率可能存在很大差异。其中一些可能的拟合值存在高达 20% 的变化，这似乎令人难以置信，因为没有其他研究表明对出生性别比有如此大的影响。
 ``` 
 
-To evaluate the model fit for logistic regressions we can use a separation plot {cite:p}`separation_plot`, as shown in Code Block [separability_plot](separability_plot) and {numref}`fig:Penguins_Separation_Plot`.A separation plot is a way to assess the calibration of a model with binary observed data. It shows the sorted predictions per class, the idea being that with perfect separation there would be two distinct rectangles. In our case we see that none of our models did a perfect job separating the two species, but the models that included bill length performed much better than the model that included mass only. In general, perfect calibration is not the goal of a Bayesian analysis, nevertheless separation plots (and other calibration assessment methods like LOO-PIT) can help us to compare models and reveal opportunities to improve them.
+名义上，我们将假设出生在男性和女性之间平均分配，并且吸引力对性别比例没有影响。这意味着将截距 $\beta_0$ 的先验均值设置为 $50$，将系数 $\beta_1$ 的先验均值设置为 $0$。我们还设置了宽的离散度来表达我们对截距和吸引力对性别比影响的不确定性。这并不是一个完全*无信息的先验*，我们在第 {ref}`make_prior_count` 节中介绍过它，不过它是一个非常宽的先验。
 
- ```{code-block} python 
-:name: separability_plot :caption: separability_plot 
+根据上述选择，我们在代码 [uninformative_prior_sex_ratio](uninformative_prior_sex_ratio)) 中编写了模型、运行推断、并生成样本来估计后验分布。
+根据数据和模型，我们估计 $\beta_1$ 的平均值为 $1.4$，这意味着与最具吸引力的群体相比，吸引力最小的群体的出生率平均相差 $7.4\%$ 。在 {numref}`fig:PosteriorUninformativeLinearRegression` 中，如果我们包括不确定性，则在将参数条件化为数据之前，从 $50$ 条可能的“拟合线”随机样本中，每单位吸引力的出生比率可以变化超过 $20\%$ 。
 
-models = {"bill": inf_data_logistic_penguins_bill_length,           "mass": inf_data_logistic_penguins_mass,           "mass bill": inf_data_logistic_penguins_bill_length_mass} 
+从数学角度来看，该结果是有效的。但从常识和我们对该研究之外的出生性别比来理解，这些结果值得怀疑。出生时的“自然”性别比约为 “ $105$ 个男孩/$100$ 个女孩” ( 大约 $103$ 到 $107$ 个男孩 )，这意味着出生时的性别比为 $48.5%$ ，标准差为 $0.5$。此外，即便与人类生物学更内在联系的因素，也不会对出生率影响到这种大的程度，这主观上削弱了吸引力应该具有这种影响程度的信念。鉴于此信息，两组之间 $8%$ 的变化将需要特殊的观测。
 
-_, axes = plt.subplots(3, 1, figsize=(12, 4), sharey=True) for (label, model), ax in zip(models.items(), axes):     az.plot_separation(model, "p", ax=ax, color="C4")     ax.set_title(label) ``` 
+让我们再次运行模型，但这次使用代码 [informative_prior_sex_ratio](informative_prior_sex_ratio) 中显示的更具信息性的先验。绘制后验样本，会发现系数的非常集中，并且在考虑可能的比率时，绘制的后验直线落入了更合理的范围内。
 
-```{figure} figures/Penguins_Separation_Plot.png :name: fig:Penguins_Separation_Plot :width: 7.00in Separation plot of all three penguin models. The light versus dark value indicates the binary class label. In this plot its much more evident that the mass only model does a poor job separating the two species, where are the bill and mass bill models perform better at this task.
+```{code-block} ipython3
+:name: informative_prior_sex_ratio
+:caption: informative_prior_sex_ratio
 
+with pm.Model() as model_informative_prior_sex_ratio:
+    σ = pm.Exponential("σ", .5)
+
+    # Note the now more informative priors
+    β_1 = pm.Normal("β_1", 0, .5)
+    β_0 = pm.Normal("β_0", 48.5, .5)
+
+    μ = pm.Deterministic("μ", β_0 + β_1 * x)
+    ratio = pm.Normal("ratio", mu=μ, sigma=σ, observed=y)
+
+    prior_predictive_informative_prior_sex_ratio = pm.sample_prior_predictive(
+        samples=10000
+    )
+    trace_informative_prior_sex_ratio = pm.sample()
+    inf_data_informative_prior_sex_ratio = az.from_PyMC3(
+        trace=trace_informative_prior_sex_ratio,
+        prior=prior_predictive_informative_prior_sex_ratio)
+```
+
+```{figure} figures/PosteriorInformativeLinearRegression.png
+:name: fig:PosteriorInformativeLinearRegression 
+:width: 7.00in 
+
+根据其他论文和专家知识优化后的先验，平均后验在吸引力比率上几乎没有变化，这表明如果认为父母吸引力对出生率有影响，则应该收集更多数据来展示这种影响。
 ``` 
 
-We can also use LOO to compare the three models we have just created, the one for the mass, the one for the bill length and the one including both covariates in Code Block [penguin_model_loo](penguin_model_loo) and {numref}`tab:penguin_loo`. According to LOO the mass only model is the worst at separating the species, the bill length only is the middle candidate model, and the mass and bill length model performed the best. This is unsurprising given what we have seen from the plots, and now we have a numerical confirmation as well.
+这次我们看到吸引力对性别的影响几乎可以忽略不计，根本没有足够信息来影响后验。正如在 {ref}`make_prior_count` 节中提到的，选择先验既是负担也是祝福。无论你认为是哪一种，重要的是使用这种统计工具并做出可解释和有原则的选择。
 
- ```{code-block} python 
-:name: penguin_model_loo :caption: penguin_model_loo 
+(exercises3)= 
 
-az.compare({"mass":inf_data_logistic_penguins_mass,             "bill": inf_data_logistic_penguins_bill_length,             "mass_bill":inf_data_logistic_penguins_bill_length_mass}) ``` 
-
- ```{list-table} Summary of model comparison. Models are ranked from lowest to highest ELPD values (loo column).
-
-:name: tab:penguin_loo * -   - **rank**   - **loo**   - **p_loo**   - **d_loo**   - **weight**   - **se**   - **dse**   - **warning**   - **loo_scale** * - **mass_bill**   - 0   - -11.3   -  1.6   -  0.0   -  1.0   -  3.1   -  0.0   -  True   -  log * - **bill**   - 1   - -27.0   -   1.7   -  15.6   -   0.0   -   6.2   -   4.9   -  True   -  log * - **mass**   -  2   - -135.8   -  2.1   -  124.5   -   0.0   -  5.3   - 5.8   -  True   -  log ``` 
-
- (log_odds)= 
-
-### Interpreting Log Odds 
-
-In a logistic regression the slope is telling you the increase in log odds units when x is incremented one unit. Odds most simply are the ratio between the probability of occurrence and probability of no occurrence. For example, in our penguin example if we were to pick a random penguin from Adelie or Chinstrap penguinsthe probability that we pick an Adelie penguin would be 0.68 as seen in Code Block [adelie_prob](adelie_prob) 
-
- ```{code-block} python 
-:name: adelie_prob :caption: adelie_prob 
-
-# Class counts of each penguin species counts = penguins["species"].value_counts() adelie_count = counts["Adelie"], chinstrap_count = counts["Chinstrap"] adelie_count / (adelie_count + chinstrap_count) ``` 
-
-``` array([0.68224299]) ``` 
-
-And for the same event the odds would be 
-
-```{code-block} python 
-:name: adelie_odds :caption: adelie_odds 
-
-adelie_count / chinstrap_count ``` 
-
-``` array([2.14705882]) ``` 
-
-Odds are made up of the same components as probability but are transformed in a manner that makes interpreting the ratio of one event occurring from another more straightforward. Stated in odds, if we were to randomly sample from Adelie and Chinstrap penguins we would expect to end up with a ratio of 2.14 more Adelie penguins than Chinstrap penguins as calculated by Code Block [adelie_odds](adelie_odds).
-
- Using our knowledge of odds we can define the logit. The logit is the natural log of the odds which is the fraction shown in Equation {eq}`eq:logit`. We can rewrite the logistic regression in Equation {eq}`eq:logistic` in an alternative form of using the logit.
-
- ```{math} 
-:label: eq:logit \log \left(\frac{p}{1-p} \right) = \boldsymbol{X} \beta 
-
-``` 
-
-This alternative formulation lets us interpret the coefficients of logistic regression as the change in log odds. Using this knowledge we can calculate the probability of observing Adelie to Chinstrap penguins given a change in the observed bill length as shown in Code Block [logistic_interpretation](logistic_interpretation).
-
-Transformations like these are both interesting mathematically, but also very practically useful when discussing statistical results, a topic we will discuss more deeply in {ref}`section_sharing_results`).
-
- ```{code-block} python 
-:name: logistic_interpretation :caption: logistic_interpretation 
-
-x = 45 β_0 = inf_data_logistic_penguins_bill_length.posterior["β_0"].mean().values β_1 = inf_data_logistic_penguins_bill_length.posterior["β_1"].mean().values bill_length = 45 
-
-val_1 = β_0 + β_1*bill_length val_2 = β_0 + β_1*(bill_length+1) 
-
-f"""(Class Probability change from 45mm Bill Length to 46mm: {(special.expit(val_2) -  special.expit(val_1))*100:.0f}%)""" ``` 
-
-``` 'Class Probability change from 45mm Bill Length to 46mm: 15%' ``` 
-
- (picking-priors-in-regression-models)= 
-
-## Picking Priors in Regression Models 
-
-Now that we are familiar with generalized linear models let us focus on the prior and its effect on posterior estimation. We will be borrowing an example from Regression and Other Stories {cite:p}`ROS`, in particular a study{cite:p}`LikehoodandPrior` where the relationship between the attractiveness of parents and the percentage of girl births of those parents is explored. In this study researchers estimated the attractiveness of American teenagers on a five-point scale. Eventually many of these subjects had children, of which the ratio of gender per each attractiveness category was calculated, the resulting data points of which are shown in Code Block [uninformative_prior_sex_ratio](uninformative_prior_sex_ratio) and plotted in {numref}`fig:BeautyRatio`. In the same code block we also write a model for single variable regression. This time however, focus specifically on how priors and likelihoods should be assessed together and not independently.
-
- ```{figure} figures/BeautyRatio.png :name: fig:BeautyRatio :width: 7.00in Data on the attractiveness of parents plotted against the gender ratio of their children.
-
-``` 
-
-```{code-block} python 
-:name: uninformative_prior_sex_ratio :caption: uninformative_prior_sex_ratio 
-
-x = np.arange(-2, 3, 1) y = np.asarray([50, 44, 50, 47, 56]) 
-
-with pm.Model() as model_uninformative_prior_sex_ratio:     σ = pm.Exponential("σ", .5)     β_1 = pm.Normal("β_1", 0, 20)     β_0 = pm.Normal("β_0", 50, 20) 
-
-    μ = pm.Deterministic("μ", β_0 + β_1 * x) 
-
-    ratio = pm.Normal("ratio", mu=μ, sigma=σ, observed=y) 
-
-    prior_predictive_uninformative_prior_sex_ratio = pm.sample_prior_predictive(         samples=10000     )     trace_uninformative_prior_sex_ratio = pm.sample()     inf_data_uninformative_prior_sex_ratio = az.from_pymc3(         trace=trace_uninformative_prior_sex_ratio,         prior=prior_predictive_uninformative_prior_sex_ratio     ) ``` 
-
-```{figure} figures/PosteriorUninformativeLinearRegression.png :name: fig:PosteriorUninformativeLinearRegression :width: 7.00in With vague or very wide priors the model shows that large differences in birth ratios are possible for parents rated as attractive. Some of these possible fits are as large as a 20% change which seems implausible as no other study has shown an effect this large on the sex ratio of births.
-
-``` 
-
-Nominally we will assume births are equally split between males and females, and that attractiveness has no effect on sex ratio. This translates to setting the mean of the prior for intercept $\beta_0$ to be 50 and the prior mean for the coefficient $\beta_1$ to be 0. We also set a wide dispersion to express our lack of knowledge about both the intercept and the effect of attractiveness on sex ratio. This is not a fully *uninformative priors*, of which we covered in Section {ref}`make_prior_count`, however, a very wide prior.
-
-Given these choices we can write our model in Code Block [uninformative_prior_sex_ratio](uninformative_prior_sex_ratio)), run inference, and generate samples to estimate posterior distribution.
-
-From the data and model we estimate that the mean of $\beta_1$ to be 1.4, meaning the least attractive group when compared to the most attractive group the birth ratio will differ by 7.4% on average. In {numref}`fig:PosteriorUninformativeLinearRegression` if we include the uncertainty, the ratio can vary by over 20% per unit of attractiveness [^10] from a random sample of 50 possible "lines of fit\" prior to conditioning the parameters to data.
-
- From a mathematical lens this result is valid. But from the lens of our general knowledge and our understanding of birth sex ratio outside of this studies, these results are suspect. The "natural\" sex ratio at birth has been measured to be around 105 boys per 100 girls (ranging from around 103 to 107 boys), which means the sex ratio at birth is 48.5% female, with a standard deviation of 0.5. Moreover, even factors that are more intrinsically tied to human biology do not affect birth ratios to this magnitude, weakening the notion that attractiveness, which is subjective, should have this magnitude of effect. Given this information a change of 8% between two groups would require extraordinary observations.
-
- Let us run our model again but this time set more informative priors shown in Code Block [informative_prior_sex_ratio](informative_prior_sex_ratio) that are consistent with this general knowledge. Plotting our posterior samples the concentration of coefficients is smaller and the plotted posterior lines fall into bounds that more reasonable when considering possible ratios.
-
- ```{code-block} python 
-:name: informative_prior_sex_ratio :caption: informative_prior_sex_ratio 
-
-with pm.Model() as model_informative_prior_sex_ratio:     σ = pm.Exponential("σ", .5) 
-
-    # Note the now more informative priors     β_1 = pm.Normal("β_1", 0, .5)     β_0 = pm.Normal("β_0", 48.5, .5) 
-
-    μ = pm.Deterministic("μ", β_0 + β_1 * x)     ratio = pm.Normal("ratio", mu=μ, sigma=σ, observed=y) 
-
-    prior_predictive_informative_prior_sex_ratio = pm.sample_prior_predictive(         samples=10000     )     trace_informative_prior_sex_ratio = pm.sample()     inf_data_informative_prior_sex_ratio = az.from_pymc3(         trace=trace_informative_prior_sex_ratio,         prior=prior_predictive_informative_prior_sex_ratio) ``` 
-
-```{figure} figures/PosteriorInformativeLinearRegression.png :name: fig:PosteriorInformativeLinearRegression :width: 7.00in With priors informed from other papers and domain expertise the mean posterior hardly changes across attractiveness ratio indicating that if there is a belief there is an effect on birth ratio from the parents attractiveness more data should be collected to showcase the effect.
-
-``` 
-
-This time we see that estimated effect of attractiveness on gender is negligible, there simply was not enough information to affect the posterior. As we mentioned in Section {ref}`make_prior_count` choosing a prior is both a burden and a blessing. Regardless of which you believe it is, it is important to use this statistical tool with an explainable and principled choice.
-
- (exercises3)= 
-
-## Exercises 
+## 3.6 练习 
 
 **E1.** Comparisons are part of everyday life. What is something you compare on a daily basis and answer the following question: 
 
 -   What is the numerical quantification you use for comparison? 
 
--   How do you decide on the logical groupings for observations? For     example in the penguin model we use species or sex 
+-   How do you decide on the logical groupings for observations? For   example in the penguin model we use species or sex 
 
 -   What point estimate would you use to compare them? 
 
 **E2.** Referring to Model [penguin_mass](penguin_mass) complete the following tasks.
 
- 1.  Compute the values of Monte Carlo Standard Error Mean using     `az.summary`. Given the computed values which of the following     reported values of $\mu$ would not be well supported as a point     estimate? 3707.235, 3707.2, or 3707.
+1. Compute the values of Monte Carlo Standard Error Mean using   `az.summary`. Given the computed values which of the following   reported values of $\mu$ would not be well supported as a point   estimate? 3707.235, 3707.2, or 3707.
 
- 2.  Plot the ESS and MCSE per quantiles and describe the results.
+2. Plot the ESS and MCSE per quantiles and describe the results.
 
- 3.  Resample the model using a low number of draws until you get bad     values of $\hat R$, and ESS 
+3. Resample the model using a low number of draws until you get bad   values of $\hat R$, and ESS 
 
-4.  Report the HDI 50% numerically and using `az.plot_posterior` 
+4.  Report the HDI $50\%$ numerically and using `az.plot_posterior` 
 
 **E3.** In your own words explain how regression can be used to do the following: 
 
@@ -744,17 +1282,17 @@ Explain how they are different, the steps to perform each, and situations where 
 
  **E4.** In Code Block [flipper_centering](flipper_centering) and Code Block [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) we centered the flipper length covariate. Refit the model, but instead of centering, subtract the minimum observed flipped length. Compare the posterior estimates of the slope and intercept parameters of the centered model. What is different, what is the same. How does the interpretation of this model change when compared to the centered model? 
 
-**E5.** Translate the following primitives from PyMC3 to TFP. Assume the model name is `pymc_model` 
+**E5.** Translate the following primitives from `PyMC3` to TFP. Assume the model name is `pymc_model` 
 
 1.  `pm.StudentT("x", 0, 10, 20)` 
 
 2.  `pm.sample(chains=2)` 
 
-Hint: write the model and inference first in PyMC3, and find the similar primitives in TFP using the code shown in this chapter.
+Hint: write the model and inference first in `PyMC3`, and find the similar primitives in TFP using the code shown in this chapter.
 
- **E6.** PyMC3 and TFP use different argument names for their distribution parameterizations. For example in PyMC3 the Uniform Distribution is parameterized as `pm.Uniform.dist(lower=, upper=)` whereas in TFP it is `tfd.Uniform(low=, high=)`. Use the online documentation to identify the difference in argument names for the following distributions.
+ **E6.** `PyMC3` and TFP use different argument names for their distribution parameterizations. For example in `PyMC3` the Uniform Distribution is parameterized as `pm.Uniform.dist(lower=, upper=)` whereas in TFP it is `tfd.Uniform(low=, high=)`. Use the online documentation to identify the difference in argument names for the following distributions.
 
- 1.  Normal 
+1. Normal 
 
 2.  Poisson 
 
@@ -782,15 +1320,15 @@ Do you get better inference results? Note that there are divergence with the ori
 
  **M13.** Duplicate the flipper length covariate in Code Block [non_centered_regression](non_centered_regression) by adding a $\beta_2$ coefficient and rerun the model. What do diagnostics such as ESS and rhat indicate about this model with a duplicated coefficient? 
 
-**M14.** Translate the PyMC3 model in Code Block [non_centered_regression](non_centered_regression) into Tensorflow Probability. List three of the syntax differences.
+**M14.** Translate the `PyMC3` model in Code Block [non_centered_regression](non_centered_regression) into Tensorflow Probability. List three of the syntax differences.
 
- **M15.** Translate the TFP model in Code Block [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) into PyMC3. List three of the syntax differences.
+ **M15.** Translate the TFP model in Code Block [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) into `PyMC3`. List three of the syntax differences.
 
  **M16.** Use a logistic regression with increasing number of covariates to reproduce the prior predictive distributions in {numref}`fig:prior_predictive_check_01`.
 
 Explain why its the case that a logistic regression with many covariates generate a prior response with extreme values.
 
- **H17.** Translate the PyMC3 model in Code Block [model_logistic_penguins_bill_length_mass](model_logistic_penguins_bill_length_mass) into TFP to classify Adelie and Chinstrap penguins. Reuse the same model to classify Chinstrap and Gentoo penguins. Compare the coefficients, how do they differ? 
+ **H17.** Translate the `PyMC3` model in Code Block [model_logistic_penguins_bill_length_mass](model_logistic_penguins_bill_length_mass) into TFP to classify Adelie and Chinstrap penguins. Reuse the same model to classify Chinstrap and Gentoo penguins. Compare the coefficients, how do they differ? 
 
 **H18.** In Code Block [penguin_mass](penguin_mass) our model allowed for negative values mass. Change the model so negative values are no longer possible. Run a prior predictive check to verify that your change was effective. Perform MCMC sampling and plot the posterior. Has the posterior changed from the original model? Given the results why would you choose one model over the other and why? 
 
@@ -800,25 +1338,24 @@ Do these covariates help estimate Adelie mass more precisely? Justify your answe
 
  **H20.** Similar the exercise 2H19, see if adding bill depth or island covariates to the penguin logistic regression help classify Adelie and Gentoo penguins more precisely. Justify if the additional covariates helped using the numerical and visual tools shown in this chapter.
 
- [^1]: You can find more information in the TensorFlow tutorials and     documentations. For example,     <https://www.tensorflow.org/probability/examples/JointDistributionAutoBatched_A_Gentle_Tutorial>     and     <https://www.tensorflow.org/probability/examples/Modeling_with_JointDistribution>.
+[^1]: You can find more information in the TensorFlow tutorials and   documentations. For example,   <https://www.tensorflow.org/probability/examples/JointDistributionAutoBatched_A_Gentle_Tutorial>   and   <https://www.tensorflow.org/probability/examples/Modeling_with_JointDistribution>.
 
- [^2]: `tfd.Sample` and `tfd.Independent` are distribution constructors     that takes other distributions as input and return a new     distribution. There are other meta distribution but with different     purposes like `tfd.Mixture`, `tfd.TransformedDistribution`, and     `tfd.JointDistribution`. A more comprehensive introduction to     `tfp.distributions` can be found in     <https://www.tensorflow.org/probability/examples/TensorFlow_Distributions_Tutorial> 
+[^2]: `tfd.Sample` and `tfd.Independent` are distribution constructors   that takes other distributions as input and return a new   distribution. There are other meta distribution but with different   purposes like `tfd.Mixture`, `tfd.TransformedDistribution`, and   `tfd.JointDistribution`. A more comprehensive introduction to   `tfp.distributions` can be found in   <https://www.tensorflow.org/probability/examples/TensorFlow_Distributions_Tutorial> 
 
 [^3]: <https://mc-stan.org/docs/2_23/reference-manual/hmc-algorithm-parameters.html#automatic-parameter-tuning> 
 
-[^4]: If wanted exactly the same model we could specify the priors in     Bambi, not shown here. For our purposes however, the models are     "close enough\".
+[^4]: If wanted exactly the same model we could specify the priors in   Bambi, not shown here. For our purposes however, the models are   "close enough\".
 
- [^5]: You can also parse the design matrix differently so that     covariates represents the contrast between 2 categories within a     column.
+[^5]: You can also parse the design matrix differently so that   covariates represents the contrast between 2 categories within a   column.
 
- [^6]: Maybe because collecting more data is expensive or difficult or     even impossible 
+[^6]: Maybe because collecting more data is expensive or difficult or   even impossible 
 
-[^7]: Unless we are talking about large systems like rain forests, where     the presence of plants actually have an impact in the weather.
+[^7]: Unless we are talking about large systems like rain forests, where   the presence of plants actually have an impact in the weather.
 
-    Nature can be hard to grasp with simple statements.
+  Nature can be hard to grasp with simple statements.
 
- [^8]: Traditionally people apply functions like $\phi$ to the left side     of Equation {eq}`eq:generalized_linear_model`, and call them link     functions. We instead prefer to apply them to the right-hand side     and then to avoid confusion we use term inverse link function.
+[^8]: Traditionally people a`PPL`y functions like $\phi$ to the left side   of Equation {eq}`eq:generalized_linear_model`, and call them link   functions. We instead prefer to a`PPL`y them to the right-hand side   and then to avoid confusion we use term inverse link function.
 
- [^9]: Usually in the traditional Generalized Linear Models Literature,     the likelihood of the observation need to be from the Exponential     family, but being Bayesian we are actually not restricted by that     and can use any likelihood that can be parameterized by the expected     value.
+[^9]: Usually in the traditional Generalized Linear Models Literature,   the likelihood of the observation need to be from the Exponential   family, but being Bayesian we are actually not restricted by that   and can use any likelihood that can be parameterized by the expected   value.
 
  [^10]: Estimate shown in corresponding notebook.
-

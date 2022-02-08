@@ -53,7 +53,7 @@ the length of babies. First we will load the data and plot in Code Block
 [babies_data](babies_data) and plot the age and month in
 {numref}`fig:Baby_Length_Scatter`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: babies_data
 :caption: babies_data
 
@@ -76,7 +76,7 @@ determine how quickly a child is growing per month. Note that this model
 formulation contains no transformations, and nothing we have not seen
 already in Chapter [3](chap2).
 
-```{code-block} python
+```{code-block} ipython3
 :name: babies_linear
 :caption: babies_linear
 
@@ -112,8 +112,8 @@ line even if the fit is not all that great.
 :name: fig:Baby_Length_Linear
 :width: 7.00in
 A linear prediction of baby length, where the mean is the blue line, the
-dark gray is the 50% highest density interval of the posterior
-predictive and the light gray is the 94% highest density interval of the
+dark gray is the $50\%$ highest density interval of the posterior
+predictive and the light gray is the $94\%$ highest density interval of the
 posterior predictive. The highest density interval around the mean line
 of fit covers most of the data points despite the predictions tend to be
 either biased high in the early months, 0 to 3, as well as late months,
@@ -128,7 +128,7 @@ generally follows the shape of a square root transformation on the month
 covariate which we write in `model_sqrt` in Code Block
 [babies_transformed](babies_transformed).
 
-```{code-block} python
+```{code-block} ipython3
 :name: babies_transformed
 :caption: babies_transformed
 
@@ -189,7 +189,7 @@ expand `model_sqrt` defined in Code Block
 that when children are young their lengths tend to cluster closely
 together, but as they age their lengths tend to become more dispersed.
 
-```{code-block} python
+```{code-block} ipython3
 :name: babies_varying_variance
 :caption: babies_varying_variance
 
@@ -285,7 +285,7 @@ effect between smoking and the total bill amount [^2]. Just like Model
 [penguin_mass_multi](penguin_mass_multi) we can include
 smokers as an independent categorical variable in our regression.
 
-```{code-block} python
+```{code-block} ipython3
 :name: tips_no_interaction
 :caption: tips_no_interaction
 
@@ -309,7 +309,7 @@ with pm.Model() as model_no_interaction:
 Let us also create a model where we include an interaction term in Code
 Block [tips_interaction](tips_interaction).
 
-```{code-block} python
+```{code-block} ipython3
 :name: tips_interaction
 :caption: tips_interaction
 
@@ -451,7 +451,7 @@ the 5 outliers, which affects the estimates. Additionally, note how the
 estimate of $\sigma$ is quite wide compared to the plotted data in
 {numref}`fig:Empanada_Scatter_Non_Robust`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: non_robust_regression
 :caption: non_robust_regression
 
@@ -469,7 +469,7 @@ with pm.Model() as model_non_robust:
 ```{figure} figures/Empanada_Scatter_Non_Robust.png
 :name: fig:Empanada_Scatter_Non_Robust
 :width: 7.00in
-A plot of the data, fitted regression line, and 94% HDI of
+A plot of the data, fitted regression line, and $94\%$ HDI of
 `model_non_robust` from Code Block
 [non_robust_regression](non_robust_regression) at two
 scales, the top including the outliers, and the bottom focused on the
@@ -515,7 +515,7 @@ t-distribution to reasonably model the nominal data, despite the
 presence of outliers.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: code_robust_regression
 :caption: code_robust_regression
 
@@ -561,7 +561,7 @@ with pm.Model() as model_robust:
 ```{figure} figures/Empanada_Scatter_Robust.png
 :name: fig:Empanada_Scatter_Robust
 :width: 7.00in
-A plot of the data, fitted regression line of `model_robust` and 94% HDI
+A plot of the data, fitted regression line of `model_robust` and $94\%$ HDI
 from Code Block [code_robust_regression](code_robust_regression).
 The outliers are not plotted but are present in the data. The fitted
 line falls within the range of the nominal data points, particularly if
@@ -683,7 +683,7 @@ include an intercept parameter for the simple reason that if a
 restaurant has zero customers, total sales will also be zero, so there
 is neither any interest nor any need for the extra parameter.
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_sales_unpooled
 :caption: model_sales_unpooled
 
@@ -729,7 +729,7 @@ the categories, but much less for others.
 :width: 7.00in
 Forest plot of the $\beta$ parameter estimates `model_sales_unpooled`.
 As expected the estimate of the $\beta$ coefficient for the salads group
-is the widest as this group has the least amount of data.
+is the widest as this group ha合并s the least amount of data.
 ```
 
 ```{figure} figures/Salad_Sales_Basic_Regression_ForestPlot_sigma.png
@@ -787,7 +787,7 @@ Y \sim& \mathcal{N}(\mu, \sigma)
 
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_sales_pooled
 :caption: model_sales_pooled
 
@@ -909,7 +909,7 @@ will be able to produce plausible inferences about salad sales in this
 new market.
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_sales_mixed_effect
 :caption: model_sales_mixed_effect
 
@@ -944,7 +944,7 @@ label="fig:Salad_Sales_Basic_Regression_Model_Multilevel"}
 ```{figure} figures/Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled.png
 :name: fig:Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled
 :width: 7.00in
-Linear model with 50% HDI from `model_pooled_sigma_sales`. This model is
+Linear model with $50\%$ HDI from `model_pooled_sigma_sales`. This model is
 more useful for our purposes of estimating salad sales as the slopes are
 independently estimated for each group. Note how all the data is being
 used to estimate the single posterior distribution of $\sigma$.
@@ -1020,7 +1020,7 @@ make this statement and "get away with it\", in a real life scenario
 more domain expertise and model comparison would be advised to justify
 this claim.
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_hierarchical_sales
 :caption: model_hierarchical_sales
 
@@ -1069,6 +1069,7 @@ in {numref}`tab:unpooled_sales`. In the unpooled estimate the mean of
 the $\sigma$ estimate for salads is 21.3, whereas in the hierarchical
 estimate the mean of the same parameter estimate is now 25.5, and has
 been "pulled\" up by the means of the pizza and sandwiches category.
+
 Moreover, the estimates of the pizza and salad categories in the
 hierarchical category, while regressed towards the mean slightly, remain
 largely the same as the unpooled estimates. Note how the estimates of each
@@ -1187,6 +1188,7 @@ that works well in one area, fails miserably in another.
 ```{figure} figures/Neals_Funnel.png
 :name: fig:Neals_Funnel
 :width: 7.00in
+
 Correlated samples in a particular shape referred to as Neal's Funnel.
 At sampling at the top of the funnel where Y is around a value 6 to 8, a
 sampler can take wide steps of lets say 1 unit, and likely remain within
@@ -1243,7 +1245,7 @@ Observed salad sales across 6 locations. Note how some locations have
 very few data points relative to others.
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_hierarchical_salad_sales
 :caption: model_hierarchical_salad_sales
 
@@ -1282,7 +1284,7 @@ description may be too abstract in words but is easier to see action in
 Code Block
 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered):
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_hierarchical_salad_sales_centered
 :caption: model_hierarchical_salad_sales_centered
 
@@ -1306,7 +1308,7 @@ in Code Block
 [model_hierarchical_salad_sales_centered_inference](model_hierarchical_salad_sales_centered_inference).
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_hierarchical_salad_sales_centered_inference
 :caption: model_hierarchical_salad_sales_centered_inference
 
@@ -1372,7 +1374,7 @@ Y \sim& \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_hierarchical_salad_sales_non_centered
 :caption: model_hierarchical_salad_sales_non_centered
 
@@ -1457,16 +1459,15 @@ population a whole. We can do so by using our previous
 [model_hierarchical_salad_sales_non_centered](model_hierarchical_salad_sales_non_centered),
 and write an `out_of_sample_prediction_model` as shown in Code Block
 [model_hierarchical_salad_sales_predictions](model_hierarchical_salad_sales_predictions).
-This using the fitted parameter estimates to make an out of sample
-prediction for the distribution of customers for 50 customers, at two
-locations and for the company as a whole *simultaneously*. Since our
+
+This using the fitted parameter estimates to make an out of sample prediction for the distribution of customers for 50 customers, at two locations and for the company as a whole *simultaneously*. Since our
 `non_centered_model` is also a TFP distribution, we can nest it into
 another `tfd.JointDistribution`, doing so constructed a larger Bayesian
 graphical model that extends our initial `non_centered_model` to include
 nodes for out of sample prediction. The estimates are plotted in
 {numref}`fig:Salad_Sales_Hierarchical_Predictions`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_hierarchical_salad_sales_predictions
 :caption: model_hierarchical_salad_sales_predictions
 
@@ -1514,7 +1515,7 @@ the posterior predictive distribution to get salad sales prediction.
 This is demonstrated in Code Block
 [model_hierarchical_salad_sales_predictions_new_location](model_hierarchical_salad_sales_predictions_new_location).
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_hierarchical_salad_sales_predictions_new_location
 :caption: model_hierarchical_salad_sales_predictions_new_location
 
@@ -1591,9 +1592,9 @@ model structure of
 ```{math} 
 :label: eq:ecology_regression
 \begin{split}
-    \alpha_i \sim& \mathcal{N}(\mu_{\alpha},\sigma^2_{\alpha}) \\
-    \mu_{i} =& \alpha_i + \beta Day_i \\
-    Y \sim& \mathcal{N}(\mu_{j},\sigma^2)
+  \alpha_i \sim& \mathcal{N}(\mu_{\alpha},\sigma^2_{\alpha}) \\
+  \mu_{i} =& \alpha_i + \beta Day_i \\
+  Y \sim& \mathcal{N}(\mu_{j},\sigma^2)
 \end{split}
 
 ```
@@ -1619,8 +1620,8 @@ using a regression with a slope and intercept as your basic model
 structure.
 ```{math} 
 \begin{split}
-    \mu =& \beta_0 + \beta_1 X_1 \\
-    Y \sim& \mathcal{N}(\mu, \sigma)
+  \mu =& \beta_0 + \beta_1 X_1 \\
+  Y \sim& \mathcal{N}(\mu, \sigma)
 \end{split}
 ```
 
@@ -1713,13 +1714,13 @@ Minnesota, in the GitHub repository as well as the county of the home,
 and the presence of a basement.
 
 1.  Run an unpooled regression estimating the effect of basements on
-    radon levels.
+  radon levels.
 
 2.  Create a hierarchical model grouping by county. Justify why this
-    model would be useful for the given the data.
+  model would be useful for the given the data.
 
 3.  Create a non-centered regression. Using plots and diagnostics
-    justify if the non-centered parameterization was needed.
+  justify if the non-centered parameterization was needed.
 
 **4H14.** Generate a synthetic dataset for each of the models
 below with your own choice of parameters. Then fit two models to each
@@ -1773,22 +1774,22 @@ Your friend asks you to estimate the following quantities
 4.  The estimated position of the ball from time 20 to time 30
 
 [^1]: The difference between the observed value and the estimated value
-    of a quantity of interest is call the residual.
+  of a quantity of interest is call the residual.
 
 [^2]: Remember this is just a toy dataset, so the take-home message
-    should be about modeling interactions and not about tips.
+  should be about modeling interactions and not about tips.
 
 [^3]: Although the mean is defined only for $\nu > 1$, and the value of
-    $\sigma$ agrees with the standard deviation only when
-    $\nu \to \infty$.
+  $\sigma$ agrees with the standard deviation only when
+  $\nu \to \infty$.
 
 [^4]: A thin dough filled with a salty or sweet preparation and baked or
-    fried. The filling can include red or white meat, fish, vegetables,
-    or fruit. Empanadas are common in Southern European, Latin American,
-    and the Filipino cultures.
+  fried. The filling can include red or white meat, fish, vegetables,
+  or fruit. Empanadas are common in Southern European, Latin American,
+  and the Filipino cultures.
 
 [^5]: The commemoration of the first Argentine government and the
-    Argentine independence day respectively.
+  Argentine independence day respectively.
 
 [^6]: [https://en.wikipedia.org/wiki/Location--scale_family](https://en.wikipedia.org/wiki/Location–scale_family)
 

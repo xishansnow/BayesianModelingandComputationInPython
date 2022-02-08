@@ -23,10 +23,10 @@ A successful Bayesian modeling approach requires performing additional
 tasks beyond inference [^2]. Such as:
 
 -   Diagnosing the quality of the inference results obtained using
-    numerical methods.
+  numerical methods.
 
 -   Model criticism, including evaluations of both model assumptions and
-    model predictions.
+  model predictions.
 
 -   Comparison of models, including model selection or model averaging.
 
@@ -298,7 +298,7 @@ predicted, that is the expected number of predictions above or below
 should be the same. Thus we should get a Uniform distribution. As for
 any finite dataset, even a perfectly calibrated model will show
 deviations from a Uniform distribution, we plot a band where we expected
-to see 94% of the Uniform-like curves.
+to see $94\%$ of the Uniform-like curves.
 
 ::: {admonition} Bayesian p-values
 
@@ -354,17 +354,17 @@ posterior predictive checks plots[^7]. In all these examples the
 observed data (in blue) follows a Gaussian distribution.
 
 1.  On the first row, the model predicts observations that are
-    systematically shifted to higher values with respect to the observed
-    data.
+  systematically shifted to higher values with respect to the observed
+  data.
 
 2.  On the second row, the model is making predictions that are more
-    spread than the observed data.
+  spread than the observed data.
 
 3.  On the third row we have the opposite scenario, the model is not
-    generating enough predictions at the tails.
+  generating enough predictions at the tails.
 
 4.  On the last row shows a model making predictions following a mixture
-    of Gaussians.
+  of Gaussians.
 
 We are now going to pay special attention to the third column from
 {numref}`fig:posterior_predictive_many_examples`. Plots in this column
@@ -372,16 +372,16 @@ are very useful but at the same time they can be confusing at first.
 From top to bottom, you can read them as:
 
 1.  The model is missing observations on the left tail (and making more
-    on the right).
+  on the right).
 
 2.  The model is making less predictions at the middle (and more at the
-    tails).
+  tails).
 
 3.  The model is making less predictions for both tails.
 
 4.  The model is making more or less well-calibrated predictions, but I
-    am a skeptical person so I should run another posterior predictive
-    check to confirm.
+  am a skeptical person so I should run another posterior predictive
+  check to confirm.
 
 If this way of reading the plots still sounds confusing to you, we could
 try from a different perspective that is totally equivalent, but it may
@@ -396,8 +396,8 @@ as:
 3.  There are more observations at the tails.
 
 4.  Observations seem well distributed (at least within the expected
-    boundaries), but you should not trust me. I am just a platonic model
-    in a platonic world.
+  boundaries), but you should not trust me. I am just a platonic model
+  in a platonic world.
 
 We hope {numref}`fig:posterior_predictive_many_examples` and the
 accompanying discussion provide you with enough intuition to better
@@ -452,13 +452,13 @@ posterior. We generate it by sorting `good_chains` and then adding a
 small Gaussian error. `bad_chains0` is a poor sample for two reasons:
 
 -   The values are not independent. On the contrary they are highly
-    autocorrelated, meaning that given any number at any position in the
-    sequence we can compute the values coming before and after with high
-    precision.
+  autocorrelated, meaning that given any number at any position in the
+  sequence we can compute the values coming before and after with high
+  precision.
 
 -   The values are not identically distributed, as we are reshaping a
-    previously flattened and sorted array into a 2D array, representing
-    two chains.
+  previously flattened and sorted array into a 2D array, representing
+  two chains.
 
 The third *synthetic posterior* called `bad_chains1` is generated from
 `good_chains`, and we are turning it into a representation of a poor
@@ -471,15 +471,15 @@ sample.
 ```python
 good_chains = stats.beta.rvs(2, 5,size=(2, 2000))
 bad_chains0 = np.random.normal(np.sort(good_chains, axis=None), 0.05,
-                               size=4000).reshape(2, -1)
+                 size=4000).reshape(2, -1)
 
 bad_chains1 = good_chains.copy()
 for i in np.random.randint(1900, size=4):
-    bad_chains1[i%2:,i:i+100] = np.random.beta(i, 950, size=100)
+  bad_chains1[i%2:,i:i+100] = np.random.beta(i, 950, size=100)
 
 chains = {"good_chains":good_chains,
-          "bad_chains0":bad_chains0,
-          "bad_chains1":bad_chains1}
+      "bad_chains0":bad_chains0,
+      "bad_chains1":bad_chains1}
 ```
 
 Notice that the 3 synthetic posteriors are samples from a scalar (single
@@ -521,11 +521,11 @@ az.ess(chains)
 
 ```none
 <xarray.Dataset>
-Dimensions:      ()
+Dimensions:    ()
 Data variables:
-    good_chains  float64 4.389e+03
-    bad_chains0  float64 2.436
-    bad_chains1  float64 111.1
+  good_chains  float64 4.389e+03
+  bad_chains0  float64 2.436
+  bad_chains1  float64 111.1
 ```
 
 We can see that even when the count of actual samples in our synthetic
@@ -639,11 +639,11 @@ az.rhat(chains)
 
 ```none
 <xarray.Dataset>
-Dimensions:      ()
+Dimensions:    ()
 Data variables:
-    good_chains  float64 1.000
-    bad_chains0  float64 2.408
-    bad_chains1  float64 1.033
+  good_chains  float64 1.000
+  bad_chains0  float64 2.408
+  bad_chains1  float64 1.033
 ```
 
 
@@ -681,11 +681,11 @@ az.mcse(chains)
 
 ```none
 <xarray.Dataset>
-Dimensions:      ()
+Dimensions:    ()
 Data variables:
-    good_chains  float64 0.002381
-    bad_chains0  float64 0.1077
-    bad_chains1  float64 0.01781
+  good_chains  float64 0.002381
+  bad_chains0  float64 0.1077
+  bad_chains1  float64 0.01781
 ```
 
 As with the ESS the MCSE varies across the parameter space and then we
@@ -919,14 +919,14 @@ Uniform distribution spanning a wide range, and when $\theta1$
 approaches zero, the width of $\theta2$ will also approach zero. Using
 PyMC3 we can write this model as:
 
-```{code-block} python
+```{code-block} ipython3
 :name: divm0
 :caption: divm0
 
 with pm.Model() as model_0:
-    θ1 = pm.Normal("θ1", 0, 1, testval=0.1)
-    θ2 = pm.Uniform("θ2", -θ1, θ1)
-    idata_0 = pm.sample(return_inferencedata=True)
+  θ1 = pm.Normal("θ1", 0, 1, testval=0.1)
+  θ2 = pm.Uniform("θ2", -θ1, θ1)
+  idata_0 = pm.sample(return_inferencedata=True)
 ```
 
 ::: {admonition} The ArviZ InferenceData format
@@ -996,13 +996,13 @@ So, let us try to **reparameterize** the model, i.e. express the model
 in a different but mathematically equivalent way. For example, we can
 do:
 
-```{code-block} python
+```{code-block} ipython3
 :name: divm1
 :caption: divm1
 with pm.Model() as model_1:
-    θ1 = pm.HalfNormal("θ1", 1 / (1-2/np.pi)**0.5)
-    θ2 = pm.Uniform("θ2", -θ1, θ1)
-    idata_1 = pm.sample(return_inferencedata=True)
+  θ1 = pm.HalfNormal("θ1", 1 / (1-2/np.pi)**0.5)
+  θ2 = pm.Uniform("θ2", -θ1, θ1)
+  idata_1 = pm.sample(return_inferencedata=True)
 ```
 
 Now $\theta1$ will always provide reasonable values we can feed into the
@@ -1022,13 +1022,13 @@ value of `target_accept` as shown in Code Block
 [divm2](divm2), by default this value is 0.8 and the
 maximum valid value is 1 (see Section {ref}`hmc` for details).
 
-```{code-block} python
+```{code-block} ipython3
 :name: divm2
 :caption: divm2
 with pm.Model() as model_1bis:
-    θ1 = pm.HalfNormal("θ1", 1 / (1-2/np.pi)**0.5)
-    θ2 = pm.Uniform("θ2", -θ1, θ1)
-    idata_1bis = pm.sample(target_accept=.95, return_inferencedata=True)
+  θ1 = pm.HalfNormal("θ1", 1 / (1-2/np.pi)**0.5)
+  θ2 = pm.Uniform("θ2", -θ1, θ1)
+  idata_1bis = pm.sample(target_accept=.95, return_inferencedata=True)
 ```
 
 `model1bis` in {numref}`fig:divergences_trace` and
@@ -1131,8 +1131,11 @@ that process, and pointwise because we perform the computations per
 observation ($y_i$), over the $n$ observations. For simplicity we use
 the term density for both continuous and discrete models [^14].
 
-For real problems we do not know $p_t(\tilde y_i)$ and thus the ELPD as
-defined in Equation {eq}`eq:elpd` is of no immediate use, in practice we
+For real problem
+where $p_t(\tilde y_i)$ is distribution of the true data-generating process for $\tilde y_i$ and $p(\tilde y_i \mid y_i)$ is the posterior predictive distribution. The quantity defined in Equation {eq}`eq:elpd` is known as the **expected log pointwise predictive density** (ELPD).
+
+Expected because we are integrating over the true data-generating process i.e over all the possible datasets that could be generated from that process, and pointwise because we perform the computations per observation ($y_i$), over the $n$ observations. For simplicity we use the term density for both continuous and discrete models [^14].
+tion {eq}`eq:elpd` is of no immediate use, in practice we
 can instead compute:
 
 ```{math}
@@ -1175,7 +1178,7 @@ computed using LOO-CV is $\text{ELPD}_\text{LOO-CV}$:
 ```{math}
 :label: eq:elpd_loo_cv
 \text{ELPD}_\text{LOO-CV} = \sum_{i=1}^{n} \log
-    \int \ p(y_i \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta} \mid y_{-i}) d\boldsymbol{\theta}
+  \int \ p(y_i \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta} \mid y_{-i}) d\boldsymbol{\theta}
 
 ```
 
@@ -1198,7 +1201,7 @@ illustrate how to interpret the output of these functions we are going
 to use 3 simple models. The models are defined in Code Block
 [pymc3_models_for_loo](pymc3_models_for_loo).
 
-```{code-block} python
+```{code-block} ipython3
 :name: pymc3_models_for_loo
 :caption: pymc3_models_for_loo
 
@@ -1208,36 +1211,36 @@ idatas_cmp = {}
 # Generate data from Skewnormal likelihood model
 # with fixed mean and skewness and random standard deviation
 with pm.Model() as mA:
-    σ = pm.HalfNormal("σ", 1)
-    y = pm.SkewNormal("y", 0, σ, alpha=1, observed=y_obs)
-    idataA = pm.sample(return_inferencedata=True)
+  σ = pm.HalfNormal("σ", 1)
+  y = pm.SkewNormal("y", 0, σ, alpha=1, observed=y_obs)
+  idataA = pm.sample(return_inferencedata=True)
 
 # add_groups modifies an existing az.InferenceData
 idataA.add_groups({"posterior_predictive":
-                  {"y":pm.sample_posterior_predictive(idataA)["y"][None,:]}})
+          {"y":pm.sample_posterior_predictive(idataA)["y"][None,:]}})
 idatas_cmp["mA"] = idataA
 
 # Generate data from Normal likelihood model
 # with fixed mean with random standard deviation
 with pm.Model() as mB:
-    σ = pm.HalfNormal("σ", 1)
-    y = pm.Normal("y", 0, σ, observed=y_obs)
-    idataB = pm.sample(return_inferencedata=True)
+  σ = pm.HalfNormal("σ", 1)
+  y = pm.Normal("y", 0, σ, observed=y_obs)
+  idataB = pm.sample(return_inferencedata=True)
 
 idataB.add_groups({"posterior_predictive":
-                  {"y":pm.sample_posterior_predictive(idataB)["y"][None,:]}})
+          {"y":pm.sample_posterior_predictive(idataB)["y"][None,:]}})
 idatas_cmp["mB"] = idataB
 
 # Generate data from Normal likelihood model
 # with random mean and random standard deviation
 with pm.Model() as mC:
-    μ = pm.Normal("μ", 0, 1)
-    σ = pm.HalfNormal("σ", 1)
-    y = pm.Normal("y", μ, σ, observed=y_obs)
-    idataC = pm.sample(return_inferencedata=True)
+  μ = pm.Normal("μ", 0, 1)
+  σ = pm.HalfNormal("σ", 1)
+  y = pm.Normal("y", μ, σ, observed=y_obs)
+  idataC = pm.sample(return_inferencedata=True)
 
 idataC.add_groups({"posterior_predictive":
-                  {"y":pm.sample_posterior_predictive(idataC)["y"][None,:]}})
+          {"y":pm.sample_posterior_predictive(idataC)["y"][None,:]}})
 idatas_cmp["mC"] = idataC
 ```
 
@@ -1295,46 +1298,46 @@ a commonly used function is `az.compare(.)`.
 There are many columns in {numref}`table:compare_00`  so let us detail their meaning one by one:
 
 1.  The first column is the index which lists the names of the models
-    taken from the keys of the dictionary passed to `az.compare(.)`.
+  taken from the keys of the dictionary passed to `az.compare(.)`.
 
 2.  `rank`: The ranking on the models starting from 0 (the model with
-    the highest predictive accuracy) to the number of models.
+  the highest predictive accuracy) to the number of models.
 
 3.  `loo`: The list of ELPD values. The DataFrame is always sorted from
-    best ELPD to worst.
+  best ELPD to worst.
 
 4.  `p_loo`: The list values for the penalization term. We can roughly
-    think of this value as the estimated effective number of parameters
-    (but do not take that too seriously). This value can be lower than
-    the actual number of parameters in model that *has more structure*
-    like hierarchical models or can be much higher than the actual
-    number when the model has very weak predictive capability and may
-    indicate a severe model misspecification.
+  think of this value as the estimated effective number of parameters
+  (but do not take that too seriously). This value can be lower than
+  the actual number of parameters in model that *has more structure*
+  like hierarchical models or can be much higher than the actual
+  number when the model has very weak predictive capability and may
+  indicate a severe model misspecification.
 
 5.  `d_loo`: The list of relative differences between the value of LOO
-    for the top-ranked model and the value of LOO for each model. For
-    this reason we will always get a value of 0 for the first model.
+  for the top-ranked model and the value of LOO for each model. For
+  this reason we will always get a value of 0 for the first model.
 
 6.  `weight`: The weights assigned to each model. These weights can be
-    loosely interpreted as the probability of each model (among the
-    compared models) given the data. See Section {ref}`model_averaging` for
-    details.
+  loosely interpreted as the probability of each model (among the
+  compared models) given the data. See Section {ref}`model_averaging` for
+  details.
 
 7.  `se`: The standard error for the ELPD computations.
 
 8.  `dse`: The standard errors of the difference between two values of
-    the ELPD. `dse` is not necessarily the same as the `se` because the
-    uncertainty about the ELPD can be correlated between models. The
-    value of `dse` is always 0 for the top-ranked model.
+  the ELPD. `dse` is not necessarily the same as the `se` because the
+  uncertainty about the ELPD can be correlated between models. The
+  value of `dse` is always 0 for the top-ranked model.
 
 9.  `warning`: If `True` this is a warning that the LOO approximation
-    may not be reliable (see Section {ref}`k-paretto` for details).
+  may not be reliable (see Section {ref}`k-paretto` for details).
 
 10. `loo_scale`: The scale of the reported values. The default is the
-    log scale. Other options are deviance, this is the log-score
-    multiplied by -2 (this will reverse the order: a lower ELPD will be
-    better). And negative-log, this is the log-score multiplied by -1,
-    as with the deviance scale, a lower value is better.
+  log scale. Other options are deviance, this is the log-score
+  multiplied by -2 (this will reverse the order: a lower ELPD will be
+  better). And negative-log, this is the log-score multiplied by -1,
+  as with the deviance scale, a lower value is better.
 
 We can also represent part of the information in
 {numref}`table:compare_00`  graphically in {numref}`fig:compare_dummy`.
@@ -1431,20 +1434,17 @@ $\hat \kappa > 0.7$ {cite:p}`vehtari_pareto_2019, gabry_visualization_2017`.
 When this is the case the recommendations are {cite:p}`loo_glossary`:
 
 -   Use the matching moment method {cite:p}`Paananen2020` [^17]. With some
-    additional computations, it is possible to transform the MCMC draws
-    from the posterior distribution to obtain more reliable importance
-    sampling estimates.
+  additional computations, it is possible to transform the MCMC draws
+  from the posterior distribution to obtain more reliable importance
+  sampling estimates.
 
 -   Perform exact leave-one-out cross validation for the problematic
-    observations or use k-fold cross-validation.
+  observations or use k-fold cross-validation.
 
 -   Use a model that is more robust to anomalous observations.
 
-When we get at least one value of $\hat \kappa > 0.7$ we will get a
-warning when calling `az.loo(.)` or `az.compare(.)`. The `warning`
-column in {numref}`table:compare_00`  has only `False` values because
-all the computed values of $\hat \kappa$ are $< 0.7$ which we can check
-by ourselves from {numref}`fig:loo_k_dummy`. We have annotated the
+When we get at least one value of $\hat \kappa > 0.7$ we will get a warning when calling `az.loo(.)` or `az.compare(.)`. The `warning` column in {numref}`table:compare_00`  has only `False` values because
+all the computed values of $\hat \kappa$ are $< 0.7$ which we can check by ourselves from {numref}`fig:loo_k_dummy`. We have annotated the
 observations with $\hat \kappa > 0.09$ values in
 {numref}`fig:loo_k_dummy`, $0.09$ is just an arbitrary number we picked,
 you can try with other cutoff value if you want. Comparing
@@ -1481,21 +1481,21 @@ of parameters $p$ can provides us with some additional information
 {cite:p}`loo_glossary`:
 
 -   If $p\_loo << p$, then the model is likely to be misspecified. You
-    usually also see problems in the posterior predictive checks that
-    the posterior predictive samples match the observations poorly.
+  usually also see problems in the posterior predictive checks that
+  the posterior predictive samples match the observations poorly.
 
 -   If $p\_loo < p$ and $p$ is relatively large compared to the number
-    of observations (e.g., $p > \frac{N}{5}$, where $N$ is the total
-    number of observations), it is usually an indication that the model
-    is too flexible or the priors are too uninformative. Thus it becomes
-    difficult to predict the left out observation.
+  of observations (e.g., $p > \frac{N}{5}$, where $N$ is the total
+  number of observations), it is usually an indication that the model
+  is too flexible or the priors are too uninformative. Thus it becomes
+  difficult to predict the left out observation.
 
 -   If $p\_loo > p$, then the model is also likely to be badly
-    misspecified. If the number of parameters is $p << N$, then
-    posterior predictive checks are also likely to already reveal some
-    problem [^18]. However, if $p$ is relatively large compared to the
-    number of observations, say $p > \frac{N}{5}$, it is possible you do
-    not see problems in the posterior predictive checks.
+  misspecified. If the number of parameters is $p << N$, then
+  posterior predictive checks are also likely to already reveal some
+  problem [^18]. However, if $p$ is relatively large compared to the
+  number of observations, say $p > \frac{N}{5}$, it is possible you do
+  not see problems in the posterior predictive checks.
 
 A few heuristics for fixing model misspecification you may try are:
 adding more structure to the model, for example, adding nonlinear
@@ -1670,14 +1670,14 @@ ArviZ to:
 1.  List all the groups available on the InferenceData object.
 
 2.  Identify the number of chains and the total number of posterior
-    samples.
+  samples.
 
 3.  Plot the posterior.
 
 4.  Plot the posterior predictive distribution.
 
 5.  Calculate the estimated mean of the parameters, and the Highest
-    Density Intervals.
+  Density Intervals.
 
 If necessary check the ArviZ documentation to help you do these tasks
 <https://arviz-devs.github.io/arviz/>
@@ -1704,10 +1704,10 @@ to the sampling algorithm. You will find them in the `sample_stats`
 group, including divergences (`diverging`):
 
 1.  Count the number of divergences for "centered_eight\" and
-    "non_centered_eight\" models.
+  "non_centered_eight\" models.
 
 2.  Use `az.plot_parallel` to identify where the divergences tend to
-    concentrate in the parameter space.
+  concentrate in the parameter space.
 
 **2E6.** In the GitHub repository we have included an
 InferenceData object with a Poisson model and one with a
@@ -1716,21 +1716,21 @@ NegativeBinomial, both models are fitted to the same dataset. Use
 answer the following questions:
 
 1.  Which model provides a better fit to the data? Use the functions
-    `az.compare(.)` and `az.plot_compare(.)`
+  `az.compare(.)` and `az.plot_compare(.)`
 
 2.  Explain why one model provides a better fit than the other. Use
-    `az.plot_ppc(.)` and `az.plot_loo_pit(.)`
+  `az.plot_ppc(.)` and `az.plot_loo_pit(.)`
 
 3.  Compare both models in terms of their pointwise ELPD values.
-    Identify the 5 observations with the largest (absolute) difference.
-    Which model is predicting them better? For which model p_loo is
-    closer to the actual number of parameters? Could you explain why?
-    Hint: the Poisson model has a single parameter that controls both
-    the variance and mean. Instead, the NegativeBinomial has two
-    parameters.
+  Identify the 5 observations with the largest (absolute) difference.
+  Which model is predicting them better? For which model p_loo is
+  closer to the actual number of parameters? Could you explain why?
+  Hint: the Poisson model has a single parameter that controls both
+  the variance and mean. Instead, the NegativeBinomial has two
+  parameters.
 
 4.  Diagnose LOO using the $\hat \kappa$ values. Is there any reason to
-    be concerned about the accuracy of LOO for this particular case?
+  be concerned about the accuracy of LOO for this particular case?
 
 **2E7.** Reproduce
 {numref}`fig:posterior_predictive_many_examples`, but using
@@ -1770,40 +1770,40 @@ according to a scoring rate $\mu$. We choose the prior
 $\text{Gamma}(0.5, 0.00001)$ because this is sometimes recommend as an
 "objective\" prior.
 
-```{code-block} python
+```{code-block} ipython3
 :name: poisson_football
 :caption: poisson_football
 with pm.Model() as model:
-    μ = pm.Gamma("μ", 0.5, 0.00001)
-    score = pm.Poisson("score", μ)
-    trace = pm.sample_prior_predictive()
+  μ = pm.Gamma("μ", 0.5, 0.00001)
+  score = pm.Poisson("score", μ)
+  trace = pm.sample_prior_predictive()
 ```
 
 1.  Generate and plot the prior predictive distribution. How reasonable
-    it looks to you?
+  it looks to you?
 
 2.  Use your knowledge of sports in order to refine the prior choice.
 
 3.  Instead of soccer you now want to model basketball. Could you come
-    with a reasonable prior for that instance? Define the prior in a
-    model and generate a prior predictive distribution to validate your
-    intuition.
+  with a reasonable prior for that instance? Define the prior in a
+  model and generate a prior predictive distribution to validate your
+  intuition.
 
-    Hint: You can parameterize the Gamma distribution using the rate and
-    shape parameters as in Code Block
-    [poisson_football](poisson_football) or alternatively
-    using the mean and standard deviation.
+  Hint: You can parameterize the Gamma distribution using the rate and
+  shape parameters as in Code Block
+  [poisson_football](poisson_football) or alternatively
+  using the mean and standard deviation.
 
 **2M12.** In Code Block [metropolis_hastings](metropolis_hastings) from
 Chapter [1](chap1), change the value of `can_sd` and run the
 Metropolis sampler. Try values like 0.2 and 1.
 
 1.  Use ArviZ to compare the sampled values using diagnostics such as
-    the autocorrelation plot, trace plot and the ESS. Explain the
-    observed differences.
+  the autocorrelation plot, trace plot and the ESS. Explain the
+  observed differences.
 
 2.  Modify Code Block [metropolis_hastings](metropolis_hastings) so you get more than one
-    independent chain. Use ArviZ to compute rank plots and $\hat R$.
+  independent chain. Use ArviZ to compute rank plots and $\hat R$.
 
 **2M13.** Generate a random sample using
 `np.random.binomial(n=1, p=0.5, size=200)` and fit it using a
@@ -1820,14 +1820,14 @@ Metropolis-Hastings?
 posterior with convergence issues, let us call it `bad_chains3`.
 
 1.  Explain why the synthetic posterior you generated is "bad\". What
-    about it would we not want to see in an actual modeling scenario?
+  about it would we not want to see in an actual modeling scenario?
 
 2.  Run the same diagnostics we run in the book for `bad_chains0` and
-    `bad_chains1`. Compare your results with those in the book and
-    explain the differences and similarities.
+  `bad_chains1`. Compare your results with those in the book and
+  explain the differences and similarities.
 
 3.  Did the results of the diagnostics from the previous point made you
-    reconsider why `bad_chains3` is a "bad chain\"?
+  reconsider why `bad_chains3` is a "bad chain\"?
 
 **2H15.** Generate a random sample using
 `np.random.binomial(n=1, p=0.5, size=200)` and fit it using a
@@ -1836,16 +1836,16 @@ Beta-Binomial model.
 1.  Check that LOO-PIT is approximately Uniform.
 
 2.  Tweak the prior to make the model a bad fit and get a LOO-PIT that
-    is low for values closer to zero and high for values closer to one.
-    Justify your prior choice.
+  is low for values closer to zero and high for values closer to one.
+  Justify your prior choice.
 
 3.  Tweak the prior to make the model a bad fit and get a LOO-PIT that
-    is high for values closer to zero and low for values closer to one.
-    Justify your prior choice.
+  is high for values closer to zero and low for values closer to one.
+  Justify your prior choice.
 
 4.  Tweak the prior to make the model a bad fit and get a LOO-PIT that
-    is high for values close to 0.5 and low for values closer to zero
-    and one. Could you do it? Explain why.
+  is high for values close to 0.5 and low for values closer to zero
+  and one. Could you do it? Explain why.
 
 **2H16.** Use PyMC3 to write a model with Normal
 likelihood. Use the following random samples as data and the following
@@ -1853,19 +1853,19 @@ priors for the mean. Fix the standard deviation parameter in the
 likelihood at 1.
 
 1.  A random sample of size 200 from a $\mathcal{N}(0,1)$ and prior
-    distribution $\mathcal{N}(0,20)$
+  distribution $\mathcal{N}(0,20)$
 
 2.  A random sample of size 2 from a $\mathcal{N}(0,1)$ and prior
-    distribution $\mathcal{N}(0,20)$
+  distribution $\mathcal{N}(0,20)$
 
 3.  A random sample of size 200 from a $\mathcal{N}(0,1)$ and prior
-    distribution $\mathcal{N}(20 1)$
+  distribution $\mathcal{N}(20 1)$
 
 4.  A random sample of size 200 from a $\mathcal{U}(0,1)$ and prior
-    distribution $\mathcal{N}(10, 20)$
+  distribution $\mathcal{N}(10, 20)$
 
 5.  A random sample of size 200 from a $\mathcal{HN}(0,1)$ and a prior
-    distribution $\mathcal{N}(10,20)$
+  distribution $\mathcal{N}(10,20)$
 
 Assess convergence by running the same diagnostics we run in the book
 for `bad_chains0` and `bad_chains1`. Compare your results with those in
@@ -1881,68 +1881,68 @@ does each tell us about our statistical models?
 [^1]: <https://www.countbayesie.com/blog/2015/2/18/bayes-theorem-with-lego>
 
 [^2]: We are omitting tasks related to obtaining the data in the first
-    place, but experimental design can be as critical if not more than
-    other aspects in the statistical analysis, see Chapter
-    [9](chap10).
+  place, but experimental design can be as critical if not more than
+  other aspects in the statistical analysis, see Chapter
+  [9](chap10).
 
 [^3]: <https://arviz-devs.github.io/arviz/>
 
 [^4]: This example has been adapted from
-    <https://mc-stan.org/users/documentation/case-studies/golf.html> and
-    <https://docs.pymc.io/notebooks/putting_workflow.html>
+  <https://mc-stan.org/users/documentation/case-studies/golf.html> and
+  <https://docs.pymc.io/notebooks/putting_workflow.html>
 
 [^5]: The example has been adapted from {cite:p}`Gelman2020`.
 
 [^6]: See Chapter [3](chap2) for details of the logistic
-    regression model.
+  regression model.
 
 [^7]: Posterior predictive checks are a very general idea. These figures
-    do not try to show the only available choices, just some of the
-    options offered by ArviZ.
+  do not try to show the only available choices, just some of the
+  options offered by ArviZ.
 
 [^8]: Unless you realize you need to collect data again, but that is
-    another story.
+  another story.
 
 [^9]: Try <https://www.timeanddate.com/sun/ecuador/quito>
 
 [^10]: Do not confuse with the standard deviation of the MCSE for the
-    mean.
+  mean.
 
 [^11]: Most useful and commonly used sampling methods for Bayesian
-    inference are variants of HMC, including for example, the default
-    method for continuous variables in PyMC3. For more details of this
-    method, see Section {ref}`hmc`).
+  inference are variants of HMC, including for example, the default
+  method for continuous variables in PyMC3. For more details of this
+  method, see Section {ref}`hmc`).
 
 [^12]: A function which is zero everywhere and infinite at zero.
 
 [^13]: For a sampler like Sequential Monte Carlo, increasing the number
-    of draws also increases the number of particles, and thus it could
-    actually provide better convergence. See Section {ref}`smc_details`.
+  of draws also increases the number of particles, and thus it could
+  actually provide better convergence. See Section {ref}`smc_details`.
 
 [^14]: Strictly speaking we should use probabilities for discrete
-    models, but that distinction rapidly becomes annoying in practice.
+  models, but that distinction rapidly becomes annoying in practice.
 
 [^15]: In non-Bayesians contexts $\boldsymbol{\theta}$ is a point
-    estimate obtained, for example, by maximizing the likelihood.
+  estimate obtained, for example, by maximizing the likelihood.
 
 [^16]: We are also computing samples from the posterior predictive
-    distribution to use them to compute LOO-PIT.
+  distribution to use them to compute LOO-PIT.
 
 [^17]: At time of writing this book the method has not been yet
-    implemented in ArviZ, but it may be already available by the time
-    you are reading this.
+  implemented in ArviZ, but it may be already available by the time
+  you are reading this.
 
 [^18]: See the case study
-    <https://avehtari.github.io/modelselection/roaches.html> for an
-    example.
+  <https://avehtari.github.io/modelselection/roaches.html> for an
+  example.
 
 [^19]: A deeper give into Probability Integral Transform can be found in Section
-      {ref}`probability-integral-transform-pit`.
+    {ref}`probability-integral-transform-pit`.
 
 [^20]: The Akaike information criterion (AIC) is an estimator of the
-    generalization error, it is commonly used in frequentists
-    statistics, but their assumptions are generally not adequate enough
-    for general use with Bayesians models.
+  generalization error, it is commonly used in frequentists
+  statistics, but their assumptions are generally not adequate enough
+  for general use with Bayesians models.
 
 [^21]: This formula also works for WAIC [^22] and other information
-    criteria
+  criteria

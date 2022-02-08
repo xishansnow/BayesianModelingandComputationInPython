@@ -50,14 +50,14 @@ handle the missing values in another way, either through data
 imputation, or imputation during modeling, we will opt to take the
 simplest approach for this chapter.
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguin_load
 :caption: penguin_load
 
 penguins = pd.read_csv("../data/penguins.csv")
 # Subset to the columns needed
 missing_data = penguins.isnull()[
-    ["bill_length_mm", "flipper_length_mm", "sex", "body_mass_g"]
+  ["bill_length_mm", "flipper_length_mm", "sex", "body_mass_g"]
 ].any(axis=1)
 # Drop rows with any missing data
 penguins = penguins.loc[~missing_data]
@@ -68,12 +68,12 @@ Code Block
 [penguin_mass_empirical](penguin_mass_empirical) with just
 a little bit of code, the results of which are in {numref}`tab:penguin_mass_parameters_point_estimates`
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguin_mass_empirical
 :caption: penguin_mass_empirical
 summary_stats = (penguins.loc[:, ["species", "body_mass_g"]]
-                         .groupby("species")
-                         .agg(["mean", "std", "count"]))
+             .groupby("species")
+             .agg(["mean", "std", "count"]))
 ```
 
 
@@ -106,7 +106,7 @@ example:
 ```{math}
 :label: eq:gaussian_bayes
 \overbrace{p(\mu, \sigma \mid Y)}^{Posterior} \propto \overbrace{\mathcal{N}(Y \mid \mu, \sigma)}^{Likelihood}\;  \overbrace{\underbrace{\mathcal{N}(4000, 3000)}_{\mu}
-     \underbrace{\mathcal{H}\text{T}(100, 2000)}_{\sigma}}^{Prior}
+   \underbrace{\mathcal{H}\text{T}(100, 2000)}_{\sigma}}^{Prior}
 
 ```
 
@@ -122,20 +122,20 @@ likelihood for penguin mass and biological mass in general, so we will
 go with it. Let us translate Equation {eq}`eq:gaussian_bayes` into a
 computational model.
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguin_mass
 :caption: penguin_mass
 adelie_mask = (penguins["species"] == "Adelie")
 adelie_mass_obs = penguins.loc[adelie_mask, "body_mass_g"].values
 
 with pm.Model() as model_adelie_penguin_mass:
-    σ = pm.HalfStudentT("σ", 100, 2000)
-    μ = pm.Normal("μ", 4000, 3000)
-    mass = pm.Normal("mass", mu=μ, sigma=σ, observed=adelie_mass_obs)
+  σ = pm.HalfStudentT("σ", 100, 2000)
+  μ = pm.Normal("μ", 4000, 3000)
+  mass = pm.Normal("mass", mu=μ, sigma=σ, observed=adelie_mass_obs)
 
-    prior = pm.sample_prior_predictive(samples=5000)
-    trace = pm.sample(chains=4)
-    inf_data_adelie_penguin_mass = az.from_pymc3(prior=prior, trace=trace)
+  prior = pm.sample_prior_predictive(samples=5000)
+  trace = pm.sample(chains=4)
+  inf_data_adelie_penguin_mass = az.from_pymc3(prior=prior, trace=trace)
 ```
 
 Before computing the posterior we are going to check the prior. In
@@ -247,26 +247,26 @@ same for the other species. We could do so by writing two more models
 but instead let us just run one model with 3 separated groups, one per
 species.
 
-```{code-block} python
+```{code-block} ipython3
 :name: nocovariate_mass
 :caption: nocovariate_mass
 # pd.categorical makes it easy to index species below
 all_species = pd.Categorical(penguins["species"])
 
 with pm.Model() as model_penguin_mass_all_species:
-    # Note the addition of the shape parameter
-    σ = pm.HalfStudentT("σ", 100, 2000, shape=3)
-    μ = pm.Normal("μ", 4000, 3000, shape=3)
-    mass = pm.Normal("mass",
-                     mu=μ[all_species.codes],
-                     sigma=σ[all_species.codes],
-                     observed=penguins["body_mass_g"])
+  # Note the addition of the shape parameter
+  σ = pm.HalfStudentT("σ", 100, 2000, shape=3)
+  μ = pm.Normal("μ", 4000, 3000, shape=3)
+  mass = pm.Normal("mass",
+           mu=μ[all_species.codes],
+           sigma=σ[all_species.codes],
+           observed=penguins["body_mass_g"])
 
-    trace = pm.sample()
-    inf_data_model_penguin_mass_all_species = az.from_pymc3(
-        trace=trace,
-        coords={"μ_dim_0": all_species.categories,
-                "σ_dim_0": all_species.categories})
+  trace = pm.sample()
+  inf_data_model_penguin_mass_all_species = az.from_pymc3(
+    trace=trace,
+    coords={"μ_dim_0": all_species.categories,
+        "σ_dim_0": all_species.categories})
 ```
 
 We use the optional shape argument in each parameter and add an index in
@@ -298,7 +298,7 @@ each species of penguins from the `penguins_masses` model. Note how each
 species has its own pair of estimates for each parameter.
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: mass_forest_plot
 :caption: mass_forest_plot
 
@@ -311,17 +311,17 @@ az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["μ"])
 Forest plot of the mean of mass of each species group in
 `model_penguin_mass_all_species`. Each line represents one chain in the
 sampler, the dot is a point estimate, in this case the mean, the thin
-line is the interquartile range from 25% to 75% of the posterior and the
-thick line is the 94% Highest Density Interval.
+line is the interquartile range from $25\%$ to 75% of the posterior and the
+thick line is the $94\%$ Highest Density Interval.
 ```
 
 {numref}`fig:forest_plot_means` makes it easier to compare our estimates
 and easily note that the Gentoo penguins have more mass than Adelie or
 Chinstrap penguins. Let us also look at the standard deviation in
-{numref}`fig:forest_plot_sigma`. The 94% highest density interval of the
+{numref}`fig:forest_plot_sigma`. The $94\%$ highest density interval of the
 posterior is reporting uncertainty in the order of 100 grams.
 
-    az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"])
+  az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"])
 
 ```{figure} figures/Independent_Model_ForestPlotSigma.png
 :name: fig:forest_plot_sigma
@@ -393,7 +393,7 @@ focus on the model building and inference.
 `model_penguin_mass_all_species` expressed in TFP which is shown in Code
 Block [penguin_mass_tfp](penguin_mass_tfp) below
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguin_mass_tfp
 :caption: penguin_mass_tfp
 
@@ -408,19 +408,19 @@ body_mass_g = tf.constant(penguins["body_mass_g"], tf.float32)
 
 @tfd.JointDistributionCoroutine
 def jd_penguin_mass_all_species():
-    σ = yield root(tfd.Sample(
-            tfd.HalfStudentT(df=100, loc=0, scale=2000),
-            sample_shape=3,
-            name="sigma"))
-    μ = yield root(tfd.Sample(
-            tfd.Normal(loc=4000, scale=3000),
-            sample_shape=3,
-            name="mu"))
-    mass = yield tfd.Independent(
-        tfd.Normal(loc=tf.gather(μ, species_idx, axis=-1),
-                   scale=tf.gather(σ, species_idx, axis=-1)),
-        reinterpreted_batch_ndims=1,
-        name="mass")
+  σ = yield root(tfd.Sample(
+      tfd.HalfStudentT(df=100, loc=0, scale=2000),
+      sample_shape=3,
+      name="sigma"))
+  μ = yield root(tfd.Sample(
+      tfd.Normal(loc=4000, scale=3000),
+      sample_shape=3,
+      name="mu"))
+  mass = yield tfd.Independent(
+    tfd.Normal(loc=tf.gather(μ, species_idx, axis=-1),
+           scale=tf.gather(σ, species_idx, axis=-1)),
+    reinterpreted_batch_ndims=1,
+    name="mass")
 ```
 
 Since this is our first encounter with a Bayesian model written in TFP,
@@ -461,7 +461,7 @@ which returns a custom nested Python structure similar to a
 [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive)
 we draw 1000 prior and prior predictive samples.
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguin_mass_tfp_prior_predictive
 :caption: penguin_mass_tfp_prior_predictive
 
@@ -476,7 +476,7 @@ and inspect the output to see how random samples change if you condition
 some random variables in the model to some specific values. Overall, we
 invoke the *forward* generative process when calling `.sample(.)`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguin_mass_tfp_prior_predictive2
 :caption: penguin_mass_tfp_prior_predictive2
 jd_penguin_mass_all_species.sample(sigma=tf.constant([.1, .2, .3]))
@@ -491,15 +491,15 @@ the input. This could be done by creating a Python function closure or
 using the `.experimental_pin` method, as shown in Code Block
 [tfp_posterior_generation](tfp_posterior_generation):
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_posterior_generation
 :caption: tfp_posterior_generation
 
 target_density_function = lambda *x: jd_penguin_mass_all_species.log_prob(
-    *x, mass=body_mass_g)
+  *x, mass=body_mass_g)
 
 jd_penguin_mass_observed = jd_penguin_mass_all_species.experimental_pin(
-    mass=body_mass_g)
+  mass=body_mass_g)
 target_density_function = jd_penguin_mass_observed.unnormalized_log_prob
 ```
 
@@ -511,27 +511,27 @@ using a standard sampling routine similar to what is currently used in
 PyMC3 [^3] as shown in Code Block
 [tfp_posterior_inference](tfp_posterior_inference):
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_posterior_inference
 :caption: tfp_posterior_inference
 
 run_mcmc = tf.function(
-    tfp.experimental.mcmc.windowed_adaptive_nuts,
-    autograph=False, jit_compile=True)
+  tfp.experimental.mcmc.windowed_adaptive_nuts,
+  autograph=False, jit_compile=True)
 mcmc_samples, sampler_stats = run_mcmc(
-    1000, jd_penguin_mass_all_species, n_chains=4, num_adaptation_steps=1000,
-    mass=body_mass_g)
+  1000, jd_penguin_mass_all_species, n_chains=4, num_adaptation_steps=1000,
+  mass=body_mass_g)
 
 inf_data_model_penguin_mass_all_species2 = az.from_dict(
-    posterior={
-        # TFP mcmc returns (num_samples, num_chains, ...), we swap
-        # the first and second axis below for each RV so the shape
-        # is what ArviZ expected.
-        k:np.swapaxes(v, 1, 0)
-        for k, v in mcmc_samples._asdict().items()},
-    sample_stats={
-        k:np.swapaxes(sampler_stats[k], 1, 0)
-        for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]}
+  posterior={
+    # TFP mcmc returns (num_samples, num_chains, ...), we swap
+    # the first and second axis below for each RV so the shape
+    # is what ArviZ expected.
+    k:np.swapaxes(v, 1, 0)
+    for k, v in mcmc_samples._asdict().items()},
+  sample_stats={
+    k:np.swapaxes(sampler_stats[k], 1, 0)
+    for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]}
 )
 ```
 
@@ -551,24 +551,24 @@ that we make use of the `sample_distributions` method of a
 `tfd.JointDistribution` that draws samples *and* generates a
 distribution conditioned on the posterior samples.
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_idata_additional
 :caption: tfp_idata_additional
 
 prior_predictive_samples = jd_penguin_mass_all_species.sample([1, 1000])
 dist, samples = jd_penguin_mass_all_species.sample_distributions(
-    value=mcmc_samples)
+  value=mcmc_samples)
 ppc_samples = samples[-1]
 ppc_distribution = dist[-1].distribution
 data_log_likelihood = ppc_distribution.log_prob(body_mass_g)
 
 # Be careful not to run this code twice during REPL workflow.
 inf_data_model_penguin_mass_all_species2.add_groups(
-    prior=prior_predictive_samples[:-1]._asdict(),
-    prior_predictive={"mass": prior_predictive_samples[-1]},
-    posterior_predictive={"mass": np.swapaxes(ppc_samples, 1, 0)},
-    log_likelihood={"mass": np.swapaxes(data_log_likelihood, 1, 0)},
-    observed_data={"mass": body_mass_g}
+  prior=prior_predictive_samples[:-1]._asdict(),
+  prior_predictive={"mass": prior_predictive_samples[-1]},
+  posterior_predictive={"mass": np.swapaxes(ppc_samples, 1, 0)},
+  log_likelihood={"mass": np.swapaxes(data_log_likelihood, 1, 0)},
+  observed_data={"mass": body_mass_g}
 )
 ```
 
@@ -603,7 +603,7 @@ a linear combination of other variables
 :label: eq:expanded_regression
 
 \begin{split}
-    \mu =& \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m \\
+  \mu =& \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m \\
 Y \sim& \mathcal{N}(\mu, \sigma)
 \end{split}
 ```
@@ -716,24 +716,24 @@ saying we assume no domain expertise. We subsequently run our sampler,
 which has now estimated three parameters $\sigma$, $\beta_1$ and
 $\beta_0$.
 
-```{code-block} python
+```{code-block} ipython3
 :name: non_centered_regression
 :caption: non_centered_regression
 
 adelie_flipper_length_obs = penguins.loc[adelie_mask, "flipper_length_mm"]
 
 with pm.Model() as model_adelie_flipper_regression:
-    # pm.Data allows us to change the underlying value in a later code block
-    adelie_flipper_length = pm.Data("adelie_flipper_length",
-                                    adelie_flipper_length_obs)
-    σ = pm.HalfStudentT("σ", 100, 2000)
-    β_0 = pm.Normal("β_0", 0, 4000)
-    β_1 = pm.Normal("β_1", 0, 4000)
-    μ = pm.Deterministic("μ", β_0 + β_1 * adelie_flipper_length)
+  # pm.Data allows us to change the underlying value in a later code block
+  adelie_flipper_length = pm.Data("adelie_flipper_length",
+                  adelie_flipper_length_obs)
+  σ = pm.HalfStudentT("σ", 100, 2000)
+  β_0 = pm.Normal("β_0", 0, 4000)
+  β_1 = pm.Normal("β_1", 0, 4000)
+  μ = pm.Deterministic("μ", β_0 + β_1 * adelie_flipper_length)
 
-    mass = pm.Normal("mass", mu=μ, sigma=σ, observed = adelie_mass_obs)
+  mass = pm.Normal("mass", mu=μ, sigma=σ, observed = adelie_mass_obs)
 
-    inf_data_adelie_flipper_regression = pm.sample(return_inferencedata=True)
+  inf_data_adelie_flipper_regression = pm.sample(return_inferencedata=True)
 ```
 
 To save space in the book we are not going to show the diagnostics each
@@ -755,7 +755,7 @@ coefficient $\beta_1$ expresses that for every millimeter change of
 Adelie flipper length we can nominally expect a change of 32 grams of
 mass, although anywhere between 22 grams to 41 grams could reasonably
 occur as well. Additionally, from
-{numref}`fig:adelie_coefficient_posterior_plots` we can note how the 94%
+{numref}`fig:adelie_coefficient_posterior_plots` we can note how the $94\%$
 highest density interval does not cross 0 grams. This supports our
 assumption that there is a relationship between mass and flipper length.
 This observation is quite useful for interpreting how flipper length and
@@ -812,7 +812,7 @@ leverage that information to make better estimates.
 :name: fig:Flipper_length_mass_regression
 :width: 7.00in
 Observed Adelie data of flipper length vs mass as scatter plot, and mean
-estimate of the likelihood as black line, and 94% HDI of the mean as
+estimate of the likelihood as black line, and $94\%$ HDI of the mean as
 gray interval. Note how our mean estimate varies as flipper varies.
 ```
 
@@ -836,16 +836,16 @@ a penguin of average flipper length and wanted to predict the likely
 mass using `PyMC3` we would write Code Block
 [penguins_ppd](penguins_ppd):
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguins_ppd
 :caption: penguins_ppd
 
 with model_adelie_flipper_regression:
-    # Change the underlying value to the mean observed flipper length
-    # for our posterior predictive samples
-    pm.set_data({"adelie_flipper_length": [adelie_flipper_length_obs.mean()]})
-    posterior_predictions = pm.sample_posterior_predictive(
-        inf_data_adelie_flipper_regression.posterior, var_names=["mass", "μ"])
+  # Change the underlying value to the mean observed flipper length
+  # for our posterior predictive samples
+  pm.set_data({"adelie_flipper_length": [adelie_flipper_length_obs.mean()]})
+  posterior_predictions = pm.sample_posterior_predictive(
+    inf_data_adelie_flipper_regression.posterior, var_names=["mass", "μ"])
 ```
 
 In the first line of Code Block
@@ -897,54 +897,54 @@ will opt for a centering transformation, which takes a set a value and
 centers its mean value at zero as shown in Code Block
 [flipper_centering](flipper_centering).
 
-```{code-block} python
+```{code-block} ipython3
 :name: flipper_centering
 :caption: flipper_centering
 
 adelie_flipper_length_c = (adelie_flipper_length_obs -
-                           adelie_flipper_length_obs.mean())
+               adelie_flipper_length_obs.mean())
 ```
 
 With our now centered covariate let us fit our model again, this time
 using TFP.
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_penguins_centered_predictor
 :caption: tfp_penguins_centered_predictor
 
 def gen_adelie_flipper_model(adelie_flipper_length):
-    adelie_flipper_length = tf.constant(adelie_flipper_length, tf.float32)
+  adelie_flipper_length = tf.constant(adelie_flipper_length, tf.float32)
 
-    @tfd.JointDistributionCoroutine
-    def jd_adelie_flipper_regression():
-        σ = yield root(
-            tfd.HalfStudentT(df=100, loc=0, scale=2000, name="sigma"))
-        β_1 = yield root(tfd.Normal(loc=0, scale=4000, name="beta_1"))
-        β_0 = yield root(tfd.Normal(loc=0, scale=4000, name="beta_0"))
-        μ = β_0[..., None] + β_1[..., None] * adelie_flipper_length
-        mass = yield tfd.Independent(
-            tfd.Normal(loc=μ, scale=σ[..., None]),
-            reinterpreted_batch_ndims=1,
-            name="mass")
+  @tfd.JointDistributionCoroutine
+  def jd_adelie_flipper_regression():
+    σ = yield root(
+      tfd.HalfStudentT(df=100, loc=0, scale=2000, name="sigma"))
+    β_1 = yield root(tfd.Normal(loc=0, scale=4000, name="beta_1"))
+    β_0 = yield root(tfd.Normal(loc=0, scale=4000, name="beta_0"))
+    μ = β_0[..., None] + β_1[..., None] * adelie_flipper_length
+    mass = yield tfd.Independent(
+      tfd.Normal(loc=μ, scale=σ[..., None]),
+      reinterpreted_batch_ndims=1,
+      name="mass")
 
-    return jd_adelie_flipper_regression
+  return jd_adelie_flipper_regression
 
 # If use non-centered predictor, this will give the same model as
 # model_adelie_flipper_regression
 jd_adelie_flipper_regression = gen_adelie_flipper_model(
-    adelie_flipper_length_c)
+  adelie_flipper_length_c)
 
 mcmc_samples, sampler_stats = run_mcmc(
-    1000, jd_adelie_flipper_regression, n_chains=4, num_adaptation_steps=1000,
-    mass=tf.constant(adelie_mass_obs, tf.float32))
+  1000, jd_adelie_flipper_regression, n_chains=4, num_adaptation_steps=1000,
+  mass=tf.constant(adelie_mass_obs, tf.float32))
 
 inf_data_adelie_flipper_length_c = az.from_dict(
-    posterior={
-        k:np.swapaxes(v, 1, 0)
-        for k, v in mcmc_samples._asdict().items()},
-    sample_stats={
-        k:np.swapaxes(sampler_stats[k], 1, 0)
-        for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]}
+  posterior={
+    k:np.swapaxes(v, 1, 0)
+    for k, v in mcmc_samples._asdict().items()},
+  sample_stats={
+    k:np.swapaxes(sampler_stats[k], 1, 0)
+    for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]}
 )
 ```
 
@@ -1001,7 +1001,7 @@ let us add a second covariate, this time sex, encoding it as a
 categorical variable and seeing if we can estimate a penguins mass more
 precisely.
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguin_mass_multi
 :caption: penguin_mass_multi
 
@@ -1009,18 +1009,18 @@ precisely.
 sex_obs = penguins.loc[adelie_mask ,"sex"].replace({"male":0, "female":1})
 
 with pm.Model() as model_penguin_mass_categorical:
-    σ = pm.HalfStudentT("σ", 100, 2000)
-    β_0 = pm.Normal("β_0", 0, 3000)
-    β_1 = pm.Normal("β_1", 0, 3000)
-    β_2 = pm.Normal("β_2", 0, 3000)
+  σ = pm.HalfStudentT("σ", 100, 2000)
+  β_0 = pm.Normal("β_0", 0, 3000)
+  β_1 = pm.Normal("β_1", 0, 3000)
+  β_2 = pm.Normal("β_2", 0, 3000)
 
-    μ = pm.Deterministic(
-        "μ", β_0 + β_1 * adelie_flipper_length_obs + β_2 * sex_obs)
+  μ = pm.Deterministic(
+    "μ", β_0 + β_1 * adelie_flipper_length_obs + β_2 * sex_obs)
 
-    mass = pm.Normal("mass", mu=μ, sigma=σ, observed=adelie_mass_obs)
+  mass = pm.Normal("mass", mu=μ, sigma=σ, observed=adelie_mass_obs)
 
-    inf_data_penguin_mass_categorical = pm.sample(
-        target_accept=.9, return_inferencedata=True)
+  inf_data_penguin_mass_categorical = pm.sample(
+    target_accept=.9, return_inferencedata=True)
 ```
 
 You will notice a new parameter, $\beta_{2}$ contributing to the value
@@ -1052,13 +1052,13 @@ model, if disregarding the priors[^4] as the one in Code Block
 [penguin_mass_multi](penguin_mass_multi) in Bambi we would
 write:
 
-```{code-block} python
+```{code-block} ipython3
 :name: bambi_categorical
 :caption: bambi_categorical
 
 import bambi as bmb
 model = bmb.Model("body_mass_g ~ flipper_length_mm + sex",
-                  penguins[adelie_mask])
+          penguins[adelie_mask])
 trace = model.fit()
 ```
 
@@ -1101,14 +1101,14 @@ flipper length and sex as a covariates. This reduction in uncertainty
 suggests that sex does indeed provide information for estimating a
 penguin's mass.
 
-```{code-block} python
+```{code-block} ipython3
 :name: forest_multiple_models
 :caption: forest_multiple_models
 
 az.plot_forest([inf_data_adelie_penguin_mass,
-        inf_data_adelie_flipper_regression,
-        inf_data_penguin_mass_categorical],
-        var_names=["σ"], combined=True)
+    inf_data_adelie_flipper_regression,
+    inf_data_penguin_mass_categorical],
+    var_names=["σ"], combined=True)
 ```
 
 ```{figure} figures/SingleSpecies_MultipleRegression_Forest_Sigma_Comparison.png
@@ -1150,43 +1150,43 @@ including bill length, and run a counterfactual analysis in TFP. The
 model building and inference is shown in Code Block
 [tfp_flipper_bill_sex](tfp_flipper_bill_sex).
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_flipper_bill_sex
 :caption: tfp_flipper_bill_sex
 
 def gen_jd_flipper_bill_sex(flipper_length, sex, bill_length, dtype=tf.float32):
-    flipper_length, sex, bill_length = tf.nest.map_structure(
-        lambda x: tf.constant(x, dtype),
-        (flipper_length, sex, bill_length)
-    )
+  flipper_length, sex, bill_length = tf.nest.map_structure(
+    lambda x: tf.constant(x, dtype),
+    (flipper_length, sex, bill_length)
+  )
 
-    @tfd.JointDistributionCoroutine
-    def jd_flipper_bill_sex():
-        σ = yield root(
-            tfd.HalfStudentT(df=100, loc=0, scale=2000, name="sigma"))
-        β_0 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_0"))
-        β_1 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_1"))
-        β_2 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_2"))
-        β_3 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_3"))
-        μ = (β_0[..., None]
-             + β_1[..., None] * flipper_length
-             + β_2[..., None] * sex
-             + β_3[..., None] * bill_length
-            )
-        mass = yield tfd.Independent(
-            tfd.Normal(loc=μ, scale=σ[..., None]),
-            reinterpreted_batch_ndims=1,
-            name="mass")
+  @tfd.JointDistributionCoroutine
+  def jd_flipper_bill_sex():
+    σ = yield root(
+      tfd.HalfStudentT(df=100, loc=0, scale=2000, name="sigma"))
+    β_0 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_0"))
+    β_1 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_1"))
+    β_2 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_2"))
+    β_3 = yield root(tfd.Normal(loc=0, scale=3000, name="beta_3"))
+    μ = (β_0[..., None]
+       + β_1[..., None] * flipper_length
+       + β_2[..., None] * sex
+       + β_3[..., None] * bill_length
+      )
+    mass = yield tfd.Independent(
+      tfd.Normal(loc=μ, scale=σ[..., None]),
+      reinterpreted_batch_ndims=1,
+      name="mass")
 
-    return jd_flipper_bill_sex
+  return jd_flipper_bill_sex
 
 bill_length_obs = penguins.loc[adelie_mask, "bill_length_mm"]
 jd_flipper_bill_sex = gen_jd_flipper_bill_sex(
-    adelie_flipper_length_obs, sex_obs, bill_length_obs)
+  adelie_flipper_length_obs, sex_obs, bill_length_obs)
 
 mcmc_samples, sampler_stats = run_mcmc(
-    1000, jd_flipper_bill_sex, n_chains=4, num_adaptation_steps=1000,
-    mass=tf.constant(adelie_mass_obs, tf.float32))
+  1000, jd_flipper_bill_sex, n_chains=4, num_adaptation_steps=1000,
+  mass=tf.constant(adelie_mass_obs, tf.float32))
 ```
 
 In this model you will note the addition of another coefficient `beta_3`
@@ -1200,20 +1200,20 @@ we wrap the model generation in a Python function (a functional
 programming style approach), it is easy to condition on new predictors,
 which useful for counterfactual analyses.
 
-```{code-block} python
+```{code-block} ipython3
 :name: tfp_flipper_bill_sex_counterfactuals
 :caption: tfp_flipper_bill_sex_counterfactuals
 
 mean_flipper_length = penguins.loc[adelie_mask, "flipper_length_mm"].mean()
 # Counterfactual dimensions is set to 21 to allow us to get the mean exactly
 counterfactual_flipper_lengths = np.linspace(
-    mean_flipper_length-20, mean_flipper_length+20, 21)
+  mean_flipper_length-20, mean_flipper_length+20, 21)
 sex_male_indicator = np.zeros_like(counterfactual_flipper_lengths)
 mean_bill_length = np.ones_like(
-    counterfactual_flipper_lengths) * bill_length_obs.mean()
+  counterfactual_flipper_lengths) * bill_length_obs.mean()
 
 jd_flipper_bill_sex_counterfactual = gen_jd_flipper_bill_sex(
-    counterfactual_flipper_lengths, sex_male_indicator, mean_bill_length)
+  counterfactual_flipper_lengths, sex_male_indicator, mean_bill_length)
 ppc_samples = jd_flipper_bill_sex_counterfactual.sample(value=mcmc_samples)
 estimated_mass = ppc_samples[-1].numpy().reshape(-1, 21)
 ```
@@ -1365,7 +1365,7 @@ binary task. Like last time we use a simple model first with just one
 covariate, bill length. We write this logistic model in Code Block
 [model_logistic_penguins_bill_length](model_logistic_penguins_bill_length)
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_logistic_penguins_bill_length
 :caption: model_logistic_penguins_bill_length
 
@@ -1374,25 +1374,25 @@ bill_length_obs = penguins.loc[species_filter, "bill_length_mm"].values
 species = pd.Categorical(penguins.loc[species_filter, "species"])
 
 with pm.Model() as model_logistic_penguins_bill_length:
-    β_0 = pm.Normal("β_0", mu=0, sigma=10)
-    β_1 = pm.Normal("β_1", mu=0, sigma=10)
+  β_0 = pm.Normal("β_0", mu=0, sigma=10)
+  β_1 = pm.Normal("β_1", mu=0, sigma=10)
 
-    μ = β_0 + pm.math.dot(bill_length_obs, β_1)
+  μ = β_0 + pm.math.dot(bill_length_obs, β_1)
 
-    # Application of our sigmoid  link function
-    θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
+  # Application of our sigmoid  link function
+  θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
 
-    # Useful for plotting the decision boundary later
-    bd = pm.Deterministic("bd", -β_0/β_1)
+  # Useful for plotting the decision boundary later
+  bd = pm.Deterministic("bd", -β_0/β_1)
 
-    # Note the change in likelihood
-    yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
+  # Note the change in likelihood
+  yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
 
-    prior_predictive_logistic_penguins_bill_length = pm.sample_prior_predictive()
-    trace_logistic_penguins_bill_length = pm.sample(5000, chains=2)
-    inf_data_logistic_penguins_bill_length = az.from_pymc3(
-        prior=prior_predictive_logistic_penguins_bill_length,
-        trace=trace_logistic_penguins_bill_length)
+  prior_predictive_logistic_penguins_bill_length = pm.sample_prior_predictive()
+  trace_logistic_penguins_bill_length = pm.sample(5000, chains=2)
+  inf_data_logistic_penguins_bill_length = az.from_pymc3(
+    prior=prior_predictive_logistic_penguins_bill_length,
+    trace=trace_logistic_penguins_bill_length)
 ```
 
 In generalized linear models, the mapping from parameter prior to
@@ -1464,24 +1464,24 @@ this time using mass as a covariate. Code Block
 [model_logistic_penguins_mass](model_logistic_penguins_mass)
 shows a model for that purpose.
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_logistic_penguins_mass
 :caption: model_logistic_penguins_mass
 
 mass_obs = penguins.loc[species_filter, "body_mass_g"].values
 
 with pm.Model() as model_logistic_penguins_mass:
-    β_0 = pm.Normal("β_0", mu=0, sigma=10)
-    β_1 = pm.Normal("β_1", mu=0, sigma=10)
+  β_0 = pm.Normal("β_0", mu=0, sigma=10)
+  β_1 = pm.Normal("β_1", mu=0, sigma=10)
 
-    μ = β_0 + pm.math.dot(mass_obs, β_1)
-    θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
-    bd = pm.Deterministic("bd", -β_0/β_1)
+  μ = β_0 + pm.math.dot(mass_obs, β_1)
+  θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
+  bd = pm.Deterministic("bd", -β_0/β_1)
 
-    yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
+  yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
 
-    inf_data_logistic_penguins_mass = pm.sample(
-        5000, target_accept=.9, return_inferencedata=True)
+  inf_data_logistic_penguins_mass = pm.sample(
+    5000, target_accept=.9, return_inferencedata=True)
 ```
 
 
@@ -1537,7 +1537,7 @@ can see the decision boundary between the dependent variables. All these
 visual checks have been helpful but subjective. We can quantify our fits
 numerically as well using diagnostics.
 
-```{code-block} python
+```{code-block} ipython3
 :name: model_logistic_penguins_bill_length_mass
 :caption: model_logistic_penguins_bill_length_mass
 
@@ -1548,18 +1548,18 @@ X.insert(0,"Intercept", value=1)
 X = X.values
 
 with pm.Model() as model_logistic_penguins_bill_length_mass:
-    β = pm.Normal("β", mu=0, sigma=20, shape=3)
+  β = pm.Normal("β", mu=0, sigma=20, shape=3)
 
-    μ = pm.math.dot(X, β)
+  μ = pm.math.dot(X, β)
 
-    θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
-    bd = pm.Deterministic("bd", -β[0]/β[2] - β[1]/β[2] * X[:,1])
+  θ = pm.Deterministic("θ", pm.math.sigmoid(μ))
+  bd = pm.Deterministic("bd", -β[0]/β[2] - β[1]/β[2] * X[:,1])
 
-    yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
+  yl = pm.Bernoulli("yl", p=θ, observed=species.codes)
 
-    inf_data_logistic_penguins_bill_length_mass = pm.sample(
-        1000,
-        return_inferencedata=True)
+  inf_data_logistic_penguins_bill_length_mass = pm.sample(
+    1000,
+    return_inferencedata=True)
 ```
 
 ```{figure} figures/Decision_Boundary_Logistic_mass_bill_length.png
@@ -1585,18 +1585,18 @@ the goal of a Bayesian analysis, nevertheless separation plots (and
 other calibration assessment methods like LOO-PIT) can help us to
 compare models and reveal opportunities to improve them.
 
-```{code-block} python
+```{code-block} ipython3
 :name: separability_plot
 :caption: separability_plot
 
 models = {"bill": inf_data_logistic_penguins_bill_length,
-          "mass": inf_data_logistic_penguins_mass,
-          "mass bill": inf_data_logistic_penguins_bill_length_mass}
+      "mass": inf_data_logistic_penguins_mass,
+      "mass bill": inf_data_logistic_penguins_bill_length_mass}
 
 _, axes = plt.subplots(3, 1, figsize=(12, 4), sharey=True)
 for (label, model), ax in zip(models.items(), axes):
-    az.plot_separation(model, "p", ax=ax, color="C4")
-    ax.set_title(label)
+  az.plot_separation(model, "p", ax=ax, color="C4")
+  ax.set_title(label)
 ```
 
 ```{figure} figures/Penguins_Separation_Plot.png
@@ -1617,13 +1617,13 @@ the middle candidate model, and the mass and bill length model performed
 the best. This is unsurprising given what we have seen from the plots,
 and now we have a numerical confirmation as well.
 
-```{code-block} python
+```{code-block} ipython3
 :name: penguin_model_loo
 :caption: penguin_model_loo
 
 az.compare({"mass":inf_data_logistic_penguins_mass,
-            "bill": inf_data_logistic_penguins_bill_length,
-            "mass_bill":inf_data_logistic_penguins_bill_length_mass})
+      "bill": inf_data_logistic_penguins_bill_length,
+      "mass_bill":inf_data_logistic_penguins_bill_length_mass})
 ```
 
 
@@ -1685,7 +1685,7 @@ pick an Adelie penguin would be 0.68 as seen in Code Block
 [adelie_prob](adelie_prob)
 
 
-```{code-block} python
+```{code-block} ipython3
 :name: adelie_prob
 :caption: adelie_prob
 
@@ -1702,7 +1702,7 @@ array([0.68224299])
 
 And for the same event the odds would be
 
-```{code-block} python
+```{code-block} ipython3
 :name: adelie_odds
 :caption: adelie_odds
 
@@ -1740,7 +1740,7 @@ Transformations like these are both interesting mathematically, but also
 very practically useful when discussing statistical results, a topic we
 will discuss more deeply in {ref}`section_sharing_results`).
 
-```{code-block} python
+```{code-block} ipython3
 :name: logistic_interpretation
 :caption: logistic_interpretation
 
@@ -1788,7 +1788,7 @@ Data on the attractiveness of parents plotted against the gender ratio
 of their children.
 ```
 
-```{code-block} python
+```{code-block} ipython3
 :name: uninformative_prior_sex_ratio
 :caption: uninformative_prior_sex_ratio
 
@@ -1796,22 +1796,22 @@ x = np.arange(-2, 3, 1)
 y = np.asarray([50, 44, 50, 47, 56])
 
 with pm.Model() as model_uninformative_prior_sex_ratio:
-    σ = pm.Exponential("σ", .5)
-    β_1 = pm.Normal("β_1", 0, 20)
-    β_0 = pm.Normal("β_0", 50, 20)
+  σ = pm.Exponential("σ", .5)
+  β_1 = pm.Normal("β_1", 0, 20)
+  β_0 = pm.Normal("β_0", 50, 20)
 
-    μ = pm.Deterministic("μ", β_0 + β_1 * x)
+  μ = pm.Deterministic("μ", β_0 + β_1 * x)
 
-    ratio = pm.Normal("ratio", mu=μ, sigma=σ, observed=y)
+  ratio = pm.Normal("ratio", mu=μ, sigma=σ, observed=y)
 
-    prior_predictive_uninformative_prior_sex_ratio = pm.sample_prior_predictive(
-        samples=10000
-    )
-    trace_uninformative_prior_sex_ratio = pm.sample()
-    inf_data_uninformative_prior_sex_ratio = az.from_pymc3(
-        trace=trace_uninformative_prior_sex_ratio,
-        prior=prior_predictive_uninformative_prior_sex_ratio
-    )
+  prior_predictive_uninformative_prior_sex_ratio = pm.sample_prior_predictive(
+    samples=10000
+  )
+  trace_uninformative_prior_sex_ratio = pm.sample()
+  inf_data_uninformative_prior_sex_ratio = az.from_pymc3(
+    trace=trace_uninformative_prior_sex_ratio,
+    prior=prior_predictive_uninformative_prior_sex_ratio
+  )
 ```
 
 ```{figure} figures/PosteriorUninformativeLinearRegression.png
@@ -1839,7 +1839,7 @@ From the data and model we estimate that the mean of $\beta_1$ to be
 attractive group the birth ratio will differ by 7.4% on average. In
 {numref}`fig:PosteriorUninformativeLinearRegression` if we include the
 uncertainty, the ratio can vary by over 20% per unit of attractiveness
-[^10] from a random sample of 50 possible "lines of fit\" prior to
+from a random sample of 50 possible "lines of fit" prior to
 conditioning the parameters to data.
 
 From a mathematical lens this result is valid. But from the lens of our
@@ -1862,27 +1862,27 @@ samples the concentration of coefficients is smaller and the plotted
 posterior lines fall into bounds that more reasonable when considering
 possible ratios.
 
-```{code-block} python
+```{code-block} ipython3
 :name: informative_prior_sex_ratio
 :caption: informative_prior_sex_ratio
 
 with pm.Model() as model_informative_prior_sex_ratio:
-    σ = pm.Exponential("σ", .5)
+  σ = pm.Exponential("σ", .5)
 
-    # Note the now more informative priors
-    β_1 = pm.Normal("β_1", 0, .5)
-    β_0 = pm.Normal("β_0", 48.5, .5)
+  # Note the now more informative priors
+  β_1 = pm.Normal("β_1", 0, .5)
+  β_0 = pm.Normal("β_0", 48.5, .5)
 
-    μ = pm.Deterministic("μ", β_0 + β_1 * x)
-    ratio = pm.Normal("ratio", mu=μ, sigma=σ, observed=y)
+  μ = pm.Deterministic("μ", β_0 + β_1 * x)
+  ratio = pm.Normal("ratio", mu=μ, sigma=σ, observed=y)
 
-    prior_predictive_informative_prior_sex_ratio = pm.sample_prior_predictive(
-        samples=10000
-    )
-    trace_informative_prior_sex_ratio = pm.sample()
-    inf_data_informative_prior_sex_ratio = az.from_pymc3(
-        trace=trace_informative_prior_sex_ratio,
-        prior=prior_predictive_informative_prior_sex_ratio)
+  prior_predictive_informative_prior_sex_ratio = pm.sample_prior_predictive(
+    samples=10000
+  )
+  trace_informative_prior_sex_ratio = pm.sample()
+  inf_data_informative_prior_sex_ratio = az.from_pymc3(
+    trace=trace_informative_prior_sex_ratio,
+    prior=prior_predictive_informative_prior_sex_ratio)
 ```
 
 ```{figure} figures/PosteriorInformativeLinearRegression.png
@@ -1912,7 +1912,7 @@ question:
 -   What is the numerical quantification you use for comparison?
 
 -   How do you decide on the logical groupings for observations? For
-    example in the penguin model we use species or sex
+  example in the penguin model we use species or sex
 
 -   What point estimate would you use to compare them?
 
@@ -1920,16 +1920,16 @@ question:
 [penguin_mass](penguin_mass) complete the following tasks.
 
 1.  Compute the values of Monte Carlo Standard Error Mean using
-    `az.summary`. Given the computed values which of the following
-    reported values of $\mu$ would not be well supported as a point
-    estimate? 3707.235, 3707.2, or 3707.
+  `az.summary`. Given the computed values which of the following
+  reported values of $\mu$ would not be well supported as a point
+  estimate? 3707.235, 3707.2, or 3707.
 
 2.  Plot the ESS and MCSE per quantiles and describe the results.
 
 3.  Resample the model using a low number of draws until you get bad
-    values of $\hat R$, and ESS
+  values of $\hat R$, and ESS
 
-4.  Report the HDI 50% numerically and using `az.plot_posterior`
+4.  Report the HDI $50\%$ numerically and using `az.plot_posterior`
 
 **E3.** In your own words explain how regression can be used
 to do the following:
@@ -2072,45 +2072,45 @@ covariates helped using the numerical and visual tools shown in this
 chapter.
 
 [^1]: You can find more information in the TensorFlow tutorials and
-    documentations. For example,
-    <https://www.tensorflow.org/probability/examples/JointDistributionAutoBatched_A_Gentle_Tutorial>
-    and
-    <https://www.tensorflow.org/probability/examples/Modeling_with_JointDistribution>.
+  documentations. For example,
+  <https://www.tensorflow.org/probability/examples/JointDistributionAutoBatched_A_Gentle_Tutorial>
+  and
+  <https://www.tensorflow.org/probability/examples/Modeling_with_JointDistribution>.
 
 [^2]: `tfd.Sample` and `tfd.Independent` are distribution constructors
-    that takes other distributions as input and return a new
-    distribution. There are other meta distribution but with different
-    purposes like `tfd.Mixture`, `tfd.TransformedDistribution`, and
-    `tfd.JointDistribution`. A more comprehensive introduction to
-    `tfp.distributions` can be found in
-    <https://www.tensorflow.org/probability/examples/TensorFlow_Distributions_Tutorial>
+  that takes other distributions as input and return a new
+  distribution. There are other meta distribution but with different
+  purposes like `tfd.Mixture`, `tfd.TransformedDistribution`, and
+  `tfd.JointDistribution`. A more comprehensive introduction to
+  `tfp.distributions` can be found in
+  <https://www.tensorflow.org/probability/examples/TensorFlow_Distributions_Tutorial>
 
 [^3]: <https://mc-stan.org/docs/2_23/reference-manual/hmc-algorithm-parameters.html#automatic-parameter-tuning>
 
 [^4]: If wanted exactly the same model we could specify the priors in
-    Bambi, not shown here. For our purposes however, the models are
-    "close enough\".
+  Bambi, not shown here. For our purposes however, the models are
+  "close enough\".
 
 [^5]: You can also parse the design matrix differently so that
-    covariates represents the contrast between 2 categories within a
-    column.
+  covariates represents the contrast between 2 categories within a
+  column.
 
 [^6]: Maybe because collecting more data is expensive or difficult or
-    even impossible
+  even impossible
 
 [^7]: Unless we are talking about large systems like rain forests, where
-    the presence of plants actually have an impact in the weather.
-    Nature can be hard to grasp with simple statements.
+  the presence of plants actually have an impact in the weather.
+  Nature can be hard to grasp with simple statements.
 
 [^8]: Traditionally people apply functions like $\phi$ to the left side
-    of Equation {eq}`eq:generalized_linear_model`, and call them link
-    functions. We instead prefer to apply them to the right-hand side
-    and then to avoid confusion we use term inverse link function.
+  of Equation {eq}`eq:generalized_linear_model`, and call them link
+  functions. We instead prefer to apply them to the right-hand side
+  and then to avoid confusion we use term inverse link function.
 
 [^9]: Usually in the traditional Generalized Linear Models Literature,
-    the likelihood of the observation need to be from the Exponential
-    family, but being Bayesian we are actually not restricted by that
-    and can use any likelihood that can be parameterized by the expected
-    value.
+  the likelihood of the observation need to be from the Exponential
+  family, but being Bayesian we are actually not restricted by that
+  and can use any likelihood that can be parameterized by the expected
+  value.
 
 [^10]: Estimate shown in corresponding notebook.

@@ -377,7 +377,7 @@ Block [splines_patsy](splines_patsy) we define 3 design
 matrices, one with degree 0 (piecewise constant), another with degree 1
 (piecewise linear) and finally one with degree 3 (cubic spline).
 
-```{code-block} python
+```{code-block} ipython3
 :name: splines_patsy
 :caption: splines_patsy
 
@@ -433,7 +433,7 @@ we used `x = np.linspace(0., 1., 500)`, so the curves look smoother and
 we use `x = np.linspace(0., 1., 20)` in the later so the matrices are
 easier to understand.
 
-```{code-block} python
+```{code-block} ipython3
 :name: splines_patsy_plot
 :caption: splines_patsy_plot
 
@@ -514,7 +514,7 @@ the number and position of the knots. We are going to use 6 knots and
 use the simplest option to position them, equal spacing between each
 knot.
 
-```{code-block} python
+```{code-block} ipython3
 :name: knot_list
 :caption: knot_list
 
@@ -531,7 +531,7 @@ larger the number of knots the less important their positions.
 
 Now we use Patsy to define and build the design matrix for us
 
-```{code-block} python
+```{code-block} ipython3
 :name: bikes_dmatrix
 :caption: bikes_dmatrix
 
@@ -545,10 +545,10 @@ The proposed statistical model is:
 ```{math} 
 \begin{aligned}
 \begin{split}
-    \tau \sim& \; \mathcal{HC}(1) \\
-    \boldsymbol{\beta} \sim& \; \mathcal{N}(0, \tau) \\
-    \sigma \sim& \; \mathcal{HN}(1) \\
-    Y \sim& \; \mathcal{N}(\boldsymbol{B}(X)\boldsymbol{\beta},\sigma)
+  \tau \sim& \; \mathcal{HC}(1) \\
+  \boldsymbol{\beta} \sim& \; \mathcal{N}(0, \tau) \\
+  \sigma \sim& \; \mathcal{HN}(1) \\
+  Y \sim& \; \mathcal{N}(\boldsymbol{B}(X)\boldsymbol{\beta},\sigma)
 \end{split}\end{aligned}
 ```
 
@@ -563,7 +563,7 @@ instead of $\boldsymbol{\mu} = \sum_i^n B_i \boldsymbol{\beta}_i$.
 As usual the statistical syntax is translated into PyMC3 in nearly a
 one-to-one fashion.
 
-```{code-block} python
+```{code-block} ipython3
 :name: splines
 :caption: splines
 with pm.Model() as splines:
@@ -606,7 +606,7 @@ around hour 18, after which there a steady decline.
 :name: fig:bikes_data2
 :width: 8.00in
 Bikes data (black dots) fitted using splines. The shaded curve
-represents the 94% HDI interval (of the mean) and the blue curve
+represents the $94\%$ HDI interval (of the mean) and the blue curve
 represents the mean trend.
 ```
 
@@ -778,7 +778,7 @@ To see the effect of this prior we are going to repeat the analysis of
 the bike dataset, but this time using `num_knots = 12`. We refit the
 data using `splines` model and the following model:
 
-```{code-block} python
+```{code-block} ipython3
 :name: splines_rw
 :caption: splines_rw
 with pm.Model() as splines_rw:
@@ -819,7 +819,7 @@ was measured at seven CO₂ concentrations for each plant, the same
 seven values for each one of the 12 plants. Let us begin by loading and
 tidying up the data.
 
-```{code-block} python
+```{code-block} ipython3
 :name: plants_co2_import
 :caption: plants_co2_import
 
@@ -866,7 +866,7 @@ advantages such as having better intuition of how to perform exploratory
 analysis of the model and then possible routes for making changes into
 the model either to simplify it or to make it more complex.
 
-```{code-block} python
+```{code-block} ipython3
 :name: sp_global
 :caption: sp_global
 
@@ -891,7 +891,7 @@ The black dots represents the CO₂ uptake measured at seven CO₂
 concentrations for each one of 12 plants (Qn1, Qn2, Qn3, Qc1, Qc2, Qc3,
 Mn1, Mn2, Mn3, Mc1, Mc2, Mc3). The black line is the mean spline fit
 from the model in Code Block [sp_global](sp_global) and
-the gray shaded curve represents the 94% HDI interval for that fit.
+the gray shaded curve represents the $94\%$ HDI interval for that fit.
 ```
 
 Let us try now with a model with a different response per plant, in
@@ -900,7 +900,7 @@ order to do this we define the design matrix `Bi` in Code Block
 `CO2_conc = [95,  175,  250,  350,  500,  675, 1000]`, thus `Bi` is a
 $7 \times 7$ matrix while `Bg` is a $84 \times 7$ matrix.
 
-```{code-block} python
+```{code-block} ipython3
 :name: Bi_matrix
 :caption: Bi_matrix
 
@@ -914,7 +914,7 @@ Accordingly with the shape of `Bi`, the parameter $\beta$ in Code Block
 `shape=(Bi.shape[1], groups))` (instead of `shape=(Bg.shape[1]))`) and
 we reshape `μi[:,index].T.ravel()`
 
-```{code-block} python
+```{code-block} ipython3
 :name: sp_individual
 :caption: sp_individual
 
@@ -936,7 +936,7 @@ better fit for each one of the 12 plants.
 CO₂ uptake measured at seven CO₂ concentrations for 12 plants. The
 black line is the mean spline fit from the model in Code Block
 [sp_individual](sp_individual) and the gray shaded curve
-represents the 94% HDI interval for that fit.
+represents the $94\%$ HDI interval for that fit.
 ```
 
 We can also mix both previous models [^13]. This may be interesting if
@@ -944,7 +944,7 @@ we want to estimate a global trend for the 12 plants plus individual
 fits. Model `sp_mix` in Code Block [sp_mix](sp_mix) use
 both previously defined design matrices `Bg` and `Bi`.
 
-```{code-block} python
+```{code-block} ipython3
 :name: sp_mix
 :caption: sp_mix
 
@@ -974,7 +974,7 @@ shape of their functional responses.
 CO₂ uptake measured at seven CO₂ concentrations for 12 plants. The
 blue line is the mean spline fit from model in Code Block
 [sp_mix](sp_mix) and the gray shaded curve represents the
-94% HDI interval for that fit. This fit is decomposed into two terms. In
+$94\%$ HDI interval for that fit. This fit is decomposed into two terms. In
 black, and a dark gray band, the global contribution and in gray, and a
 light gray band, the deviations from that global contribution. The blue
 line, and blue band, is the sum of the global trend and deviations from
@@ -1070,19 +1070,19 @@ B3 = dmatrix("bs(x, knots=knots, degree=3, include_intercept=True) -1",
 ```
 
 1.  What is the shape of each one of the matrices? Can you justify the
-    values for the shapes?
+  values for the shapes?
 
 2.  Could you explain what the arguments `include_intercept=True/False`
-    and the `+1/-1` do? Try generating figures like
-    {numref}`fig:splines_basis` and {numref}`fig:design_matrices` to
-    help you answer this question
+  and the `+1/-1` do? Try generating figures like
+  {numref}`fig:splines_basis` and {numref}`fig:design_matrices` to
+  help you answer this question
 
 **5E7.** Refit the bike rental example using the options
 listed below. Visually compare the results and try to explain the
 results:
 
 1.  Code Block [knot_list](knot_list) but do not remove
-    the first and last knots (i.e. without using 1:-1)
+  the first and last knots (i.e. without using 1:-1)
 
 2.  Use quantiles to set the knots instead of spacing them linearly.
 
@@ -1092,16 +1092,16 @@ results:
 dataset use it to:
 
 1.  Fit a cubic spline with knots
-    `np.quantile(X, np.arange(0.1, 1, 0.02))` and a Gaussian prior (like
-    in Code Block [splines](splines))
+  `np.quantile(X, np.arange(0.1, 1, 0.02))` and a Gaussian prior (like
+  in Code Block [splines](splines))
 
 2.  Fit a cubic spline with knots
-    `np.quantile(X, np.arange(0.1, 1, 0.02))` and a Gaussian Random Walk
-    prior (like in Code Block [splines_rw](splines_rw))
+  `np.quantile(X, np.arange(0.1, 1, 0.02))` and a Gaussian Random Walk
+  prior (like in Code Block [splines_rw](splines_rw))
 
 3.  Fit a cubic spline with knots
-    `np.quantile(X, np.arange(0.1, 1, 0.1))` and a Gaussian prior (like
-    in Code Block [splines](splines))
+  `np.quantile(X, np.arange(0.1, 1, 0.1))` and a Gaussian prior (like
+  in Code Block [splines](splines))
 
 4.  compare the fits visually and using LOO
 
@@ -1113,10 +1113,10 @@ from 6 to 12.
 2.  What are the implications for extrapolation?
 
 3.  add one more knot and make the necessary changes in the code so the
-    fit actually use the 3 knots.
+  fit actually use the 3 knots.
 
 4.  change the position of the third new knot to improve the fit as much
-    as possible.
+  as possible.
 
 **5M10.** For the bike rental example increase the number
 of knots. What is the effect on the fit? Change the width of the prior
@@ -1137,12 +1137,12 @@ circular spline regression so perform the following steps.
 1.  Duplicate the 0 hour data label it as 24.
 
 2.  Generate a circular design matrix and a non-circular design matrix
-    with this modified dataset. Plot the results and compare.
+  with this modified dataset. Plot the results and compare.
 
 3.  Refit the bike spline dataset.
 
 4.  Explain what the effect of the circular spine regression was using
-    plots, numerical summaries, and diagnostics.
+  plots, numerical summaries, and diagnostics.
 
 **5M13.** For the rent bike example we use a Gaussian as
 likelihood, this can be seen as a reasonable approximation when the
@@ -1152,21 +1152,21 @@ the observed number of rented bikes is close to zero). To fix this issue
 and improve our models we can try with other likelihoods:
 
 1.  use a Poisson likelihood (hint you may need to restrict the $\beta$
-    coefficients to be positive, and you can not normalize the data as
-    we did in the example). How the fit differs from the example in the
-    book. is this a better fit? In what sense?
+  coefficients to be positive, and you can not normalize the data as
+  we did in the example). How the fit differs from the example in the
+  book. is this a better fit? In what sense?
 
 2.  use a NegativeBinomial likelihood, how the fit differs from the
-    previous two? Could you explain the differences (hint, the
-    NegativeBinomial can be considered as a mixture model of Poisson
-    distributions, which often helps to model overdispersed data)
+  previous two? Could you explain the differences (hint, the
+  NegativeBinomial can be considered as a mixture model of Poisson
+  distributions, which often helps to model overdispersed data)
 
 3.  Use LOO to compare the spline model with Poisson and
-    NegativeBinomial likelihoods. Which one has the best predictive
-    performance?
+  NegativeBinomial likelihoods. Which one has the best predictive
+  performance?
 
 4.  Can you justify the values of `p_loo` and the values of
-    $\hat \kappa$?
+  $\hat \kappa$?
 
 5.  Use LOO-PIT to compare Gaussian, NegativeBinomial and Poisson models
 
@@ -1175,13 +1175,13 @@ and improve our models we can try with other likelihoods:
 $\tau \sim \text{Laplace}(0, 1)$:
 
 1.  Sample and plot realizations from the prior for $\mu$. Use different
-    number and locations for the knots
+  number and locations for the knots
 
 2.  What is the prior expectation for $\mu(x_i)$ and how does it depend
-    on the knots and X?
+  on the knots and X?
 
 3.  What is the prior expectation for the standard deviations of
-    $\mu(x_i)$ and how does it depend on the knots and X?
+  $\mu(x_i)$ and how does it depend on the knots and X?
 
 4.  Repeat the previous points for the prior predictive distribution
 
@@ -1192,14 +1192,14 @@ variable is binary so you will need to adjust the likelihood accordingly
 and use a link function.
 
 1.  a logistic regression from a previous chapter. Visually compare the
-    results between both models.
+  results between both models.
 
 2.  Space Influenza is a disease which affects mostly young and old
-    people, but not middle-age folks. Fortunately, Space Influenza is
-    not a serious concern as it is completely made up. In this dataset
-    we have a record of people that got tested for Space Influenza and
-    whether they are sick (1) or healthy (0) and also their age. Could
-    you have solved this problem using logistic regression?
+  people, but not middle-age folks. Fortunately, Space Influenza is
+  not a serious concern as it is completely made up. In this dataset
+  we have a record of people that got tested for Space Influenza and
+  whether they are sick (1) or healthy (0) and also their age. Could
+  you have solved this problem using logistic regression?
 
 **5M16.** Besides "hour" the bike dataset has other
 covariates, like "temperature". Fit a splines using both covariates. The
@@ -1207,55 +1207,55 @@ simplest way to do this is by defining a separated spline/design matrix
 for each covariate. Fit a model with a NegativeBinomial likelihood.
 
 1.  Run diagnostics to check the sampling is correct and modify the
-    model and or sample hyperparameters accordingly.
+  model and or sample hyperparameters accordingly.
 
 2.  How the rented bikes depend on the hours of the day and how on the
-    temperature?
+  temperature?
 
 3.  Generate a model with only the hour covariate to the one with the
-    "hour" and "temperature". Compare both model using LOO, LOO-PIT and
-    posterior predictive checks.
+  "hour" and "temperature". Compare both model using LOO, LOO-PIT and
+  posterior predictive checks.
 
 4.  Summarize all your findings
 
 [^1]: See Runge's phenomenon for details. This can also be seen from
-    Taylor's theorem, polynomials will be useful to approximate a
-    function close to a single given point, but it will not be good over
-    its whole domain. If you got lost try watching this video
-    <https://www.youtube.com/watch?v=3d6DsjIBzJ4>.
+  Taylor's theorem, polynomials will be useful to approximate a
+  function close to a single given point, but it will not be good over
+  its whole domain. If you got lost try watching this video
+  <https://www.youtube.com/watch?v=3d6DsjIBzJ4>.
 
 [^2]: A piecewise function is a function that is defined using
-    sub-functions, where each sub-function applies to a different
-    interval in the domain.
+  sub-functions, where each sub-function applies to a different
+  interval in the domain.
 
 [^3]: In Chapter [7](chap6) we explore how step-functions have a
-    central role in Bayesian Additive Regression Trees.
+  central role in Bayesian Additive Regression Trees.
 
 [^4]: This can also be justified numerically as this reduces the number
-    of coefficients we need to find to compute a solution.
+  of coefficients we need to find to compute a solution.
 
 [^5]: As usual the identity function is a valid choice.
 
 [^6]: Other basis functions could be wavelets or Fourier series as we
-    will see in Chapter [6](chap4).
+  will see in Chapter [6](chap4).
 
 [^7]: Also known as break points, which is arguably a more memorable
-    name, but still knots is widely used in the literature.
+  name, but still knots is widely used in the literature.
 
 [^8]: In the limit of infinite degree a B-spline will span the entire
-    real line and not only that, it will converge to a Gaussian
-    <https://www.youtube.com/watch/9CS7j5I6aOc>.
+  real line and not only that, it will converge to a Gaussian
+  <https://www.youtube.com/watch/9CS7j5I6aOc>.
 
 [^9]: Check
-    <https://pclambert.net/interactivegraphs/spline_continuity/spline_continuity>
-    for further intuition
+  <https://pclambert.net/interactivegraphs/spline_continuity/spline_continuity>
+  for further intuition
 
 [^10]: If interested you can check
-    <https://en.wikipedia.org/wiki/De_Boor's_algorithm>.
+  <https://en.wikipedia.org/wiki/De_Boor's_algorithm>.
 
 [^11]: <https://patsy.readthedocs.io>
 
 [^12]: <https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset>
 
 [^13]: Yes, this is also known as a mixed-effect model, you might recall
-    the related concept we discussed in Chapter [4](chap3).
+  the related concept we discussed in Chapter [4](chap3).

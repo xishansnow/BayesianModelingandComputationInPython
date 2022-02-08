@@ -1,1103 +1,1703 @@
+---
+jupytext:
+  formats: ipynb,md:myst
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.11.5
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
 (chap4)= 
 
-# Chapter 6: Time Series 
+# 第六章: 时间序列 
 
-"It is difficult to make predictions, especially about the future\".
+<style>p{text-indent:2em;2}</style>
 
-This is true when dutch politician Karl Kristian Steincke allegedly said this sometime in the 1940s [^1], and it is still true today especially if you are working on time series and forecasting problems. There are many applications of time series analysis, from making predictions with forecasting, to understanding what were the underlying latent factors in the historical trend. In this chapter we will discuss some Bayesian approaches to this problem. We will start by considering time series modeling as a regression problem, with the design matrices parsed from the timestamp information. We will then explore the approaches to model temporal correlation using autoregressive components. These models extend into a wider (more general) class of State Space Model and Bayesian Structural Time Series model (BSTS), and we will introduce a specialized inference method in the linear Gaussian cases: Kalman Filter. The remainder of the chapter will give a brief summary of model comparison as well as considerations to be made when choosing prior distributions for time series models.
+“很难做出预测，尤其是关于未来的预测”。
 
- (an-overview-of-time-series-problems)= 
+据称，荷兰政治家 `Karl Kristian Steincke` 在 $1940$ 年代 [^1] 的某个时候说过的这句话确实如此，即便今天仍然如此，特别是你在研究时间序列问题和预报问题的时候。
 
-## An Overview of Time Series Problems 
+时间序列分析有很多应用，从面向未来的预报、到了解历史趋势中的潜在因素等。在本章中，我们将讨论涉及此问题域的一些贝叶斯方法。
 
-In many real life applications we observe data sequentially in time, generating timestamps along the way each time we make an observation. In addition to the observation itself, the timestamp information can be quite informative when: 
+- 首先，将时间序列建模视为一个回归问题，并且从时间戳中解析设计矩阵。
 
--   There is a temporal **trend**, for example, regional population,     global GDP, annual CO₂ emissions in the US. Usually this is an     overall pattern which we intuitively label as "growth\" or     "decline\".
+- 然后，我们将探索使用自回归方法对时间相关性进行建模。
 
- -   There is some recurrent pattern correlated to time, called     **seasonality** [^2]. For example, changes in monthly temperature     (higher in the summer and lower in the winter), monthly rainfall     amounts (in many regions of the world this is lower in winter and     higher during summer), daily coffee consumption in a given office     building (higher in the weekdays and lower in the weekends), hourly     number of bike rentals(higher in the day than during the night),     like we saw in Chapter [5](chap3_5).
+- 将上述模型进一步扩展到更一般性的状态空间模型和贝叶斯结构的时间序列模型，并在线性高斯情况下引入一种专门的推断方法：卡尔曼滤波器。
 
- -   The current data point informs the next data point in some way. In     other words where noise or **residuals** are correlated [^3]. For     example, the daily number of cases resolved at a help desk, stock     price, hourly temperature, hourly rainfall amounts.
+- 本章其余部分简要总结了模型比较问题，以及在为时间序列模型选择先验时需要考虑的因素。
 
- It is thus quite natural and useful to consider the decomposition of a time series into: 
+(an-overview-of-time-series-problems)= 
+
+## 6.1 时间序列问题概览 
+
+在许多现实生活的应用中，我们按时间顺序观测数据，每次观测时都会生成时间戳。除了观测本身之外，时间戳信息在以下情况中可以提供相当丰富的信息：
+
+- 存在一个**时间趋势**，例如，地区人口、全球 GDP 、美国的年二氧化碳排放量等。通常这是一种整体模式，可以直观地将其标记为“增长”或“下降”。
+
+- 有一些与时间相关的循环模式，称为**季节性（ seasonality ）** [^2]。例如，
+
+  - 每月温度的变化（夏季较高，冬季较低）；
+  - 每月降雨量（在世界许多地区，冬季较低，夏季较高）；
+  - 给定办公楼的每日咖啡消耗量（较高平日，周末减少）；
+  - 每小时的自行车租赁数量（白天比晚上多）。
+
+- 当前数据点以某种方式提供了有关下一个数据点的信息。换句话说，**噪声( Noise )**或**残差( Residuals )**是相关的 [^3]。例如，
+
+   - 帮助台每天解决的案例数量；
+   - 股票的价格；
+   - 每小时的温度；
+   - 每小时的降雨量。
+
+因此，可以考虑将时间序列分解为：
 
 ```{math} 
+:label: eq:generic_time_series
 
- :label: eq:generic_time_series 
-
-    y_t = \text{Trend}_t + \text{Seasonality}_t + \text{Residuals}_t
+ y_t = \text{Trend}_t + \text{Seasonality}_t + \text{Residuals}_t
 ```
 
-Most of the classical time series models are based on this decomposition. In this chapter, we will discuss modeling approaches on time series that display some level of temporal trend and seasonality, and explore methods to capture these regular patterns, as well as the less-regular patterns (e.g., residuals correlated in time).
+大多数经典的时间序列模型都是基于此分解。在本章中，我们将讨论呈现出某种程度`时间趋势`和`季节性`的时间序列建模方法，并探索捕获其中`有规则`和`无规则`模式的方法。
 
- (time-series-analysis-as-a-regression-problem)= 
+(time-series-analysis-as-a-regression-problem)= 
 
-## Time Series Analysis as a Regression Problem 
+## 6.2 将时间序列视为回归问题 
 
-We will start with modeling a time series with a linear regression model on a widely used demo data set that appears in many tutorials (e.g., PyMC3, TensorFlow Probability) and it was used as an example in the Gaussian Processes for Machine Learning book by  {cite:t}`Rasmussen2005`. Atmospheric CO₂ measurements have been taken regularly at the Mauna Loa observatory in Hawaii since the late 1950s at hourly intervals. In many examples the observations are aggregated into monthly average as shown in {numref}`fig:fig1_co2_by_month`. We load the data into Python with Code Block [load_co2_data](load_co2_data), and also split the data set into training and testing set. We will fit the model using the training set only, and evaluate the forecast against the testing set.
+我们将首先在一些教程中频繁出现和使用的演示数据集上，使用线性回归模型对时间序列建模。它在《机器学习中的高斯过程》一书中被用作示例{cite:t}`Rasmussen2005`。自 $1950$ 年代后期以来，夏威夷的莫纳罗亚天文台每隔一小时就测定一次大气二氧化碳浓度。在许多示例中，该观测结果被汇总为月平均值，如 {numref}`fig:fig1_co2_by_month` 所示。我们使用代码 [load_co2_data](load_co2_data) 将数据加载到 Python 中，并将数据集拆分为训练集和测试集。仅使用训练集拟合模型，并根据测试集来评估预测结果。
 
- ```{figure} figures/fig1_co2_by_month.png
- :name: fig:fig1_co2_by_month
- :width: 8.00in Monthly CO₂ measurements in Mauna Loa from 1966 January to 2019 February, split into training (shown in black) and testing (shown in blue) set. We can see a strong upward trend and seasonality pattern in the data.
 
-``` 
+```{figure} figures/fig1_co2_by_month.png
+:name: fig:fig1_co2_by_month
+:width: 8.00in
 
-```{code-block} python 
+从 $1966$ 年 $1$ 月到 $2019$ 年 $2$ 月，莫纳罗亚的月度 $\text{CO}_2$ 测量值，分为训练集（黑色显示）和测试集（蓝色显示）。我们可以在数据中看到强劲的上升趋势和季节性模式。
+
+```
+
+```{code-block} ipython3
+:caption: load_co2_data
 :name: load_co2_data
- :caption: load_co2_data 
 
-co2_by_month = pd.read_csv("../data/monthly_mauna_loa_co2.csv") co2_by_month["date_month"] = pd.to_datetime(co2_by_month["date_month"]) co2_by_month["CO2"] = co2_by_month["CO2"].astype(np.float32) co2_by_month.set_index("date_month", drop=True, inplace=True) 
+co2_by_month = pd.read_csv("../data/monthly_mauna_loa_co2.csv")
+co2_by_month["date_month"] = pd.to_datetime(co2_by_month["date_month"])
+co2_by_month["CO2"] = co2_by_month["CO2"].astype(np.float32)
+co2_by_month.set_index("date_month", drop=True, inplace=True)
 
-num_forecast_steps = 12 * 10  # Forecast the final ten years, given previous data co2_by_month_training_data = co2_by_month[:-num_forecast_steps] co2_by_month_testing_data = co2_by_month[-num_forecast_steps:]
+num_forecast_steps = 12 * 10  # Forecast the final ten years, given previous data
+co2_by_month_training_data = co2_by_month[:-num_forecast_steps]
+co2_by_month_testing_data = co2_by_month[-num_forecast_steps:]
 ```
 
-Here we have a vector of observations of monthly atmospheric CO₂ concentrations $y_t$ with $t = [0, \dots, 636]$; each element associated with a timestamp. The month of the year could be nicely parsed into a vector of $[1, 2, 3,\dots, 12, 1, 2,\dots]$. Recall that for linear regression we can state the likelihood as follows: 
+在这里，我们有一个每月大气 $\text{CO}_2$ 浓度 $y_t$ 的观测向量，其中 $t = [0, \dots, 636]$ ；其中每个元素都与时间戳相关联。一年中的月份可以解析为 $[1, 2, 3,\dots, 12, 1, 2,\dots]$ 的向量。对于线性回归，我们可以将似然函数陈述如下：
+
 
 ```{math} 
+:label: eq:regression_model
 
- :label: eq:regression_model 
-
-    Y \sim \mathcal{N}(\mathbf{X} \beta, \sigma)
+Y \sim \mathcal{N}(\mathbf{X} \beta, \sigma)
 ```
 
-Considering the seasonality effect, we can use the month of the year predictor directly to index a vector of regression coefficient. Here using Code Block [generate_design_matrix](generate_design_matrix), we dummy code the predictor into a design matrix with `shape = (637, 12)`. Adding a linear predictor to the design matrix to capture the upward increasing trend we see in the data, we get the design matrix for the time series.
+考虑到季节性的影响，我们使用年预测变量的月份来索引回归系数的向量。这里使用代码 [generate_design_matrix](generate_design_matrix)，将预测变量独热编码为具有 `shape = (637, 12)` 的设计矩阵。在设计矩阵中，添加一个线性预测变量以捕获数据中的上升趋势，进而得到时间序列的设计矩阵。
 
-You can see a subset of the design matrix in {numref}`fig:fig2_sparse_design_matrix`.
+你可以在 {numref}`fig:fig2_sparse_design_matrix` 中看到设计矩阵的子集。
 
- ```{figure} figures/fig2_sparse_design_matrix.png
- :name: fig:fig2_sparse_design_matrix
- :width: 5.2in Design matrix with a linear component and month of the year component for a simple regression model for time series. The design matrix is transposed into $feature * timestamps$ so it is easier to visualize. In the figure, the first row (index 0) contains continuous values between 0 and 1 representing the time and the linear growth. The rest of the rows (index 1 - 12) are dummy coding of month information. The color coding goes from black for 1 to light gray for 0.
+```{figure} figures/fig2_sparse_design_matrix.png
+:name: fig:fig2_sparse_design_matrix
+:width: 5.2in
 
-``` 
+为时间序列的简单回归模型设计具有年度线性分量和月份分量的矩阵。设计矩阵转置为 $feature * timestamps$ ，以便更易于可视化。在图中，第一行（索引 $0$）包含 $0$ 到 $1$ 之间的连续值，表示时间和线性增长。其余行（索引 $1 - 12$ ）是月份信息的独热编码。颜色编码从代表黑色的 $1$ 到 代表浅灰色的 $0$ 。
 
-```{code-block} python 
+```
+
+```{code-block} ipython3
+:caption: generate_design_matrix
 :name: generate_design_matrix
- :caption: generate_design_matrix 
 
-trend_all = np.linspace(0., 1., len(co2_by_month))[..., None] trend_all = trend_all.astype(np.float32) trend = trend_all[:-num_forecast_steps, :] 
+trend_all = np.linspace(0., 1., len(co2_by_month))[..., None]
+trend_all = trend_all.astype(np.float32)
+trend = trend_all[:-num_forecast_steps, :]
 
-seasonality_all = pd.get_dummies(    co2_by_month.index.month).values.astype(np.float32) seasonality = seasonality_all[:-num_forecast_steps, :] 
+seasonality_all = pd.get_dummies(
+   co2_by_month.index.month).values.astype(np.float32)
+seasonality = seasonality_all[:-num_forecast_steps, :]
 
-_, ax = plt.subplots(figsize=(10, 4)) X_subset = np.concatenate([trend, seasonality], axis=-1)[-50:] ax.imshow(X_subset.T)
+_, ax = plt.subplots(figsize=(10, 4))
+X_subset = np.concatenate([trend, seasonality], axis=-1)[-50:]
+ax.imshow(X_subset.T)
 ```
 
-::: {admonition} Parsing timestamps to a design matrix 
+::: {admonition} 解析到设计矩阵的时间戳
 
-Treatment of timestamps could be tedious and error prone, especially when time zone is involved. Typical cyclical information we could parse from timestamp are, in order of resolution: 
+时间戳的处理可能很乏味，并且容易出错，尤其是在涉及不同时区的时候。我们可以从时间戳中解析出的典型周期性信息包括（按解析顺序排列）：
 
--   Second of the hour (1, 2, ..., 60) 
+- 小时的秒数 (1, 2, ..., 60)
 
--   Hour of the day (1, 2, ..., 24) 
+- 一天中的小时（1、2、...、24）
 
--   Day of the week (Monday, Tuesday, ..., Sunday) 
+- 星期几（周一、周二、...、周日）
 
--   Day of the month (1, 2, ..., 31) 
+- 一个月中的某天（1、2、...、31）
 
--   Holiday effect (New year's day, Easter holiday, International     Workers' Day, Christmas day, etc) 
+- 一年中的月份（1、2、...、12）
 
--   Month of the year (1, 2, ..., 12) 
+- 节日效应（元旦、复活节、国际劳动节、圣诞节等）
 
-All of which could be parsed into a design matrix with dummy coding.
+所有上述信息都可以用独热编码解析为一个设计矩阵。
 
-Effects like day of the week and day of the month usually are closely related to human activities. For example, passenger numbers of public transportation usually show a strong week day effect; consumer spending might be higher after a payday, which is usually around the end of the month. In this chapter we mostly consider timestamps recorded at regular intervals.
+类似于 “一周中的某天” 和 “一个月中的某天” 等时间戳的效应通常与人类活动密切相关。例如，
+
+- 公共交通乘客的数量通常表现出强烈的工作日效应；
+
+- 发薪日之后，消费者支出可能会更高，这通常是在月底左右。
+
+在本章中，**我们主要考虑定期记录的时间戳**。
 
 ::: 
 
-We can now write down our first time series model as a regression problem, using `tfd.JointDistributionCoroutine`, using the same `tfd.JointDistributionCoroutine` API and TFP Bayesian modeling methods we introduced in Chapter [3](chap2).
+我们现在可以使用 `tfd.JointDistributionCoroutine` 建立第一个面向回归问题的时间序列模型，其作法和第 [3](chap2) 章中介绍的 `tfd.JointDistributionCoroutine` API 和 TFP 贝叶斯建模方法相同。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: regression_model_for_timeseries
 :name: regression_model_for_timeseries
- :caption: regression_model_for_timeseries 
 
-tfd = tfp.distributions root = tfd.JointDistributionCoroutine.Root 
+tfd = tfp.distributions
+root = tfd.JointDistributionCoroutine.Root
 
-@tfd.JointDistributionCoroutine def ts_regression_model():     intercept = yield root(tfd.Normal(0., 100., name="intercept"))     trend_coeff = yield root(tfd.Normal(0., 10., name="trend_coeff"))     seasonality_coeff = yield root(         tfd.Sample(tfd.Normal(0., 1.),                    sample_shape=seasonality.shape[-1],                    name="seasonality_coeff"))     noise = yield root(tfd.HalfCauchy(loc=0., scale=5., name="noise_sigma"))     y_hat = (intercept[..., None] +              tf.einsum("ij,...->...i", trend, trend_coeff) +              tf.einsum("ij,...j->...i", seasonality, seasonality_coeff))     observed = yield tfd.Independent(         tfd.Normal(y_hat, noise[..., None]),         reinterpreted_batch_ndims=1,         name="observed")
+@tfd.JointDistributionCoroutine
+def ts_regression_model():
+    intercept = yield root(tfd.Normal(0., 100., name="intercept"))
+    trend_coeff = yield root(tfd.Normal(0., 10., name="trend_coeff"))
+    seasonality_coeff = yield root(
+        tfd.Sample(tfd.Normal(0., 1.),
+                   sample_shape=seasonality.shape[-1],
+                   name="seasonality_coeff"))
+    noise = yield root(tfd.HalfCauchy(loc=0., scale=5., name="noise_sigma"))
+    y_hat = (intercept[..., None] +
+             tf.einsum("ij,...->...i", trend, trend_coeff) +
+             tf.einsum("ij,...j->...i", seasonality, seasonality_coeff))
+    observed = yield tfd.Independent(
+        tfd.Normal(y_hat, noise[..., None]),
+        reinterpreted_batch_ndims=1,
+        name="observed")
 ```
 
-As we mentioned in earlier chapters, TFP offers a lower level API compared to PyMC3. While it is more flexible to interact with low level modules and component (e.g., customized composable inference approaches), we usually end up with a bit more boilerplate code, and additional shape handling in the model using `tfp` compared to other PPLs. For example, in Code Block [regression_model_for_timeseries](regression_model_for_timeseries) we use `einsum` instead of `matmul` with Python Ellipsis so it can handle arbitrary *batch shape* (see Section {ref}`shape_ppl`) for more details).
+正如在前面章节中提到的，与 PyMC3 相比，TFP 提供了较低级别的 API 。虽然与低级模块和分量交互更灵活，但与其他概率编程语言相比，通常需要更多代码，并且需要在模型中使用 `tfp` 进行额外的 `shape` 形状处理。例如，在代码 [regression_model_for_timeseries](regression_model_for_timeseries) 中，我们使用 `einsum` 而不是 `matmul` 以便代码能够处理任意的 *批形状*（详情参阅第 {ref}`shape_ppl` 节）。
 
- Running the Code Block [regression_model_for_timeseries](regression_model_for_timeseries) gives us a regression model `ts_regression_model`. It has similar functionality to `tfd.Distribution` which we can utilize in our Bayesian workflow. To draw prior and prior predictive samples, we can call the `.sample(.)` method (see Code Block [prior_predictive](prior_predictive), with the result shown in {numref}`fig:fig3_prior_predictive1`).
+代码 [regression_model_for_timeseries](regression_model_for_timeseries) 提供了一个回归模型 `ts_regression_model`。它具有和 `tfd.Distribution` 类似的功能，要抽取先验和先验预测样本，我们可以调用 `.sample(.)` 方法（参见代码 [prior_predictive](prior_predictive)，结果显示在 {numref}`fig:fig3_prior_predictive1` 中）。
 
- 
-
-```{code-block} python 
+```{code-block} ipython3
+:caption: prior_predictive
 :name: prior_predictive
- :caption: prior_predictive 
 
-# Draw 100 prior and prior predictive samples prior_samples = ts_regression_model.sample(100)   prior_predictive_timeseries = prior_samples.observed 
+# Draw 100 prior and prior predictive samples
+prior_samples = ts_regression_model.sample(100)  
+prior_predictive_timeseries = prior_samples.observed
 
-fig, ax = plt.subplots(figsize=(10, 5)) ax.plot(co2_by_month.index[:-num_forecast_steps],         tf.transpose(prior_predictive_timeseries), alpha=.5) ax.set_xlabel("Year") fig.autofmt_xdate()
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(co2_by_month.index[:-num_forecast_steps],
+        tf.transpose(prior_predictive_timeseries), alpha=.5)
+ax.set_xlabel("Year")
+fig.autofmt_xdate()
 ```
 
 ```{figure} figures/fig3_prior_predictive1.png
- :name: fig:fig3_prior_predictive1
- :width: 8.00in Prior predictive samples from a simple regression model for modeling the Monthly CO₂ measurements in Mauna Loa time series. Each line plot is one simulated time series. Since we use an uninformative prior the prior prediction has a pretty wide range.
+:name: fig:fig3_prior_predictive1
+:width: 8.00in
+
+来自简单回归模型的先验预测样本，用于模拟 Mauna Loa 时间序列中的月 $\text{CO}_2$ 测量值。每条线是一个模拟的时间序列。由于使用了无信息先验，造成先验预测结果的分布范围很广。
 
 ``` 
 
-We can now run inference of the regression model and format the result into an `az.InferenceData` object in Code Block [inference_of_regression_model](inference_of_regression_model).
+在代码 [inference_of_regression_model](inference_of_regression_model) 中，我们运行回归模型的推断，并将结果格式化为 `az.InferenceData` 对象。
 
- 
-
-```{code-block} python 
+```{code-block} ipython3
+:caption: inference_of_regression_model
 :name: inference_of_regression_model
- :caption: inference_of_regression_model 
 
-run_mcmc = tf.function(     tfp.experimental.mcmc.windowed_adaptive_nuts,     autograph=False, jit_compile=True) mcmc_samples, sampler_stats = run_mcmc(     1000, ts_regression_model, n_chains=4, num_adaptation_steps=1000,     observed=co2_by_month_training_data["CO2"].values[None, ...]) 
+run_mcmc = tf.function(
+    tfp.experimental.mcmc.windowed_adaptive_nuts,
+    autograph=False, jit_compile=True)
+mcmc_samples, sampler_stats = run_mcmc(
+    1000, ts_regression_model, n_chains=4, num_adaptation_steps=1000,
+    observed=co2_by_month_training_data["CO2"].values[None, ...])
 
-regression_idata = az.from_dict(     posterior={         # TFP mcmc returns (num_samples, num_chains, ...), we swap         # the first and second axis below for each RV so the shape         # is what ArviZ expects.
-
-        k:np.swapaxes(v.numpy(), 1, 0)         for k, v in mcmc_samples._asdict().items()},     sample_stats={         k:np.swapaxes(sampler_stats[k], 1, 0)         for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]})
+regression_idata = az.from_dict(
+    posterior={
+        # TFP mcmc returns (num_samples, num_chains, ...), we swap
+        # the first and second axis below for each RV so the shape
+        # is what ArviZ expects.
+        k:np.swapaxes(v.numpy(), 1, 0)
+        for k, v in mcmc_samples._asdict().items()},
+    sample_stats={
+        k:np.swapaxes(sampler_stats[k], 1, 0)
+        for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]})
 ```
 
-To draw posterior predictive samples conditioned on the inference result, we can use the `.sample_distributions` method and condition on the posterior samples. In this case, since we would like to also plot the posterior predictive sample for the trend and seasonality components in the time series, while conditioning on both the training and testing data set. To visualize the forecasting ability of the model we construct the posterior predictive distributions in Code Block [posterior_predictive_with_component](posterior_predictive_with_component), with the result displayed in {numref}`fig:fig4_posterior_predictive_components1` for the trend and seasonality components and in {numref}`fig:fig5_posterior_predictive1` for the overall model fit and forecast.
+如果要依据推断结果来抽取后验预测样本，我们可以使用 `.sample_distributions` 方法先抽取后验样本，并基于后验样本的条件化生成后验预测样本。本例中，我们还希望能够为时间序列中的`趋势性`和`季节性`分量绘制后验预测样本。为了可视化模型的预测能力，我们在代码 [posterior_predictive_with_component](posterior_predictive_with_component) 中构建了后验预测分布，结果显示在趋势性和季节性分量的 {numref}`fig:fig4_posterior_predictive_components1` 中，以及整体模型拟合和预测的 {numref}`fig:fig5_posterior_predictive1` 。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: posterior_predictive_with_component
 :name: posterior_predictive_with_component
- :caption: posterior_predictive_with_component 
 
-# We can draw posterior predictive sample with jd.sample_distributions() # But since we want to also plot the posterior predictive distribution for  # each components, conditioned on both training and testing data, we # construct the posterior predictive distribution as below: nchains = regression_idata.posterior.dims["chain"] 
+# We can draw posterior predictive sample with jd.sample_distributions()
+# But since we want to also plot the posterior predictive distribution for 
+# each components, conditioned on both training and testing data, we
+# construct the posterior predictive distribution as below:
+nchains = regression_idata.posterior.dims["chain"]
 
-trend_posterior = mcmc_samples.intercept + \     tf.einsum("ij,...->i...", trend_all, mcmc_samples.trend_coeff) seasonality_posterior = tf.einsum(     "ij,...j->i...", seasonality_all, mcmc_samples.seasonality_coeff) 
+trend_posterior = mcmc_samples.intercept + \
+    tf.einsum("ij,...->i...", trend_all, mcmc_samples.trend_coeff)
+seasonality_posterior = tf.einsum(
+    "ij,...j->i...", seasonality_all, mcmc_samples.seasonality_coeff)
 
-y_hat = trend_posterior + seasonality_posterior posterior_predictive_dist = tfd.Normal(y_hat, mcmc_samples.noise_sigma) posterior_predictive_samples = posterior_predictive_dist.sample()
+y_hat = trend_posterior + seasonality_posterior
+posterior_predictive_dist = tfd.Normal(y_hat, mcmc_samples.noise_sigma)
+posterior_predictive_samples = posterior_predictive_dist.sample()
 ```
 
 ```{figure} figures/fig4_posterior_predictive_components1.png
- :name: fig:fig4_posterior_predictive_components1
- :width: 8.00in Posterior predictive samples of the trend component and seasonality component of a regression model for time series.
+:name: fig:fig4_posterior_predictive_components1
+:width: 8.00in
+
+时间序列回归模型的趋势分量和季节性分量的后验预测样本。
 
 ``` 
 
 ```{figure} figures/fig5_posterior_predictive1.png
- :name: fig:fig5_posterior_predictive1
- :width: 8.00in Posterior predictive samples from a simple regression model for time series in gray, with the actual data plotted in black and blue. While the overall fit is reasonable for the training set (plotted in black), the forecast (out of sample prediction) is poor as the underlying trend is accelerating more than linearly.
+:name: fig:fig5_posterior_predictive1
+:width: 8.00in
+
+来自时间序列简单回归模型的后验预测样本（灰色），实际数据为黑色和蓝色。虽然训练集的整体拟合（绘制为黑色）是合理的，但预测结果（样本外预测）很差，因为数据中隐含的加速趋势超过了线性关系。
 
 ``` 
 
-Looking at the out of sample prediction in {numref}`fig:fig5_posterior_predictive1`, we notice that: 
+查看 {numref}`fig:fig5_posterior_predictive1` 中的样本外预测，我们注意到：
 
-1.  The linear trend does not perform well when we forecast further into     the future and gives forecast consistently lower than the actual     observed. Specifically the atmospheric CO₂ does not increase     linearly with a constant slope over the years [^4] 
+1. 当对未来预测时，线性趋势表现不佳，给出的预测始终低于实际观测值。具体来说，大气中的二氧化碳不会以恒定的斜率线性增加 [^4]
 
-2.  The range of uncertainty is almost constant (sometimes also referred     to as the forecast cone), where intuitively we expect the     uncertainty to increase when we forecast farther into the future.
+2. 不确定性的范围几乎是恒定的（有时也称为预测锥），但直觉上判断，当预测更远的未来时，似乎不确定性应当增加才对。
 
- (design-matrices-for-time-series)= 
+(design-matrices-for-time-series)= 
 
-### Design Matrices for Time Series 
+### 6.2.1 时间序列的设计矩阵 
 
-In the regression model above, a rather simplistic design matrix was used. We can get a better model to capture our knowledge of the observed time series by adding additional information to our design matrix.
+在上面的回归模型中，使用了一个相当简单的设计矩阵。通过向设计矩阵添加额外信息，可以获得更好的模型来捕获我们对时间序列的理解。
 
- Generally, a better trend component is the most important aspect for improving forecast performance: seasonality components are *usually* stationary [^5] with easy to estimate parameters. Restated, there is a repeated pattern that forms a kind of a repeated measure. Thus most time series modeling involves designing a latent process that realistically captures the non-stationarity in the trend.
+更好的趋势分量通常是提高预测性能最重要的方面，因为季节性分量*通常*是平稳的 [^5]，具有易于估计的参数。重申：存在一种重复的模式导致了一种重复的测量。因此，大多数时间序列建模都包含如何设计一个能够捕获趋势中非平稳性的隐过程。
 
- One approach that has been quite successful is using a local linear process for the trend component. Basically, it is a smooth trend that is linear within some range, with an intercept and coefficient that changes, or drifts, slowly over the observed time span. A prime example of such an application is Facebook Prophet [^6], where a semi-smooth step linear function is used to model the trend {cite:p}`TaylorLetham2018`. By allowing the slope to change at some specific breakpoints, we can generate a trend line that could capture the long-term trend much better than a straight line. This is similar to the idea of indicator functions we discussed in Section {ref}`expanding_feature_space`. In a time series context we specify this idea mathematically in Equation {eq}`eq:step_linear_function` 
+一种非常成功的方法是对趋势分量使用局部线性过程。基本上，它是一个在某个范围内呈线性的平滑趋势，截距和系数在观测到的时间跨度内缓慢变化或漂移。这种应用程序的一个典型例子是 Facebook Prophet [^6]，其中使用 *半平滑阶跃线性函数* 对趋势 {cite:p}`TaylorLetham2018` 进行建模。通过允许斜率在某些特定断点处发生变化，我们可以生成能够比直线更好捕获长期趋势的趋势线。这类似于我们在第 {ref}`expanding_feature_space` 中讨论的指示函数的想法。在时间序列上下文中，我们在公式 {eq}`eq:step_linear_function` 中以数学方式表达了这个想法。
 
 ```{math} 
+:label: eq:step_linear_function
 
- :label: eq:step_linear_function 
-
-    g(t) = (k + \mathbf{A}\delta) t + (m + \mathbf{A} \gamma)
+g(t) = (k + \mathbf{A}\delta) t + (m + \mathbf{A} \gamma)
 ```
 
-where $k$ is the (global) growth rate, $\delta$ is a vector of rate adjustments at each change point, $m$ is the (global) intercept.
+其中 $k$ 是（全局）增长率，$\delta$ 是每个变化点的调整率向量，$m$ 是（全局）截距。$\mathbf{A}$ 是一个 `shape=(n_t, n_s)` 的矩阵，其中 $n_s$ 是变化点的数量。在时间 $t$，$\mathbf{A}$ 累积斜率的漂移效应 $\delta$。 $\gamma$ 设置为 $-s_j \times \delta_j$（其中 $s_j$ 是 $n_s$ 个变化点的时间位置）以使趋势线连续。
 
-$\mathbf{A}$ is a matrix with `shape=(n_t, n_s)` with $n_s$ being the number of change points. At time $t$, $\mathbf{A}$ accumulates the drift effect $\delta$ of the slope. $\gamma$ is set to $-s_j \times \delta_j$ (where $s_j$ is the time location of the $n_s$ change points) to make the trend line continuous. A regularized prior, like $\text{Laplace}$, is usually chosen for $\delta$ to express that we don't expect to see sudden or large change in the slope. You can see in Code Block [step_linear_function_for_trend](step_linear_function_for_trend) for an example of a randomly generated step linear function and its breakdown in {numref}`fig:fig6_step_linear_function`.
+通常为 $\delta$ 选择一个正则化的先验，如 $\text{Laplace}$，以表示我们不希望看到斜率发生突然的或较大的变化。你可以在代码 [step_linear_function_for_trend](step_linear_function_for_trend) 中查看随机生成的阶跃线性函数的示例,以及在 {numref}`fig:fig6_step_linear_function` 中的分解。
 
- 
-
-```{code-block} python 
+```{code-block} ipython3
+:caption: step_linear_function_for_trend
 :name: step_linear_function_for_trend
- :caption: step_linear_function_for_trend 
 
-n_changepoints = 8 n_tp = 500 t = np.linspace(0, 1, n_tp) s = np.linspace(0, 1, n_changepoints + 2)[1:-1] A = (t[:, None] > s) 
+n_changepoints = 8
+n_tp = 500
+t = np.linspace(0, 1, n_tp)
+s = np.linspace(0, 1, n_changepoints + 2)[1:-1]
+A = (t[:, None] > s)
 
-k, m = 2.5, 40 delta = np.random.laplace(.1, size=n_changepoints) growth = (k + A @ delta) * t offset = m + A @ (-s * delta) trend = growth + offset
+k, m = 2.5, 40
+delta = np.random.laplace(.1, size=n_changepoints)
+growth = (k + A @ delta) * t
+offset = m + A @ (-s * delta)
+trend = growth + offset
 ```
 
 ```{figure} figures/fig6_step_linear_function.png
- :name: fig:fig6_step_linear_function
- :width: 8.00in A step linear function as trend component for a time series model, generated with Code Block [step_linear_function_for_trend](step_linear_function_for_trend).
+:name: fig:fig6_step_linear_function
+:width: 8.00in
 
-The first panel is the design matrix $\mathbf{A}$, with the same color coding that black for 1 and light gray for 0. The last panel is the resulting function $g(t)$ in Equation {eq}`eq:step_linear_function` that we could use as trend in a time series model. The two middle panels are the breakdown of the two components in Equation {eq}`eq:step_linear_function`. Note how combining the two makes the resulting trend continuous.
-
+作为时间序列模型趋势分量的阶跃线性函数，使用代码 [step_linear_function_for_trend](step_linear_function_for_trend) 生成。第一个子图是设计矩阵 $\mathbf{A}$，其颜色编码相同，黑色代表 $1$，浅灰色代表 $0$。最后一个子图是公式 {eq}`eq:step_linear_function` 中可以在时间序列模型中用作趋势的结果函数 $g(t)$ 。中间两个子图是公式 {eq}`eq:step_linear_function` 中两个分量的分解。请注意两者是如何结合使结果趋势连续的。
 ``` 
 
-In practice, we usually specify a priori how many change points there are so $\mathbf{A}$ can be generated statically. One common approach is to specify more change points than you believe the time series actually displays, and place a more sparse prior on $\delta$ to regulate the posterior towards 0. Automatic change point detection is also possible {cite:p}`adams2007bayesian`.
+在实践中，我们通常会先验地指定有多少变化点，因此可以静态生成 $\mathbf{A}$。一种常见的方法是指定比你认为时间序列实际显示的更多的变化点，并在 $\delta$ 上放置一个更稀疏的先验以将后验调节到 0。自动变化点检测也是可能的 {cite:p}`adams2007bayesian`。
 
 (chp4_gam)= 
 
-### Basis Functions and Generalized Additive Model 
+### 6.2.2 基函数和广义可加模型 
 
-In our regression model defined in Code Block [regression_model_for_timeseries](regression_model_for_timeseries), we model the seasonality component with a sparse, index, matrix. An alternative is to use basis functions like B-spline (see Chapter [5](chap3_5)), or Fourier basis function as in the Facebook Prophet model. Basis function as a design matrix might provide some nice properties like orthogonality (see Box **Mathematical properties of design matrix**), which makes numerically solving the linear equation more stable {cite:p}`strang09`.
+在代码 [regression_model_for_timeseries](regression_model_for_timeseries) 中定义的回归模型中，我们使用稀疏索引矩阵对季节性分量进行建模。另一种方法是使用基样条（ 参见第 [5](chap3_5) 章 ）之类的基函数，或 Facebook Prophet 模型中的傅里叶基函数。作为设计矩阵的基函数可能会提供一些很好的属性，如正交性（参见**设计矩阵的数学性质**），这使得数值求解线性公式更稳定 {cite:p}`strang09`。
 
- Fourier basis functions are a collection of sine and cosine functions that can be used for approximating arbitrary smooth seasonal effects {cite:p}`109876`: 
+傅里叶基函数是正弦和余弦函数的集合，可用于逼近任意平滑的季节性效应 {cite:p}`109876`：
 
 ```{math} 
+:label: eq:Fourier_basis_functions
 
- :label: eq:Fourier_basis_functions 
-
-    s(t) = \sum^N_{n=1} \left[a_n \text{cos}\left(\frac{2 \pi nt}{P} \right) + b_n \text{sin}\left(\frac{2 \pi nt}{P}\right) \right]
+s(t) = \sum^N_{n=1} \left[a_n \text{cos}\left(\frac{2 \pi nt}{P} \right) + b_n \text{sin}\left(\frac{2 \pi nt}{P}\right) \right]
 ```
 
-where $P$ is the regular period the time series has (e.g. $P = 365.25$ for yearly data or $P = 7$ for weekly data, when the time variable is scaled in days). We can generate them statically with formulation as shown in Code Block [fourier_basis_as_seasonality](fourier_basis_as_seasonality), and visualize it in {numref}`fig:fig7_fourier_basis`.
+其中 $P$ 是时间序列具有的常规周期（例如，对于年度数据，$P = 365.25$ 或对于每周数据，当时间变量以天为单位时，$P = 7$）。我们可以使用代码 [fourier_basis_as_seasonality](fourier_basis_as_seasonality) 中所示的公式静态生成它们，并在 {numref}`fig:fig7_fourier_basis` 中将其可视化。
 
- ```{code-block} python 
-:name: fourier_basis_as_seasonality
- :caption: fourier_basis_as_seasonality 
 
- def gen_fourier_basis(t, p=365.25, n=3):     x = 2 * np.pi * (np.arange(n) + 1) * t[:, None] / p     return np.concatenate((np.cos(x), np.sin(x)), axis=1) 
+```{code-block} ipython3
+:caption: fourier_basis_as_seasonality 
+:name: fourier_basis_as_seasonality 
 
-n_tp = 500 p = 12 t_monthly = np.asarray([i % p for i in range(n_tp)]) monthly_X = gen_fourier_basis(t_monthly, p=p, n=3)
+def gen_fourier_basis(t, p=365.25, n=3):
+    x = 2 * np.pi * (np.arange(n) + 1) * t[:, None] / p
+    return np.concatenate((np.cos(x), np.sin(x)), axis=1)
+
+n_tp = 500
+p = 12
+t_monthly = np.asarray([i % p for i in range(n_tp)])
+monthly_X = gen_fourier_basis(t_monthly, p=p, n=3)
+
 ```
 
-```{figure} figures/fig7_fourier_basis.png
- :name: fig:fig7_fourier_basis
- :width: 8.00in Fourier basis function with n=3. There are in total 6 predictors, where we highlighted the first one by setting the rest semi-transparent.
+
+```{figure} figures/fig7_fourier_basis.png 
+:name: fig:fig7_fourier_basis 
+:width: 8.00in 
+
+$n=3$ 的傅立叶基函数。总共有 $6$ 个预测变量，我们通过将其余的设置为半透明来突出显示第一个。
 
 ``` 
 
-Fitting the seasonality using a design matrix generated from Fourier basis function as above requires estimating 2N parameters $\beta = [a_1, b_1, \dots , a_N , b_N]$.
+使用上述傅里叶基函数生成的设计矩阵拟合季节性需要估计 $2N$ 个参数 $\beta = [a_1, b_1, \dots , a_N , b_N]$。
 
- Regression models like Facebook Prophet are also referred to as a (GAM), as their response variable $Y_t$ depends linearly on unknown smooth basis functions [^7]. We also discussed other GAMs previously in Chapter [5](chap3_5).
+像 Facebook Prophet 这样的回归模型也被称为广义可加模型 (GAM)，因为其结果变量 $Y_t$ 线性依赖于未知的平滑基函数 [^7]。我们之前在第 [5](chap3_5) 章中也讨论了其他 GAM。
 
- ::: {admonition} Mathematical properties of design matrix 
+::: {admonition} 设计矩阵的数学性质 
 
-Mathematical properties of design matrices are studied quite extensively in the linear least squares problem setting, where we want to solve $min \mid Y - \mathbf{X} \beta \mid ^{2}$ for $\beta$. We can often get a sense how stable the solution of $\beta$ will be, or even possible to get a solution at all, by inspecting the property of matrix $\mathbf{X}^T \mathbf{X}$. One such property is the condition number, which is an indication of whether the solution of $\beta$ may be prone to large numerical errors. For example, if the design matrix contains columns that are highly correlated (multicollinearity), the conditioned number will be large and the matrix $\mathbf{X}^T \mathbf{X}$ is ill-conditioned. Similar principle also applies in Bayesian modeling. An in-depth exploratory data analysis in your analyses workflow is useful no matter what formal modeling approach you are taking. Basis functions as a design matrix usually are well-conditioned.
+设计矩阵的数学性质在线性最小二乘问题设置中得到了相当广泛的研究，我们想要求解 $min \mid Y - \mathbf{X} \beta \mid ^{2}$ 的 $\beta$。通过检查矩阵 $\mathbf{X}^T \mathbf{X}$ 的性质，我们通常可以了解 $\beta$ 解的稳定程度，甚至可能得到一个解。其中一个性质是条件数，它表明 $\beta$ 的解是否容易出现较大的数值误差。例如，如果设计矩阵包含高相关（多重共线性）的列，则条件数会很大，并且矩阵 $\mathbf{X}^T \mathbf{X}$ 是病态的。类似原理也适用于贝叶斯建模。无论你采用何种建模方法，在分析工作流程中做深入的探索性分析都是非常有用的。基函数作为设计矩阵通常需要具备良好的条件。
 
 ::: 
 
-A Facebook Prophet-like GAM for the monthly CO₂ measurements is expressed in Code Block [gam](gam). We assign weakly informative prior to `k` and `m` to express our knowledge that monthly measure is trending upward in general. This gives prior predictive samples in a similar range of what is actually being observed (see {numref}`fig:fig8_prior_predictive2`).
+用于每月二氧化碳测量结果的类似 Facebook Prophet 的广义可加模型见代码 [gam](gam) 。我们为 `k` 和 `m` 分配了弱信息先验，以表达我们对月指标总体呈上升趋势的认知。这里得到了与实际观测非常接近的先验预测样本（参见 {numref}`fig:fig8_prior_predictive2`）。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: gam
 :name: gam
- :caption: gam 
 
-# Generate trend design matrix n_changepoints = 12 n_tp = seasonality_all.shape[0] t = np.linspace(0, 1, n_tp, dtype=np.float32) s = np.linspace(0, max(t), n_changepoints + 2, dtype=np.float32)[1: -1] A = (t[:, None] > s).astype(np.float32) # Generate seasonality design matrix # Set n=6 here so that there are 12 columns (same as `seasonality_all`) X_pred = gen_fourier_basis(np.where(seasonality_all)[1],                            p=seasonality_all.shape[-1],                            n=6) n_pred = X_pred.shape[-1] 
+# Generate trend design matrix
+n_changepoints = 12
+n_tp = seasonality_all.shape[0]
+t = np.linspace(0, 1, n_tp, dtype=np.float32)
+s = np.linspace(0, max(t), n_changepoints + 2, dtype=np.float32)[1: -1]
+A = (t[:, None] > s).astype(np.float32)
+# Generate seasonality design matrix
+# Set n=6 here so that there are 12 columns (same as `seasonality_all`)
+X_pred = gen_fourier_basis(np.where(seasonality_all)[1],
+                           p=seasonality_all.shape[-1],
+                           n=6)
+n_pred = X_pred.shape[-1]
 
-@tfd.JointDistributionCoroutine def gam():     beta = yield root(tfd.Sample(         tfd.Normal(0., 1.), sample_shape=n_pred, name="beta"))     seasonality = tf.einsum("ij,...j->...i", X_pred, beta) 
+@tfd.JointDistributionCoroutine
+def gam():
+    beta = yield root(tfd.Sample(
+        tfd.Normal(0., 1.), sample_shape=n_pred, name="beta"))
+    seasonality = tf.einsum("ij,...j->...i", X_pred, beta)
 
-    k = yield root(tfd.HalfNormal(10., name="k"))     m = yield root(tfd.Normal(         co2_by_month_training_data["CO2"].mean(), scale=5., name="m"))     tau = yield root(tfd.HalfNormal(10., name="tau"))     delta = yield tfd.Sample(         tfd.Laplace(0., tau), sample_shape=n_changepoints, name="delta") 
+    k = yield root(tfd.HalfNormal(10., name="k"))
+    m = yield root(tfd.Normal(
+        co2_by_month_training_data["CO2"].mean(), scale=5., name="m"))
+    tau = yield root(tfd.HalfNormal(10., name="tau"))
+    delta = yield tfd.Sample(
+        tfd.Laplace(0., tau), sample_shape=n_changepoints, name="delta")
 
-    growth_rate = k[..., None] + tf.einsum("ij,...j->...i", A, delta)     offset = m[..., None] + tf.einsum("ij,...j->...i", A, -s * delta)     trend = growth_rate * t + offset 
+    growth_rate = k[..., None] + tf.einsum("ij,...j->...i", A, delta)
+    offset = m[..., None] + tf.einsum("ij,...j->...i", A, -s * delta)
+    trend = growth_rate * t + offset
 
-    y_hat = seasonality + trend     y_hat = y_hat[..., :co2_by_month_training_data.shape[0]] 
+    y_hat = seasonality + trend
+    y_hat = y_hat[..., :co2_by_month_training_data.shape[0]]
 
-    noise_sigma = yield root(tfd.HalfNormal(scale=5., name="noise_sigma"))     observed = yield tfd.Independent(         tfd.Normal(y_hat, noise_sigma[..., None]),         reinterpreted_batch_ndims=1,         name="observed")
+    noise_sigma = yield root(tfd.HalfNormal(scale=5., name="noise_sigma"))
+    observed = yield tfd.Independent(
+        tfd.Normal(y_hat, noise_sigma[..., None]),
+        reinterpreted_batch_ndims=1,
+        name="observed")
 ```
 
 ```{figure} figures/fig8_prior_predictive2.png
- :name: fig:fig8_prior_predictive2
- :width: 8.00in Prior predictive samples from a Facebook Prophet-like GAM with a weakly informative prior on trend related parameters generated from Code Block [gam](gam). Each line plot is one simulated time series.
+:name: fig:fig8_prior_predictive2
+:width: 8.00in
 
-The predictive samples are now in a similar range to what actually being observed, particularly when comparing this figure to {numref}`fig:fig3_prior_predictive1`.
+从代码 [gam](gam) 生成的、来自类 Facebook Prophet 广义加法模型的先验预测样本，与趋势分量相关的参数具有弱信息先验。每条线是一个模拟时间序列。预测样本与实际观测值的范围相似，尤其是将此图与 {numref}`fig:fig3_prior_predictive1` 进行比较时表现更明显。
 
 ``` 
 
-After inference, we can generate posterior predictive samples. As you can see in {numref}`fig:fig9_posterior_predictive2`, the forecast performance is better than the simple regression model in {numref}`fig:fig5_posterior_predictive1`. Note that in {cite:t}`TaylorLetham2018`, the generative process for forecast is not identical to the generative model, as the step linear function is evenly spaced with the change point predetermined. It is recommended that for forecasting, at each time point we first determine whether that time point would be a change point, with a probability proportional to the number of predefined change points divided by the total number of observations, and then generate a new delta from the posterior distribution $\delta_{new} \sim \text{Laplace}(0, \tau)$. Here however, to simplify the generative process we simply use the linear trend from the last period.
+经过推断，我们可以生成后验预测样本，如 {numref}`fig:fig9_posterior_predictive2` 所示，预测性能优于 {numref}`fig:fig5_posterior_predictive1` 中的简单回归模型。
 
- ```{figure} figures/fig9_posterior_predictive2.png
- :name: fig:fig9_posterior_predictive2
- :width: 8.00in Posterior predictive samples from a Facebook Prophet-like from Code Block [gam](gam) in gray, with the actual data plotted in black and blue.
+请注意，在 {cite:t}`TaylorLetham2018` 中预测的生成过程与此处的生成模型不同，因为阶跃线性函数与预定的变化点均匀分布。对于预测而言，在每个时间点，建议首先确定该时间点是否为变化点，然后从后验分布 $\delta_{new} \sim \text{Laplace}(0, \tau)$ 中生成新的 `delta`。在这里，我们为了简化生成过程，简单地使用上一时段的线性趋势。
+
+```{figure} figures/fig9_posterior_predictive2.png
+:name: fig:fig9_posterior_predictive2
+:width: 8.00in
+
+来自代码 [gam](gam) 的类 Facebook Prophet 模型的后验预测样本以灰色显示，实际数据以黑色和蓝色显示。
 
 ``` 
 
 (chap4_ar)= 
 
-## Autoregressive Models 
+## 6.3 自回归模型 
 
-One characteristic of time series is the sequential dependency of the observations. This usually introduces structured errors that are correlated temporally on previous observation(s) or error(s). A typical example is autoregressive-ness. In an autoregressive model, the distribution of output at time $t$ is parameterized by a linear function of previous observations. Consider a first-order autoregressive model (usually we write that as AR(1) with a Gaussian likelihood: 
+### 6.3.1 基础的自回归模型
+
+时间序列的一个特征是观测值的顺序依赖性。这通常会引入在时间上与先前观测（或观测误差）相关的结构化误差，其中比较典型的是自回归性。在自回归模型中，时间 $t$ 处的分布被先前观测值的线性函数参数化。考虑一个具有高斯似然的一阶自回归模型（ 通常写为 $AR(1)$ ）：
 
 ```{math} 
+:label: eq:ar1
 
- :label: eq:ar1 
-
-    y_t \sim \mathcal{N}(\alpha + \rho y_{t-1}, \sigma)
+y_t \sim \mathcal{N}(\alpha + \rho y_{t-1}, \sigma)
 ```
 
-The distribution of $y_t$ follows a Normal distribution with the location being a linear function of $y_{t-1}$. In Python, we can write down such a model with a for loop that explicitly builds out the autoregressive process. For example, in Code Block [ar1_with_forloop](ar1_with_forloop) we create an AR(1) process using `tfd.JointDistributionCoroutine` with $\alpha = 0$, and draw random samples from it by conditioned on $\sigma = 1$ and different values of $\rho$. The result is shown in {numref}`fig:fig10_ar1_process`.
+$y_t$ 遵循在该位置处的高斯分布，并且是 $y_{t-1}$ 的线性函数。在 Python 中，可以用一个 `for` 循环来编写这样一个自回归模型。例如，在代码 [ar1_with_forloop](ar1_with_forloop) 中，我们使用 $\alpha = 0$ 的 `tfd.JointDistributionCoroutine` 创建了一个 AR(1) 过程，并以 $\sigma = 1$ 和 不同的 $\rho$ 值做条件化抽取了随机样本，其结果显示在 {numref}`fig:fig10_ar1_process` 中。
 
- 
-
-```{code-block} python 
+```{code-block} ipython3
+:caption: ar1_with_forloop
 :name: ar1_with_forloop
- :caption: ar1_with_forloop 
 
-n_t = 200 
+n_t = 200
 
-@tfd.JointDistributionCoroutine def ar1_with_forloop():     sigma = yield root(tfd.HalfNormal(1.))     rho = yield root(tfd.Uniform(-1., 1.))     x0 = yield tfd.Normal(0., sigma)     x = [x0]     for i in range(1, n_t):         x_i = yield tfd.Normal(x[i-1] * rho, sigma)         x.append(x_i) 
+@tfd.JointDistributionCoroutine
+def ar1_with_forloop():
+    sigma = yield root(tfd.HalfNormal(1.))
+    rho = yield root(tfd.Uniform(-1., 1.))
+    x0 = yield tfd.Normal(0., sigma)
+    x = [x0]
+    for i in range(1, n_t):
+        x_i = yield tfd.Normal(x[i-1] * rho, sigma)
+        x.append(x_i)
 
-nplot = 4 fig, axes = plt.subplots(nplot, 1) for ax, rho in zip(axes, np.linspace(-1.01, 1.01, nplot)):     test_samples = ar1_with_forloop.sample(value=(1., rho))     ar1_samples = tf.stack(test_samples[2:])     ax.plot(ar1_samples, alpha=.5, label=r"$\rho$=%.2f" % rho)     ax.legend(bbox_to_anchor=(1, 1), loc="upper left",               borderaxespad=0., fontsize=10)
+nplot = 4
+fig, axes = plt.subplots(nplot, 1)
+for ax, rho in zip(axes, np.linspace(-1.01, 1.01, nplot)):
+    test_samples = ar1_with_forloop.sample(value=(1., rho))
+    ar1_samples = tf.stack(test_samples[2:])
+    ax.plot(ar1_samples, alpha=.5, label=r"$\rho$=%.2f" % rho)
+    ax.legend(bbox_to_anchor=(1, 1), loc="upper left",
+              borderaxespad=0., fontsize=10)
 ```
 
 ```{figure} figures/fig10_ar1_process.png
- :name: fig:fig10_ar1_process
- :width: 8.00in Random sample of an AR(1) process with $\sigma = 1$ and different $\rho$. Note that the AR(1) process is not stationary when $\mid \rho \mid > 1$.
+:name: fig:fig10_ar1_process
+:width: 8.00in
+
+$\sigma = 1$ 和不同 $\rho$ 值时 AR(1) 过程的随机样本。请注意，当 $\mid \rho \mid > 1$ 时，AR(1) 过程是非平稳的。
 
 ``` 
 
-Using a for-loop to generate the time series random variable is pretty straightforward, but now each time point is a random variable, which makes working with it quite difficult (e.g., it does not scale well with more time points). When possible, we prefer writing models that use vectorized operations. The model above can be rewritten without using for-loop by using the Autoregressive distribution `tfd.Autoregressive` in TFP, which takes a `distribution_fn` that represents Equation {eq}`eq:ar1`, a function that takes $y_{t-1}$ as input and returns the distribution of $y_t$. However, the Autoregressive distribution in TFP only retains the end state of the process, the distribution representing the random variable $y_t$ after the initial value $y_0$ iterates for $t$ steps. To get all the time steps of a AR process, we need to express Equation {eq}`eq:ar1` a bit differently using a backshift operator, also called (Lag operator) $\mathbf{B}$ that shifts the time series $\mathbf{B} y_t = y_{t-1}$ for all $t > 0$. Re-expressing Equation {eq}`eq:ar1` with a backshift operator $\mathbf{B}$ we have $Y \sim \mathcal{N}(\rho \mathbf{B} Y, \sigma)$. Conceptually, you can think of it as evaluating a vectorized likelihood `Normal(ρ * y[:-1], σ).log_prob(y[1:])`. In Code Block [ar1_without_forloop](ar1_without_forloop) we construct the same generative AR(1) model for `n_t` steps with the `tfd.Autoregressive` API. Note that we did not construct the backshift operator $\mathbf{B}$ explicitly by just generating the outcome $y_{t-1}$ directly shown in Code Block [ar1_without_forloop](ar1_without_forloop), where a Python function `ar1_fun` applies the backshift operation and generates the distribution for the next step.
+使用 `for` 循环生成时间序列随机变量非常简单，但现在每个时间点都是一个随机变量，使其应用起来非常困难（ 例如，难以适应大规模的时间点数据 ）。如果可能，我们更喜欢编写使用向量化操作的模型。上面的模型可以在不使用 `for` 循环的情况下，通过 TFP 中的自回归分布 `tfd.Autoregressive` 来重写模型，它采用`distribution_fn` 函数来表示公式 {eq}`eq:ar1` ，该函数输入 $y_{t -1}$ 并返回 $y_t$ 的分布。但 TFP 中的自回归分布仅保留了过程的最终状态，即初始值 $y_0$ 迭代 $t$ 步骤后，随机变量 $y_t$ 的分布。为了获得自回归过程中的所有时间步，我们需要使用后移运算符（也称为滞后运算符）$\mathbf{B}$ 表达公式 {eq}`eq:ar1`，该运算符会对所有 $t > 0$ 移动时间序列 $\mathbf{B} y_t = y_{t-1}$ 。用后移运算符 $\mathbf{B}$ 重新表示公式 {eq}`eq:ar1` 为 $Y \sim \mathcal{N}(\rho \mathbf{B} Y, \sigma)$ 。从概念上讲，你可以将其视为对向量化似然 `Normal(ρ * y[:-1], σ).log_prob(y[1:])` 的估计。在代码 [ar1_without_forloop](ar1_without_forloop) 中，我们用 `tfd.Autoregressive` API 为 `n_t` 步骤构建了相同的生成式 AR(1) 模型。请注意，我们并没有在代码 [ar1_without_forloop](ar1_without_forloop) 中通过生成输出结果 $y_{t-1}$ 来显式地构造后移运算符 $\mathbf{B}$ ，而是使用了 Python 函数 `ar1_fun` 完成后移操作并为下一时间步生成分布。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: ar1_without_forloop
 :name: ar1_without_forloop
- :caption: ar1_without_forloop 
 
-@tfd.JointDistributionCoroutine def ar1_without_forloop():     sigma = yield root(tfd.HalfNormal(1.))     rho = yield root(tfd.Uniform(-1., 1.)) 
+@tfd.JointDistributionCoroutine
+def ar1_without_forloop():
+    sigma = yield root(tfd.HalfNormal(1.))
+    rho = yield root(tfd.Uniform(-1., 1.))
 
-    def ar1_fun(x):         # We apply the backshift operation here         x_tm1 = tf.concat([tf.zeros_like(x[..., :1]), x[..., :-1]], axis=-1)         loc = x_tm1 * rho[..., None]         return tfd.Independent(tfd.Normal(loc=loc, scale=sigma[..., None]),                                reinterpreted_batch_ndims=1) 
+    def ar1_fun(x):
+        # We apply the backshift operation here
+        x_tm1 = tf.concat([tf.zeros_like(x[..., :1]), x[..., :-1]], axis=-1)
+        loc = x_tm1 * rho[..., None]
+        return tfd.Independent(tfd.Normal(loc=loc, scale=sigma[..., None]),
+                               reinterpreted_batch_ndims=1)
 
-    dist = yield tfd.Autoregressive(         distribution_fn=ar1_fun,         sample0=tf.zeros([n_t], dtype=rho.dtype),         num_steps=n_t)
+    dist = yield tfd.Autoregressive(
+        distribution_fn=ar1_fun,
+        sample0=tf.zeros([n_t], dtype=rho.dtype),
+        num_steps=n_t)
 ```
 
-We are now ready to extend the Facebook Prophet -like GAM above with AR(1) process as likelihood. But before we do that let us rewrite the GAM in Code Block [gam](gam) slightly differently into Code Block [gam_alternative](gam_alternative).
+现在我们以 AR(1) 过程作为似然函数来扩展上述类 Facebook Prophet 的广义可加模型。但在这样做之前，先将代码 [gam](gam) 中的 `GAM` 重写为代码 [gam_alternative](gam_alternative)。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: gam_alternative
 :name: gam_alternative
- :caption: gam_alternative 
 
-def gam_trend_seasonality():     beta = yield root(tfd.Sample(         tfd.Normal(0., 1.), sample_shape=n_pred, name="beta"))     seasonality = tf.einsum("ij,...j->...i", X_pred, beta) 
+def gam_trend_seasonality():
+    beta = yield root(tfd.Sample(
+        tfd.Normal(0., 1.), sample_shape=n_pred, name="beta"))
+    seasonality = tf.einsum("ij,...j->...i", X_pred, beta)
 
-    k = yield root(tfd.HalfNormal(10., name="k"))     m = yield root(tfd.Normal(         co2_by_month_training_data["CO2"].mean(), scale=5., name="m"))     tau = yield root(tfd.HalfNormal(10., name="tau"))     delta = yield tfd.Sample(         tfd.Laplace(0., tau), sample_shape=n_changepoints, name="delta") 
+    k = yield root(tfd.HalfNormal(10., name="k"))
+    m = yield root(tfd.Normal(
+        co2_by_month_training_data["CO2"].mean(), scale=5., name="m"))
+    tau = yield root(tfd.HalfNormal(10., name="tau"))
+    delta = yield tfd.Sample(
+        tfd.Laplace(0., tau), sample_shape=n_changepoints, name="delta")
 
-    growth_rate = k[..., None] + tf.einsum("ij,...j->...i", A, delta)     offset = m[..., None] + tf.einsum("ij,...j->...i", A, -s * delta)     trend = growth_rate * t + offset     noise_sigma = yield root(tfd.HalfNormal(scale=5., name="noise_sigma"))     return seasonality, trend, noise_sigma 
+    growth_rate = k[..., None] + tf.einsum("ij,...j->...i", A, delta)
+    offset = m[..., None] + tf.einsum("ij,...j->...i", A, -s * delta)
+    trend = growth_rate * t + offset
+    noise_sigma = yield root(tfd.HalfNormal(scale=5., name="noise_sigma"))
+    return seasonality, trend, noise_sigma
 
-def generate_gam(training=True): 
+def generate_gam(training=True):
 
-    @tfd.JointDistributionCoroutine     def gam():         seasonality, trend, noise_sigma = yield from gam_trend_seasonality()         y_hat = seasonality + trend         if training:             y_hat = y_hat[..., :co2_by_month_training_data.shape[0]] 
+    @tfd.JointDistributionCoroutine
+    def gam():
+        seasonality, trend, noise_sigma = yield from gam_trend_seasonality()
+        y_hat = seasonality + trend
+        if training:
+            y_hat = y_hat[..., :co2_by_month_training_data.shape[0]]
 
-        # likelihood         observed = yield tfd.Independent(             tfd.Normal(y_hat, noise_sigma[..., None]),             reinterpreted_batch_ndims=1,             name="observed"         ) 
+        # likelihood
+        observed = yield tfd.Independent(
+            tfd.Normal(y_hat, noise_sigma[..., None]),
+            reinterpreted_batch_ndims=1,
+            name="observed"
+        )
 
-    return gam 
+    return gam
 
 gam = generate_gam()
 ```
 
-Comparing Code Block [gam_alternative](gam_alternative) with Code Block [gam](gam), we see two major differences: 
+比较代码 [gam_alternative](gam_alternative) 和代码 [gam](gam)，可以看到两个主要区别：
 
-1.  We split out the construction of the trend and seasonality     components (with their priors) into a separate function, and in the     `tfd.JointDistributionCoroutine` model block we use a `yield from`     statement so we get the identical `tfd.JointDistributionCoroutine`     model in both Code Blocks; 
+1. 我们将趋势和季节性分量（及其先验）的构造拆分成了独立函数，并且在 `tfd.JointDistributionCoroutine` 的模型块中，使用了 `yield from` 语句，从而在不同代码中能够获得相同的 `tfd.JointDistributionCoroutine ` 模型；
 
-2.  We wrap the `tfd.JointDistributionCoroutine` in another Python     function so it is easier to condition on both the training and     testing set.
+2. 我们将 `tfd.JointDistributionCoroutine` 包装在另一个 Python 函数中，这样更容易在训练集和测试集上实现条件化。
 
- Code Block [gam_alternative](gam_alternative) is a much more modular approach. We can write down a GAM with an AR(1) likelihood by just changing the likelihood part. This is what we do in Code Block [gam_with_ar_likelihood](gam_with_ar_likelihood).
+代码 [gam_alternative](gam_alternative) 是一种更加模块化的方法。我们可以通过改变似然函数部分来写出一个具有 AR(1) 似然函数的 GAM。这就是在代码 [gam_with_ar_likelihood](gam_with_ar_likelihood) 中所做的。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: gam_with_ar_likelihood
 :name: gam_with_ar_likelihood
- :caption: gam_with_ar_likelihood 
 
-def generate_gam_ar_likelihood(training=True): 
+def generate_gam_ar_likelihood(training=True):
 
-    @tfd.JointDistributionCoroutine     def gam_with_ar_likelihood():         seasonality, trend, noise_sigma = yield from gam_trend_seasonality()         y_hat = seasonality + trend         if training:             y_hat = y_hat[..., :co2_by_month_training_data.shape[0]] 
+    @tfd.JointDistributionCoroutine
+    def gam_with_ar_likelihood():
+        seasonality, trend, noise_sigma = yield from gam_trend_seasonality()
+        y_hat = seasonality + trend
+        if training:
+            y_hat = y_hat[..., :co2_by_month_training_data.shape[0]]
 
-        # Likelihood         rho = yield root(tfd.Uniform(-1., 1., name="rho"))         def ar_fun(y):             loc = tf.concat([tf.zeros_like(y[..., :1]), y[..., :-1]],                             axis=-1) * rho[..., None] + y_hat             return tfd.Independent(                 tfd.Normal(loc=loc, scale=noise_sigma[..., None]),                 reinterpreted_batch_ndims=1)         observed = yield tfd.Autoregressive(             distribution_fn=ar_fun,             sample0=tf.zeros_like(y_hat),             num_steps=1,             name="observed") 
+        # Likelihood
+        rho = yield root(tfd.Uniform(-1., 1., name="rho"))
+        def ar_fun(y):
+            loc = tf.concat([tf.zeros_like(y[..., :1]), y[..., :-1]],
+                            axis=-1) * rho[..., None] + y_hat
+            return tfd.Independent(
+                tfd.Normal(loc=loc, scale=noise_sigma[..., None]),
+                reinterpreted_batch_ndims=1)
+        observed = yield tfd.Autoregressive(
+            distribution_fn=ar_fun,
+            sample0=tf.zeros_like(y_hat),
+            num_steps=1,
+            name="observed")
 
-    return gam_with_ar_likelihood 
+    return gam_with_ar_likelihood
 
 gam_with_ar_likelihood = generate_gam_ar_likelihood()
 ```
 
-Another way to think about AR(1) model here is as extending our linear regression notion to include an observation dependent column in the design matrix, and setting the element of this column $x_i$ being $y_{i-1}$. The autoregressive coefficient $\rho$ is then no different to any other regression coefficient, which is just telling us what is the linear contribution of the previous observation to the expectation of the current observation [^8]. In this model, we found that the effect is almost negligible by inspecting the posterior distribution of $\rho$ (see {numref}`fig:fig11_ar1_likelihood_rho`): 
+在这里考虑 AR(1) 模型的另一种方法，是将线性回归概念扩展为在设计矩阵中包含一个观测相关列，并将该列的元素 $x_i$ 设置为 $y_{i-1}$。然后，自回归系数 $\rho$ 与任何其他回归系数没有什么不同，这只是告诉我们，先前观测对当前观测的期望的线性贡献是什么 [^8]。在这个模型中，我们通过检查 $\rho$ 的后验分布发现这种影响几乎可以忽略不计（ 参见 {numref}`fig:fig11_ar1_likelihood_rho` ）：
 
 ```{figure} figures/fig11_ar1_likelihood_rho.png
- :name: fig:fig11_ar1_likelihood_rho
- :width: 8.00in Posterior distribution of the parameters in the likelihood for the Facebook Prophet -like GAM defined in Code Block [gam_with_ar_likelihood](gam_with_ar_likelihood). Leftmost panel is the $\sigma$ in the model with a Normal likelihood, middle and rightmost panels are $\sigma$ and $\rho$ in the model with an AR(1) likelihood. Both models return a similar estimation of $\sigma$, with the $\rho$ estimated centered around 0.
+:name: fig:fig11_ar1_likelihood_rho
+:width: 8.00in
+
+在代码 [gam_with_ar_likelihood](gam_with_ar_likelihood) 中定义的类 Facebook Prophet 的 GAM 模型的似然函数参数的后验分布。最左边的子图是具有正态似然的模型中的 $\sigma$，中间和最右边的子图是具有 AR(1) 似然的模型中的 $\sigma$ 和 $\rho$。两个模型都返回了相似的 $\sigma$ 估计值，$\rho$ 估计值以 $0$ 为中心。
 
 ``` 
 
-Instead of using an AR(k) likelihood, we can also include AR in a time series model by adding a latent AR component to the linear prediction.
+除了采用 AR(k) 似然函数这种方式之外，我们还可以通过在线性预测中添加隐自回归分量，来达到将自回归包含在时间序列模型中的目的。这就是代码 [gam_with_latent_ar](gam_with_latent_ar) 中的 `gam_with_latent_ar` 隐自回归模型。
 
-This is the `gam_with_latent_ar` model in Code Block [gam_with_latent_ar](gam_with_latent_ar).
-
- ```{code-block} python 
+```{code-block} ipython3
+:caption: gam_with_latent_ar
 :name: gam_with_latent_ar
- :caption: gam_with_latent_ar 
 
-def generate_gam_ar_latent(training=True): 
+def generate_gam_ar_latent(training=True):
 
-    @tfd.JointDistributionCoroutine     def gam_with_latent_ar():         seasonality, trend, noise_sigma = yield from gam_trend_seasonality()                  # Latent AR(1)         ar_sigma = yield root(tfd.HalfNormal(.1, name="ar_sigma"))         rho = yield root(tfd.Uniform(-1., 1., name="rho"))         def ar_fun(y):             loc = tf.concat([tf.zeros_like(y[..., :1]), y[..., :-1]],                             axis=-1) * rho[..., None]             return tfd.Independent(                 tfd.Normal(loc=loc, scale=ar_sigma[..., None]),                 reinterpreted_batch_ndims=1)         temporal_error = yield tfd.Autoregressive(             distribution_fn=ar_fun,             sample0=tf.zeros_like(trend),             num_steps=trend.shape[-1],             name="temporal_error") 
+    @tfd.JointDistributionCoroutine
+    def gam_with_latent_ar():
+        seasonality, trend, noise_sigma = yield from gam_trend_seasonality()
+        
+        # Latent AR(1)
+        ar_sigma = yield root(tfd.HalfNormal(.1, name="ar_sigma"))
+        rho = yield root(tfd.Uniform(-1., 1., name="rho"))
+        def ar_fun(y):
+            loc = tf.concat([tf.zeros_like(y[..., :1]), y[..., :-1]],
+                            axis=-1) * rho[..., None]
+            return tfd.Independent(
+                tfd.Normal(loc=loc, scale=ar_sigma[..., None]),
+                reinterpreted_batch_ndims=1)
+        temporal_error = yield tfd.Autoregressive(
+            distribution_fn=ar_fun,
+            sample0=tf.zeros_like(trend),
+            num_steps=trend.shape[-1],
+            name="temporal_error")
 
-        # Linear prediction         y_hat = seasonality + trend + temporal_error         if training:             y_hat = y_hat[..., :co2_by_month_training_data.shape[0]] 
+        # Linear prediction
+        y_hat = seasonality + trend + temporal_error
+        if training:
+            y_hat = y_hat[..., :co2_by_month_training_data.shape[0]]
 
-        # Likelihood         observed = yield tfd.Independent(             tfd.Normal(y_hat, noise_sigma[..., None]),             reinterpreted_batch_ndims=1,             name="observed"         ) 
+        # Likelihood
+        observed = yield tfd.Independent(
+            tfd.Normal(y_hat, noise_sigma[..., None]),
+            reinterpreted_batch_ndims=1,
+            name="observed"
+        )
 
-    return gam_with_latent_ar 
+    return gam_with_latent_ar
 
 gam_with_latent_ar = generate_gam_ar_latent()
 ```
 
-With the explicit latent AR process, we are adding a random variable with the same size as the observed data to the model. Since it is now an explicit component added to the linear prediction $\hat{Y}$, we can interpret the AR process to be complementary to, or even part of, the trend component. We can visualize the latent AR component after inference similar to the trend and seasonality components of a time series model (see {numref}`fig:fig12_posterior_predictive_ar1`).
+通过显式的隐自回归过程，我们将一个与观测数据大小相同的随机变量添加到模型中。由于它现在是添加到线性预测 $\hat{Y}$ 中的显式分量，因此可以将自回归过程解释为趋势分量的补充，甚至是其一部分。
 
- ```{figure} figures/fig12_posterior_predictive_ar1.png
- :name: fig:fig12_posterior_predictive_ar1
- :width: 8.00in Posterior predictive samples of the trend, seasonality, and AR(1) components of the GAM based time series model `gam_with_latent_ar` specified in Code Block [gam_with_latent_ar](gam_with_latent_ar).
+我们可以在完成推断后，可视化隐自回归分量，类似于时间序列模型的趋势和季节性分量（参见 {numref}`fig:fig12_posterior_predictive_ar1`）。
+
+```{figure} figures/fig12_posterior_predictive_ar1.png
+:name: fig:fig12_posterior_predictive_ar1
+:width: 8.00in
+
+在代码 [gam_with_latent_ar](gam_with_latent_ar) 中指定的基于 GAM 的时间序列模型 `gam_with_latent_ar` 的趋势、季节性和 AR(1) 分量的后验预测样本。
 
 ``` 
 
-Another way to interpret the explicit latent AR process is that it captures the temporally correlated *residuals*, so we expect the posterior estimation of the $\sigma_{noise}$ will be smaller compared to the model without this component. In {numref}`fig:fig13_ar1_likelihood_rho2` we display the posterior distribution of $\sigma_{noise}$, $\sigma_{AR}$, and $\rho$ for model `gam_with_latent_ar`. In comparison to model `gam_with_ar_likelihood`, we indeed get a lower estimation of $\sigma_{noise}$, with a much higher estimation of $\rho$.
+解释显式隐自回归过程的另一种方法是认为它捕获了时间相关的残差，因此我们预期 $\sigma_{noise}$ 的后验估计较没有此分量的模型更小。在 {numref}`fig:fig13_ar1_likelihood_rho2` 中，我们展示了模型 `gam_with_latent_ar` 的 $\sigma_{noise}$、$\sigma_{AR}$ 和 $\rho$ 的后验分布。与模型 `gam_with_ar_likelihood` 相比，确实得到了 $\sigma_{noise}$ 的较低估计，而 $\rho$ 的估计则要高得多。
 
- ```{figure} figures/fig13_ar1_likelihood_rho2.png
- :name: fig:fig13_ar1_likelihood_rho2
- :width: 8.00in Posterior distribution of $\sigma_{noise}$, $\sigma_{AR}$, and $\rho$ of the AR(1) latent component for `gam_with_latent_ar` specified in Code Block [gam_with_latent_ar](gam_with_latent_ar). Note not to be confused with {numref}`fig:fig11_ar1_likelihood_rho` where we displays posterior distribution of parameters from 2 different GAMs.
+```{figure} figures/fig13_ar1_likelihood_rho2.png
+:name: fig:fig13_ar1_likelihood_rho2
+:width: 8.00in
+
+代码 [gam_with_latent_ar](gam_with_latent_ar) 中 `gam_with_latent_ar` 模型的 AR(1) 潜在分量的 $\sigma_{noise}$、$\sigma_{AR}$ 和 $\rho$ 的后验分布。注意不要与 {numref}`fig:fig11_ar1_likelihood_rho` 混淆，其中我们展示了来自 $2$ 个不同 GAM 的参数的后验分布。
 
 ``` 
 
 (latent-ar-process-and-smoothing)= 
 
-### Latent AR Process and Smoothing 
+### 6.3.2 隐自回归过程和平滑 
 
-A latent process is quite powerful at capturing the subtle trends in the observed time series. It can even approximate some arbitrary functions.
+隐过程在捕获时间观测序列中的微妙趋势方面非常强大。它甚至可以逼近任意函数。为了看到这一点，让我们考虑使用包含隐 (GRW) 分量的时间序列模型对玩具数据进行建模，如公式 {eq}`eq:gw_formulation1` 所示。
 
-To see that let us consider modeling a toy problem with a time series model that contains a latent (GRW) component, as formulated in Equation {eq}`eq:gw_formulation1`.
 
- ```{math} 
+```{math} 
+:label: eq:gw_formulation1
 
- :label: eq:gw_formulation1 
-
-\begin{split} z_i & \sim \mathcal{N}(z_{i-1}, \sigma_{z}^2) \: \text{ for } i=1,\dots,N \\ y_i & \sim \mathcal{N}(z_i,  \sigma_{y}^2) \end{split}
+\begin{split}
+z_i & \sim \mathcal{N}(z_{i-1}, \sigma_{z}^2) \: \text{ for } i=1,\dots,N \\
+y_i & \sim \mathcal{N}(z_i,  \sigma_{y}^2)
+\end{split}
 ```
 
-The GRW here is the same as an AR(1) process with $\rho = 1$. By placing different prior on $\sigma_{z}$ and $\sigma_{y}$ in Equation {eq}`eq:gw_formulation1`, we can emphasize how much of the variance in the observed data should be accounted for in the GRW, and how much is iid *noise*. We can also compute the ratio $\alpha = \frac{\sigma_{y}^2}{\sigma_{z}^2 + \sigma_{y}^2}$, where $\alpha$ is in the range $[0, 1]$ that can be interpret as the degree of smoothing. Thus we can express the model in Equation {eq}`eq:gw_formulation1` equivalently as Equation {eq}`eq:gw_formulation2`.
+这里的 GRW 等同于 $\rho = 1$ 时的 AR(1) 过程。
 
- ```{math} 
+通过在公式 {eq}`eq:gw_formulation1` 中对 $\sigma_{z}$ 和 $\sigma_{y}$ 设置不同先验，我们可以强调在 GRW 中应解释多少观测数据中的方差，以及其中有多少是独立同分布的噪声。我们还可以计算比率 $\alpha = \frac{\sigma_{y}^2}{\sigma_{z}^2 + \sigma_{y}^2}$ ，其中 $\alpha$ 在 $[0, 1]$ 区间内，可以解释为平滑度。因此，我们可以将公式 {eq}`eq:gw_formulation1` 中的模型等价地表示为公式 {eq}`eq:gw_formulation2`。
 
- :label: eq:gw_formulation2 
+```{math} 
+:label: eq:gw_formulation2
 
-\begin{split} z_i & \sim \mathcal{N}(z_{i-1}, (1 - \alpha) \sigma^2) \: \text{ for } i=1,\dots,N \\ y_i & \sim \mathcal{N}(z_i,   \alpha \sigma^2) \end{split}
+\begin{split}
+z_i & \sim \mathcal{N}(z_{i-1}, (1 - \alpha) \sigma^2) \: \text{ for } i=1,\dots,N \\
+y_i & \sim \mathcal{N}(z_i,   \alpha \sigma^2)
+\end{split}
 ```
 
-Our latent GRW model in Equation {eq}`eq:gw_formulation2` could be written in TFP in Code Block [gw_tfp](gw_tfp). By placing informative prior on $\alpha$ we can control how much "smoothing\" we would like to see in the latent GRW (larger $\alpha$ gives smoother approximation). Let us fit the model `smoothing_grw` with some noisy observations simulated from an arbitrary function. The data is shown as black solid dots in {numref}`fig:fig14_smoothing_with_gw`, with the fitted latent Random Walk displayed in the same Figure. As you can see we can approximate the underlying function pretty well.
+我们在公式 {eq}`eq:gw_formulation2` 中的隐 GRW 模型可以用代码 [gw_tfp](gw_tfp) 编写。通过在 $\alpha$ 上放置信息先验，我们可以控制希望在隐 GRW 中看到多少 “平滑”（较大的 $\alpha$ 给出更平滑的近似值）。让我们用从任意函数模拟的一些含噪声观测来拟合模型 `smoothing_grw`。数据在 {numref}`fig:fig14_smoothing_with_gw` 中显示为黑色实心点，拟合的隐随机游走显示在同一图中。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: gw_tfp
 :name: gw_tfp
- :caption: gw_tfp 
 
-@tfd.JointDistributionCoroutine def smoothing_grw():     alpha = yield root(tfd.Beta(5, 1.))     variance = yield root(tfd.HalfNormal(10.))     sigma0 = tf.sqrt(variance * alpha)     sigma1 = tf.sqrt(variance * (1. - alpha))     z = yield tfd.Sample(tfd.Normal(0., sigma0), num_steps)     observed = yield tfd.Independent(         tfd.Normal(tf.math.cumsum(z, axis=-1), sigma1[..., None]))
+@tfd.JointDistributionCoroutine
+def smoothing_grw():
+    alpha = yield root(tfd.Beta(5, 1.))
+    variance = yield root(tfd.HalfNormal(10.))
+    sigma0 = tf.sqrt(variance * alpha)
+    sigma1 = tf.sqrt(variance * (1. - alpha))
+    z = yield tfd.Sample(tfd.Normal(0., sigma0), num_steps)
+    observed = yield tfd.Independent(
+        tfd.Normal(tf.math.cumsum(z, axis=-1), sigma1[..., None]))
 ```
 
 ```{figure} figures/fig14_smoothing_with_gw.png
- :name: fig:fig14_smoothing_with_gw
- :width: 8.00in Simulated observations from $y \sim \text{Normal}(f(x), 1)$ with $f(x) = e^{1 + x^{0.5} - e^{\frac{x}{15}}}$, and the inferred latent Gaussian Random Walk. The gray semi-transparent region is the posterior 94% HDI interval of the latent Gaussian Random Walk $z$, with the posterior mean plot in dash blue line.
+:name: fig:fig14_smoothing_with_gw
+:width: 8.00in
+
+来自 $y \sim \text{Normal}(f(x), 1)$ 的模拟观测结果 $f(x) = e^{1 + x^{0.5} - e^{\frac{x}{15} }}$，以及推断的隐高斯随机游走。灰色半透明区域是隐高斯随机游走 $z$ 的后验 $94\%$ HDI 区间，后验均值图为蓝色虚线。
 
 ``` 
 
-There are a few other interesting properties of the AR process, with connection to the Gaussian Process {cite:p}`Rasmussen2005`. For example, you might find that the Autoregressive model *alone* is useless to capture the long-term trend. Even though the model seems to fit well the observation, during forecast you will observe the forecast value regress to the mean of the last few time steps very quickly. Same as what you will observe using the Gaussian Process with a constant mean function [^9].
+自回归过程还有一些其他有趣的性质，与高斯过程 {cite:p}`Rasmussen2005` 有关。例如，你可能会发现*单独的*自回归模型无法捕获长期趋势。尽管模型似乎很适合观测结果，但在预测时，你会观察到预测值很快就回归到了最后几个时间步的平均值。与使用具有恒定平均函数 [^9] 的高斯过程所观测到的相同。
 
- An autoregressive component as an additional trend component could place some challenges to model inference. For example, scaling could be an issue as we are adding a random variable with the same shape as the observed time series. We might have an unidentifiable model when both the trend component and the AR process are flexible, as the AR process alone already has the ability to approximate the underlying trend, a smoothed function, of the observed data as we have seen here.
+作为额外趋势分量的自回归分量可能会给模型推断带来一些挑战。例如，规模化可能是一个问题，因为我们正在添加一个时间观测序列具有相同形状的随机变量。当趋势分量和自回归过程都灵活时，我们可能会得到一个无法识别的模型，因为自回归过程本身已经有能力近似观测数据的潜在趋势（平滑函数）了。
 
 (sarimax)= 
 
-### (S)AR(I)MA(X) 
+### 6.3.3 自回归移动平均 (S)AR(I)MA(X) 
 
-Many classical time series models share a similar autoregressive like pattern, where you have some latent parameter at time $t$ that is dependent on the value of itself or another parameter at $t-k$. Two examples of these models are 
+许多经典时间序列模型共享相似的类自回归模式，在此类模式中，时间 $t$ 处有一些隐参数依赖于自身的观测值或 $t-k$ 处的另外一个参数。其中两个典型的例子是：
 
--   Autoregressive conditional heteroscedasticity (ARCH) model, where     the scale of the residuals vary over time; 
+- 自回归条件异方差 (ARCH) 模型，其中残差的规模随时间变化；
 
--   Moving average (MA) model, which is a linear combination of previous     residuals are added to the mean of the series.
+- 移动平均 (MA) 模型，它将先前残差的线性组合添加到时间系列均值中。
 
- Some of these classical time series models could be combined into more complex models, one of such extensions is the Seasonal AutoRegressive Integrated Moving Average with eXogenous regressors model (SARIMAX).
+这些经典时间序列模型中可以组合成更复杂的模型，其中一种扩展是 SARIMAX 模型。虽然命名可能看起来很吓人，但基本概念在很大程度上是自回归和移动平均模型的直接组合。
 
-While the naming might look intimidating, the basic concept is largely a straightforward combination of the AR and MA model. Extending the AR model with MA we get: 
-
-```{math} 
-
- :label: eq:arma 
-
-\begin{split} y_t & = \alpha + \sum_{i=1}^{p}\phi_i y_{t-i} + \sum_{j=1}^{q}\theta_j \epsilon_{t-j} + \epsilon_t \\ \epsilon_t & \sim \mathcal{N}(0, \sigma^2) \end{split}
-```
-
-where $p$ is the order of the autoregressive model and $q$ is the order of the moving average model. Conventionally, we write models as such being ARMA(p, q). Similarly, for seasonal ARMA we have: 
+用移动平均扩展自回归模型，我们得到一般性的 ARMA 模型：
 
 ```{math} 
+:label: eq:arma
 
- :label: eq:sarma 
-
-\begin{split} y_t = \alpha + \sum_{i=1}^{p}\phi_i y_{t-period-i} + \sum_{j=1}^{q}\theta_j \epsilon_{t-period-j} + \epsilon_t \end{split}
+\begin{split}
+y_t & = \alpha + \sum_{i=1}^{p}\phi_i y_{t-i} + \sum_{j=1}^{q}\theta_j \epsilon_{t-j} + \epsilon_t \\
+\epsilon_t & \sim \mathcal{N}(0, \sigma^2)
+\end{split}
 ```
 
-The integrated part of an ARIMA model refers to the summary statistics of a time series: order of integration. Denoted as $I(d)$, a time series is integrated to order $d$ if taking repeated differences $d$ times yields a stationary series. Following {cite:t}`box2008time`, we repeatedly take difference of the observed time series as a preprocessing step to account for the $I(d)$ part of an ARIMA(p,d,q) model, and model the resulting differenced series as a stationary process with ARMA(p,q). The operation itself is also quite standard in Python. We can use `numpy.diff` where the first difference computed is `delta_y[i] = y[i] - y[i-1]` along a given axis, and higher differences are calculated by repeating the same operation recursively on the resulting array.
+其中 $p$ 是自回归模型的阶数，$q$ 是移动平均模型的阶数。通常，我们将模型记为 $ARMA(p, q)$ 。同样，对于季节性 ARMA，我们有：
 
- If we have an additional regressor $\mathbf{X}$, in the model above $\alpha$ is replaced with the linear prediction $\mathbf{X} \beta$. We will apply the same differencing operation on $\mathbf{X}$ if $d > 0$.
+```{math} 
+:label: eq:sarma
 
-Note that we can have either seasonal (SARIMA) or exogenous regressors (ARIMAX) but not both.
+\begin{split}
+y_t = \alpha + \sum_{i=1}^{p}\phi_i y_{t-period-i} + \sum_{j=1}^{q}\theta_j \epsilon_{t-period-j} + \epsilon_t
+\end{split}
+```
 
- ::: {admonition} Notation for (S)AR(I)MA(X) 
+在 ARIMA 模型中，积分部分是指时间序列的统计量：积分阶数。表示为 $I(d)$，如果一个时间序列重复差分 $d$ 次后仍然产生平稳序列，则称其被积分至 $d$ 阶。遵从 {cite:t}`box2008time` ，我们将反复获取时间观测序列的差作为预处理步骤，来解释 $ARIMA(p,d,q)$ 模型的 $I(d)$ 部分，并对差分序列结果建模为一个带 $ARMA(p,q)$ 的平稳过程。该运算本身在 Python 中也相当标准。我们可以使用 `numpy.diff`，其中计算的第一个差分是沿给定轴的 `delta_y[i] = y[i] - y[i-1]`，通过在给定轴上递归重复相同运算来计算更高阶的差分结果数组。
 
-Typically, ARIMA models are denoted as ARIMA(p,d,q), which is to say we have a model containing order $p$ of AR, $d$ degree of I, and order $q$ of MA. For example, ARIMA(1,0,0) is just a AR(1). We denote seasonal ARIMA models as $\text{SARIMA}(p,d,q)(P,D,Q)_{s}$, where $s$ refers to the number of periods in each season, and the uppercase $P$, $D$, $Q$ are the seasonal counter part of the ARIMA model $p$, $d$, $q$. Sometimes seasonal ARIMA are denoted also as $\text{SARIMA}(p,d,q)(P,D,Q,s)$. If there are exogenous regressors, we write $\text{ARIMAX}(p,d,q)\mathbf{X}[k]$ with $\mathbf{X}[k]$ indicating we have a $k$ columns design matrix $\mathbf{X}$.
+如果我们有一个额外的回归量 $\mathbf{X}$，在上面模型中 $\alpha$ 被线性预测 $\mathbf{X} \beta$ 替换。如果 $d > 0$，我们将对 $\mathbf{X}$ 应用相同的差分运算。
+
+此外请注意，我们可以有季节性（ `SARIMA` ）或外生回归（ `ARIMAX` ），但不能同时有。
+
+::: {admonition} (S)AR(I)MA(X) 的概念
+
+通常，ARIMA 模型表示为 $ARIMA(p,d,q)$，也就是说，我们有一个包含 $p$ 阶自回归、$d$ 度积分 、 $q$ 阶移动平均的模型。例如，$ARIMA(1,0,0)$ 只是一个 AR(1)。
+
+我们将季节性 ARIMA 模型表示为 $\text{SARIMA}(p,d,q)(P,D,Q)_{s}$，其中 $s$ 表示每个季节的周期数，大写的 $P$、$D$、$Q$ 是 ARIMA 模型 $p$、$d$、$q$ 的季节性计数器部分。有时季节性 ARIMA 也表示为 $\text{SARIMA}(p,d,q)(P,D,Q,s)$。
+
+如果有外生回归量，我们记为 $\text{ARIMAX}(p,d,q)\mathbf{X}[k]$ ，其中 $\mathbf{X}[k]$ 表示包含 $k$ 列的设计矩阵 $\mathbf{X}$。
 
 ::: 
 
-As the second example in this chapter, we will use different ARIMA to model the time series of the monthly live births in the United States from 1948 to 1979 {cite:p}`shumway2019time`. The data is shown in {numref}`fig:fig15_birth_by_month`.
+作为本章的第二个例子，我们将使用不同的 ARIMA 对美国从 $1948$ 年到 $1979$ 年的月活产率时间序列进行建模{cite:p}`shumway2019time`。数据显示在 {numref}`fig:fig15_birth_by_month` 中。
 
- ```{figure} figures/fig15_birth_by_month.png
- :name: fig:fig15_birth_by_month
- :width: 8.00in Monthly live births in the United States (1948-1979). Y-axis shows the number of births in thousands.
+```{figure} figures/fig15_birth_by_month.png
+:name: fig:fig15_birth_by_month
+:width: 8.00in
+
+美国的月活产婴儿（1948-1979 年）。 $Y$ 轴显示出生人数（以千计）。
 
 ``` 
 
-We will start with a $\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}$ model. First we load and pre-process the observed time series in Code Block [sarima_preprocess](sarima_preprocess).
+我们从 $\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}$ 模型开始。首先，在代码 [sarima_preprocess](sarima_preprocess) 中加载和预处理时间观测序列。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: sarima_preprocess
 :name: sarima_preprocess
- :caption: sarima_preprocess 
 
-us_monthly_birth = pd.read_csv("../data/monthly_birth_usa.csv") us_monthly_birth["date_month"] = pd.to_datetime(us_monthly_birth["date_month"]) us_monthly_birth.set_index("date_month", drop=True, inplace=True) 
+us_monthly_birth = pd.read_csv("../data/monthly_birth_usa.csv")
+us_monthly_birth["date_month"] = pd.to_datetime(us_monthly_birth["date_month"])
+us_monthly_birth.set_index("date_month", drop=True, inplace=True)
 
-# y ~ Sarima(1,1,1)(1,1,1)[12] p, d, q = (1, 1, 1) P, D, Q, period = (1, 1, 1, 12) # Time series data: us_monthly_birth.shape = (372,) observed = us_monthly_birth["birth_in_thousands"].values # Integrated to seasonal order $D$ for _ in range(D):     observed = observed[period:] - observed[:-period] # Integrated to order $d$ observed = tf.constant(np.diff(observed, n=d), tf.float32)
+# y ~ Sarima(1,1,1)(1,1,1)[12]
+p, d, q = (1, 1, 1)
+P, D, Q, period = (1, 1, 1, 12)
+# Time series data: us_monthly_birth.shape = (372,)
+observed = us_monthly_birth["birth_in_thousands"].values
+# Integrated to seasonal order $D$
+for _ in range(D):
+    observed = observed[period:] - observed[:-period]
+# Integrated to order $d$
+observed = tf.constant(np.diff(observed, n=d), tf.float32)
 ```
 
-At time of writing TFP does not have a dedicated implementation of an ARMA distribution. To run inference of our SARIMA model, TFP requires a Python `callable` representing the log posterior density function (up to some constant {cite:p}`lao2020tfpmcmc`. In this case, we can archive that by implementing the likelihood function of $\text{SARMA}(1, 1)(1, 1)_{12}$ (since the $\text{I}$ part is already dealt with via differencing). We do that in Code Block [sarima_likelihood](sarima_likelihood) using a `tf.while_loop` to construct the residual time series $\epsilon_t$ and evaluated on a $\text{Normal}$ distribution [^10]. From the programming point of view, the biggest challenge here is to make sure the shape is correct when we index to the time series. To avoid additional control flow to check whether some of the indexes are valid (e.g, we cannot index to $t-1$ and $t-period-1$ when $t=0$), we pad the time series with zeros.
+在撰写本文时，TFP 没有 ARMA 分布的专门实现。为了运行 SARIMA 模型的推断，TFP 需要一个 Python 的 `callable` 来表示对数后验密度函数（直到某个常数 {cite:p}`lao2020tfpmcmc`）。在这种情况下，我们可以通过实现似然函数 $\text{SARMA}(1, 1)(1, 1)_{12}$ 来得到它（ 因为 $\text{I}$ 部分已经通过差分处理实现 ）。我们在代码 [sarima_likelihood](sarima_likelihood) 使用 `tf.while_loop` 构造残差时间序列 $\epsilon_t$ 并在 $\text{Normal}$ 分布 [^10] 上进行估值。从编程角度来看，这里的最大挑战是确保当我们对时间序列进行索引时，张量形状是正确的。为了避免额外的控制流来检查索引是否有效（ 例如，当 $t=0$ 时，我们不能索引到 $t-1$ 和 $t-period-1$ )，我们用零来填充时间序列。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: sarima_likelihood
 :name: sarima_likelihood
- :caption: sarima_likelihood 
 
-def likelihood(mu0, sigma, phi, theta, sphi, stheta):     batch_shape = tf.shape(mu0)     y_extended = tf.concat(         [tf.zeros(tf.concat([[r], batch_shape], axis=0), dtype=mu0.dtype),         tf.einsum("...,j->j...",                   tf.ones_like(mu0, dtype=observed.dtype),                   observed)],         axis=0)     eps_t = tf.zeros_like(y_extended, dtype=observed.dtype) 
+def likelihood(mu0, sigma, phi, theta, sphi, stheta):
+    batch_shape = tf.shape(mu0)
+    y_extended = tf.concat(
+        [tf.zeros(tf.concat([[r], batch_shape], axis=0), dtype=mu0.dtype),
+        tf.einsum("...,j->j...",
+                  tf.ones_like(mu0, dtype=observed.dtype),
+                  observed)],
+        axis=0)
+    eps_t = tf.zeros_like(y_extended, dtype=observed.dtype)
 
-    def arma_onestep(t, eps_t):         t_shift = t + r         # AR         y_past = tf.gather(y_extended, t_shift - (np.arange(p) + 1))         ar = tf.einsum("...p,p...->...", phi, y_past)         # MA         eps_past = tf.gather(eps_t, t_shift - (np.arange(q) + 1))         ma = tf.einsum("...q,q...->...", theta, eps_past)         # Seasonal AR         sy_past = tf.gather(y_extended, t_shift - (np.arange(P) + 1) * period)         sar = tf.einsum("...p,p...->...", sphi, sy_past)         # Seasonal MA         seps_past = tf.gather(eps_t, t_shift - (np.arange(Q) + 1) * period)         sma = tf.einsum("...q,q...->...", stheta, seps_past) 
+    def arma_onestep(t, eps_t):
+        t_shift = t + r
+        # AR
+        y_past = tf.gather(y_extended, t_shift - (np.arange(p) + 1))
+        ar = tf.einsum("...p,p...->...", phi, y_past)
+        # MA
+        eps_past = tf.gather(eps_t, t_shift - (np.arange(q) + 1))
+        ma = tf.einsum("...q,q...->...", theta, eps_past)
+        # Seasonal AR
+        sy_past = tf.gather(y_extended, t_shift - (np.arange(P) + 1) * period)
+        sar = tf.einsum("...p,p...->...", sphi, sy_past)
+        # Seasonal MA
+        seps_past = tf.gather(eps_t, t_shift - (np.arange(Q) + 1) * period)
+        sma = tf.einsum("...q,q...->...", stheta, seps_past)
 
-        mu_at_t = ar + ma + sar + sma + mu0         eps_update = tf.gather(y_extended, t_shift) - mu_at_t         epsilon_t_next = tf.tensor_scatter_nd_update(             eps_t, [[t_shift]], eps_update[None, ...])         return t+1, epsilon_t_next 
+        mu_at_t = ar + ma + sar + sma + mu0
+        eps_update = tf.gather(y_extended, t_shift) - mu_at_t
+        epsilon_t_next = tf.tensor_scatter_nd_update(
+            eps_t, [[t_shift]], eps_update[None, ...])
+        return t+1, epsilon_t_next
 
-    t, eps_output_ = tf.while_loop(         lambda t, *_: t < observed.shape[-1],         arma_onestep,         loop_vars=(0, eps_t),         maximum_iterations=observed.shape[-1])     eps_output = eps_output_[r:]     return tf.reduce_sum(         tfd.Normal(0, sigma[None, ...]).log_prob(eps_output), axis=0)
+    t, eps_output_ = tf.while_loop(
+        lambda t, *_: t < observed.shape[-1],
+        arma_onestep,
+        loop_vars=(0, eps_t),
+        maximum_iterations=observed.shape[-1])
+    eps_output = eps_output_[r:]
+    return tf.reduce_sum(
+        tfd.Normal(0, sigma[None, ...]).log_prob(eps_output), axis=0)
 ```
 
-Adding the prior to the unknown parameters (in this case, `mu0`, `sigma`, `phi`, `theta`, `sphi`, and `stheta`), we can generate the posterior density function for inference. This is shown in Code Block [sarima_posterior](sarima_posterior), with a resulting `target_log_prob_fn` that we sample from in Code Block [sarima_posterior](sarima_posterior) [^11].
+添加未知参数的先验（ 当前情况下为 `mu0`、`sigma`、`phi`、`theta`、`sphi` 和 `stheta` ），我们可以生成用于推断的后验密度函数。这显示在代码 [sarima_posterior](sarima_posterior) 中，我们从代码 [sarima_posterior](sarima_posterior) [^11] 中采样得到 `target_log_prob_fn`。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: sarima_posterior
 :name: sarima_posterior
- :caption: sarima_posterior 
 
-@tfd.JointDistributionCoroutine def sarima_priors():     mu0 = yield root(tfd.StudentT(df=6, loc=0, scale=2.5, name='mu0'))     sigma = yield root(tfd.HalfStudentT(df=7, loc=0, scale=1., name='sigma')) 
+@tfd.JointDistributionCoroutine
+def sarima_priors():
+    mu0 = yield root(tfd.StudentT(df=6, loc=0, scale=2.5, name='mu0'))
+    sigma = yield root(tfd.HalfStudentT(df=7, loc=0, scale=1., name='sigma'))
 
-    phi = yield root(tfd.Sample(tfd.Normal(0, 0.5), p, name='phi'))     theta = yield root(tfd.Sample(tfd.Normal(0, 0.5), q, name='theta'))     sphi = yield root(tfd.Sample(tfd.Normal(0, 0.5), P, name='sphi'))     stheta = yield root(tfd.Sample(tfd.Normal(0, 0.5), Q, name='stheta')) 
+    phi = yield root(tfd.Sample(tfd.Normal(0, 0.5), p, name='phi'))
+    theta = yield root(tfd.Sample(tfd.Normal(0, 0.5), q, name='theta'))
+    sphi = yield root(tfd.Sample(tfd.Normal(0, 0.5), P, name='sphi'))
+    stheta = yield root(tfd.Sample(tfd.Normal(0, 0.5), Q, name='stheta'))
 
 target_log_prob_fn = lambda *x: sarima_priors.log_prob(*x) + likelihood(*x)
 ```
 
-The preprocessing of the time series to account for the *integrated* part in Code Block [sarima_preprocess](sarima_preprocess) and the likelihood implementation in Code Block [sarima_likelihood](sarima_likelihood) could be refactored into a helper Python `Class` that flexibility generate different SARIMA likelihood. For example, {numref}`tab:loo_sarima` shows the model comparison between the $\text{SARIMA}(1,1,1)(1,1,1)_{12}$ model from Code Block [sarima_posterior](sarima_posterior) and a similar $\text{SARIMA}(0,1,2)(1,1,1)_{12}$ model.
+时间序列的预处理以解释代码 [sarima_preprocess](sarima_preprocess) 中的 *积分* 部分，代码 [sarima_likelihood](sarima_likelihood) 中实现的似然函数可以重构为一个可灵活生成不同SARIMA 似然函数的 Python 语言 helper 类。例如，{numref}`tab:loo_sarima` 显示了代码 [sarima_posterior](sarima_posterior) 中的 $$\text{SARIMA}(1,1,1)(1,1,1)_{12}$ 模型与相似的 $\text{SARIMA}(0,1,2)(1,1,1)_{12}$ 模型之间的比较。
 
- 
 
- ```{list-table} Summary of model comparison using LOO (log scale) for different SARIMA models.
-
-:name: tab:loo_sarima * -    - **rank**   - **loo**   - **p_loo**   - **d_loo**   - **weight**   - **se**   - **dse** * - $\text{SARIMA}(0,1,2)(1,1,1)_{12}$   - 0   - -1235.60   - 7.51   - 0.00   -  0.5   - 15.41   - 0.00 * - $\text{SARIMA}(1,1,1)(1,1,1)_{12}$   - 1   - -1235.97   - 8.30   - 0.37   - 0.5   - 15.47   - 6.29
+```{list-table} 使用 LOO（对数标度）对不同 SARIMA 模型进行模型比较的汇总数据。
+:name: tab:loo_sarima
+* - 
+  - **rank**
+  - **loo**
+  - **p_loo**
+  - **d_loo**
+  - **weight**
+  - **se**
+  - **dse**
+* - $\text{SARIMA}(0,1,2)(1,1,1)_{12}$
+  - 0
+  - -1235.60
+  - 7.51
+  - 0.00
+  -  0.5
+  - 15.41
+  - 0.00
+* - $\text{SARIMA}(1,1,1)(1,1,1)_{12}$
+  - 1
+  - -1235.97
+  - 8.30
+  - 0.37
+  - 0.5
+  - 15.47
+  - 6.29
 ```
 
- (state-space-models)= 
 
-## State Space Models 
+(state-space-models)= 
 
-In the implementation of the ARMA log-likelihood function above (Code Block [sarima_likelihood](sarima_likelihood)), we iterate through time steps to condition on the observations and construct some latent variables for that time slice. Indeed, unless the models are of a very specific and simple variety (e.g. the Markov dependencies between each two consecutive time steps make it possible to reduce the generative process into vectorized operations), this recursive pattern is a very natural way to express time series models. A powerful, general formulation of this pattern is the State Space model, a discrete-time process where we assume at each time step some latent states $X_t$ evolves from previous step $X_{t-1}$ (a Markov Sequence), and we observed $Y_t$ that is some projection from the latent states $X_t$ to the observable space [^12]: 
+## 6.4 状态空间模型 
+
+在代码 [sarima_likelihood](sarima_likelihood)的 ARMA 对数似然函数中，我们对时间步进行迭代以便以观测为条件构建一些隐变量。实际上，除非模型非常具体和简单（例如，每两个连续时间步长之间的马尔可夫依赖关系可以将生成过程简化为向量化操作，而非迭代），否则这种递归模式是表达时间序列模型的一种非常自然的方式。这种模式的一个强大而通用的形式是**状态空间模型（ Status Space Model ）**，该模型是一个离散时间过程，其中假设在每个时间步，一些隐状态 $X_t$ 由前一步 $X_{t-1}$ 演变而来（ 马尔可夫序列 ），而观测值 $Y_t$ 则是从 $X_t$ 所在的隐状态空间到观测空间的某种投影 [^12] ：
 
 ```{math} 
+:label: eq:state_space_model
 
- :label: eq:state_space_model 
-
-\begin{split} X_0 & \sim p(X_0) \\ \text{for t in 0...T:} \\     Y_t & \sim p^{\psi}(Y_t \mid X_t) \\     X_{t+1} & \sim p^{\theta}(X_{t+1} \mid X_{t}) \end{split}
+\begin{split}
+X_0 & \sim p(X_0) \\
+\text{for t in 0...T:} \\
+ Y_t & \sim p^{\psi}(Y_t \mid X_t) \\
+ X_{t+1} & \sim p^{\theta}(X_{t+1} \mid X_{t})
+\end{split}
 ```
 
-where $p(X_0)$ is the prior distribution of the latent states at time step 0, $p^{\theta}(X_{t+1} \mid X_t)$ is the transition probability distribution parameterized by a vector of parameter $\theta$ that describes the system dynamics, and $p^{\psi}(Y_t \mid X_t)$ being the observation distribution parameterized by $\psi$ that describes the measurement at time $t$ conditioned on the latent states.
+其中 $p(X_0)$ 是时间步 $0$ 处隐状态的先验分布，$p^{\theta}(X_{t+1} \mid X_t)$ 是由参数向量 $\theta$ 参数化的转移概率， 其中 $\theta$ 描述了系统动力学。$p^{\psi}(Y_t \mid X_t)$ 是由参数向量 $\psi$ 参数化的观测概率，描述了时间 $t$ 时隐状态条件下的测量值。
 
- ::: {admonition}  Implementation of state space model for efficient computation 
+::: {admonition} 实现高效计算的状态空间模型
 
-There is a harmony between mathematical formulation and computation implementation of a State Space model with API like `tf.while_loop` or `tf.scan`.
+使用 `tf.while_loop` 或 `tf.scan`  等 API 实现的状态空间模型和数学公式之间存在某种调谐。与使用 Python 的 `for` 循环或 `while` 循环不同，在 TFP 中，需要将循环体编译成一个函数，该函数采用相同的张量结构作为输入和输出。这种函数风格的实现方式有助于显式表示 “在每个时间步隐状态是如何转换的？” 以及 “隐状态如果转换到为观测结果的？”。值得注意的是，实现状态空间模型及其相关推断算法（ 如卡尔曼滤波器 ）也涉及在何处放置初始计算的设计决策。在上式中，我们在初始隐条件上放置了一个先验，并且第一个观测值直接来自初始状态的测量值。不过，在第 $0$ 步中，对隐状态进行转换同样有效，然后通过修改先验分布进行第一次观测，这两种方法是等效的。
 
-Unlike using a Python `for` loop or `while` loop, they require compiling the loop body into a function that takes the same structure of tensors as input and outputs. This functional style of implementation is useful to make explicit how the latent states are being transitioned at each time step and how the measurement, from latent state to observed, should be outputted. It is worth noting that implementation of state space model and its associated inference algorithm like Kalman filter also involved design decisions about where to place some of the initial computation. In the formulation above, we place a prior on the initial latent condition, and the first observation is a measure of the initial state directly. However, it is equally valid to make a transition on the latent state at step 0, then make the first observation with modification to the prior distribution the two approaches are equivalent.
+然而，在为时间序列问题实现滤波器时，在形状处理上有一些微妙的技巧。主要挑战是时间维度的放置位置。一个明显选择是将其放置在轴 $0$ 上，因为使用 `t` 作为时间索引来执行 `time_series[t]` 是很自然的事情。使用 `tf.scan` 或 `theano.scan` 等循环结构在时间序列上实现循环时，会自动将时间维度放在轴 $0$ 上。但是，这与通常作为引导轴的批处理维有冲突。例如，如果我们想对 $N$ 批 $k$ 维时间序列进行向量化，每个时间序列总共有 $T$ 个时间戳，则数组的形状为 `[N, T, ...]`，但 `tf.scan ` 的输出形状为 `[T, N, ...]` 。目前，建模人员似乎不可避免地需要对 `scan` 的输出执行转置，以使其与输入张量的批处理维和时间维语义相匹配。
 
- There is however a subtle trickiness in dealing with shape when implementing filters for time series problems. The main challenge is where to place the time dimension. An obvious choice is to place it at axis 0, as it becomes nature to do `time_series[t]` with `t` being some time index. Moreover, loop construction using `tf.scan` or `theano.scan` to loop over a time series automatically places the time dimension on axis 0. However, it conflicts with the batch dimensions, which are usually the leading axis. For example, if we want to vectorize over N batch of k dimension time series, each with T total time stamps, the array will have a shape of `[N, T, ...]` but the output of `tf.scan` will have a shape of `[T, N, ...]`. Currently, it seems unavoidable that modelers need to perform some transpose on a scan output so that it matches the semantic of the batch and time dimension as the input.
+:::
 
-::: 
+一旦有了时间序列问题的状态空间表示，我们就处在了一个序列分析框架中。该框架通常包括滤波和平滑等任务：
 
-Once we have the state space representation of a time series problem, we are in a sequential analysis framework that typically includes tasks like filtering and smoothing: 
+- 滤波：
 
--   Filtering: computing the marginal distribution of the latent state     $X_k$, conditioned on observations up to that time step $k$:     $p(X_k \mid y_{0:k}), k = 0,...,T$; $\circ$ Prediction: a forecast     distribution of the latent state, extending the filtering     distribution into the future for $n$ steps:     $p(X_k+n \mid y_{0:k}), k = 0,...,T, n=1, 2,...$ 
+  - 以 $k$ 时间步之前（含 $k$ ）的观测作为条件，计算隐状态 $X_k$ 的边缘分布：$p(X_k \mid y_{0:k}), k = 0,...,T $ ； 
+  - $\circ$ 预测：隐状态的预测分布，将滤波分布扩展到未来 $n$ 步：$p(X_k+n \mid y_{0:k}), k = 0,... ,T, n=1, 2,...$
 
--   Smoothing: similar to filtering where we try to compute the marginal     distribution of the latent state at each time step $X_k$, but     conditioned on all observations: :     $p(X_k \mid y_{0:T}), k = 0,...,T$.
+- 平滑：
 
- notice how the subscript of $y_{0:\dots}$ is different in filtering and smoothing: for filtering it is conditioned on $y_{0:k}$ and for smoothing it is conditioned on $y_{0:T}$.
+  - 类似于滤波，但我们尝试以所有观测为条件，计算隐状态 $X_k$ 的边缘分布：$p(X_k \mid y_{0:T}), k = 0 ,...,T$ 。
 
- Indeed, there is a strong tradition of considering time series modeling problems from a filtering and smoothing perspective. For example, the way we compute log likelihood of an ARMA process above could be seen as a filtering problem where the observed data is deconstructed into some latent unobserved states.
+注意 $y_{0:\dots}$ 的下标在滤波和平滑方面有所不同：滤波以 $y_{0:k}$ 为条件，而平滑以 $y_{0:T}$ 为条件。
+
+事实上，从滤波和平滑的角度考虑时间序列建模有着悠久的传统。例如，我们计算上述 ARMA 过程的对数似然的方式，可以看作是一个滤波问题，其中观测数据被解构为一些隐含的不可观测状态。
 
 (lgssm_time_series)= 
 
-### Linear Gaussian State Space Models and Kalman filter 
+### 6.4.1 线性高斯状态空间模型与卡尔曼滤波 
 
-Perhaps one of the most notable State Space models is Linear Gaussian State Space Model, where we have latent states $X_t$ and the observation model $Y_t$ distributed as (multivariate) Gaussian, with the transition and measurement both being linear functions: 
-
-```{math} 
-
- :label: eq:lgssm 
-
-\begin{split} Y_t & = \mathbf{H}_t X_t + \epsilon_t \\ X_t & = \mathbf{F}_t X_{t-1} + \eta_t \end{split}
-```
-
-where $\epsilon_t \sim \mathcal{N}(0, \mathbf{R}_t)$ and $\eta_t \sim \mathcal{N}(0, \mathbf{Q}_t)$ are the noise components.
-
-Variables ($\mathbf{H}_t$, $\mathbf{F}_t$) are matrices describing the linear transformation (Linear Operators) usually $\mathbf{F}_t$ is a square matrix and $\mathbf{H}_t$ has a lower rank than $\mathbf{F}_t$ that "push-forward" the states from latent space to measurement space.
-
-$\mathbf{R}_t$, $\mathbf{Q}_t$ are covariance matrices (positive semidefinite matrices). You can also find some intuitive examples of transition matrix in Section {ref}`markov_chains`.
-
- Since $\epsilon_t$ and $\eta_t$ are random variables following Gaussian distribution, the linear function above performs affine transformation of the Gaussian random variables, resulting in $X_t$ and $Y_t$ also distributed as Gaussian. The property of the prior (state at $t-1$) and posterior (state at $t$) being conjugate make it possible to derive a closed form solution to the Bayesian filtering equations: the Kalman filter (Kalman, 1960). Arguably the most important application of a conjugate Bayesian model, the Kalman filter helped humans land on the moon and is still widely used in many areas.
-
- To gain an intuitive understanding of Kalman filter, we first look at the generative process from time $t-1$ to $t$ of the Linear Gaussian State Space Model: 
+线性高斯状态空间模型也许是最著名的状态空间模型。在该模型中，有隐状态 $X_t$ ，并且假设观测 $Y_t$ 呈（多元）高斯分布，其中状态转移和测量都是线性函数：
 
 ```{math} 
+:label: eq:lgssm
 
- :label: eq:lgssm_generative 
-
-\begin{split} X_t \sim p(X_t \mid X_{t-1}) & \equiv \mathcal{N}(\mathbf{F}_{t} X_{t-1}, \mathbf{Q}_{t}) \\     Y_t \sim p(Y_t \mid X_t) & \equiv \mathcal{N}(\mathbf{H}_t X_t, \mathbf{R}_t) \end{split}
+\begin{split}
+Y_t & = \mathbf{H}_t X_t + \epsilon_t \\
+X_t & = \mathbf{F}_t X_{t-1} + \eta_t
+\end{split}
 ```
 
-where the conditioned distribution of $X_t$ and $Y_t$ are denoted as $p(.)$ (we use $\equiv$ to indicate that the conditional distribution is a Multivariate Gaussian). Note that $X_t$ only depends on the state from the last time step $X_{t-1}$ but not the past observation(s). This means that the generative process could very well be done by first generating the latent time series $X_t$ for $t = 0...T$ and then project the whole latent time series to the measurement space. In the Bayesian filtering context, $Y_t$ is observed (partly if there is missing data) and thus to be used to update the state $X_t$, similar to how we update the prior using the observed likelihood in a static model: 
+其中 $\epsilon_t \sim \mathcal{N}(0, \mathbf{R}_t)$ 和 $\eta_t \sim \mathcal{N}(0, \mathbf{Q}_t)$ 是噪声分量。
+
+变量 ($\mathbf{H}_t$, $\mathbf{F}_t$) 是描述线性变换的矩阵，通常 $\mathbf{F}_t$ 是方阵，$\mathbf{H} _t$ 的秩低于 $\mathbf{F}_t$，它将状态从隐空间 “推进” 到测量空间。 $\mathbf{R}_t$, $\mathbf{Q}_t$ 是协方差矩阵（正半定矩阵）。你还可以在章节 {ref}`markov_chains` 中找到一些比较直观的转移矩阵示例。
+
+由于 $\epsilon_t$ 和 $\eta_t$ 都是服从高斯分布的随机变量，因此上述线性函数实际上是对高斯随机变量做了仿射变换，导致 $X_t$ 和 $Y_t$ 也服从高斯分布。也就是说，先验（ $t-1$ 时的状态 ）和后验（ $t$ 时的状态 ）之间存在共轭性质，这使得获得贝叶斯滤波公式的解析解成为可能，即**卡尔曼滤波器**（Kalman，1960）。作为共轭贝叶斯模型最重要的应用之一，卡尔曼滤波器帮助人类登陆月球，并且至今在许多领域仍然被广泛使用。
+
+为了直观地理解卡尔曼滤波器，首先看一下线性高斯状态空间模型从时间 $t-1$ 到 $t$ 的生成过程：
 
 ```{math} 
+:label: eq:lgssm_generative
 
- :label: eq:kalman_fitler 
-
-\begin{split} X_0 \sim p(X_0 \mid m_0, \mathbf{P}_0) & \equiv \mathcal{N}(m_0, \mathbf{P}_0) \\ X_{t \mid t-1} \sim p(X_{t \mid t-1} \mid Y_{0:t-1}) & \equiv \mathcal{N}(m_{t \mid t-1}, \mathbf{P}_{t \mid t-1}) \\ X_{t \mid t} \sim p(X_{t \mid t} \mid Y_{0:t}) & \equiv \mathcal{N}(m_{t \mid t}, \mathbf{P}_{t \mid t}) \\ Y_t \sim p(Y_t \mid Y_{0:t-1}) & \equiv \mathcal{N}(\mathbf{H}_t m_{t \mid t-1}, \mathbf{S}_t) \end{split}
+\begin{split}
+X_t \sim p(X_t \mid X_{t-1}) & \equiv \mathcal{N}(\mathbf{F}_{t} X_{t-1}, \mathbf{Q}_{t}) \\
+Y_t \sim p(Y_t \mid X_t) & \equiv \mathcal{N}(\mathbf{H}_t X_t, \mathbf{R}_t)
+\end{split}
 ```
 
-where $m_t$ and $\mathbf{P}_t$ represent the mean and covariance matrix of the latent state $X_t$ at each time step. $X_{t \mid t-1}$ is the predicted latent state with associated parameter $m_{t \mid t-1}$ (predicted mean) and $\mathbf{P}_{t \mid t-1}$ (predicted covariance), whereas $X_{t \mid t}$ is the filtered latent state with associated parameter $m_{t \mid t}$ and $\mathbf{P}_{t \mid t}$. The subscripts in Equation {eq}`eq:kalman_fitler` might get confusing, a good high-level view to keep in mind is that from the previous time step we have a filtered state $X_{t-1 \mid t-1}$, which after applying the transition matrix $\mathbf{F}_{t}$ we get a predicted state $X_{t \mid t-1}$, and upon incorporating the observation of the current time step we get the filtered state for the next time step $X_{t \mid t}$.
+其中 $X_t$ 和 $Y_t$ 的条件概率分布表示为 $p(.)$（ 此处使用 $\equiv$ 表示该条件分布为多元高斯分布 ）。请注意，$X_t$ 仅取决于上一个时间步的状态 $X_{t-1}$ ，而不取决于历史观测。这意味着，生成过程可以首先生成一个隐时间序列 $X_t,\ t = 0...T$ ， 然后再将整个隐时间序列投射到观测空间中。在贝叶斯滤波上下文中，$Y_t$ 是可观测的，因此被用于更新状态 $X_t$，类似于在静态模型中用（观测数据的）似然去更新先验：
 
- The parameters of the distributions above in Equation {eq}`eq:kalman_fitler` are computed using the Kalman filter prediction and update steps: 
+```{math} 
+:label: eq:kalman_fitler
 
--   Prediction     ```{math} 
-    
- :label: eq:kalman_fitler_preddict_step 
-
-        \begin{split}         m_{t \mid t-1} & = \mathbf{F}_{t} m_{t-1 \mid t-1} \\         \mathbf{P}_{t \mid t-1} & = \mathbf{F}_{t} \mathbf{P}_{t-1 \mid t-1} \mathbf{F}_{t}^T + \mathbf{Q}_{t}         \end{split}    
+\begin{split}
+X_0 \sim p(X_0 \mid m_0, \mathbf{P}_0) & \equiv \mathcal{N}(m_0, \mathbf{P}_0) \\
+X_{t \mid t-1} \sim p(X_{t \mid t-1} \mid Y_{0:t-1}) & \equiv \mathcal{N}(m_{t \mid t-1}, \mathbf{P}_{t \mid t-1}) \\
+X_{t \mid t} \sim p(X_{t \mid t} \mid Y_{0:t}) & \equiv \mathcal{N}(m_{t \mid t}, \mathbf{P}_{t \mid t}) \\
+Y_t \sim p(Y_t \mid Y_{0:t-1}) & \equiv \mathcal{N}(\mathbf{H}_t m_{t \mid t-1}, \mathbf{S}_t)
+\end{split}
 ```
 
--   Update     ```{math} 
-    
- :label: eq:kalman_fitler_update_step 
+其中 $m_t$ 和 $\mathbf{P}_t$ 表示隐状态 $X_t$ 的均值和协方差矩阵。 $X_{t \mid t-1}$ 是参数 $m_{t \mid t-1}$ （预测均值）和 $\mathbf{P}_{t \mid t-1}$ （预测协方差）下预测隐状态，而 $X_{t \mid t}$ 是参数 $m_{t \mid t}$ 和 $\mathbf{P}_{t \mid t}$下的滤波后隐状态。
 
-        \begin{split}         z_t & = Y_t - \mathbf{H}_t m_{t \mid t-1} \\         \mathbf{S}_t & = \mathbf{H}_t \mathbf{P}_{t \mid t-1} \mathbf{H}_t^T + \mathbf{R}_t \\         \mathbf{K}_t & = \mathbf{P}_{t \mid t-1} \mathbf{H}_t^T \mathbf{S}_t^{-1} \\         m_{t \mid t} & = m_{t \mid t-1} + \mathbf{K}_t z_t \\         \mathbf{P}_{t \mid t} & = \mathbf{P}_{t \mid t-1} - \mathbf{K}_t \mathbf{S}_t \mathbf{K}_t^T         \end{split}    
-```
+公式 {eq}`eq:kalman_fitler` 中的下标容易让人感到困惑，因此需要有一个如下的高层视图：从上一个时间步开始，我们有一个滤波状态 $X_{t-1 \mid t-1} $，在应用转移矩阵 $\mathbf{F}_{t}$ 后，我们得到一个预测状态 $X_{t \mid t-1}$，结合当前时间步的观测，我们得到滤波后的新状态 $X_{t \mid t}$ 。
 
-The proof of deriving the Kalman filter equations is an application of the joint multivariate Gaussian distribution. In practice, there are some tricks in implementation to make sure the computation is numerically stable (e.g., avoid inverting matrix $\mathbf{S}_t$, using a Jordan form update in computing $\mathbf{P}_{t \mid t}$ to ensure the result is a positive definite matrix {cite:p}`westharrison1997`. In TFP, the linear Gaussian state space model and related Kalman filter is conveniently implemented as a distribution `tfd.LinearGaussianStateSpaceModel`.
+公式 {eq}`eq:kalman_fitler` 中，上述分布的参数是利用卡尔曼滤波的预测和更新步骤计算的：
 
- One of the practical challenges in using Linear Gaussian State Space Model for time series modeling is expressing the unknown parameters as Gaussian latent state. We will demonstrate with a simple linear growth time series as the first example (see Chapter 3 of Bayesian Filtering and Smoothing {cite:p}`sarkka2013bayesian`: 
+- 预测步骤：
 
-```{code-block} python 
+   ```{math} 
+   :label: eq:kalman_fitler_preddict_step
+
+   \begin{split}
+   m_{t \mid t-1} & = \mathbf{F}_{t} m_{t-1 \mid t-1} \\
+   \mathbf{P}_{t \mid t-1} & = \mathbf{F}_{t} \mathbf{P}_{t-1 \mid t-1} \mathbf{F}_{t}^T + \mathbf{Q}_{t}
+   \end{split}
+   ```
+
+- 更新步骤
+
+   ```{math} 
+   :label: eq:kalman_fitler_update_step
+
+   \begin{split}
+   z_t & = Y_t - \mathbf{H}_t m_{t \mid t-1} \\
+   \mathbf{S}_t & = \mathbf{H}_t \mathbf{P}_{t \mid t-1} \mathbf{H}_t^T + \mathbf{R}_t \\
+   \mathbf{K}_t & = \mathbf{P}_{t \mid t-1} \mathbf{H}_t^T \mathbf{S}_t^{-1} \\
+   m_{t \mid t} & = m_{t \mid t-1} + \mathbf{K}_t z_t \\
+   \mathbf{P}_{t \mid t} & = \mathbf{P}_{t \mid t-1} - \mathbf{K}_t \mathbf{S}_t \mathbf{K}_t^T
+   \end{split}
+   ```
+
+卡尔曼滤波方程的推导主要使用了多元高斯联合分布。在实践中，还有一些技巧来确保计算在数值上是稳定的。例如，避免逆矩阵 $\mathbf{S}_t$ ，在计算 $\mathbf{P}_{t\mid t}$ 时使用 Jordan 范数更新，以确保结果是正定矩阵 {cite:p}`westharrison1997`。在 TFP 中，线性高斯状态空间模型和卡尔曼滤波器可以通过分布`tfd.LinearGaussianStateSpaceModel` 方便地实现。
+
+线性高斯状态空间模型的实际挑战之一是将未知参数表示为高斯隐状态。我们将用一个简单的线性增长时间序列作为第一个示例进行演示（ 参见《贝叶斯滤波和平滑》 {cite:p}`sarkka2013bayesian` 的第 3 章 ）：
+
+```{code-block} ipython3
+:caption: linear_growth_model
 :name: linear_growth_model
- :caption: linear_growth_model 
 
-theta0, theta1 = 1.2, 2.6 sigma = 0.4 num_timesteps = 100 
+theta0, theta1 = 1.2, 2.6
+sigma = 0.4
+num_timesteps = 100
 
-time_stamp = tf.linspace(0., 1., num_timesteps)[..., None] yhat = theta0 + theta1 * time_stamp y = tfd.Normal(yhat, sigma).sample()
+time_stamp = tf.linspace(0., 1., num_timesteps)[..., None]
+yhat = theta0 + theta1 * time_stamp
+y = tfd.Normal(yhat, sigma).sample()
 ```
 
-You might recognize Code Block [linear_growth_model](linear_growth_model) as a simple linear regression. To solve it as a filtering problem using Kalman filter, we need to assume that the measurement noise $\sigma$ is known, and the unknown parameters $\theta_0$ and $\theta_1$ follow a Gaussian prior distribution.
+你可能会将代码 [linear_growth_model](linear_growth_model) 识别为简单的线性回归。要将其作为使用卡尔曼滤波器的滤波问题来处理，需要假设测量噪声 $\sigma$ 已知，未知参数 $\theta_0$ 和 $\theta_1$ 服从高斯先验分布。
 
- In a state space form, we have the latent states: 
+在状态空间形式中，有隐状态：
 
 ```{math} 
+:label: eq:linear_growth_state
 
- :label: eq:linear_growth_state 
-
-X_t = \left[\begin{array}{ccc}   \theta_0 \\   \theta_1 \\ \end{array}\right]
+X_t = \left[\begin{array}{ccc}
+  \theta_0 \\
+  \theta_1 \\
+\end{array}\right]
 ```
 
-Since the latent state does not change over time, the transition operator $F_t$ is an identity matrix with no transition noise. The observation operator describes the "push-forward" from latent to measurement space, which is a matrix form of the linear function [^13]: 
+由于隐状态不随时间变化，转移矩阵 $F_t$ 是一个没有转移噪声的单位矩阵。观测矩阵描述了从隐空间到测量空间的“推进”，它是线性函数的矩阵形式 [^13] ：
 
 ```{math} 
+:label: eq:linear_growth_observed_state
 
- :label: eq:linear_growth_observed_state 
-
-y_t = \theta_0 + \theta_1 * t = \left[\begin{array}{ccc}   1, t \\ \end{array}\right]\left[\begin{array}{ccc}   \theta_0 \\   \theta_1 \\ \end{array}\right]
+y_t = \theta_0 + \theta_1 * t = \left[\begin{array}{ccc}
+  1, t \\
+\end{array}\right]\left[\begin{array}{ccc}
+  \theta_0 \\
+  \theta_1 \\
+\end{array}\right]
 ```
 
-Expressed with the `tfd.LinearGaussianStateSpaceModel` API, we have: 
+用 `tfd.LinearGaussianStateSpaceModel` API 表示，我们有：
 
-```{code-block} python 
+```{code-block} ipython3
+:caption: tfd_lgssm_linear_growth
 :name: tfd_lgssm_linear_growth
- :caption: tfd_lgssm_linear_growth 
 
-# X_0 initial_state_prior = tfd.MultivariateNormalDiag(     loc=[0., 0.], scale_diag=[5., 5.]) # F_t transition_matrix = lambda _: tf.linalg.LinearOperatorIdentity(2) # eta_t ~ Normal(0, Q_t) transition_noise = lambda _: tfd.MultivariateNormalDiag(     loc=[0., 0.], scale_diag=[0., 0.]) # H_t H = tf.concat([tf.ones_like(time_stamp), time_stamp], axis=-1) observation_matrix = lambda t: tf.linalg.LinearOperatorFullMatrix(     [tf.gather(H, t)]) # epsilon_t ~ Normal(0, R_t) observation_noise = lambda _: tfd.MultivariateNormalDiag(     loc=[0.], scale_diag=[sigma]) 
+# X_0
+initial_state_prior = tfd.MultivariateNormalDiag(
+    loc=[0., 0.], scale_diag=[5., 5.])
+# F_t
+transition_matrix = lambda _: tf.linalg.LinearOperatorIdentity(2)
+# eta_t ~ Normal(0, Q_t)
+transition_noise = lambda _: tfd.MultivariateNormalDiag(
+    loc=[0., 0.], scale_diag=[0., 0.])
+# H_t
+H = tf.concat([tf.ones_like(time_stamp), time_stamp], axis=-1)
+observation_matrix = lambda t: tf.linalg.LinearOperatorFullMatrix(
+    [tf.gather(H, t)])
+# epsilon_t ~ Normal(0, R_t)
+observation_noise = lambda _: tfd.MultivariateNormalDiag(
+    loc=[0.], scale_diag=[sigma])
 
-linear_growth_model = tfd.LinearGaussianStateSpaceModel(     num_timesteps=num_timesteps,     transition_matrix=transition_matrix,     transition_noise=transition_noise,     observation_matrix=observation_matrix,     observation_noise=observation_noise,     initial_state_prior=initial_state_prior)
+linear_growth_model = tfd.LinearGaussianStateSpaceModel(
+    num_timesteps=num_timesteps,
+    transition_matrix=transition_matrix,
+    transition_noise=transition_noise,
+    observation_matrix=observation_matrix,
+    observation_noise=observation_noise,
+    initial_state_prior=initial_state_prior)
 ```
 
-we can apply the Kalman filter to obtain the posterior distribution of $\theta_0$ and $\theta_1$: 
+我们可以应用卡尔曼滤波器获得 $\theta_0$ 和 $\theta_1$ 的后验分布：
 
-```{code-block} python 
+```{code-block} ipython3
+:caption: tfd_lgssm_linear_growth_filter
 :name: tfd_lgssm_linear_growth_filter
- :caption: tfd_lgssm_linear_growth_filter 
 
-# Run the Kalman filter (     log_likelihoods,     mt_filtered, Pt_filtered,     mt_predicted, Pt_predicted,     observation_means, observation_cov  # observation_cov is S_t ) = linear_growth_model.forward_filter(y)
+# Run the Kalman filter
+(
+    log_likelihoods,
+    mt_filtered, Pt_filtered,
+    mt_predicted, Pt_predicted,
+    observation_means, observation_cov  # observation_cov is S_t
+) = linear_growth_model.forward_filter(y)
 ```
 
-We can compare the result from the Kalman filter (i.e., iteratively observing each time steps) with the analytic result (i.e., observing the full time series) in {numref}`fig:fig16_linear_growth_lgssm`.
+我们可以在 {numref}`fig:fig16_linear_growth_lgssm` 中将卡尔曼滤波器的结果（即迭代地观测每个时间步长）与分析结果（即观测的完整时间序列）进行比较。
 
- ```{figure} figures/fig16_linear_growth_lgssm.png
- :name: fig:fig16_linear_growth_lgssm
- :width: 8.00in Linear Growth time series model, inference using a Kalman filter. In the first panel we show the observed data (gray dot connected by dash line) and the one-step prediction from the Kalman filter ($H_t m_{t \mid t-1}$ in solid black line). The posterior distribution of the latent state $X_t$ after observing each time step is compared with the closed form solution using all data (black solid line) in the middle and rightmost panel.
+```{figure} figures/fig16_linear_growth_lgssm.png
+:name: fig:fig16_linear_growth_lgssm
+:width: 8.00in
+
+线性增长时间序列模型，使用卡尔曼滤波器进行推断。在第一个子图中，展示了观测数据（用虚线连接的灰点）和来自卡尔曼滤波器的单步预测（ 黑色实线中的 $H_t m_{t \mid t-1}$ ）。在观测每个时间步之后，将隐状态 $X_t$ 的后验分布与使用中间和最右侧子图中的所有数据的解析解（黑色实线）进行比较。
 
 ``` 
 
 (arima-expressed-as-a-state-space-model)= 
 
-### ARIMA, Expressed as a State Space Model 
+### 6.4.2 表示为状态空间模型的 ARIM 
 
-State space models are a unified methodology that generalized many classical time series models. However, it might not always be obvious how we can express a model in state space format. In this section we will look at how to express a more complex linear Gaussian state space model: ARMA and ARIMA. Recall the ARMA(p,q) Equation {eq}`eq:arma` from above, we have the AR coefficient parameters $\phi_i$, the MA coefficient $\theta_j$, and noise parameter $\sigma$. It is tempting to use $\sigma$ to parameterize the observation noise distribution $R_t$.
+状态空间模型是一种概括了许多经典时间序列模型的统一方法。但如何以状态空间形式表达传统模型可能并不总是很明显。在本节中，我们将了解如何表达更复杂的线性高斯状态空间模型：ARMA 和 ARIMA。
 
-However, the moving average of the noise from the previous steps in the ARMA(p,q) Equation {eq}`eq:arma` requires us to "record" the current noise. The only solution is to formulate it into the transition noise so it becomes part of the latent state $X_t$. First, we reformulate ARMA(p,q) Equation {eq}`eq:arma` into: 
+回想上面的 $ARMA(p,q)$ 公式 {eq}`eq:arma`，我们有自回归系数参数 $\phi_i$、移动平均系数 $\theta_j$ 和噪声参数 $\sigma$ 。使用 $\sigma$ 来参数化观测噪声的分布 $R_t$ 很具有吸引力。
+
+然而，在 $ARMA(p,q)$ 公式 {eq}`eq:arma` 中，利用先前步骤的噪声所做的移动平均，要求我们 “记录” 当前噪声。唯一的解决办法是将其形式化为转移噪声，使其成为隐状态 $X_t$ 的一部分。我们将 $ARMA(p,q)$ 公式 {eq}`eq:arma` 重新表述为：
 
 ```{math} 
-
- :label: eq:arma_pre_lgssm 
+:label: eq:arma_pre_lgssm
 
 y_t = \sum_{i=1}^{r}\phi_i y_{t-i} + \sum_{i=1}^{r-1}\theta_i \epsilon_{t-i} + \epsilon_t
 ```
 
-where the constant term $\alpha$ from Equation {eq}`eq:arma` is omitted, and $r = max(p, q+1)$. We pad zeros to coefficient parameters $\phi$ and $\theta$ when needed so that they have the same size $r$. The component of the state equation for $X_t$ is thus: 
+其中公式 {eq}`eq:arma` 中的常数项 $\alpha$ 被省略，$r = \max(p, q+1)$。我们在需要时用零来填充（ pad ）参数 $\phi$ 和 $\theta$ ，以便其具有相同的大小 $r$。因此状态方程中的 $X_t$ 分量为：
 
 ```{math} 
+:label: eq:arma_lgssm_state_fn
 
- :label: eq:arma_lgssm_state_fn 
-
-\mathbf{F}_t = \mathbf{F} = \left[\begin{array}{cccc} \phi_1 & 1 & \cdots & 0 \\ \vdots  & \vdots  & \ddots & \vdots  \\ \phi_{r-1} & 0 & \cdots & 1  \\ \phi_r & 0 & \cdots & 0  \end{array}\right], \\ \mathbf{A} = \left[\begin{array}{c} 1\\ \theta_1 \\ \vdots \\ \theta_{r-1} \\ \end{array}\right], \eta'_{t+1} \sim \mathcal{N}(0, \sigma^2), \eta_t = \mathbf{A} \eta'_{t+1}
+\mathbf{F}_t = \mathbf{F} = \left[\begin{array}{cccc}
+\phi_1 & 1 & \cdots & 0 \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+\phi_{r-1} & 0 & \cdots & 1  \\
+\phi_r & 0 & \cdots & 0 
+\end{array}\right], \\
+\mathbf{A} = \left[\begin{array}{c}
+1\\
+\theta_1 \\
+\vdots \\
+\theta_{r-1} \\
+\end{array}\right],
+\eta'_{t+1} \sim \mathcal{N}(0, \sigma^2), \eta_t = \mathbf{A} \eta'_{t+1}
 ```
 
-With the latent state being: ```{math} 
-
- :label: eq:arma_lgssm_state 
-
-X_t = \left[\begin{array}{ccc} y_t \\ \phi_2 y_{t-1} + \dots + \phi_r y_{t-r+1} + \theta_1 \eta'_t + \dots + \theta_{r-1} \eta'_{t-r+2} \\ \phi_3 y_{t-1} + \dots + \phi_r y_{t-r+2} + \theta_2 \eta'_t + \dots + \theta_{r-1} \eta'_{t-r+3} \\ \vdots \\ \phi_r y_{t-1} + \theta_{r-1} \eta'_t \end{array}\right]
-```
-
-The observation operator is thus simply an indexing matrix $\mathbf{H}_t = [1, 0, 0, \dots, 0]$ with the observation equation being $y_t = \mathbf{H}_t X_t$ [^14].
-
- For example, an ARMA(2,1) model in state space representation is: 
+隐状态为：
 
 ```{math} 
+:label: eq:arma_lgssm_state
 
- :label: eq:arma_lgssm_state_full 
-
-\begin{split} \left[\begin{array}{ccc} y_{t+1}\\ \phi_2 y_t + \theta_1 \eta'_{t+1}\\ \end{array}\right] & =   \left[\begin{array}{ccc} \phi_1 & 1\\ \phi_2 & 0\\ \end{array}\right] \left[\begin{array}{ccc} y_t\\ \phi_2 y_{t-1} + \theta_1 \eta'_t\\ \end{array}\right] + \left[\begin{array}{ccc} 1\\ \theta_1\\ \end{array}\right] \eta'_{t+1}\\ \eta'_{t+1} & \sim \mathcal{N}(0, \sigma^2) \end{split}
+X_t = \left[\begin{array}{ccc}
+y_t \\
+\phi_2 y_{t-1} + \dots + \phi_r y_{t-r+1} + \theta_1 \eta'_t + \dots + \theta_{r-1} \eta'_{t-r+2} \\
+\phi_3 y_{t-1} + \dots + \phi_r y_{t-r+2} + \theta_2 \eta'_t + \dots + \theta_{r-1} \eta'_{t-r+3} \\
+\vdots \\
+\phi_r y_{t-1} + \theta_{r-1} \eta'_t
+\end{array}\right]
 ```
 
-You might notice that the state transition is slightly different than what we defined above, as the transition noise is not drawn from a Multivariate Gaussian distribution. The covariance matrix of $\eta$ is $\mathbf{Q}_t = \mathbf{A} \sigma^2 \mathbf{A}^T$, which in this case results in a singular random variable $\eta$. Nonetheless, we can define the model in TFP. For example, in Code Block [tfd_lgssm_arma_simulate](tfd_lgssm_arma_simulate) we defines a ARMA(2,1) model with $\phi = [-0.1, 0.5]$, $\theta = -0.25$, and $\sigma = 1.25$, and draw one random time series.
+观测矩阵只是一个索引矩阵 $\mathbf{H}_t = [1, 0, 0, \dots, 0]$，观测公式为 $y_t = \mathbf{H}_t X_t$ [^14] 。
 
- ```{code-block} python 
+例如，状态空间表示中的 $ARMA(2,1)$ 模型是：
+
+```{math} 
+:label: eq:arma_lgssm_state_full
+
+\begin{split}
+\left[\begin{array}{ccc}
+y_{t+1}\\
+\phi_2 y_t + \theta_1 \eta'_{t+1}\\
+\end{array}\right] & =  
+\left[\begin{array}{ccc}
+\phi_1 & 1\\
+\phi_2 & 0\\
+\end{array}\right]
+\left[\begin{array}{ccc}
+y_t\\
+\phi_2 y_{t-1} + \theta_1 \eta'_t\\
+\end{array}\right] + \left[\begin{array}{ccc}
+1\\
+\theta_1\\
+\end{array}\right] \eta'_{t+1}\\
+\eta'_{t+1} & \sim \mathcal{N}(0, \sigma^2)
+\end{split}
+```
+
+你可能注意到状态转移与上面定义的略有不同，因为转换噪声不是从多元高斯分布中抽取的。 $\eta$ 的协方差矩阵是 $\mathbf{Q}_t = \mathbf{A} \sigma^2 \mathbf{A}^T$ ，在这种情况下会产生奇异的随机变量 $\eta$ 。但无论如何，我们可以在 TFP 中定义模型了。例如，在代码 [tfd_lgssm_arma_simulate](tfd_lgssm_arma_simulate) 中，我们定义了一个 $ARMA(2,1)$ 模型，其中 $\phi = [-0.1, 0.5]$ 、 $\theta = -0.25$ 、 $\sigma = 1.25$ ，并抽取了一个随机时间序列。
+
+```{code-block} ipython3
+:caption: tfd_lgssm_arma_simulate
 :name: tfd_lgssm_arma_simulate
- :caption: tfd_lgssm_arma_simulate 
 
-num_timesteps = 300 phi1 = -.1 phi2 = .5 theta1 = -.25 sigma = 1.25 
+num_timesteps = 300
+phi1 = -.1
+phi2 = .5
+theta1 = -.25
+sigma = 1.25
 
-# X_0 initial_state_prior = tfd.MultivariateNormalDiag(    scale_diag=[sigma, sigma]) # F_t transition_matrix = lambda _: tf.linalg.LinearOperatorFullMatrix(    [[phi1, 1], [phi2, 0]]) # eta_t ~ Normal(0, Q_t) R_t = tf.constant([[sigma], [sigma*theta1]]) Q_t_tril = tf.concat([R_t, tf.zeros_like(R_t)], axis=-1) transition_noise = lambda _: tfd.MultivariateNormalTriL(    scale_tril=Q_t_tril) # H_t observation_matrix = lambda t: tf.linalg.LinearOperatorFullMatrix(    [[1., 0.]]) # epsilon_t ~ Normal(0, 0) observation_noise = lambda _: tfd.MultivariateNormalDiag(    loc=[0.], scale_diag=[0.]) 
+# X_0
+initial_state_prior = tfd.MultivariateNormalDiag(
+   scale_diag=[sigma, sigma])
+# F_t
+transition_matrix = lambda _: tf.linalg.LinearOperatorFullMatrix(
+   [[phi1, 1], [phi2, 0]])
+# eta_t ~ Normal(0, Q_t)
+R_t = tf.constant([[sigma], [sigma*theta1]])
+Q_t_tril = tf.concat([R_t, tf.zeros_like(R_t)], axis=-1)
+transition_noise = lambda _: tfd.MultivariateNormalTriL(
+   scale_tril=Q_t_tril)
+# H_t
+observation_matrix = lambda t: tf.linalg.LinearOperatorFullMatrix(
+   [[1., 0.]])
+# epsilon_t ~ Normal(0, 0)
+observation_noise = lambda _: tfd.MultivariateNormalDiag(
+   loc=[0.], scale_diag=[0.])
 
-arma = tfd.LinearGaussianStateSpaceModel(    num_timesteps=num_timesteps,    transition_matrix=transition_matrix,    transition_noise=transition_noise,    observation_matrix=observation_matrix,    observation_noise=observation_noise,    initial_state_prior=initial_state_prior    ) 
+arma = tfd.LinearGaussianStateSpaceModel(
+   num_timesteps=num_timesteps,
+   transition_matrix=transition_matrix,
+   transition_noise=transition_noise,
+   observation_matrix=observation_matrix,
+   observation_noise=observation_noise,
+   initial_state_prior=initial_state_prior
+   )
 
 sim_ts = arma.sample()  # Simulate from the model
 ```
 
-Adding the appropriate prior and some small rewrite to handle the shape a bit better, we can get a full generative ARMA(2,1) model in Code Block [tfd_lgssm_arma_with_prior](tfd_lgssm_arma_with_prior).
+添加适当先验并做一些重写可以更好地处理形状，我们在代码 [tfd_lgssm_arma_with_prior](tfd_lgssm_arma_with_prior) 中得到一个完整的生成式 $ARMA(2,1)$ 模型。
 
-Conditioning on the (simulated) data `sim_ts` and running inference are straightforward since we are working with a `tfd.JointDistributionCoroutine` model. Note that the unknown parameters are not part of the latent state $X_t$, thus instead of a Bayesian filter like Kalman filter, inference is done using standard MCMC method.
+由于使用了 `tfd.JointDistributionCoroutine` 模型，因此对（模拟的）数据 `sim_ts` 和推断进行调整非常简单。请注意，未知参数并非隐状态 $X_t$ 的一部分，因此不能像卡尔曼滤波一样做贝叶斯滤波推导，而是使用标准的 MCMC 方法进行推断。我们在 {numref}`fig:fig17_arma_lgssm_inference_result` 中展示了后验样本的轨迹图。
 
-We show the resulting trace plot of the posterior samples in {numref}`fig:fig17_arma_lgssm_inference_result`.
-
- 
-
-```{code-block} python 
+```{code-block} ipython3
+:caption: tfd_lgssm_arma_with_prior
 :name: tfd_lgssm_arma_with_prior
- :caption: tfd_lgssm_arma_with_prior 
 
-@tfd.JointDistributionCoroutine def arma_lgssm():     sigma = yield root(tfd.HalfStudentT(df=7, loc=0, scale=1., name="sigma"))     phi = yield root(tfd.Sample(tfd.Normal(0, 0.5), 2, name="phi"))     theta = yield root(tfd.Sample(tfd.Normal(0, 0.5), 1, name="theta"))     # Prior for initial state     init_scale_diag = tf.concat([sigma[..., None], sigma[..., None]], axis=-1)     initial_state_prior = tfd.MultivariateNormalDiag(         scale_diag=init_scale_diag)          F_t = tf.concat([phi[..., None],                      tf.concat([tf.ones_like(phi[..., 0, None]),                                 tf.zeros_like(phi[..., 0, None])],                                axis=-1)[..., None]],                     axis=-1)     transition_matrix = lambda _: tf.linalg.LinearOperatorFullMatrix(F_t)          transition_scale_tril = tf.concat(         [sigma[..., None], theta * sigma[..., None]], axis=-1)[..., None]     scale_tril = tf.concat(         [transition_scale_tril,          tf.zeros_like(transition_scale_tril)],         axis=-1)     transition_noise = lambda _: tfd.MultivariateNormalTriL(         scale_tril=scale_tril)          observation_matrix = lambda t: tf.linalg.LinearOperatorFullMatrix([[1., 0.]])     observation_noise = lambda t: tfd.MultivariateNormalDiag(         loc=[0], scale_diag=[0.]) 
+@tfd.JointDistributionCoroutine
+def arma_lgssm():
+    sigma = yield root(tfd.HalfStudentT(df=7, loc=0, scale=1., name="sigma"))
+    phi = yield root(tfd.Sample(tfd.Normal(0, 0.5), 2, name="phi"))
+    theta = yield root(tfd.Sample(tfd.Normal(0, 0.5), 1, name="theta"))
+    # Prior for initial state
+    init_scale_diag = tf.concat([sigma[..., None], sigma[..., None]], axis=-1)
+    initial_state_prior = tfd.MultivariateNormalDiag(
+        scale_diag=init_scale_diag)
+    
+    F_t = tf.concat([phi[..., None],
+                     tf.concat([tf.ones_like(phi[..., 0, None]),
+                                tf.zeros_like(phi[..., 0, None])],
+                               axis=-1)[..., None]],
+                    axis=-1)
+    transition_matrix = lambda _: tf.linalg.LinearOperatorFullMatrix(F_t)
+    
+    transition_scale_tril = tf.concat(
+        [sigma[..., None], theta * sigma[..., None]], axis=-1)[..., None]
+    scale_tril = tf.concat(
+        [transition_scale_tril,
+         tf.zeros_like(transition_scale_tril)],
+        axis=-1)
+    transition_noise = lambda _: tfd.MultivariateNormalTriL(
+        scale_tril=scale_tril)
+    
+    observation_matrix = lambda t: tf.linalg.LinearOperatorFullMatrix([[1., 0.]])
+    observation_noise = lambda t: tfd.MultivariateNormalDiag(
+        loc=[0], scale_diag=[0.])
 
-    arma = yield tfd.LinearGaussianStateSpaceModel(             num_timesteps=num_timesteps,             transition_matrix=transition_matrix,             transition_noise=transition_noise,             observation_matrix=observation_matrix,             observation_noise=observation_noise,             initial_state_prior=initial_state_prior,             name="arma")
+    arma = yield tfd.LinearGaussianStateSpaceModel(
+            num_timesteps=num_timesteps,
+            transition_matrix=transition_matrix,
+            transition_noise=transition_noise,
+            observation_matrix=observation_matrix,
+            observation_noise=observation_noise,
+            initial_state_prior=initial_state_prior,
+            name="arma")
 ```
 
 ```{figure} figures/fig17_arma_lgssm_inference_result.png
- :name: fig:fig17_arma_lgssm_inference_result
- :width: 8.00in MCMC sampling result from the ARMA(2,1) model `arma_lgssm` defined in Code Block [tfd_lgssm_arma_with_prior](tfd_lgssm_arma_with_prior), conditioned on the simulated data `sim_ts` generated in Code Block [tfd_lgssm_arma_simulate](tfd_lgssm_arma_simulate). The true values of the parameters are plotted as vertical lines in the posterior density plot and horizontal lines in the trace plot.
+:name: fig:fig17_arma_lgssm_inference_result
+:width: 8.00in
+
+代码 [tfd_lgssm_arma_with_prior](tfd_lgssm_arma_with_prior) 中的 $ARMA(2,1)$ 模型 `arma_lgssm` 的 MCMC 采样结果，以代码 [tfd_lgssm_arma_simulate](tfd_lgssm_arma_simulate) 中生成的模拟数据 `sim_ts` 为条件。参数的真实值在后验密度图中绘制为垂直线，在轨迹图中绘制为水平线。
 
 ``` 
 
-We can already use this formulation for ARIMA modeling with $d>0$ by preprocessing the observed time series to account for the integrated part. However, state space model representation gives us an advantage where we can write down the generative process directly and more intuitively without taking the repeated differences $d$ times on the observation in the data preprocessing step.
+结合通过预处理观测时间序列以解释积分部分的方法，我们现在已经可以将该形式用于 $d>0$ 的 ARIMA 建模了。状态空间模型的表达形式为我们提供了一个很重要的优势：我们可以更直接更直观地写下生成过程，而无需在数据预处理步骤中的重复 $d$ 次差分。
 
- For example, consider extending the ARMA(2,1) model above with $d=1$, we have $\Delta y_t = y_t - y_{t-1}$, which means $y_t = y_{t-1} + \Delta y_t$ and we can define observation operator as $\mathbf{H}_t = [1, 1, 0]$, with the latent state $X_t$ and state transition being: 
-
-```{math} 
-
- :label: eq:arima_lgssm_state_transition 
-
-\begin{split} \left[\begin{array}{ccc} y_{t-1} + \Delta y_t \\ \phi_1 \Delta y_t + \phi_2 \Delta y_{t-1} + \eta'_{t+1} + \theta_1 \eta'_t\\ \phi_2 \Delta y_t + \theta_1 \eta'_{t+1}\\ \end{array}\right] & =   \left[\begin{array}{ccc} 1 & 1 & 0 \\ 0 & \phi_1 & 1\\ 0 & \phi_2 & 0\\ \end{array}\right] \left[\begin{array}{ccc} y_{t-1}\\ \Delta y_t \\ \phi_2 \Delta y_{t-1} + \theta_1 \eta'_t\\ \end{array}\right] + \left[\begin{array}{ccc} 0 \\ 1 \\ \theta_1\\ \end{array}\right] \eta'_{t+1} \end{split}
-```
-
-As you can see, while the parameterization results in a larger size latent state vector $X_t$, the number of parameters stays the same.
-
-Moreover, the model is generative in $y_t$ instead of $\Delta y_t$.
-
-However, challenges may arise when specifying the distribution of the initial state $X_0$, as the first elements ($y_0$) are now non-stationary. In practice, we can assign an informative prior around the initial value of the time series after centering (subtracting the mean). More discussion around this topic and an in depth introduction to state space models for time series problems could be found in {cite:t}`durbin2012time`.
-
- (bayesian-structural-time-series)= 
-
-### Bayesian Structural Time Series 
-
-A linear Gaussian state space representation of a time series model has another advantage that it is easily extendable, especially with other linear Gaussian state space models. To combine two models, we follow the same idea of concatenating two normal random variables in the latent space. We generate a block diagonal matrix using the 2 covariance matrix, concatenating the mean on the event axis. In the measurement space the operation is equivalent to summing two normal random variables. More concretely, we have: 
+例如，考虑用 $d=1$ 扩展上面的 $ARMA(2,1)$ 模型，有 $\Delta y_t = y_t - y_{t-1}$，这意味着 $y_t = y_{t-1} + \Delta y_t$，我们可以将观测矩阵定义为 $\mathbf{H}_t = [1, 1, 0]$ ，其中隐状态 $X_t$ 和状态转移矩阵为：
 
 ```{math} 
+:label: eq:arima_lgssm_state_transition
 
- :label: eq:combining_lgssm 
-
-\begin{split} \mathbf{F}_t & = \left[\begin{array}{ccc} \mathbf{F}_{\mathbf{1}, t} & 0 \\ 0 & \mathbf{F}_{\mathbf{2}, t}\\ \end{array}\right],  \mathbf{Q}_t = \left[\begin{array}{ccc} \mathbf{Q}_{\mathbf{1}, t} & 0 \\ 0 & \mathbf{Q}_{\mathbf{2}, t}\\ \end{array}\right], X_t = \left[\begin{array}{ccc} X_{1,t} \\ X_{2,t}\\ \end{array}\right] \\ \mathbf{H}_t & = \left[\begin{array}{ccc} \mathbf{H}_{\mathbf{1}, t} & \mathbf{H}_{\mathbf{2}, t} \\ \end{array}\right], \mathbf{R}_t = \mathbf{R}_{\mathbf{1}, t} + \mathbf{R}_{\mathbf{2}, t}\\ \end{split}
+\begin{split}
+\left[\begin{array}{ccc}
+y_{t-1} + \Delta y_t \\
+\phi_1 \Delta y_t + \phi_2 \Delta y_{t-1} + \eta'_{t+1} + \theta_1 \eta'_t\\
+\phi_2 \Delta y_t + \theta_1 \eta'_{t+1}\\
+\end{array}\right] & =  
+\left[\begin{array}{ccc}
+1 & 1 & 0 \\
+0 & \phi_1 & 1\\
+0 & \phi_2 & 0\\
+\end{array}\right]
+\left[\begin{array}{ccc}
+y_{t-1}\\
+\Delta y_t \\
+\phi_2 \Delta y_{t-1} + \theta_1 \eta'_t\\
+\end{array}\right] + \left[\begin{array}{ccc}
+0 \\
+1 \\
+\theta_1\\
+\end{array}\right] \eta'_{t+1}
+\end{split}
 ```
 
-If we have a time series model $\mathcal{M}$ that is not linear Gaussian. We can also incorporate it into a state space model. To do that, we treat the prediction $\hat{\psi}_t$ from $\mathcal{M}$ at each time step as a static "known" value and add to the observation noise distribution $\epsilon_t \sim N(\hat{\mu}_t + \hat{\psi}_t, R_t)$.
+如你所见，虽然参数化导致更大的隐状态向量 $X_t$，但参数的数量保持不变。此外，该模型是在 $y_t$ 而不是 $\Delta y_t$ 中生成的。
 
-Conceptually we can understand it as subtracting the prediction of $\mathcal{M}$ from $Y_t$ and modeling the result, so that the Kalman filter and other linear Gaussian state space model properties still hold.
+上述方法在指定初始状态 $X_0$ 的分布时可能存在挑战，因为第一个元素 ( $y_0$ ) 现在是非平稳的。在实践中，我们可以在中心化处理（减去平均值）之后，围绕时间序列的初始值分配一个信息先验。你可以在 {cite:t}`durbin2012time` 中找到有关此主题的更多讨论，以及对状态空间模型的深入介绍。
 
- This *composability* feature makes it easy to build a time series model that is constructed from multiple smaller linear Gaussian state space model components. We can have individual state space representations for the trend, seasonal, and error terms, and combine them into what is usually referred to as a *structural time series* model or dynamic linear model. TFP provides a very convenient way to build Bayesian structural time series with the `tfp.sts` module, along with helper functions to deconstruct the components, make forecasts, inference, and other diagnostics.
 
- For example, we can model the monthly birth data using a structural time series with a local linear trend component and a seasonal component to account for the monthly pattern in Code Block [tfp_sts_example2](tfp_sts_example2).
+(bayesian-structural-time-series)= 
 
- ```{code-block} python 
+### 6.4.3 贝叶斯结构时间序列 
+
+时间序列模型的线性高斯状态空间表达形式具有另一个优点，即它很容易与其他线性高斯状态空间模型一起扩展。为了将两个模型组合在一起，我们可以对隐空间中的两个正态随机变量做连接。我们使用两个协方差矩阵生成一个块对角矩阵，连接事件轴上的均值。在测量空间中，该操作相当于对两个正态随机变量求和。
+
+更具体地说，我们有：
+
+```{math} 
+:label: eq:combining_lgssm
+
+\begin{split}
+\mathbf{F}_t & = \left[\begin{array}{ccc}
+\mathbf{F}_{\mathbf{1}, t} & 0 \\
+0 & \mathbf{F}_{\mathbf{2}, t}\\
+\end{array}\right], 
+\mathbf{Q}_t = \left[\begin{array}{ccc}
+\mathbf{Q}_{\mathbf{1}, t} & 0 \\
+0 & \mathbf{Q}_{\mathbf{2}, t}\\
+\end{array}\right],
+X_t = \left[\begin{array}{ccc}
+X_{1,t} \\
+X_{2,t}\\
+\end{array}\right] \\
+\mathbf{H}_t & = \left[\begin{array}{ccc}
+\mathbf{H}_{\mathbf{1}, t} & \mathbf{H}_{\mathbf{2}, t} \\
+\end{array}\right],
+\mathbf{R}_t = \mathbf{R}_{\mathbf{1}, t} + \mathbf{R}_{\mathbf{2}, t}\\
+\end{split}
+```
+
+如果我们有一个不是线性高斯的时间序列模型 $\mathcal{M}$。我们还可以将其合并到状态空间模型中。为此，我们将每个时间步的来自 $\mathcal{M}$ 的预测 $\hat{\psi}_t$ 视为静态“已知”值，并添加到观测噪声分布 $\epsilon_t \sim N( \hat{\mu}_t + \hat{\psi}_t, R_t)$。
+
+从概念上讲，我们可以将其理解为从 $Y_t$ 中减去 $\mathcal{M}$ 的预测并对结果进行建模，因此卡尔曼滤波器和其他线性高斯状态空间模型属性仍然成立。
+
+这种*可组合性*功能可以轻松构建由多个较小的线性高斯状态空间模型分量构建的时间序列模型。我们可以为趋势、季节性和误差项提供单独的状态空间表示，并将它们组合成通常称为*结构时间序列*模型或动态线性模型的模型。 TFP 提供了一种非常方便的方法来构建贝叶斯结构化时间序列，它使用 `tfp.sts` 模块，以及用于解构分量、进行预测、推断和其他诊断的辅助函数。
+
+例如，我们可以使用具有局部线性趋势分量和季节性分量的结构化时间序列对每月出生数据进行建模，以解释代码 [tfp_sts_example2](tfp_sts_example2) 中的每月模式。
+
+```{code-block} ipython3
+:caption: tfp_sts_example2
 :name: tfp_sts_example2
- :caption: tfp_sts_example2 
 
-def generate_bsts_model(observed=None):     """     Args:         observed: Observed time series, tfp.sts use it to generate prior.
+def generate_bsts_model(observed=None):
+    """
+    Args:
+        observed: Observed time series, tfp.sts use it to generate prior.
+    """
+    # Trend
+    trend = tfp.sts.LocalLinearTrend(observed_time_series=observed)
+    # Seasonal
+    seasonal = tfp.sts.Seasonal(num_seasons=12, observed_time_series=observed)
+    # Full model
+    return tfp.sts.Sum([trend, seasonal], observed_time_series=observed)
 
-    """     # Trend     trend = tfp.sts.LocalLinearTrend(observed_time_series=observed)     # Seasonal     seasonal = tfp.sts.Seasonal(num_seasons=12, observed_time_series=observed)     # Full model     return tfp.sts.Sum([trend, seasonal], observed_time_series=observed) 
+observed = tf.constant(us_monthly_birth["birth_in_thousands"], dtype=tf.float32)
+birth_model = generate_bsts_model(observed=observed)
 
-observed = tf.constant(us_monthly_birth["birth_in_thousands"], dtype=tf.float32) birth_model = generate_bsts_model(observed=observed) 
-
-# Generate the posterior distribution conditioned on the observed target_log_prob_fn = birth_model.joint_log_prob(observed_time_series=observed)
+# Generate the posterior distribution conditioned on the observed
+target_log_prob_fn = birth_model.joint_log_prob(observed_time_series=observed)
 ```
 
-We can inspect each component in `birth_model`: 
+我们可以检查 `birth_model` 中的每个分量：
 
-```{code-block} python 
+```{code-block} ipython3
+:caption: tfp_sts_model
 :name: tfp_sts_model
- :caption: tfp_sts_model 
 
 birth_model.components
 ```
 
-```none [<tensorflow_probability.python.sts.local_linear_trend.LocalLinearTrend at ...>,  <tensorflow_probability.python.sts.seasonal.Seasonal at ...>]
+```none
+[<tensorflow_probability.python.sts.local_linear_trend.LocalLinearTrend at ...>,
+ <tensorflow_probability.python.sts.seasonal.Seasonal at ...>]
 ```
 
-Each of the components is parameterized by some hyperparameters, which are the unknown parameters that we want to do inference on. They are not part of the latent state $X_t$, but might parameterize the prior that generates $X_t$. For example, we can check the parameters of the seasonal component: 
+每个分量都由一些超参数参数化，这些超参数是我们想要进行推断的未知参数。它们不是隐状态 $X_t$ 的一部分，但可能参数化生成 $X_t$ 的先验。例如，我们可以检查季节性分量的参数：
 
-```{code-block} python 
+```{code-block} ipython3
+:caption: tfp_sts_model_component
 :name: tfp_sts_model_component
- :caption: tfp_sts_model_component 
 
 birth_model.components[1].parameters
 ```
 
-```none [Parameter(name='drift_scale', prior=<tfp.distributions.LogNormal  'Seasonal_LogNormal' batch_shape=[] event_shape=[] dtype=float32>, bijector=<tensorflow_probability.python.bijectors.chain.Chain object at ...>)]
+```none
+[Parameter(name='drift_scale', prior=<tfp.distributions.LogNormal 
+'Seasonal_LogNormal' batch_shape=[] event_shape=[] dtype=float32>,
+bijector=<tensorflow_probability.python.bijectors.chain.Chain object at ...>)]
 ```
 
-Here the seasonal component of the STS model contains 12 latent states (one for each month), but the component only contains 1 parameter (the hyperparameter that parameterized the latent states). You might have already noticed from examples in the previous session how unknown parameters are treated differently. In the linear growth model, unknown parameters are part of the latent state $X_t$, in the ARIMA model, the unknown parameters parameterized $\mathbf{F}_t$ and $\mathbf{Q}_t$. For the latter case, we cannot use Kalman filter to infer those parameters.
+这里 STS 模型的季节性分量包含 12 个隐状态（每个月一个），但该分量仅包含 1 个参数（参数化隐状态的超参数）。你可能已经从上一节中的示例中注意到未知参数的处理方式是如何不同的。在线性增长模型中，未知参数是隐状态 $X_t$ 的一部分，在 ARIMA 模型中，未知参数参数化 $\mathbf{F}_t$ 和 $\mathbf{Q}_t$。对于后一种情况，我们不能使用卡尔曼滤波器来推断这些参数。
 
-Instead, the latent state is effectively marginalized out but we can nonetheless recover them after inference by running the Kalman filter conditioned on the posterior distribution (represented as Monte Carlo Samples). A conceptual description of the parameterization could be found in the {numref}`fig:fig18_bsts_lgssm`: 
+相反，隐状态被有效地边缘化了，但我们仍然可以通过运行以后验分布为条件的卡尔曼滤波器（表示为蒙特卡洛样本）在推断后恢复它们。参数化的概念描述可以在 {numref}`fig:fig18_bsts_lgssm` 中找到：
 
 ```{figure} figures/fig18_bsts_lgssm.png
- :name: fig:fig18_bsts_lgssm
- :width: 8.00in Relationship between Bayesian Structural Time Series (blue box) and Linear Gaussian State Space Model (red box). The Linear Gaussian State Space Model shown here is an example containing a local linear trend component, a seasonal component, and an Autoregressive component.
+:name: fig:fig18_bsts_lgssm
+:width: 8.00in
+
+贝叶斯结构时间序列（蓝色框）与线性高斯状态空间模型（红色框）之间的关系。此处显示的线性高斯状态空间模型是一个包含局部线性趋势分量、季节性分量和自回归分量的示例。
 
 ``` 
 
-Thus running inference on a structural time series model could conceptually be understood as generating a linear Gaussian state space model from the parameters to be inferred, running the Kalman filter to obtain the data likelihood, and combining with the prior log-likelihood conditioned on the current value of the parameters. Unfortunately, the operation of iterating through each data point is quite computationally costly (even though Kalman filter is already an extremely efficient algorithm), thus fitting structural time series may not scale very well when running long time series.
+因此，对结构时间序列模型进行推断在概念上可以理解为从要推断的参数生成线性高斯状态空间模型，运行卡尔曼滤波器以获得数据似然性，并结合以当前为条件的先验对数似然参数的值。不幸的是，遍历每个数据点的操作在计算上是相当昂贵的（尽管卡尔曼滤波器已经是一种非常有效的算法），因此在运行长时间序列时，拟合结构时间序列可能无法很好地扩展。
 
- After running inference on a structural time series model there are some helpful utility functions from `tfp.sts` we can use to make forecast and inspect each inferred component with Code Block [tfp_sts_example2_result](tfp_sts_example2_result). The result is shown in {numref}`fig:fig19_bsts_lgssm_result`.
+在对结构化时间序列模型进行推断之后，我们可以使用来自 `tfp.sts` 的一些有用的实用函数来预测和检查每个带有代码 [tfp_sts_example2_result](tfp_sts_example2_result) 的推断分量。结果显示在 {numref}`fig:fig19_bsts_lgssm_result` 中。
 
- ```{code-block} python 
+```{code-block} ipython3
+:caption: tfp_sts_example2_result
 :name: tfp_sts_example2_result
- :caption: tfp_sts_example2_result 
 
 # Using a subset of posterior samples.
-
-parameter_samples = [x[-100:, 0, ...] for x in mcmc_samples] 
+parameter_samples = [x[-100:, 0, ...] for x in mcmc_samples]
 
 # Get structual compoenent.
-
-component_dists = tfp.sts.decompose_by_component(     birth_model,     observed_time_series=observed,     parameter_samples=parameter_samples) 
+component_dists = tfp.sts.decompose_by_component(
+    birth_model,
+    observed_time_series=observed,
+    parameter_samples=parameter_samples)
 
 # Get forecast for n_steps.
+n_steps = 36
+forecast_dist = tfp.sts.forecast(
+    birth_model,
+    observed_time_series=observed,
+    parameter_samples=parameter_samples,
+    num_steps_forecast=n_steps)
+birth_dates = us_monthly_birth.index
+forecast_date = pd.date_range(
+    start=birth_dates[-1] + np.timedelta64(1, "M"),
+    end=birth_dates[-1] + np.timedelta64(1 + n_steps, "M"),
+    freq="M")
 
-n_steps = 36 forecast_dist = tfp.sts.forecast(     birth_model,     observed_time_series=observed,     parameter_samples=parameter_samples,     num_steps_forecast=n_steps) birth_dates = us_monthly_birth.index forecast_date = pd.date_range(     start=birth_dates[-1] + np.timedelta64(1, "M"),     end=birth_dates[-1] + np.timedelta64(1 + n_steps, "M"),     freq="M") 
+fig, axes = plt.subplots(
+    1 + len(component_dists.keys()), 1, figsize=(10, 9), sharex=True)
 
-fig, axes = plt.subplots(     1 + len(component_dists.keys()), 1, figsize=(10, 9), sharex=True) 
+ax = axes[0]
+ax.plot(us_monthly_birth, lw=1.5, label="observed")
 
-ax = axes[0] ax.plot(us_monthly_birth, lw=1.5, label="observed") 
+forecast_mean = np.squeeze(forecast_dist.mean())
+line = ax.plot(forecast_date, forecast_mean, lw=1.5,
+               label="forecast mean", color="C4")
 
-forecast_mean = np.squeeze(forecast_dist.mean()) line = ax.plot(forecast_date, forecast_mean, lw=1.5,                label="forecast mean", color="C4") 
+forecast_std = np.squeeze(forecast_dist.stddev())
+ax.fill_between(forecast_date,
+                forecast_mean - 2 * forecast_std,
+                forecast_mean + 2 * forecast_std,
+                color=line[0].get_color(), alpha=0.2)
 
-forecast_std = np.squeeze(forecast_dist.stddev()) ax.fill_between(forecast_date,                 forecast_mean - 2 * forecast_std,                 forecast_mean + 2 * forecast_std,                 color=line[0].get_color(), alpha=0.2) 
-
-for ax_, (key, dist) in zip(axes[1:], component_dists.items()):     comp_mean, comp_std = np.squeeze(dist.mean()), np.squeeze(dist.stddev())     line = ax_.plot(birth_dates, dist.mean(), lw=2.)     ax_.fill_between(birth_dates,                      comp_mean - 2 * comp_std,                      comp_mean + 2 * comp_std,                      alpha=0.2)     ax_.set_title(key.name[:-1])
+for ax_, (key, dist) in zip(axes[1:], component_dists.items()):
+    comp_mean, comp_std = np.squeeze(dist.mean()), np.squeeze(dist.stddev())
+    line = ax_.plot(birth_dates, dist.mean(), lw=2.)
+    ax_.fill_between(birth_dates,
+                     comp_mean - 2 * comp_std,
+                     comp_mean + 2 * comp_std,
+                     alpha=0.2)
+    ax_.set_title(key.name[:-1])
 ```
 
 ```{figure} figures/fig19_bsts_lgssm_result.png
- :name: fig:fig19_bsts_lgssm_result
- :width: 8.00in Inference result and forecast of monthly live births in the United States (1948-1979) using the `tfp.sts` API with Code Block [tfp_sts_example2_result](tfp_sts_example2_result). Top panel: 36 months forecast; bottom 2 panels: decomposition of the structural time series.
+:name: fig:fig19_bsts_lgssm_result
+:width: 8.00in
+
+使用带有代码 [tfp_sts_example2_result](tfp_sts_example2_result) 的 `tfp.sts` API 推断美国（1948-1979 年）每月活产的结果和预测。上子图：36 个月预测；底部 2 个子图：结构时间序列的分解。
 
 ``` 
 
 (other-time-series-models)= 
 
-## Other Time Series Models 
+## 6.5 其他时间序列模型 
 
-While structural time series and linear Gaussian state space models are powerful and expressive classes of time series models, they certainly do not cover all our needs. For example, some interesting extensions include nonlinear Gaussian state space models, where the transition function and measurement function are differentiable nonlinear functions. Extended Kalman filter could be used for inference of $X_t$ for these models {cite:p}`grewal2014kalman`. There is the Unscented Kalman filter for inference of non-Gaussian nonlinear models {cite:p}`grewal2014kalman`, and Particle filter as a general filtering approach for state space models {cite:p}`Chopin2020`.
+虽然结构时间序列和线性高斯状态空间模型是时间序列模型的强大且富有表现力的类别，但它们当然不能满足我们的所有需求。例如，一些有趣的扩展包括非线性高斯状态空间模型，其中转移函数和测量函数是可微分的非线性函数。扩展卡尔曼滤波器可用于推断这些模型 {cite:p}`grewal2014kalman` 的 $X_t$ 。有用于推断非高斯非线性模型 {cite:p}`grewal2014kalman` 的 Unscented Kalman 滤波器，以及作为状态空间模型 {cite:p}`Chopin2020` 的一般滤波方法的粒子滤波器。
 
- Another class of widely used time series models is the Hidden Markov model, which is a state space model with discrete state space. There are also specialized algorithms for doing inference of these models, for example, the forward-backward algorithm for computing the marginal posterior likelihood, and the Viterbi algorithm for computing the posterior mode.
+另一类广泛使用的时间序列模型是隐马尔可夫模型，它是具有离散状态空间的状态空间模型。还有一些专门的算法可以对这些模型进行推断，例如，用于计算边缘后验似然的前向后向算法，以及用于计算后验模式的 Viterbi 算法。
 
- In addition there are ordinary differential equations (ODE) and stochastic differential equations (SDE) that are continuous time models.
 
-In {numref}`table:ts_model_type` we divide the space of models by their treatment of stochasticity and time. While we are not going into details of these models, they are well studied subjects with easy to use implementations in the Python computing ecosystem.
+此外，还有作为连续时间模型的常微分公式 (ODE) 和随机微分公式 (SDE)。
 
- ```{list-table} Various time series models categorized by treatment of stochasticity and time
- :name: table:ts_model_type * -   - **Deterministic dynamics**   - **Stochastic dynamics** * - **Discrete time**   - automata / discretized ODEs   - state space models * - **Continuous time**   - ODEs   - SDEs
+在 {numref}`table:ts_model_type` 中，我们通过对随机性和时间的处理来划分模型的空间。虽然我们不会详细介绍这些模型，但它们是经过深入研究的主题，在 Python 计算生态系统中具有易于使用的实现。
+
+
+```{list-table} 按随机性和时间处理分类的各种时间序列模型
+:name: table:ts_model_type
+* -
+  - **Deterministic dynamics**
+  - **Stochastic dynamics**
+* - **Discrete time**
+  - automata / discretized ODEs
+  - state space models
+* - **Continuous time**
+  - ODEs
+  - SDEs
 ```
+`
 
 (model-criticism-and-choosing-priors)= 
 
-## Model Criticism and Choosing Priors 
+## 6.6 模型评判和先验选择 
 
-In the seminal time series book by  {cite:t}`box2008time` [^15], they outlined five important practical problems for time series modeling: 
+在 {cite:t}`box2008time` [^15] 的开创性时间序列书中，他们概述了时间序列建模的五个重要实际问题：
 
--   Forecasting 
+- 预测
 
--   Estimation of Transfer Functions 
+- 传递函数的估计
 
--   Analysis of Effects of Unusual Intervention Events to a System 
+- 异常干预事件对系统的影响分析
 
--   Analysis of Multivariate Time Series 
+- 多元时间序列分析
 
--   Discrete Control Systems 
+- 离散控制系统
 
-In practice, most time series problems aim at performing some sort of forecasting (or nowcasting where you try to infer at instantaneous time $t$ some observed quantity that are not yet available due to delay in getting the measurements), which sets up a natural model criticism criteria in time series analysis problems. While we do not have specific treatment around Bayesian decision theory in this chapter, It is worth quoting from {cite:t}`westharrison1997`: 
+在实践中，大多数时间序列问题旨在执行某种预测（或即时预测，你试图在瞬时时间 $t$ 推断一些由于获取测量延迟而尚不可用的观测量），这建立了一个自然的时间序列分析问题中的模型批评标准。虽然我们在本章中没有围绕贝叶斯决策理论进行具体处理，但值得引用 {cite:t}`westharrison1997` 的内容：
 
-> Good modeling demands hard thinking, and good forecasting requires an integrated view of the role of forecasting within decision systems.
+> 良好的建模需要认真思考，而良好的预测需要对预测在决策系统中的作用有一个综合的认识。
 
- 
+在实践中，对时间序列模型推断的批评和对预测的评估应与决策过程紧密结合，尤其是如何将不确定性纳入决策。尽管如此，预测绩效可以单独评估。
 
-In practice, criticism of time series model inference and evaluation of forecasting should be closely integrated with the decision making process, especially how uncertainty should be incorporated into decisions. Nonetheless, forecast performance could be evaluated alone.
-
-Usually this is done by collecting new data or keeping some hold out dataset as we did in this Chapter for the CO₂ example, and compare the observation with the forecast using standard metrics. One of a popular choice is Mean Absolute Percentage Error (MAPE), which simply compute: 
+通常这是通过收集新数据或保留一些保留数据集来完成的，就像我们在本章中对 $\text{CO}_2$ 示例所做的那样，并使用标准指标将观测结果与预测结果进行比较。一种流行的选择是平均绝对百分比误差 (MAPE)，它简单地计算：
 
 ```{math} 
-
- :label: eq:mape 
+:label: eq:mape
 
 MAPE = \frac{1}{n} \sum_{i=1}^{n} \frac{|\text{forecast}_i - \text{observed}_i|}{\text{observed}_i}
 ```
 
-However, there are some known biases of MAPE, for example, large errors during low value observation periods will significantly impact MAPE.
+然而，MAPE 存在一些已知的偏差，例如，在低值观测期间的大误差会显着影响 MAPE。
 
-Also, it is difficult to compare MAPE across multiple time series when the range of observation differs greatly.
+此外，当观测范围差异很大时，很难跨多个时间序列比较 MAPE。
 
- Cross-validation based model evaluation approaches still apply and are recommended for time series models. However, using LOO for a single time series will be problematic if the goal is to estimate the predictive performance for future time points. Simply leaving out one observation at a time does not respect the temporal structure of the data (or model). For example, if you remove one point $t$ and use the rest of the points for predictions you will be using the points $t_{-1}, t_{-2}, ...$ which may be fine as previous observations (up to some point) inform future ones, but you will be also using points $t_{+1}, t_{+2}, ...$, that is you will be using the future to predict the past. Thus, we can compute LOO, but the interpretation of the number will get will be nonsensical and thus misleading. Instead of leaving one (or some) time points out, we need some form of leave-future-out cross-validation (LFO-CV, see e.g. {cite:t}`Burkner2020`. As a rough sketch, after initial model inference, to approximate 1-step-ahead predictions we would iterate over the hold out time series or future observations and evaluate on the log predictive density, and refit the model including a specific time point when the Pareto $k$ estimate exceeds some threshold [^16]. Thus, LFO-CV does not refer to one particular prediction task but rather to various possible cross validation approaches that all involve some form of prediction of future time points.
+基于交叉验证的模型评估方法仍然适用并推荐用于时间序列模型。但是，如果目标是估计未来时间点的预测性能，则将 LOO 用于单个时间序列将是有问题的。一次简单地忽略一个观测结果并不尊重数据（或模型）的时间结构。例如，如果你删除一个点 $t$ 并将其余点用于预测，你将使用点 $t_{-1}, t_{-2}, ...$ 这可能与之前的观测结果一样好（在某种程度上）通知未来的，但你也将使用点 $t_{+1}, t_{+2}, ...$，也就是说你将使用未来来预测过去。因此，我们可以计算 LOO，但对得到的数字的解释将是荒谬的，因此会产生误导。我们不需要留下一个（或一些）时间点，而是需要某种形式的保留未来交叉验证（LFO-CV，参见例如 {cite:t}`Burkner2020`。作为粗略的草图，在初始模型推断之后，为了近似提前 1 步预测，我们将迭代保留时间序列或未来观测结果并评估对数预测密度，并重新拟合模型，包括 Pareto $k$ 估计超过某个阈值时的特定时间点 [^ 16]. 因此，LFO-CV 不是指一个特定的预测任务，而是指各种可能的交叉验证方法，这些方法都涉及对未来时间点的某种形式的预测。
 
- (priors-for-time-series-models)= 
+(priors-for-time-series-models)= 
 
-### Priors for Time Series Models 
+### 6.6.1 时间序列模型的先验 
 
-In Section {ref}`chp4_gam` we used a regularizing prior, the Laplace prior, for the slope of the step linear function. As we mentioned this is to express our prior knowledge that the change in slope is usually small and close to zero, so that the resulting latent trend is smoother.
-
-Another common use of regularizing priors or sparse priors, is for modeling holiday or special days effect. Usually each holiday has its own coefficients, and we want to express a prior that indicates some holidays could have huge effect on the time series, but most holidays are just like any other ordinary day. We can formalize this intuition with a horseshoe prior {cite:p}`carvalho2010horseshoe, piironen2017sparsity` as shown in Equation {eq}`eq:horse_shoe`: 
+在 {ref}`chp4_gam` 部分中，我们使用了正则化先验，拉普拉斯先验，用于阶跃线性函数的斜率。正如我们所提到的，这是为了表达我们的先验知识，即斜率的变化通常很小且接近于零，因此产生的潜在趋势更平滑。
+正则化先验或稀疏先验的另一个常见用途是模拟假期或特殊日子效果。通常每个假期都有自己的系数，我们想表达一个先验，表明某些假期可能会对时间序列产生巨大影响，但大多数假期就像任何其他普通日子一样。我们可以用马蹄形先验 {cite:p}`carvalho2010horseshoe, piironen2017sparsity` 将这种直觉形式化，如公式 {eq}`eq:horse_shoe` 所示：
 
 ```{math} 
+:label: eq:horse_shoe
 
- :label: eq:horse_shoe 
-
-\begin{split} \lambda_t^2 \sim& \mathcal{H}\text{C}(1.) \\ \beta_t \sim& \mathcal{N}(0, \lambda_t^2 \tau^2) \end{split}
+\begin{split}
+\lambda_t^2 \sim& \mathcal{H}\text{C}(1.) \\
+\beta_t \sim& \mathcal{N}(0, \lambda_t^2 \tau^2)
+\end{split}
 ```
 
-The global parameter $\tau$ in the horseshoe prior pulls the coefficients of the holiday effect globally towards zero. Meanwhile, the heavy tail from the local scales $\lambda_t$ let some effect break out from the shrinkage. We can accommodate different levels of sparsity by changing the value of $\tau$: the closer $\tau$ is to zero the more shrinkage of the holiday effect $\beta_t$ to tends to zero, whereas with a larger $\tau$ we have a more diffuse prior {cite:p}`piironen2017hyperprior` [^17]. For example, in Case Study 2 of {cite:t}`riutort2020practical` they included a special day effect for each individual day of a year (366 as the Leap Day is included) and use a horseshoe prior to regularize it.
 
- Another important consideration of prior for time series model is the prior for the observation noise. Most time series data are by nature are non-repeated measures. We simply cannot go back in time and make another observation under the exact condition (i.e., we cannot quantify the **aleatoric** uncertainty). This means our model needs information from the prior to "decide" whether the noise is from measurement or from latent process (i.e., the **epistemic** uncertainty). For example, in a time series model with a latent autoregressive component or a local linear trend model, we can place more informative prior on the observation noise to regulate it towards a smaller value. This will "push" the trend or autoregressive component to overfits the underlying drift pattern and we might have a nicer forecast on the trend (higher forecast accuracy in the short term). The risk is that we are overconfident about the underlying trend, which will likely result in a poor forecast in the long run. In a real world application where time series are most likely non-stationary, we should be ready to adjust the prior accordingly.
+
+
+马蹄形先验中的全局参数 $\tau$ 将假日效应的系数全局拉向零。同时，局部尺度 $\lambda_t$ 的重尾让收缩产生了一些影响。我们可以通过改变 $\tau$ 的值来适应不同程度的稀疏性：$\tau$ 越接近于零，假期效应 $\beta_t$ 的收缩越多，趋向于零，而较大的 $\tau$我们有一个更分散的先验 {cite:p}`piironen2017hyperprior` [^17]。例如，在 {cite:t}`riutort2020practical` 的案例研究 2 中，他们为一年中的每一天（包括闰日为 366 天）添加了一个特殊的日效应，并在对其进行正则化之前使用马蹄形。
+
+
+时间序列模型先验的另一个重要考虑因素是观测噪声的先验。大多数时间序列数据本质上是非重复测量。我们根本无法及时返回并在确切条件下进行另一次观测（即，我们无法量化**偶然**不确定性）。这意味着我们的模型需要先验信息才能“确定”噪声是来自测量还是来自隐过程（即 **epistemic** 不确定性）。例如，在具有隐自回归分量或局部线性趋势模型的时间序列模型中，我们可以将更多信息先验放在观测噪声上，以将其调节为更小的值。这将“推动”趋势或自回归分量以过度拟合潜在的漂移模式，并且我们可能对趋势有更好的预测（短期内预测准确性更高）。风险在于我们对潜在趋势过于自信，从长远来看，这可能会导致预测不佳。在时间序列很可能是非平稳的实际应用程序中，我们应该准备好相应地调整先验。
 
 (exercises6)= 
 
-## Exercises 
+## 6.7 练习 
 
 **6E1.** As we explained in Box *Parsing timestamp to design matrix* above, date information could be formatted into a design matrix for regression model to account for the periodic pattern in a time series. Try generating the following design matrix for the year 2021.
 
-Hint: use Code Block [timerange_2021](timerange_2021) to generate all time stamps for 2021: 
+Hint: use Code Block [timerange_2021](timerange_2021) to generate all time stamps for 2021:
 
-```{code-block} python 
+```{code-block} ipython3
+:caption: timerange_2021
 :name: timerange_2021
- :caption: timerange_2021 
 
 datetime_index = pd.date_range(start="2021-01-01", end="2021-12-31", freq='D')
 ```
 
 -   A design matrix for day of the month effect.
 
- -   A design matrix for weekday vs weekend effect.
+-   A design matrix for weekday vs weekend effect.
 
- -   Company G pay their employee on the 25th of every month, and if the     25th falls on a weekend, the payday is moved up to the Friday     before. Try to create a design matrix to encode the pay day of 2021.
+-   Company G pay their employee on the 25th of every month, and if the  25th falls on a weekend, the payday is moved up to the Friday  before. Try to create a design matrix to encode the pay day of 2021.
 
- -   A design matrix for the US Federal holiday effect [^18] in 2021.
+-   A design matrix for the US Federal holiday effect [^18] in 2021.
 
-    Create the design matrix so that each holiday has their individual     coefficient.
+ Create the design matrix so that each holiday has their individual  coefficient.
 
- **6E2.** In the previous exercise , the design matrix for holiday effect treat each holiday separately. What if we consider all holiday effects to be the same? What is the shape of the design matrix if we do so? Reason about how does it affects the fit of the regression time series model.
+**6E2.** In the previous exercise , the design matrix for holiday effect treat each holiday separately. What if we consider all holiday effects to be the same? What is the shape of the design matrix if we do so? Reason about how does it affects the fit of the regression time series model.
 
- **6E3.** Fit a linear regression to the `"monthly_mauna_loa_co2.csv"` dataset: 
+**6E3.** Fit a linear regression to the `"monthly_mauna_loa_co2.csv"` dataset: 
 
--   A plain regression with an intercept and slope, using linear time as     predictor.
+-   A plain regression with an intercept and slope, using linear time as  predictor.
 
- -   A covariate adjusted regression like the square root predictor in     the baby example in Chapter [4](chap3) Code Block     [babies_transformed](babies_transformed).
+-   A covariate adjusted regression like the square root predictor in  the baby example in Chapter [4](chap3) Code Block  [babies_transformed](babies_transformed).
 
  Explain what these models are missing compared to Code Block [regression_model_for_timeseries](regression_model_for_timeseries).
 
- **6E4.** Explain in your own words the difference between regression, autoregressive and state space architectures. In which situation would each be particularly useful.
+**6E4.** Explain in your own words the difference between regression, autoregressive and state space architectures. In which situation would each be particularly useful.
 
- **6M5.** Does using basis function as design matrix actually have better condition number than sparse matrix? Compare the condition number of the following design matrix of the same rank using `numpy.linalg.cond`: 
+**6M5.** Does using basis function as design matrix actually have better condition number than sparse matrix? Compare the condition number of the following design matrix of the same rank using `numpy.linalg.cond`: 
 
--   Dummy coded design matrix `seasonality_all` from Code Block     [generate_design_matrix](generate_design_matrix).
+-   Dummy coded design matrix `seasonality_all` from Code Block  [generate_design_matrix](generate_design_matrix).
 
- -   Fourier basis function design matrix `X_pred` from Code Block     [gam](gam).
+-   Fourier basis function design matrix `X_pred` from Code Block  [gam](gam).
 
- -   An array of the same shape as `seasonality_all` with values drawn     from a Normal distribution.
+-   An array of the same shape as `seasonality_all` with values drawn  from a Normal distribution.
 
- -   An array of the same shape as `seasonality_all` with values drawn     from a Normal distribution *and* one of the column being identical     to another.
+-   An array of the same shape as `seasonality_all` with values drawn  from a Normal distribution *and* one of the column being identical  to another.
 
- **6M6.** The `gen_fourier_basis` function from Code Block [fourier_basis_as_seasonality](fourier_basis_as_seasonality) takes a time index `t` as the first input. There are a few different ways to represent the time index, for example, if we are observing some data monthly from 2019 January for 36 months, we can code the time index in 2 equivalent ways as shown below in Code Block [exercise_chap4_e6](exercise_chap4_e6): 
+**6M6.** The `gen_fourier_basis` function from Code Block [fourier_basis_as_seasonality](fourier_basis_as_seasonality) takes a time index `t` as the first input. There are a few different ways to represent the time index, for example, if we are observing some data monthly from 2019 January for 36 months, we can code the time index in 2 equivalent ways as shown below in Code Block [exercise_chap4_e6](exercise_chap4_e6):
 
-```{code-block} python 
+```{code-block} ipython3
+:caption: exercise_chap4_e6
 :name: exercise_chap4_e6
- :caption: exercise_chap4_e6 
 
-nmonths = 36 day0 = pd.Timestamp('2019-01-01') time_index = pd.date_range(     start=day0, end=day0 + np.timedelta64(nmonths, 'M'),      freq='M') 
+nmonths = 36
+day0 = pd.Timestamp('2019-01-01')
+time_index = pd.date_range(
+    start=day0, end=day0 + np.timedelta64(nmonths, 'M'), 
+    freq='M')
 
-t0 = np.arange(len(time_index)) design_matrix0 = gen_fourier_basis(t0, p=12, n=6) t1 = time_index.month - 1 design_matrix1 = gen_fourier_basis(t1, p=12, n=6) 
+t0 = np.arange(len(time_index))
+design_matrix0 = gen_fourier_basis(t0, p=12, n=6)
+t1 = time_index.month - 1
+design_matrix1 = gen_fourier_basis(t1, p=12, n=6)
 
 np.testing.assert_array_almost_equal(design_matrix0, design_matrix1)
 ```
 
 What if we are observing the data daily? How would you change the Code Block [exercise_chap4_e6](exercise_chap4_e6) to: 
 
--   Make `time_index` represent day of the year instead of month of the     year.
+-   Make `time_index` represent day of the year instead of month of the  year.
 
- -   Modify the function signature to `gen_fourier_basis` in line 8 and     10 so that the resulting design matrices coded for the month of the     year effect.
+-   Modify the function signature to `gen_fourier_basis` in line 8 and 10 so that the resulting design matrices coded for the month of the year effect.
 
- -   How does the new `design_matrix0` and `design_matrix1` differ? How     is the differences would impact the model fitting? Hint: validate     your reasoning by multiplying them with the same random regression     coefficient.
+-   How does the new `design_matrix0` and `design_matrix1` differ? How is the differences would impact the model fitting? Hint: validate your reasoning by multiplying them with the same random regression coefficient.
 
- **6E7.** In Section {ref}`chap4_ar` we introduced the backshift operator $\mathbf{B}$. You might have already noticed that applying the operation $\mathbf{B}$ on a time series is the same as performing a matrix multiplication. We can generate a matrix $\mathbf{B}$ explicitly in Python. Modify Code Block [ar1_without_forloop](ar1_without_forloop) to use an explicit $\mathbf{B}$ constructed in NumPy or TensorFlow.
+**6E7.** In Section {ref}`chap4_ar` we introduced the backshift operator $\mathbf{B}$. You might have already noticed that applying the operation $\mathbf{B}$ on a time series is the same as performing a matrix multiplication. We can generate a matrix $\mathbf{B}$ explicitly in Python. Modify Code Block [ar1_without_forloop](ar1_without_forloop) to use an explicit $\mathbf{B}$ constructed in NumPy or TensorFlow.
 
- **6E8.** The step linear function as defined in Equation {eq}`eq:step_linear_function` and Code Block [step_linear_function_for_trend](step_linear_function_for_trend) rely on a key regression coefficient $\delta$. Rewrite the definition so that it has a similar form compare to other linear regression: 
-
+**6E8.** The step linear function as defined in Equation {eq}`eq:step_linear_function` and Code Block [step_linear_function_for_trend](step_linear_function_for_trend) rely on a key regression coefficient $\delta$. Rewrite the definition so that it has a similar form compare to other linear regression: 
+ 
 ```{math} 
- g(t) = \mathbf{A}^\prime \delta^\prime
+
+g(t) = \mathbf{A}^\prime \delta^\prime 
 ```
 
 Find the appropriate expression of design matrix $\mathbf{A}^\prime$ and coefficient $\delta^\prime$.
 
- **6E9.** As we have seen in past chapters, a great way to understand your data generating process is to write it down. In this exercise we will generate synthetic data which will reinforce the mapping of "real world\" ideas to code. Assume we start with a linear trend that is `y = 2x, x = np.arange(90)`, and iid noise at each time point draw from a $\mathcal{N}(0, 1)$. Assume that this time series starts on Sunday June 6 2021. Generate 4 synthetic datasets that include: 
+**6E9.** As we have seen in past chapters, a great way to understand your data generating process is to write it down. In this exercise we will generate synthetic data which will reinforce the mapping of "real world" ideas to code. Assume we start with a linear trend that is `y = 2x, x = np.arange(90)`, and iid noise at each time point draw from a $\mathcal{N}(0, 1)$. Assume that this time series starts on Sunday June 6 2021. Generate 4 synthetic datasets that include: 
 
-1.  An additive weekend effect where weekends have 2x more volume than     weekdays.
+1.  An additive weekend effect where weekends have 2x more volume than weekdays.
 
- 2.  An additive sinusoidal effect of sin(2x).
+2.  An additive sinusoidal effect of sin(2x).
 
- 3.  An additive AR(1) latent process with autoregressive coefficient of     your choice and a noise scale $\sigma = 0.2$.
+3.  An additive AR(1) latent process with autoregressive coefficient of  your choice and a noise scale $\sigma = 0.2$.
 
- 4.  A time series with weekend and sinusoidal effect from (1) and (2),     and an AR(1) process on the mean of the time series with the same     autoregressive coefficient as in (3) 
+4.  A time series with weekend and sinusoidal effect from (1) and (2),  and an AR(1) process on the mean of the time series with the same  autoregressive coefficient as in (3) 
 
 **6E10.** Adapt the model in Code Block [gam_with_ar_likelihood](gam_with_ar_likelihood) to model the generated time series in **6E9** (4).
 
- **6E11.** Inspection of the inference result (MCMC trace and diagnostic) of models in this chapter using `ArviZ`. For example, look at: 
+**6E11.** Inspection of the inference result (MCMC trace and diagnostic) of models in this chapter using `ArviZ`. For example, look at: 
 
 -   Trace plot 
 
@@ -1109,70 +1709,73 @@ Which model contains problematic chains (divergence, low ESS, large $\hat R$)? C
 
 **6M12.** Generate a sinusoidal time series with 200 time points in Python, and fit it with a AR(2) model. Do that in TFP by modifying Code Block [ar1_without_forloop](ar1_without_forloop) and in PyMC3 with `pm.AR` API.
 
- **6M13.** This is an exercise of posterior predictive check for AR models. Generate the prediction distribution at each time step $t$ for the AR2 model in Exercise **6M11**. Note that for each time step $t$ you need to condition on all the observations up to time step $t-1$. Does the one-step-ahead predictive distribution match the observed time series? 
+**6M13.** This is an exercise of posterior predictive check for AR models. Generate the prediction distribution at each time step $t$ for the AR2 model in Exercise **6M11**. Note that for each time step $t$ you need to condition on all the observations up to time step $t-1$. Does the one-step-ahead predictive distribution match the observed time series? 
 
 **6M14.** Make forecast for 50 time steps using the AR2 models from Exercise **6M11**. Does the forecast also look like a sinusoidal signal? 
 
 **6H15.** Implement the generative process for the $\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}$ model, and make forecast.
 
- **6M16.** Implement and inference a $ARIMAX(1,1,1)X[4]$ model for the monthly birth dataset in this chapter, with the design matrix generated from a Fourier basis functions with $N=2$.
+**6M16.** Implement and inference a $ARIMAX(1,1,1)X[4]$ model for the monthly birth dataset in this chapter, with the design matrix generated from a Fourier basis functions with $N=2$.
 
- **6H17.** Derive the Kalman filter equations. Hint: first work out the joint distribution of $X_t$ and $X_{t-1}$, and then follow with the joint distribution of $Y_t$ and $X_t$. If you are still stuck take at look at Chapter 4 in Särkkä's book {cite:p}`sarkka2013bayesian`.
+**6H17.** Derive the Kalman filter equations. Hint: first work out the joint distribution of $X_t$ and $X_{t-1}$, and then follow with the joint distribution of $Y_t$ and $X_t$. If you are still stuck take at look at Chapter 4 in Särkkä's book {cite:p}`sarkka2013bayesian`.
 
- **6M18.** Inspect the output of `linear_growth_model.forward_filter` by indexing to a given time step: 
+**6M18.** Inspect the output of `linear_growth_model.forward_filter` by indexing to a given time step: 
 
 -   Identify the input and output of one Kalman filter step; 
 
--   Compute one step of the Kalman filter predict and update step using     the input; 
+-   Compute one step of the Kalman filter predict and update step using  the input; 
 
 -   Assert that your computation is the same as the indexed output.
 
- **6M19.** Study the documentation and implementation of `tfp.sts.Seasonal`, and answer the following questions: 
+**6M19.** Study the documentation and implementation of `tfp.sts.Seasonal`, and answer the following questions: 
 
 -   How many hyperparameters does a seasonal SSM contains? 
 
--   How does it parameterized the latent states and what kind of     regularization effect does the prior has? Hint: draw connection to     the Gaussian Random Walk prior in Chapter [5](chap3_5).
+-   How does it parameterized the latent states and what kind of  regularization effect does the prior has? Hint: draw connection to  the Gaussian Random Walk prior in Chapter [5](chap3_5).
 
- **6M20.** Study the documentation and implementation of `tfp.sts.LinearRegression` and `tfp.sts.Seasonal`, and reason about the differences of SSM they represent when modeling a day of the week pattern: 
+**6M20.** Study the documentation and implementation of `tfp.sts.LinearRegression` and `tfp.sts.Seasonal`, and reason about the differences of SSM they represent when modeling a day of the week pattern: 
 
--   How is the day of the week coefficient represented? Are they part of     the latent states? 
+-   How is the day of the week coefficient represented? Are they part of  the latent states? 
 
--   How is the model fit different between the two SSMs? Validate your     reasoning with simulations.
+-   How is the model fit different between the two SSMs? Validate your  reasoning with simulations.
 
- [^1]: <https://quoteinvestigator.com/2013/10/20/no-predict/> 
 
-[^2]: There is also a subtlety that not all periodic patterns in the     time series should be considered seasonal. A useful distinction to     make is between cyclic and seasonal behavior. You can find a nice     summary in <https://robjhyndman.com/hyndsight/cyclicts/>.
+---
 
- [^3]: This makes the observation not iid and not exchangeable. You can     also see in Chapter [4](chap3) where we define residuals 
+[^1]: <https://quoteinvestigator.com/2013/10/20/no-predict/> 
+
+[^2]: There is also a subtlety that not all periodic patterns in the  time series should be considered seasonal. A useful distinction to  make is between cyclic and seasonal behavior. You can find a nice  summary in <https://robjhyndman.com/hyndsight/cyclicts/>.
+
+[^3]: This makes the observation not iid and not exchangeable. You can  also see in Chapter [4](chap3) where we define residuals 
 
 [^4]: Which, it is unfortunate for our model and for our planet.
 
- [^5]: A series is stationary if its characteristic properties such as     means and covariances remain invariant across time.
+[^5]: A series is stationary if its characteristic properties such as  means and covariances remain invariant across time.
 
- [^6]: <https://facebook.github.io/prophet/>.
+[^6]: <https://facebook.github.io/prophet/>.
 
- [^7]: A demo of the design matrix used in Facebook Prophet could be     found in <http://prophet.mbrouns.com> from a PyMCon 2020     presentation.
+[^7]: A demo of the design matrix used in Facebook Prophet could be  found in <http://prophet.mbrouns.com> from a PyMCon 2020  presentation.
 
- [^8]: That is why is called autoregressive, it applies a linear     regression to itself. Hence the similar naming to the     autocorrelation diagnostic introduced in Section {ref}`autocorr_plot`.
+[^8]: That is why is called autoregressive, it applies a linear  regression to itself. Hence the similar naming to the  autocorrelation diagnostic introduced in Section {ref}`autocorr_plot`.
 
- [^9]: Actually, the AR example in this section *is* a Gaussian Process.
+[^9]: Actually, the AR example in this section *is* a Gaussian Process.
 
- [^10]: The Stan implementation of SARIMA can be found in e.g.
+[^10]: The Stan implementation of SARIMA can be found in e.g.
 
-    <https://github.com/asael697/bayesforecast>.
+ <https://github.com/asael697/bayesforecast>.
 
- [^11]: For brevity, we omitted the MCMC sampling code here. You can find     the details in the accompanying Jupyter Notebook.
+[^11]: For brevity, we omitted the MCMC sampling code here. You can find  the details in the accompanying Jupyter Notebook.
 
- [^12]: It might be useful to first consider "space" here being some     multi-dimensional Euclidean spaces, so $X_t$ and $Y_t$ is some     multi-dimensional array/tensor when we do computations in Python.
+[^12]: It might be useful to first consider "space" here being some  multi-dimensional Euclidean spaces, so $X_t$ and $Y_t$ is some  multi-dimensional array/tensor when we do computations in Python.
 
- [^13]: This also gives a nice example of a non-stationary observation     matrix $\mathbf{H}$.
+[^13]: This also gives a nice example of a non-stationary observation  matrix $\mathbf{H}$.
 
- [^14]: Note that this is not the only way to express ARMA model in a     state-space form, for more detail see lecture note     <http://www-stat.wharton.upenn.edu/~stine/stat910/lectures/14_state_space.pdf>.
+[^14]: Note that this is not the only way to express ARMA model in a  state-space form, for more detail see lecture note  <http://www-stat.wharton.upenn.edu/~stine/stat910/lectures/14_state_space.pdf>.
 
- [^15]: Nothing more puts George E. P. Box's famous quote: "All models     are wrong, but some are useful" into perspective, than reading     through his seminal book and working on forecasting problems.
+[^15]: Nothing more puts George E. P. Box's famous quote: "All models  are wrong, but some are useful" into perspective, than reading  through his seminal book and working on forecasting problems.
 
- [^16]: For a demonstration see     <https://mc-stan.org/loo/articles/loo2-lfo.html>.
+[^16]: For a demonstration see  <https://mc-stan.org/loo/articles/loo2-lfo.html>.
 
- [^17]: Note that in practice we usually parameterize Equation     {eq}`eq:horse_shoe` a little bit differently.
+[^17]: Note that in practice we usually parameterize Equation  {eq}`eq:horse_shoe` a little bit differently.
 
- [^18]: <https://en.wikipedia.org/wiki/Federal_holidays_in_the_United_States#List_of_federal_holidays> 
+[^18]: <https://en.wikipedia.org/wiki/Federal_holidays_in_the_United_States#List_of_federal_holidays>
