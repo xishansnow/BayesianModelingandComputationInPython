@@ -1,0 +1,469 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>前言 — Bayesian Modeling and Computation in Python</title>
+<link href="../_static/css/theme.css" rel="stylesheet"/>
+<link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet"/>
+<link href="../_static/vendor/fontawesome/5.13.0/css/all.min.css" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" rel="stylesheet" type="text/css">
+<link href="../_static/togglebutton.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="../_static/mystnb.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-codeautolink.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<link as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js" rel="preload"/>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/togglebutton.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+<script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+<script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+<script>
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+<script async="async" src="../_static/sphinx-thebe.js"></script>
+<link href="../_static/favicon.ico" rel="shortcut icon">
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="symbollist.html" rel="next" title="符号表"/>
+<link href="foreword.html" rel="prev" title="序言"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="None" name="docsearch:language"/>
+<!-- Google Analytics -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-702QMHG8ST"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-702QMHG8ST');
+                </script>
+</link></link></link></link></link></link></head>
+<body data-offset="80" data-spy="scroll" data-target="#bd-toc-nav">
+<div class="container-fluid" id="banner"></div>
+<div class="container-xl">
+<div class="row">
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+<div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../index.html">
+<h1 class="site-logo" id="site-title">Bayesian Modeling and Computation in Python</h1>
+</a>
+</div><form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="icon fas fa-search"></i>
+<input aria-label="Search this book..." autocomplete="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." type="search"/>
+</form><nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+<div class="bd-toc-item active">
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1">
+<a class="reference internal" href="dedication.html">
+   贡献
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="foreword.html">
+   序言
+  </a>
+</li>
+<li class="toctree-l1 current active">
+<a class="current reference internal" href="#">
+   前言
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="symbollist.html">
+   符号表
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_01.html">
+   第一章: 贝叶斯推断
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_02.html">
+   第二章: 贝叶斯模型的探索性分析
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_03.html">
+   第三章：线性模型与概率编程语言
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_04.html">
+   第四章：扩展线性模型
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_05.html">
+   第五章: 样条
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_06.html">
+   第六章: 时间序列
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_07.html">
+   第七章：贝叶斯加性回归树
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_08.html">
+   第八章：近似贝叶斯计算
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_09.html">
+   第九章: 端到端的贝叶斯工作流
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_10.html">
+   第十章: 概率编程语言
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_11.html">
+   第十一章: 附加主题
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="glossary.html">
+   词汇表
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="references.html">
+   References
+  </a>
+</li>
+</ul>
+</div>
+</nav> <!-- To handle the deprecated key -->
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+</div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+<div class="topbar container-xl fixed-top">
+<div class="topbar-contents row">
+<div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+<div class="col pl-md-4 topbar-main">
+<button aria-controls="site-navigation" aria-expanded="true" aria-label="Toggle navigation" class="navbar-toggler ml-0" data-placement="left" data-target=".site-navigation" data-toggle="tooltip" id="navbar-toggler" title="Toggle navigation" type="button">
+<i class="fas fa-bars"></i>
+<i class="fas fa-arrow-left"></i>
+<i class="fas fa-arrow-up"></i>
+</button>
+<!-- Source interaction buttons -->
+<div class="dropdown-buttons-trigger">
+<button aria-label="Connect with source repository" class="btn btn-secondary topbarbtn" id="dropdown-buttons-trigger"><i class="fab fa-github"></i></button>
+<div class="dropdown-buttons sourcebuttons">
+<a class="repository-button" href="https://github.com/BayesianModelingandComputationInPython/BookCode_Edition1"><button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Source repository" type="button"><i class="fab fa-github"></i>repository</button></a>
+<a class="issues-button" href="https://github.com/BayesianModelingandComputationInPython/BookCode_Edition1/issues/new?title=Issue%20on%20page%20%2Fzh_CN/preface.html&amp;body=Your%20issue%20content%20here."><button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Open an issue" type="button"><i class="fas fa-lightbulb"></i>open issue</button></a>
+</div>
+</div>
+<!-- Full screen (wrap in <a> to have style consistency -->
+<a class="full-screen-button"><button aria-label="Fullscreen mode" class="btn btn-secondary topbarbtn" data-placement="bottom" data-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode" type="button"><i class="fas fa-expand"></i></button></a>
+<!-- Launch buttons -->
+</div>
+<!-- Table of contents -->
+<div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<div class="tocsection onthispage pt-5 pb-3">
+<i class="fas fa-list"></i> Contents
+            </div>
+<nav aria-label="Page" id="bd-toc-nav">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#prior-knowledge">
+   预先知识储备
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#how-to-read-this-book">
+   阅读方法
+  </a>
+<ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#text-highlights">
+     高亮文本
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#code">
+     源代码
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#boxes">
+     方框
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#import">
+     import 代码
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#how-to-interact-with-this-book">
+     与本书交互
+    </a>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#acknowledgments">
+   致谢
+  </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="row" id="main-content">
+<div class="col-12 col-md-9 pl-md-3 pr-md-0">
+<!-- Table of contents that is only displayed when printing the page -->
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>前言</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#prior-knowledge">
+   预先知识储备
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#how-to-read-this-book">
+   阅读方法
+  </a>
+<ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#text-highlights">
+     高亮文本
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#code">
+     源代码
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#boxes">
+     方框
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#import">
+     import 代码
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#how-to-interact-with-this-book">
+     与本书交互
+    </a>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#acknowledgments">
+   致谢
+  </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div>
+<div class="tex2jax_ignore mathjax_ignore section" id="preface">
+<span id="id1"></span><h1>前言<a class="headerlink" href="#preface" title="Permalink to this headline">¶</a></h1>
+<style>p{text-indent:2em;2}</style>
+<p><code class="docutils literal notranslate"><span class="pre">贝叶斯统计</span></code>这个名字归功于长老会牧师兼业余数学家<code class="docutils literal notranslate"><span class="pre">托马斯·贝叶斯（Thomas</span> <span class="pre">Bayes，1702--1761）</span></code>，他第一次推导出了被后人所知的贝叶斯定理，该定理于其死后的 <span class="math notranslate nohighlight">\(1763\)</span> 年发表。但真正开发贝叶斯方法的第一人是 <code class="docutils literal notranslate"><span class="pre">Pierre-Simon</span> <span class="pre">Laplace</span> <span class="pre">(1749--1827)</span></code>，因此我们将之称为拉普拉斯统计也许更合理一些。尽管如此，我们将尊重斯蒂格勒的同名法则并坚持传统，在本书的其余部分中以贝叶斯方法命名。</p>
+<p>从贝叶斯和拉普拉斯（以及许多其他人）的开创性时代至今，发生了很多事情，特别是开发了很多新想法，其中大部分是由计算机技术推动和/或实现的。本书的目的是提供一个关于此主题的现代视角，从 “打基础的基本知识” 到 “现代贝叶斯工作流和工具的使用”。</p>
+<p>我们写这本书是为了帮助初学的贝叶斯从业者成为中级建模者。我们并不是说这在你读完本书后会自动发生，但我们希望这本书能够引导你朝着一个富有成效的方向发展。</p>
+<p>特别指出，本书面向对应用贝叶斯模型解决实际数据分析问题感兴趣的贝叶斯从业者。通常，学术界和工业界是有区别的。但本书没有做这样的区分，因为它对大学的学生和公司的机器学习工程师同样有用。</p>
+<p>我们的目标是：在完成本书后，你不仅能够熟悉 <strong>贝叶斯推断</strong>，而且还能轻松地进行 <strong>贝叶斯模型的探索性分析</strong>，包括模型比较、模型诊断、模型评估和结果交流等。</p>
+<p>我们计划从现代计算的角度教授这些内容。对我们来说，如果采用<strong>计算</strong>方法，贝叶斯统计会被更好地理解和应用。举例来说，我们更关注经验主义地检查假设被推翻的原因，而不是试图从理论上证明假设是正确的。这也意味着我们会使用许多可视化的表达手段。随着逐页阅读，建模方法的其他含义将会逐步变清晰。</p>
+<p>我们在书中使用 Python 编程语言。更具体地说，我们将主要使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> <span id="id2">[<a class="reference internal" href="references.html#id124">1</a>]</span> 和 <code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span> <span class="pre">(TFP)</span></code> <span id="id3">[<a class="reference internal" href="references.html#id141">2</a>]</span> 作为模型构建和推断的主要概率编程语言，并使用 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 作为贝叶斯模型探索性分析的主要软件库 <span id="id4">[<a class="reference internal" href="references.html#id11">3</a>]</span>。我们不打算对本书中的所有 Python 概率编程语言进行详尽调研和比较，因为选择较多，而且发展迅速。相反，我们会专注于贝叶斯分析的实践方面。</p>
+<p>编程语言和软件库只是通往目的地的桥梁。</p>
+<p>虽然我们为本书选择的编程语言是 Python，但选择的软件库很少，并且书中涵盖的统计和建模概念与编程语言和库无关，可以应用于许多计算机编程语言，例如 R、Julia 和 Scala 等。具有这些语言基础而不了解 Python 的读者，仍然可以从阅读本书中受益，如果能够找到了自身熟悉语言中等效功能的软件包进行实践最好。此外，作者鼓励其他人将这项工作中的代码示例转换为其他语言或框架。</p>
+<div class="section" id="prior-knowledge">
+<span id="id5"></span><h2>预先知识储备<a class="headerlink" href="#prior-knowledge" title="Permalink to this headline">¶</a></h2>
+<p>当我们撰写本书以帮助初学者向中级从业者转变时，假设读者事先接触过贝叶斯统计的基本思想（ 如先验、似然和后验 ），以及一些基本统计概念（ 如随机变量、概率分布、期望等 ）。对于那些有点生疏的人，我们在 <a class="reference internal" href="chp_11.html#app"><span class="std std-ref">第 11 章</span></a> 中提供了一个完整的摘要，对基本统计概念进行了复习。</p>
+<p>几本更深入地解释这些概念的好书是 《 Understanding Advanced Statistical Methods 》 <span id="id6">[<a class="reference internal" href="references.html#id28">4</a>]</span> 和 《Introduction to Probability》 <span id="id7">[<a class="reference internal" href="references.html#id10">5</a>]</span>。后者更具理论性，但两者都比较重视应用。</p>
+<p>如果你对统计学有很好的理解，但从未接触过贝叶斯统计学，那么你也可以将本书作为对该主题的简介，只是开始的几章（ 主要是前两章 ）的节奏会有点快，可能需要通读几次。</p>
+<p>我们希望你熟悉一些数学概念，例如积分、导数和对数性质。写作最好能够在科学、技术、工程和数学等学科领域中达到普通技术高中或大学第一学年时的水平。对于那些需要复习这些数学概念的人，我们推荐 <code class="docutils literal notranslate"><span class="pre">3Blue1Brown</span></code> <a class="footnote-reference brackets" href="#id16" id="id8">1</a> 的系列视频。我们不会要求你做许多数学练习，而是主要要求你使用代码和交互式计算环境来理解和解决问题。只有当它们有助于更好地理解贝叶斯统计建模时，才会使用贯穿全文的数学公式。</p>
+<p>本书假定读者具备一定的计算机编程知识。使用 Python 语言，我们还将使用许多专门的包，特别是概率编程语言。在阅读本书之前，至少将一个模型拟合到概率编程语言中会有所帮助，但不是必须的。有关如何设置本书所需计算环境的参考，请阅读 <a class="reference external" href="https://github.com/BayesianModelingandComputationInPython/BookCode_Edition1#environment-installation">环境安装</a> 。</p>
+</div>
+<div class="section" id="how-to-read-this-book">
+<span id="id9"></span><h2>阅读方法<a class="headerlink" href="#how-to-read-this-book" title="Permalink to this headline">¶</a></h2>
+<p>我们将使用玩具模型来理解重要概念，而不会让数据模糊主要概念，然后使用真实数据集来逼近真实的实际问题，例如采样问题、重参数化、先验/后验校准等。我们鼓励你以交互方式运行这些模型。</p>
+<p>我们强烈建议你阅读和使用各种库的在线文档。尽管我们尽最大努力使本书自成一体，但在线上有大量关于这些工具的文档，参考这些文档将有助于学习本书，并帮助你使用这些工具。</p>
+<p><a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref">第 1 章</span></a> 提供了对贝叶斯推断中基本和核心概念的复习或快速介绍。该章中的概念将在本书其余部分进行重新审视和应用。</p>
+<p><a class="reference internal" href="chp_02.html#chap1bis"><span class="std std-ref">第 2 章</span></a> 介绍了贝叶斯模型的探索性分析。即介绍了许多属于贝叶斯工作流但并非推断本身的概念。我们将在本书其余部分应用并重新审视该章中的概念。</p>
+<p><a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 是第一个介绍特定模型架构的章节。它介绍了线性回归模型，并为接下来的第 5 章奠定了基础。第 3 章还全面介绍了本书中使用的主要概率编程语言 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span></code>。</p>
+<p><a class="reference internal" href="chp_04.html#chap3"><span class="std std-ref">第 4 章</span></a>  扩展了线性回归模型，并讨论了更高级的主题，如鲁棒回归、分层模型和模型重参数化。本章会使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span></code>。</p>
+<p><a class="reference internal" href="chp_05.html#chap3-5"><span class="std std-ref">第 5 章</span></a> 介绍了基函数，特别是样条作为线性模型的扩展，使我们能够构建更灵活的模型。本章使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code>。</p>
+<p><a class="reference internal" href="chp_06.html#chap4"><span class="std std-ref">第 6 章</span></a> 侧重于时间序列模型，从将时间序列建模为回归模型,到更复杂的模型，如 <code class="docutils literal notranslate"><span class="pre">ARIMA</span></code> 和<code class="docutils literal notranslate"><span class="pre">线性高斯状态空间模型</span></code>。本章使用 <code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span></code> 。</p>
+<p><a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref">第 7 章</span></a> 介绍了贝叶斯加性回归树的<code class="docutils literal notranslate"><span class="pre">非参数模型</span></code>。我们讨论了这个模型的可解释性和变量的重要性。本章使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 。</p>
+<p><a class="reference internal" href="chp_08.html#chap8"><span class="std std-ref">第 8 章</span></a> 将注意力集中在近似贝叶斯计算框架上，该框架对于没有明确似然表达式的问题很有用。本章使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 。</p>
+<p><a class="reference internal" href="chp_09.html#chap9"><span class="std std-ref">第 9 章</span></a> 概述了端到端的贝叶斯工作流程。它展示了商业应用中的观测性研究和科研环境中的实验性研究。本章使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code>。</p>
+<p><a class="reference internal" href="chp_10.html#chap10"><span class="std std-ref">第 10 章</span></a> 深入探讨了概率编程语言。本章展示了各种不同的概率编程语言。</p>
+<p><a class="reference internal" href="chp_11.html#app"><span class="std std-ref">第 11 章</span></a> 为阅读其他章节提供辅助作用，因为其中的主题彼此松散相关，你可能不想串行地阅读。</p>
+<div class="section" id="text-highlights">
+<span id="id10"></span><h3>高亮文本<a class="headerlink" href="#text-highlights" title="Permalink to this headline">¶</a></h3>
+<p>本书中的文字将用<strong>粗体</strong>或<em>斜体</em>突出强调。 <strong>粗体字</strong>将突出新概念或概念的重点。 <em>斜体文字</em>表示口语或不严谨的表达方式。当提到特定代码时，也会突出显示，例如：<code class="docutils literal notranslate"><span class="pre">pm.sample</span></code>。</p>
+</div>
+<div class="section" id="code">
+<span id="id11"></span><h3>源代码<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h3>
+<p>书中的代码块用阴影框标记，左侧有行号。并使用章节编号后跟代码块编号进行引用。</p>
+<p>例如：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> 0 1 4
+</pre></div>
+</div>
+<p>每次看到代码块时都会想查看运行结果。这通常会体现为一张图、一个数字、一份代码输出或一个表格。反之，书中大部分图都有相关的代码块，有时我们会省略书中的代码块以节省篇幅，但你可以在 <a class="reference external" href="https://github.com/BayesianModelingandComputationInPython">GitHub 存储库</a> 中访问完整代码。</p>
+<p>该存储库还包括一些练习用的附加材料。该存储库中的 notebook 还可能包含书中未见但用于开发书中所见模型的其他图形、代码或输出。 GitHub 中还包含如何创建标准计算环境的说明。</p>
+</div>
+<div class="section" id="boxes">
+<span id="id12"></span><h3>方框<a class="headerlink" href="#boxes" title="Permalink to this headline">¶</a></h3>
+<p>我们使用方框来提供关于重要的统计、数学或编程概念的快速参考。我们还会提供参考资料供你继续学习该主题。例如：</p>
+<div class="admonition- admonition">
+<p class="admonition-title">中心极限定理</p>
+<p>在概率论中，中心极限定理确定，在某些情况下，当添加独立随机变量时，即使原始变量本身不是正态分布，它们的适当归一化总和也会趋于正态分布。</p>
+<p>设 <span class="math notranslate nohighlight">\(X_1, X_2, X_3, ...\)</span> 独立同分布，均值为 <span class="math notranslate nohighlight">\(\mu\)</span> ，标准差为 <span class="math notranslate nohighlight">\(\sigma\)</span>。当 <span class="math notranslate nohighlight">\(n \rightarrow \infty\)</span> 时，有：</p>
+<div class="math notranslate nohighlight">
+\[\sqrt{n} \left(\frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{\text{d}} \mathcal{N}(0, 1)\]</div>
+<p>《 Introduction to Probability 》 <span id="id13">[<a class="reference internal" href="references.html#id10">5</a>]</span> 这本书是学习概率基础理论的好资源，其内容在实践中很有用。</p>
+</div>
+</div>
+<div class="section" id="import">
+<span id="code-imports"></span><h3>import 代码<a class="headerlink" href="#import" title="Permalink to this headline">¶</a></h3>
+<p>在本书中，我们导入 Python 包时使用以下约定：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic </span>
+
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/index.html#module-numpy" title="numpy"><span class="nn">numpy</span></a> <span class="k">as</span> <span class="nn">np</span> 
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span> 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="kn">from</span> <span class="nn">patsy</span> <span class="kn">import</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dmatrix</span> 
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="matplotlib.pyplot"><span class="nn">matplotlib.pyplot</span></a> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Exploratory Analysis of Bayesian Models </span>
+<span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span> 
+
+<span class="c1"># Probabilistic programming languages </span>
+<span class="kn">import</span> <span class="nn">bambi</span> <span class="k">as</span> <span class="nn">bmb</span> 
+<span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span> 
+<span class="kn">import</span> <span class="nn">tensorflow_probability</span> <span class="k">as</span> <span class="nn">tfp</span> 
+
+<span class="n">tfd</span> <span class="o">=</span> <span class="n">tfp</span><span class="o">.</span><span class="n">distributions</span> 
+
+<span class="c1"># Computational Backend </span>
+<span class="kn">import</span> <span class="nn">theano</span> 
+<span class="kn">import</span> <span class="nn">theano.tensor</span> <span class="k">as</span> <span class="nn">tt</span> 
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+</pre></div>
+</div>
+<p>我们还会使用 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 的一些预定义风格 <code class="docutils literal notranslate"><span class="pre">az.style.use("arviz-grayscale")</span></code> 。</p>
+</div>
+<div class="section" id="how-to-interact-with-this-book">
+<span id="id14"></span><h3>与本书交互<a class="headerlink" href="#how-to-interact-with-this-book" title="Permalink to this headline">¶</a></h3>
+<p>我们的观众不仅仅是<em>贝叶斯读者</em>，更是贝叶斯实践者。</p>
+<p>我们将提供材料来练习贝叶斯推断和贝叶斯模型的探索性分析。由于利用计算和代码是现代贝叶斯从业者所需的核心技能，因此我们将为你提供可以在多次尝试中建立直觉的示例。</p>
+<p>我们的期望是本书代码被读者阅读、执行、修改，并再次执行多次。我们只能在本书中展示有限示例，但你可以使用计算机为自己制作无限数量的示例。通过这种方式，你不仅可以学习统计概念，还可以学习如何使用计算机让这些概念产生价值。</p>
+<p>计算机还将使你摆脱印刷文本的限制，例如缺乏颜色、缺乏动画和并排比较。</p>
+<p>现代贝叶斯从业者利用监视器和快速可计算“双重检查”提供的灵活性，我们专门创建了示例以允许相同级别的交互性。我们在每一章的末尾都包含了测试你学习和实践的练习。练习标记为<code class="docutils literal notranslate"><span class="pre">简单</span> <span class="pre">(E)</span></code>、<code class="docutils literal notranslate"><span class="pre">中等</span> <span class="pre">(M)</span></code> 和<code class="docutils literal notranslate"><span class="pre">困难</span> <span class="pre">(H)</span></code>，可根据需要酌情提供解答。</p>
+</div>
+</div>
+<div class="section" id="acknowledgments">
+<span id="id15"></span><h2>致谢<a class="headerlink" href="#acknowledgments" title="Permalink to this headline">¶</a></h2>
+<p>感谢我们的朋友和同事，他们提供了大量时间和精力来阅读早期书稿，提出并提供了有用的反馈，帮助我们改进了本书，也帮助我们修复了书中的许多错误。非常感谢：</p>
+<p>Oriol Abril-Pla、Alex Andorra、Paul Anzel、Dan Becker、Tomás Capretto、Allen Downey、Christopher Fonnesbeck、Meenal Jhajharia、Will Kurt、Asael Matamoros、Kevin Murphy 和 Aki Vehtari。</p>
+<hr class="footnotes docutils"/>
+<dl class="footnote brackets">
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id8">1</a></span></dt>
+<dd><p><a class="reference external" href="https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw">https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw</a>, 即使你不需要复习，也推荐你看一下这些视频。</p>
+</dd>
+</dl>
+</div>
+</div>
+<script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./zh_CN"
+        },
+        predefinedOutput: true
+    }
+    </script>
+<script>kernelName = 'python3'</script>
+</div>
+<!-- Previous / next buttons -->
+<div class="prev-next-area">
+<a class="left-prev" href="foreword.html" id="prev-link" title="previous page">
+<i class="fas fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">序言</p>
+</div>
+</a>
+<a class="right-next" href="symbollist.html" id="next-link" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">符号表</p>
+</div>
+<i class="fas fa-angle-right"></i>
+</a>
+</div>
+</div>
+</div>
+<footer class="footer">
+<p>
+    
+      By Martin, Kumar, Lao<br/>
+    
+        © Copyright 2021.<br/>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</body>
+</html>

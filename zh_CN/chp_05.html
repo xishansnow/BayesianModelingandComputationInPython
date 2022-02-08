@@ -1,0 +1,970 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第五章: 样条 — Bayesian Modeling and Computation in Python</title>
+<link href="../_static/css/theme.css" rel="stylesheet"/>
+<link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet"/>
+<link href="../_static/vendor/fontawesome/5.13.0/css/all.min.css" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" rel="stylesheet" type="text/css">
+<link href="../_static/togglebutton.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="../_static/mystnb.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-codeautolink.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<link as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js" rel="preload"/>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/togglebutton.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+<script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+<script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+<script>
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+<script async="async" src="../_static/sphinx-thebe.js"></script>
+<link href="../_static/favicon.ico" rel="shortcut icon">
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="chp_06.html" rel="next" title="第六章: 时间序列"/>
+<link href="chp_04.html" rel="prev" title="第四章：扩展线性模型"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="None" name="docsearch:language"/>
+<!-- Google Analytics -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-702QMHG8ST"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-702QMHG8ST');
+                </script>
+</link></link></link></link></link></link></head>
+<body data-offset="80" data-spy="scroll" data-target="#bd-toc-nav">
+<div class="container-fluid" id="banner"></div>
+<div class="container-xl">
+<div class="row">
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+<div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../index.html">
+<h1 class="site-logo" id="site-title">Bayesian Modeling and Computation in Python</h1>
+</a>
+</div><form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="icon fas fa-search"></i>
+<input aria-label="Search this book..." autocomplete="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." type="search"/>
+</form><nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+<div class="bd-toc-item active">
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1">
+<a class="reference internal" href="dedication.html">
+   贡献
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="foreword.html">
+   序言
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="preface.html">
+   前言
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="symbollist.html">
+   符号表
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_01.html">
+   第一章: 贝叶斯推断
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_02.html">
+   第二章: 贝叶斯模型的探索性分析
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_03.html">
+   第三章：线性模型与概率编程语言
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_04.html">
+   第四章：扩展线性模型
+  </a>
+</li>
+<li class="toctree-l1 current active">
+<a class="current reference internal" href="#">
+   第五章: 样条
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_06.html">
+   第六章: 时间序列
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_07.html">
+   第七章：贝叶斯加性回归树
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_08.html">
+   第八章：近似贝叶斯计算
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_09.html">
+   第九章: 端到端的贝叶斯工作流
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_10.html">
+   第十章: 概率编程语言
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="chp_11.html">
+   第十一章: 附加主题
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="glossary.html">
+   词汇表
+  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference internal" href="references.html">
+   References
+  </a>
+</li>
+</ul>
+</div>
+</nav> <!-- To handle the deprecated key -->
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+</div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+<div class="topbar container-xl fixed-top">
+<div class="topbar-contents row">
+<div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+<div class="col pl-md-4 topbar-main">
+<button aria-controls="site-navigation" aria-expanded="true" aria-label="Toggle navigation" class="navbar-toggler ml-0" data-placement="left" data-target=".site-navigation" data-toggle="tooltip" id="navbar-toggler" title="Toggle navigation" type="button">
+<i class="fas fa-bars"></i>
+<i class="fas fa-arrow-left"></i>
+<i class="fas fa-arrow-up"></i>
+</button>
+<!-- Source interaction buttons -->
+<div class="dropdown-buttons-trigger">
+<button aria-label="Connect with source repository" class="btn btn-secondary topbarbtn" id="dropdown-buttons-trigger"><i class="fab fa-github"></i></button>
+<div class="dropdown-buttons sourcebuttons">
+<a class="repository-button" href="https://github.com/BayesianModelingandComputationInPython/BookCode_Edition1"><button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Source repository" type="button"><i class="fab fa-github"></i>repository</button></a>
+<a class="issues-button" href="https://github.com/BayesianModelingandComputationInPython/BookCode_Edition1/issues/new?title=Issue%20on%20page%20%2Fzh_CN/chp_05.html&amp;body=Your%20issue%20content%20here."><button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Open an issue" type="button"><i class="fas fa-lightbulb"></i>open issue</button></a>
+</div>
+</div>
+<!-- Full screen (wrap in <a> to have style consistency -->
+<a class="full-screen-button"><button aria-label="Fullscreen mode" class="btn btn-secondary topbarbtn" data-placement="bottom" data-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode" type="button"><i class="fas fa-expand"></i></button></a>
+<!-- Launch buttons -->
+</div>
+<!-- Table of contents -->
+<div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<div class="tocsection onthispage pt-5 pb-3">
+<i class="fas fa-list"></i> Contents
+            </div>
+<nav aria-label="Page" id="bd-toc-nav">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#polynomial-regression">
+   5.1 多项式回归
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#expanding-feature-space">
+   5.2 扩展特征空间
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#introducing-splines">
+   5.3 样条简介
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#patsy">
+   5.4 使用
+   <code class="docutils literal notranslate">
+<span class="pre">
+     Patsy
+    </span>
+</code>
+   软件包构建设计矩阵
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#pymc3">
+   5.5 在 PyMC3 中拟合样条
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#choosing-knots-and-prior-for-splines">
+   5.6 选择样条的结点和先验
+  </a>
+<ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#regularizing-prior-for-splines">
+     5.6.1 样条的正则化先验
+    </a>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#co-2">
+   5.7 用样条对
+   <span class="math notranslate nohighlight">
+    \(CO_2\)
+   </span>
+   吸收量建模
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#exercises5">
+   5.8 练习
+  </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="row" id="main-content">
+<div class="col-12 col-md-9 pl-md-3 pr-md-0">
+<!-- Table of contents that is only displayed when printing the page -->
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>第五章: 样条</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#polynomial-regression">
+   5.1 多项式回归
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#expanding-feature-space">
+   5.2 扩展特征空间
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#introducing-splines">
+   5.3 样条简介
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#patsy">
+   5.4 使用
+   <code class="docutils literal notranslate">
+<span class="pre">
+     Patsy
+    </span>
+</code>
+   软件包构建设计矩阵
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#pymc3">
+   5.5 在 PyMC3 中拟合样条
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#choosing-knots-and-prior-for-splines">
+   5.6 选择样条的结点和先验
+  </a>
+<ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#regularizing-prior-for-splines">
+     5.6.1 样条的正则化先验
+    </a>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#co-2">
+   5.7 用样条对
+   <span class="math notranslate nohighlight">
+    \(CO_2\)
+   </span>
+   吸收量建模
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#exercises5">
+   5.8 练习
+  </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div>
+<div class="tex2jax_ignore mathjax_ignore section" id="chap3-5">
+<span id="id1"></span><h1>第五章: 样条<a class="headerlink" href="#chap3-5" title="Permalink to this headline">¶</a></h1>
+<style>p{text-indent:2em;2}</style>
+<p>在本章中，我们将讨论样条曲线，它是第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中概念的扩展，旨在增加更多灵活性。在第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中介绍的模型中，结果变量和预测变量之间的关系在整个域中是相同的。相比之下，样条曲线可以将一个问题分解为多个局部解决方案，所有这些局部解决方案可以组合起来产生一个有用的全局解决方案。</p>
+<div class="section" id="polynomial-regression">
+<span id="id2"></span><h2>5.1 多项式回归<a class="headerlink" href="#polynomial-regression" title="Permalink to this headline">¶</a></h2>
+<p>正如在第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中看到的，我们可以将线性模型写为：</p>
+<div class="math notranslate nohighlight" id="equation-eq-lin-model">
+<span class="eqno">(41)<a class="headerlink" href="#equation-eq-lin-model" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \beta_0 + \beta_1 X\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\beta_0\)</span> 是截距，<span class="math notranslate nohighlight">\(\beta_1\)</span> 是斜率，<span class="math notranslate nohighlight">\(\mathbb{E}[Y]\)</span> 是结果（随机）变量 <span class="math notranslate nohighlight">\(Y\)</span> 的期望值或均值。我们可以将公式 <a class="reference internal" href="#equation-eq-lin-model">(41)</a> 改写为以下形式：</p>
+<div class="math notranslate nohighlight" id="equation-eq-polynomial-reg">
+<span class="eqno">(42)<a class="headerlink" href="#equation-eq-polynomial-reg" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \beta_0 + \beta_1 X + \beta_2 X^2 + \cdots + \beta_m X^m\]</div>
+<p>上式被称为多项式回归。</p>
+<p>乍一看，公式 <a class="reference internal" href="#equation-eq-polynomial-reg">(42)</a> 似乎表示预测变量 <span class="math notranslate nohighlight">\(X、X^2 \cdots + X^m\)</span> 的多元线性回归。从某种意义上说这也没有错，但关键是所有预测变量 <span class="math notranslate nohighlight">\(X^m\)</span> 都是从 <span class="math notranslate nohighlight">\(X\)</span> 的 <span class="math notranslate nohighlight">\(1\)</span> 到 <span class="math notranslate nohighlight">\(m\)</span> 整数幂派生而来。因此，就实际问题而言，我们仍然在拟合一元预测变量。</p>
+<p>我们称 <span class="math notranslate nohighlight">\(m\)</span> 为多项式的度。第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章和 <a class="reference internal" href="chp_04.html#chap3"><span class="std std-ref">4</span></a> 章的线性回归模型都是 <span class="math notranslate nohighlight">\(1\)</span> 次多项式。唯一的例外是 <a class="reference internal" href="chp_04.html#transforming-covariates"><span class="std std-ref">4.1 预测变量的变换</span></a> 节中的变方差示例，其中使用了 <span class="math notranslate nohighlight">\(m=1/2\)</span>。</p>
+<p><a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a> 显示了 <span class="math notranslate nohighlight">\(3\)</span> 个使用 <span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(10\)</span> 和 <span class="math notranslate nohighlight">\(15\)</span> 次的多项式回归示例。随着我们增加多项式的阶数，我们会得到更灵活的曲线。</p>
+<div class="figure align-default" id="fig-polynomial-regression">
+<a class="reference internal image-reference" href="../_images/polynomial_regression.png"><img alt="../_images/polynomial_regression.png" src="../_images/polynomial_regression.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 87 </span><span class="caption-text">度为 <span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(10\)</span> 和 <span class="math notranslate nohighlight">\(15\)</span> 的多项式回归示例。随着度数增加，拟合变得更加摇摆。虚线是删除用蓝色十字表示的观测值后的拟合。当多项式的次数为 <span class="math notranslate nohighlight">\(2\)</span> 或 <span class="math notranslate nohighlight">\(10\)</span> 时，删除数据点的影响较小，但在次数为 <span class="math notranslate nohighlight">\(15\)</span> 时效果比较明显。使用最小二乘法计算拟合。</span><a class="headerlink" href="#fig-polynomial-regression" title="Permalink to this image">¶</a></p>
+</div>
+<p>多项式的缺陷之一是其全局性，当我们应用一个度为 <span class="math notranslate nohighlight">\(m\)</span> 的多项式时，其实是在说：“预测变量和结果变量之间的关系对于整个数据集的度是 <span class="math notranslate nohighlight">\(m\)</span> ”。当数据的不同区域需要不同级别的灵活性时，这会出现问题，比如在某些区域导致曲线过于灵活 <a class="footnote-reference brackets" href="#id24" id="id3">1</a>。在 <a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a>  的最后一个度为 <span class="math notranslate nohighlight">\(15\)</span> 子图中，可以看到，在 <span class="math notranslate nohighlight">\(X\)</span> 值增大的过程中，拟合曲线呈现出一个深谷，然后是一个高峰，即便不存在具有如此低或高值的真实观测数据点。</p>
+<p>此外，随着度数增加，拟合变得更倾向于那些被删除的点，或者等效于添加了若干未来数据；换句话说，随着度数的增加，模型变得比较容易过拟合。例如，在 <a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a> 中，黑线表示对整个数据集的拟合，虚线表示删除一个数据点（图中用叉号表示）后的拟合。可以看到，尤其是在最后一个子图中，即使删除单个数据点也会改变模型的拟合结果，这种效应甚至延伸至了远离该点的位置。</p>
+</div>
+<div class="section" id="expanding-feature-space">
+<span id="id4"></span><h2>5.2 扩展特征空间<a class="headerlink" href="#expanding-feature-space" title="Permalink to this headline">¶</a></h2>
+<p>在概念层面上，我们可以将多项式回归视为创建新预测变量的药方，或者表述为更正式的术语：<strong>对特征空间进行扩展</strong>。通过执行特征扩展，我们在扩展空间中拟合的一条直线，可能代表原始数据空间中的一条曲线，非常简洁！然而，特征扩展并不是随意使用的，我们不能总是期望通过对数据使用随机的变换，就能得到好的结果。</p>
+<p>事实上，正如我们刚刚看到的那样，应用多项式并非没有问题。</p>
+<p>为了概括特征扩展的概念，除了多项式模型，我们可以将公式 <a class="reference internal" href="#equation-eq-lin-model">(41)</a> 扩展为以下形式：</p>
+<div class="math notranslate nohighlight" id="equation-eq-bfr">
+<span class="eqno">(43)<a class="headerlink" href="#equation-eq-bfr" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \beta_0 + \beta_1 B_{1}(X_{1}) + \beta_2 B_{2}(X_{2}) + \cdots + \beta_m B_{m}(X_{m})\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(B_i\)</span> 是任意函数，我们称之为基函数。基函数的线性组合为我们提供了一个函数 <span class="math notranslate nohighlight">\(f\)</span>，它才是我们实际看到的拟合。从这个意义上说，<span class="math notranslate nohighlight">\(B_i\)</span> 是构建灵活函数 <span class="math notranslate nohighlight">\(f\)</span> 的幕后技巧。</p>
+<div class="math notranslate nohighlight" id="equation-eq-bfr2">
+<span class="eqno">(44)<a class="headerlink" href="#equation-eq-bfr2" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \sum_i^m \beta_i B_{i}(X_{i}) = f(X) \]</div>
+<p>基函数 <span class="math notranslate nohighlight">\(B_i\)</span> 有很多选择，多项式是其中之一，也可以应用任意一组函数，例如 <span class="math notranslate nohighlight">\(2\)</span> 的幂、对数或平方根等。选择这些函数可能是由待解决的问题驱动的，例如，在第 <a class="reference internal" href="chp_04.html#transforming-covariates"><span class="std std-ref">4.1 预测变量的变换</span></a> 节中，我们通过计算平方根来模拟婴儿的身高随年龄变化的函数，其动机是人类婴儿在生命早期阶段生长得更快，然后趋于平稳，类似于平方根函数的效果。</p>
+<p>另一种替代方法是使用 <span class="math notranslate nohighlight">\(I(c_i \leq x_k &lt; c_j)\)</span> 之类的指示函数，将原始 <span class="math notranslate nohighlight">\(\boldsymbol{X}\)</span> 预测变量分解为（非重叠的）子集。然后仅在这些子集内拟合局部的多项式。此过程导致拟合出 <strong>分段多项式</strong> <a class="footnote-reference brackets" href="#id25" id="id5">2</a>，如 <a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> 所示。</p>
+<div class="figure align-default" id="fig-piecewise">
+<a class="reference internal image-reference" href="../_images/piecewise.png"><img alt="../_images/piecewise.png" src="../_images/piecewise.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 88 </span><span class="caption-text">蓝线是我们试图逼近的 <em>真实</em> 函数。黑色实线是递增阶数（<span class="math notranslate nohighlight">\(1\)</span>、<span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(3\)</span> 和 <span class="math notranslate nohighlight">\(4\)</span>）的分段多项式。在 <span class="math notranslate nohighlight">\(x\)</span> 轴上垂直的灰色虚线标记每个子域的约束边界。</span><a class="headerlink" href="#fig-piecewise" title="Permalink to this image">¶</a></p>
+</div>
+<p><a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> 的四个子图目标相同，用于近似蓝色曲线对应的函数。我们首先将函数分成 <span class="math notranslate nohighlight">\(3\)</span> 个子域，由灰色虚线分隔，然后为每个子域拟合不同的函数。</p>
+<p>在第一个子图（ 分段常数 ）中，我们拟合了一个常数函数，可以将其视为零次多项式。聚合的解决方案，即黑色的 3 段称为 <strong>step-function</strong>。这似乎是一个相当粗略的近似值，但它可能就是我们所需要的。例如，如果我们试图找出不连续的结果，例如早上、下午和晚上的预期平均温度，则阶跃函数可能没问题。或者，即使我们认为结果是平滑的 <a class="footnote-reference brackets" href="#id26" id="id6">3</a>，我们也可以得到一个非平滑的近似值。</p>
+<p>在第二个子图（分段线性）中，我们执行与第一个子图相同的操作，但我们使用线性函数而不是常数函数，它是一次多项式。请注意，连续线性解决方案在虚线处相遇，这是故意完成的。我们可以证明这种限制是为了使解决方案尽可能平滑<a class="footnote-reference brackets" href="#id27" id="id7">4</a>。</p>
+<p>在第三个子图（分段二次）和第四个子图（分段三次）中，我们使用二次和三次分段多项式。正如我们所看到的，通过增加分段多项式的次数，我们得到了越来越灵活的解决方案，这带来了更好的拟合，但也有更高的过拟合机会。</p>
+<p>因为最终拟合是由局部解（<span class="math notranslate nohighlight">\(B_i\)</span> 基函数）构造的函数 <span class="math notranslate nohighlight">\(f\)</span>，我们可以更轻松地适应模型的灵活性以适应不同区域的数据需求。在这种特殊情况下，我们可以使用更简单的函数（阶数较低的多项式）来拟合不同区域的数据，同时提供适合整个数据域的良好整体模型。</p>
+<p>到目前为止，我们假设我们有一个预测变量 <span class="math notranslate nohighlight">\(X\)</span>，但同样的想法可以扩展到多个预测变量 <span class="math notranslate nohighlight">\(X_0, X_1, \cdots, X_p\)</span> (注意：<span class="math notranslate nohighlight">\(X_i\)</span> 之间相互独立，见公式)。我们甚至可以添加一个反向链接函数 <span class="math notranslate nohighlight">\(\phi\)</span> <a class="footnote-reference brackets" href="#id28" id="id8">5</a> 这种形式的模型被称为广义可加模型 (GAM)：<span id="id9">[<a class="reference internal" href="references.html#id3">18</a>, <a class="reference internal" href="references.html#id4">49</a>]</span>。</p>
+<div class="math notranslate nohighlight" id="equation-eq-gam">
+<span class="eqno">(45)<a class="headerlink" href="#equation-eq-gam" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \phi \left(\sum_i^p f(X_i)\right) \]</div>
+<p>概括一下在本节中学到的知识，公式 <a class="reference internal" href="#equation-eq-bfr">(43)</a> 中的 <span class="math notranslate nohighlight">\(B_i\)</span> 函数是一种巧妙的统计工具，它允许我们拟合更灵活的模型。原则上，可以自由选择任意 <span class="math notranslate nohighlight">\(B_i\)</span> 函数，根据领域知识做探索性数据分析，并形成阶段性结果，甚至可以通过反复试验来选择 <span class="math notranslate nohighlight">\(B_i\)</span> 。并非所有转换都具有相同的统计属性，因此最好能够在更广泛的数据集上评估一些具有良好通用属性的默认函数。从下一节开始，本书将讨论限制在被称为 <code class="docutils literal notranslate"><span class="pre">基样条</span></code> 的基函数族 <a class="footnote-reference brackets" href="#id29" id="id10">6</a> 。</p>
+</div>
+<div class="section" id="introducing-splines">
+<span id="id11"></span><h2>5.3 样条简介<a class="headerlink" href="#introducing-splines" title="Permalink to this headline">¶</a></h2>
+<p>样条曲线可以看作是试图利用多项式的灵活性、同时又能控制其缺点的一种具有整体良好统计特性的模型。要定义样条曲线，首先要定义结点（ Knots ） <a class="footnote-reference brackets" href="#id30" id="id12">7</a>。结点的作用是将变量 <span class="math notranslate nohighlight">\(\boldsymbol{X}\)</span> 的域分割成连续区间。例如，<a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> 中的灰色垂直虚线就表示结点。为了达到既具备灵活性，又能控制多项式缺陷的目的，样条曲线被设计为一个连续的分段多项式，也就是说，我们强制要求两个连续区间的子多项式在结点处相遇。如果子多项式的度数 ( Degree ) 为 <span class="math notranslate nohighlight">\(n\)</span>，则称该样条曲线的度数为 <span class="math notranslate nohighlight">\(n\)</span>。有时也用样条曲线的阶数（ Order ，增加一项幂为 <span class="math notranslate nohighlight">\(0\)</span> 的常数项）来表示，即相同情况下，阶数为度数加 <span class="math notranslate nohighlight">\(1\)</span> 。</p>
+<p>在 <a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> 中，可以看到随着分段多项式阶数增加，结果函数的<em>平滑度</em>也会增加。正如已经提到的，子多项式应该在结点处相遇。在第一个子图上，我们似乎在作弊，因为每行之间有一个台阶，并不连续，但如果限制条件是在每个区间使用常数，那么这可能是最好的结果了。</p>
+<p>在谈论样条时，子多项式被形式化地称为基样条或简称 <code class="docutils literal notranslate"><span class="pre">B-样条</span></code>。给定次数的任何样条函数都可以构造为该次数基样条的线性组合。</p>
+<p><a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 显示了从 <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(3\)</span>（从上到下）递增程度的基样条示例，底部的点代表结点，其中蓝色的点表示基样条 (黑色实线）值不为 <span class="math notranslate nohighlight">\(0\)</span> 的结点（即该基样条的作用域）。为清楚起见，所有其他基样条均用较细的虚线表示，但所有基样条都同样重要。事实上，<a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 中的每个子图都显示了由给定结点定义的所有基样条。换句话说，基样条完全由一组结点和一个度数定义。</p>
+<div class="figure align-default" id="fig-splines-basis">
+<a class="reference internal image-reference" href="../_images/splines_basis.png"><img alt="../_images/splines_basis.png" src="../_images/splines_basis.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 89 </span><span class="caption-text">逐步增加度数的基样条，从 <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(3\)</span>。顶部子图为一个阶梯函数，第二个子图三角函数，然后是越来越多的高斯函数。图中添加了边界处的堆叠结点（用较小黑点表示），以便能够定义靠近边界处的样条。</span><a class="headerlink" href="#fig-splines-basis" title="Permalink to this image">¶</a></p>
+</div>
+<p>从 <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 中可以看到，随着基样条度数的增加，基样条的域跨度也越来越大 <a class="footnote-reference brackets" href="#id31" id="id13">8</a>。因此，为了使更高度数的样条有意义，需要定义更多结点。请注意，在所有情况下，基样条仅在给定区间内被限制为非零。这个属性使样条回归比多项式回归更具备<em>局部性</em>。</p>
+<p>控制每个基样条的结点数随着度数增加而增长，对于所有大于 <span class="math notranslate nohighlight">\(0\)</span> 的度数，我们无法在边界附近定义基样条。这就是当增加度数时，基样条曲线在边界 <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 处以黑色突出显示的原因。这带来了一个潜在问题，因为它在边界处的基样条较少，所以我们的近似会在那里受到影响。幸运的是，这个边界问题很容易解决，我们只需要在边界处添加结点（参见 <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 中的小黑点）。因此，如果我们的结点是 <span class="math notranslate nohighlight">\((0,1,2,3,4,5)\)</span> 并且想要拟合三次样条曲线（就像在 <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 的最后一个子图中），那么我们实际使用节点集合应当为 <span class="math notranslate nohighlight">\((0,0,0,0,1,2,3,4,5,5,5,5)\)</span> 。也就是说，在起点填充了 <span class="math notranslate nohighlight">\(3\)</span> 次结点 <span class="math notranslate nohighlight">\(0\)</span> ，最后填充了 <span class="math notranslate nohighlight">\(3\)</span> 次结点 <span class="math notranslate nohighlight">\(5\)</span>。通过这样做，现在有五个必要的结点 <span class="math notranslate nohighlight">\((0,0,0,0,1)\)</span> 来定义第一个基样条（ 参见 <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a>  的最后一个子图中看起来像指数分布的靛蓝色虚线 )。然后使用结点 <span class="math notranslate nohighlight">\((0,0,0,1,2)\)</span> 来定义第二个基样条（ 看起来像 <code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code>的那个 ）等等。看看由结点 <span class="math notranslate nohighlight">\((0,1,2,3,4)\)</span> 定义的第一个完整基样条（以黑色突出显示）。请注意，我们需要在边界处填充与样条度数一样多的结点。这就是为什么 <span class="math notranslate nohighlight">\(0\)</span> 度无需额外结点，而 <span class="math notranslate nohighlight">\(3\)</span> 度需要额外 <span class="math notranslate nohighlight">\(6\)</span> 个结点。</p>
+<p>每个单独的基样条本身并不是很有用，但是它们的线性组合能够拟合出复杂的函数。因此，在实践中拟合样条需要选择基样条顺序、结点数量以及结点位置，然后找到一组系数来加权所有基样条。这在 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中表示。我们可以看到使用不同颜色表示的基函数，以帮助个性化每个单独的基函数。结点在每个子图的底部用黑点表示。第二行更有趣，因为可以看到与第一行相同基函数被一组 <span class="math notranslate nohighlight">\(\beta_i\)</span> 系数缩放。较粗的连续黑线表示通过基样条与 <span class="math notranslate nohighlight">\(\beta\)</span> 系数加权后得到的样条。</p>
+<div class="figure align-default" id="fig-splines-weighted">
+<a class="reference internal image-reference" href="../_images/splines_weighted.png"><img alt="../_images/splines_weighted.png" src="../_images/splines_weighted.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 90 </span><span class="caption-text">使用 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 软件包定义的基样条。在第一行中可以看到以灰色虚线表示的 1 阶（分段常数）、2 阶（分段线性）和 4 阶（分段三次）样条曲线。为了清楚起见，每个基函数都用不同的颜色表示。在第二行中，将第一行的基样条按一组系数加权，粗黑线表示了这些基函数的加权和。由于系数值是随机选择的，所以可以将第二行中的每个子图视为<em>样条空间</em>上先验分布的随机样本。</span><a class="headerlink" href="#fig-splines-weighted" title="Permalink to this image">¶</a></p>
+</div>
+<p>在这个例子中，我们从半正态分布（代码 <a class="reference internal" href="#splines-patsy-plot"><span class="std std-ref">splines_patsy_plot</span></a> 中的第 17 行）中采样生成 <span class="math notranslate nohighlight">\(\beta_i\)</span> 系数。因此，<a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中的每个子图仅显示样条上概率分布的一种实现。通过删除随机种子，然后运行代码 <a class="reference internal" href="#splines-patsy-plot"><span class="std std-ref">splines_patsy_plot</span></a> 几次就能看出这一点，每次你都会看到不同的样条曲线。此外，你还可以尝试将半正态分布替换为正态分布、指数分布等其他分布。<a class="reference internal" href="#fig-splines-realizations"><span class="std std-numref">Fig. 91</span></a> 显示了三次样条的四种实现。</p>
+<div class="figure align-default" id="fig-splines-realizations">
+<a class="reference internal image-reference" href="../_images/splines_realizations.png"><img alt="../_images/splines_realizations.png" src="../_images/splines_realizations.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 91 </span><span class="caption-text">从半正态分布中采样得到 <span class="math notranslate nohighlight">\(\beta_i\)</span> 系数的四种三次样条实现。</span><a class="headerlink" href="#fig-splines-realizations" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition-four-is-a-crowd-for-splines admonition">
+<p class="admonition-title">Four is a crowd for splines </p>
+<p>在所有可能的样条中，三次样条是最常用的。</p>
+<p>但为什么三次样条曲线是样条曲线的女王呢？图 <a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> 和 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 提供了一些提示。三次样条曲线为我们提供了能够为大多数场景生成<em>足够平滑</em>曲线所需的最低阶样条曲线，从而降低了更高阶样条曲线对人们的吸引力。所谓<em>足够平滑</em>是什么意思？在不深入数学细节的情况下，其大致意思是拟合的函数不会出现斜率的突然变化。这样做的一种方法是添加两个连续的分段多项式应该在其公共结点处相遇的约束条件，而三次样条另外增加了两个约束：其在结点处的一阶和二阶导数也是连续的。这意味着斜率在结点处是连续的，并且斜率的斜率也连续 <a class="footnote-reference brackets" href="#id32" id="id14">9</a>。事实上，<span class="math notranslate nohighlight">\(m\)</span> 度的样条曲线在结点处会有 <span class="math notranslate nohighlight">\(m-1\)</span> 阶导数。</p>
+<p>说了这么多，低阶或高阶样条对于某些问题仍然有用，只是三次样条是很好的默认值。</p>
+</div>
+</div>
+<div class="section" id="patsy">
+<span id="building-the-design-matrix-using-patsy"></span><h2>5.4 使用 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 软件包构建设计矩阵<a class="headerlink" href="#patsy" title="Permalink to this headline">¶</a></h2>
+<p>在图 <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 和 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中，我们绘制了基样条线，但到目前为止省略了计算它们的方法，主要原因是计算很麻烦，并且在 <code class="docutils literal notranslate"><span class="pre">Scipy</span></code> <a class="footnote-reference brackets" href="#id33" id="id15">10</a> 等软件包中已经有有效的可用算法。因此，与我们不打算从头开始计算基样条，而是依赖 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 软件包，这是一个用于描述统计模型（尤其是线性模型，或具有线性组件的模型）和构建设计矩阵的包。其灵感来自 R 编程语言生态系统的许多包中广泛使用的<em>公式迷你语言</em>。例如，具有两个预测变量的线性模型看起来像<code class="docutils literal notranslate"><span class="pre">"y</span> <span class="pre">~</span> <span class="pre">x1</span> <span class="pre">+</span> <span class="pre">x2"</span></code>，如果想添加交互，可以写成<code class="docutils literal notranslate"><span class="pre">"y</span> <span class="pre">~</span> <span class="pre">x1</span> <span class="pre">+</span> <span class="pre">x2</span> <span class="pre">+</span> <span class="pre">x1:x2"</span></code>。这与第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中突出显示 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 语法相似。有关详细信息，请查看 <code class="docutils literal notranslate"><span class="pre">patsy</span></code> 文档 <a class="footnote-reference brackets" href="#id34" id="id16">11</a>。</p>
+<p>要在 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 中定义基样条设计矩阵，我们需要将以 <code class="docutils literal notranslate"><span class="pre">bs()</span></code> 开头的字符串<em>粒子</em>传递给 <code class="docutils literal notranslate"><span class="pre">dmatrix</span></code> 函数，该粒子是一个能够被 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 解析为函数的字符串。因此，它可以接受多个参数，包括数据、样条结点数组、样条的度数等。在代码 <a class="reference internal" href="#splines-patsy"><span class="std std-ref">splines_patsy</span></a> 中，我们定义了 <span class="math notranslate nohighlight">\(3\)</span> 个设计矩阵，一个具有 <span class="math notranslate nohighlight">\(0\)</span> 阶（分段常数），另一个具有 <span class="math notranslate nohighlight">\(1\)</span> 阶（分段线性），最后一个具有 <span class="math notranslate nohighlight">\(3\)</span> 阶（三次样条）。</p>
+<div class="literal-block-wrapper docutils container" id="splines-patsy">
+<div class="code-block-caption"><span class="caption-number">Listing 62 </span><span class="caption-text">splines_patsy</span><a class="headerlink" href="#splines-patsy" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">knots</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">]</span>
+
+<span class="n">B0</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="s2">"bs(x, knots=knots, degree=0, include_intercept=True) - 1"</span><span class="p">,</span> 
+             <span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span><span class="n">knots</span><span class="p">})</span>
+<span class="n">B1</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="s2">"bs(x, knots=knots, degree=1, include_intercept=True) - 1"</span><span class="p">,</span>
+             <span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span><span class="n">knots</span><span class="p">})</span>
+<span class="n">B3</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="s2">"bs(x, knots=knots, degree=3,include_intercept=True) - 1"</span><span class="p">,</span>
+             <span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span><span class="n">knots</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<p><a class="reference internal" href="#fig-design-matrices"><span class="std std-numref">Fig. 92</span></a> 表示使用代码 <a class="reference internal" href="#splines-patsy"><span class="std std-ref">splines_patsy</span></a> 计算的 <span class="math notranslate nohighlight">\(3\)</span> 个设计矩阵。为了更好地掌握 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 正在做什么，建议你使用 Jupyter notebook/lab 或其他 IDE 来检查对象 <code class="docutils literal notranslate"><span class="pre">B0</span></code>、<code class="docutils literal notranslate"><span class="pre">B1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">B2</span></code>。</p>
+<div class="figure align-default" id="fig-design-matrices">
+<a class="reference internal image-reference" href="../_images/design_matrices.png"><img alt="../_images/design_matrices.png" src="../_images/design_matrices.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 92 </span><span class="caption-text">在代码 <a class="reference internal" href="#splines-patsy"><span class="std std-ref">splines_patsy</span></a> 中使用 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 生成的设计矩阵。颜色从黑色 ( <span class="math notranslate nohighlight">\(1\)</span> ) 变为浅灰色 ( <span class="math notranslate nohighlight">\(0\)</span> )，列数是基样条数，行数是数据点数。</span><a class="headerlink" href="#fig-design-matrices" title="Permalink to this image">¶</a></p>
+</div>
+<p><a class="reference internal" href="#fig-design-matrices"><span class="std std-numref">Fig. 92</span></a> 的第一个子图对应于 <code class="docutils literal notranslate"><span class="pre">B0</span></code>，一个 <span class="math notranslate nohighlight">\(0\)</span> 次样条曲线。对于前 <span class="math notranslate nohighlight">\(5\)</span> 个观测值，我们可以看到设计矩阵是一个只有 <span class="math notranslate nohighlight">\(0\)</span>（浅灰色）和 <span class="math notranslate nohighlight">\(1\)</span>（黑色）的矩阵。第一个基样条（第 <span class="math notranslate nohighlight">\(0\)</span> 列）为 <span class="math notranslate nohighlight">\(1\)</span>，否则为 <span class="math notranslate nohighlight">\(0\)</span>，对于前 <span class="math notranslate nohighlight">\(5\)</span> 个观测值，第二个基样条（第 1 列）为 0，对于后 5 个观测值为 1，再次为 0。并且重复相同的模式。将此与 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 的第一个子图（第一行）进行比较，你应该会看到设计矩阵如何编码该图。</p>
+<p>对于 <a class="reference internal" href="#fig-design-matrices"><span class="std std-numref">Fig. 92</span></a> 中的第二个子图，我们有第一个基样条从 1 到 0，第二、第三和第四个从 0 到 1，然后从 1 到 0。第五个基样条从 0 到 1。</p>
+<p>你应该在 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 的第二个子图（第一行）中看到此模式如何匹配具有负斜率的线、3 个三角函数和具有正斜率的线。</p>
+<p>最后，如果我们比较 <a class="reference internal" href="#fig-design-matrices"><span class="std std-numref">Fig. 92</span></a> 的第三个子图中的 7 列如何与 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 的第三个子图（第一行）中的 7 条曲线相匹配，我们可以看到类似的结果。</p>
+<p>代码 <a class="reference internal" href="#splines-patsy"><span class="std std-ref">splines_patsy</span></a> 用于生成图 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 和 <a class="reference internal" href="#fig-design-matrices"><span class="std std-numref">Fig. 92</span></a> 中的基样条，唯一不同的是前者我们使用了 <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">np</span> <span class="pre">.linspace(0.,</span> <span class="pre">1.,</span> <span class="pre">500)</span></code>，所以曲线看起来更平滑，我们在后面使用<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">np.linspace(0.,</span> <span class="pre">1.,</span> <span class="pre">20)</span></code>，这样矩阵更容易理解。</p>
+<div class="literal-block-wrapper docutils container" id="splines-patsy-plot">
+<div class="code-block-caption"><span class="caption-number">Listing 63 </span><span class="caption-text">splines_patsy_plot</span><a class="headerlink" href="#splines-patsy-plot" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="s2">"row"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">((</span><span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B3</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="s2">"Piecewise constant"</span><span class="p">,</span>
+                                      <span class="s2">"Piecewise linear"</span><span class="p">,</span>
+                                      <span class="s2">"Cubic spline"</span><span class="p">))):</span>
+    <span class="c1"># plot spline basis functions</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">B</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span>
+                          <span class="n">color</span><span class="o">=</span><span class="n">viridish</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">)</span>
+    <span class="c1"># we generate some positive random coefficients </span>
+    <span class="c1"># there is nothing wrong with negative values</span>
+    <span class="n">β</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="numpy.random.normal"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="c1"># plot spline basis functions scaled by its β</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">B</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">β</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                          <span class="n">color</span><span class="o">=</span><span class="n">viridish</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">)</span>
+    <span class="c1"># plot the sum of the basis functions</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">β</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">"k"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="c1"># plot the knots</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">knots</span><span class="p">,</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.zeros_like.html#numpy.zeros_like" title="numpy.zeros_like"><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span></a><span class="p">(</span><span class="n">knots</span><span class="p">),</span> <span class="s2">"ko"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">knots</span><span class="p">,</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.zeros_like.html#numpy.zeros_like" title="numpy.zeros_like"><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span></a><span class="p">(</span><span class="n">knots</span><span class="p">),</span> <span class="s2">"ko"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>到目前为止，我们已经探索了几个示例，以直观了解样条线是什么以及如何在 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 的帮助下自动创建它们。</p>
+<p>我们现在可以继续计算权重。让我们看看如何使用 PyMC3 在贝叶斯模型中做到这一点。</p>
+</div>
+<div class="section" id="pymc3">
+<span id="fitting-splines-in-pymc3"></span><h2>5.5 在 PyMC3 中拟合样条<a class="headerlink" href="#pymc3" title="Permalink to this headline">¶</a></h2>
+<p>在本节中，我们将使用 PyMC3 通过将一组基样条拟合到数据来获得回归系数 <span class="math notranslate nohighlight">\(\beta\)</span> 的值。</p>
+<p>现代自行车共享系统允许全球许多城市的人们以完全自动化的方式租用和归还自行车，有助于提高公共交通的效率，并可能使社会的一部分更健康、更快乐。我们将使用来自加州大学欧文分校机器学习库 <a class="footnote-reference brackets" href="#id35" id="id17">12</a> 的此类自行车共享系统的数据集。对于我们的示例，我们将估计 24 小时内每小时租用的自行车数量。让我们加载并绘制数据：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/bikes_hour.csv"</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">"hour"</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># We standardize the response variable</span>
+<span class="n">data_cnt_om</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">data_cnt_os</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"count_normalized"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="o">-</span> <span class="n">data_cnt_om</span><span class="p">)</span> <span class="o">/</span> <span class="n">data_cnt_os</span>
+<span class="c1"># Remove data, you may later try to refit the model to the whole data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[::</span><span class="mi">50</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="fig-bikes-data">
+<a class="reference internal image-reference" href="../_images/bikes_data.png"><img alt="../_images/bikes_data.png" src="../_images/bikes_data.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 93 </span><span class="caption-text">自行车数据的可视化。每个点是一天中每小时租用的自行车的标准化数量（在区间 0、23 上）。这些点是半透明的，以避免点过度重叠，从而有助于查看数据的分布。</span><a class="headerlink" href="#fig-bikes-data" title="Permalink to this image">¶</a></p>
+</div>
+<p>快速查看 <a class="reference internal" href="#fig-bikes-data"><span class="std std-numref">Fig. 93</span></a> 会发现，一天中的时间与出租自行车数量之间的关系并不能通过拟合一条线来很好地捕捉到。因此，让我们尝试使用样条回归来更好地逼近非线性模式。</p>
+<p>正如我们已经提到的，为了使用样条曲线，我们需要定义结点的数量和位置。我们将使用 6 个结点并使用最简单的选项来定位它们，每个结点之间的间距相等。</p>
+<div class="literal-block-wrapper docutils container" id="knot-list">
+<div class="code-block-caption"><span class="caption-number">Listing 64 </span><span class="caption-text">knot_list</span><a class="headerlink" href="#knot-list" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_knots</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">knot_list</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="n">num_knots</span><span class="o">+</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>请注意，在代码 <a class="reference internal" href="#knot-list"><span class="std std-ref">knot_list</span></a> 中，我们定义了 8 个结点，但随后我们删除了第一个和最后一个结点，确保保留在数据的 <em>interior</em> 中定义的 6 个结点。这是否是一个有用的策略将取决于数据。例如，如果大部分数据远离边界，这将是一个好主意，结点的数量越大，它们的位置就越不重要。</p>
+<p>现在我们使用 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 为我们定义和构建设计矩阵：</p>
+<div class="literal-block-wrapper docutils container" id="bikes-dmatrix">
+<div class="code-block-caption"><span class="caption-number">Listing 65 </span><span class="caption-text">bikes_dmatrix</span><a class="headerlink" href="#bikes-dmatrix" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span>
+    <span class="s2">"bs(cnt, knots=knots, degree=3, include_intercept=True) - 1"</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">"cnt"</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">hour</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span> <span class="n">knot_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<p>建议的统计模型是：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\begin{split}
+  \tau \sim&amp; \; \mathcal{HC}(1) \\
+  \boldsymbol{\beta} \sim&amp; \; \mathcal{N}(0, \tau) \\
+  \sigma \sim&amp; \; \mathcal{HN}(1) \\
+  Y \sim&amp; \; \mathcal{N}(\boldsymbol{B}(X)\boldsymbol{\beta},\sigma)
+\end{split}\end{aligned}\end{split}\]</div>
+<p>我们的样条回归模型与第  <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中的线性模型非常相似。所有的工作都是由设计矩阵 <span class="math notranslate nohighlight">\(\boldsymbol{B}\)</span> 及其对特征空间的扩展完成的。请注意，我们使用线性代数符号将公式 <a class="reference internal" href="#equation-eq-bfr">(43)</a> 和 <a class="reference internal" href="#equation-eq-bfr2">(44)</a> 的乘法和求和写成更短的形式，即我们写成 <span class="math notranslate nohighlight">\(\boldsymbol{\mu} = \boldsymbol{B}\boldsymbol{\beta}\)</span> 而不是 <span class="math notranslate nohighlight">\(\boldsymbol{\mu} = \sum_i^n B_i \boldsymbol{\beta}_i\)</span>。</p>
+<p>像往常一样，统计语法以几乎一对一的方式翻译成 PyMC3。</p>
+<div class="literal-block-wrapper docutils container" id="splines">
+<div class="code-block-caption"><span class="caption-number">Listing 66 </span><span class="caption-text">splines</span><a class="headerlink" href="#splines" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">splines</span><span class="p">:</span>
+    <span class="n">τ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfCauchy</span><span class="p">(</span><span class="s2">"τ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> 
+    <span class="n">β</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"β"</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="n">τ</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">μ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">"μ"</span><span class="p">,</span> <span class="n">pm</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">β</span><span class="p">))</span>
+    <span class="n">σ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">"σ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"c"</span><span class="p">,</span> <span class="n">μ</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"count_normalized"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">idata_s</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>我们在 <a class="reference internal" href="#fig-bikes-spline-raw-data"><span class="std std-numref">Fig. 94</span></a> 中将最终拟合的线性预测显示为黑色实线，每个加权基样条显示为虚线。这是一个很好的表示，因为我们可以看到基样条如何影响最终结点果。</p>
+<div class="figure align-default" id="fig-bikes-spline-raw-data">
+<a class="reference internal image-reference" href="../_images/bikes_spline_raw_data.png"><img alt="../_images/bikes_spline_raw_data.png" src="../_images/bikes_spline_raw_data.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 94 </span><span class="caption-text">使用样条拟合的自行车数据。 B样条用虚线表示。它们的总和产生更粗的黑色实线。
+绘制的值对应于后验的平均值。黑点代表结点。相对于 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中绘制的样条线，此图中的样条线看起来非常<em>锯齿状</em>。原因是我们在更少的点上评估函数。此处为 24 分，因为数据每小时分箱，而 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中的数据为 500。</span><a class="headerlink" href="#fig-bikes-spline-raw-data" title="Permalink to this image">¶</a></p>
+</div>
+<p>当我们想要显示模型的结果时，更有用的绘图是使用重叠样条及其不确定性绘制数据，如 <a class="reference internal" href="#fig-bikes-data2"><span class="std std-numref">Fig. 95</span></a>。从这个图中我们可以很容易地看出，在深夜租用自行车的数量是最低的。然后有增加，可能随着人们醒来并去工作。我们在 10 小时左右出现第一个高峰，然后趋于平稳，或者可能略有下降，然后在 18 小时左右人们通勤回家时出现第二个高峰，之后稳步下降。</p>
+<div class="figure align-default" id="fig-bikes-data2">
+<a class="reference internal image-reference" href="../_images/bikes_spline_data.png"><img alt="../_images/bikes_spline_data.png" src="../_images/bikes_spline_data.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 95 </span><span class="caption-text">使用样条拟合的自行车数据（黑点）。阴影曲线代表 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间（平均值），蓝色曲线代表平均趋势。</span><a class="headerlink" href="#fig-bikes-data2" title="Permalink to this image">¶</a></p>
+</div>
+<p>在这个自行车租赁示例中，我们正在处理一个循环变量，这意味着 0 小时等于 24 小时。这对我们来说可能或多或少是显而易见的，但对于我们的模型来说绝对不明显。 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 提供了一个简单的解决方案来告诉我们的模型变量是循环的。我们可以使用 cc 来代替使用 <code class="docutils literal notranslate"><span class="pre">bs</span></code> 定义设计矩阵，这是一个<em>圆形感知</em>的三次样条。我们建议你查看 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 文档以获取更多详细信息，并探索在以前的模型中使用 <code class="docutils literal notranslate"><span class="pre">cc</span></code> 并比较结果。</p>
+</div>
+<div class="section" id="choosing-knots-and-prior-for-splines">
+<span id="id18"></span><h2>5.6 选择样条的结点和先验<a class="headerlink" href="#choosing-knots-and-prior-for-splines" title="Permalink to this headline">¶</a></h2>
+<p>在使用样条曲线时，我们必须做出的一项建模决策是选择结点的数量和位置。这可能有点令人担忧，因为通常结点的数量和它们的间距不是明显的决定。当面对这种类型的选择时，我们总是可以尝试拟合多个模型，然后使用 LOO 等方法来帮助我们选择最佳模型。 <a class="reference internal" href="#tab-loo-splines"><span class="std std-numref">Table 12</span></a> 显示了拟合模型的结果，如代码 <a class="reference internal" href="#splines"><span class="std std-ref">splines</span></a> 中定义的模型，具有 3、6、9、12 和 18 个等距结点。我们可以看到 LOO 选择了 12 节的样条作为最佳模型。</p>
+<p><a class="reference internal" href="#tab-loo-splines"><span class="std std-numref">Table 12</span></a> 的一个有趣观察是，模型<code class="docutils literal notranslate"><span class="pre">m_12k</span></code>（排名最高的模型）的权重为 0.88，而 <code class="docutils literal notranslate"><span class="pre">m_3k</span></code>（排名最后的模型）的权重为 0.12。其余型号的重量几乎为 0。正如我们在 <a class="reference internal" href="chp_02.html#model-averaging"><span class="std std-ref">2.5.6 模型平均</span></a> 节中解释的，默认情况下，权重是使用堆叠计算的，这是一种尝试在元模型中组合多个模型以最小化元模型和 <em>true 之间的分歧的方法</em> 生成模型。结果，即使模型 <code class="docutils literal notranslate"><span class="pre">m_6k</span></code>、<code class="docutils literal notranslate"><span class="pre">m_9k</span></code> 和 <code class="docutils literal notranslate"><span class="pre">m_18k</span></code> 具有更好的 <code class="docutils literal notranslate"><span class="pre">loo</span></code> 值，一旦包含 <code class="docutils literal notranslate"><span class="pre">m_12k</span></code>，它们也没有太多可添加的内容，而 <code class="docutils literal notranslate"><span class="pre">m_3k</span></code> 是排名最低的模型，它似乎它仍然有一些新的东西可以为模型平均做出贡献。</p>
+<p><a class="reference internal" href="#fig-bikes-spline-loo-knots"><span class="std std-numref">Fig. 96</span></a> 显示所有这些模型的平均拟合样条曲线。</p>
+<table class="table" id="tab-loo-splines">
+<caption><span class="caption-number">Table 12 </span><span class="caption-text">使用 LOO 对具有不同结点数的样条模型进行模型比较的总结。</span><a class="headerlink" href="#tab-loo-splines" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+<col style="width: 10%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td></td>
+<td><p><strong>rank</strong></p></td>
+<td><p><strong>loo</strong></p></td>
+<td><p><strong>p_loo</strong></p></td>
+<td><p><strong>d_loo</strong></p></td>
+<td><p><strong>weight</strong></p></td>
+<td><p><strong>se</strong></p></td>
+<td><p><strong>dse</strong></p></td>
+<td><p><strong>warning</strong></p></td>
+<td><p><strong>loo_scale</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>m_12k</p></td>
+<td><p>0</p></td>
+<td><p>-377.67</p></td>
+<td><p>14.21</p></td>
+<td><p>0.00</p></td>
+<td><p>0.88</p></td>
+<td><p>17.86</p></td>
+<td><p>0.00</p></td>
+<td><p>False</p></td>
+<td><p>log</p></td>
+</tr>
+<tr class="row-odd"><td><p>m_18k</p></td>
+<td><p>1</p></td>
+<td><p>-379.78</p></td>
+<td><p>17.56</p></td>
+<td><p>2.10</p></td>
+<td><p>0.00</p></td>
+<td><p>17.89</p></td>
+<td><p>1.45</p></td>
+<td><p>False</p></td>
+<td><p>log</p></td>
+</tr>
+<tr class="row-even"><td><p>m_9k</p></td>
+<td><p>2</p></td>
+<td><p>-380.42</p></td>
+<td><p>11.43</p></td>
+<td><p>2.75</p></td>
+<td><p>0.00</p></td>
+<td><p>18.12</p></td>
+<td><p>2.97</p></td>
+<td><p>False</p></td>
+<td><p>log</p></td>
+</tr>
+<tr class="row-odd"><td><p>m_6k</p></td>
+<td><p>3</p></td>
+<td><p>-389.43</p></td>
+<td><p>9.41</p></td>
+<td><p>11.76</p></td>
+<td><p>0.00</p></td>
+<td><p>18.16</p></td>
+<td><p>5.72</p></td>
+<td><p>False</p></td>
+<td><p>log</p></td>
+</tr>
+<tr class="row-even"><td><p>m_3k</p></td>
+<td><p>4</p></td>
+<td><p>400.25</p></td>
+<td><p>7.17</p></td>
+<td><p>22.58</p></td>
+<td><p>0.12</p></td>
+<td><p>18.01</p></td>
+<td><p>7.78</p></td>
+<td><p>False</p></td>
+<td><p>log</p></td>
+</tr>
+</tbody>
+</table>
+<div class="figure align-default" id="fig-bikes-spline-loo-knots">
+<a class="reference internal image-reference" href="../_images/bikes_spline_loo_knots.png"><img alt="../_images/bikes_spline_loo_knots.png" src="../_images/bikes_spline_loo_knots.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 96 </span><span class="caption-text">具有不同结点数 (3, 6, 9, 12, 18) 的代码 <a class="reference internal" href="#splines"><span class="std std-ref">splines</span></a> 中描述的模型的平均后验样条。根据 LOO，模型“m_12k”以蓝色突出显示为排名最高的模型。模型 <code class="docutils literal notranslate"><span class="pre">m_3k</span></code> 以黑色突出显示，而其余模型则显示为灰色，因为它们的权重为零（参见 <a class="reference internal" href="#tab-loo-splines"><span class="std std-numref">Table 12</span></a>）。</span><a class="headerlink" href="#fig-bikes-spline-loo-knots" title="Permalink to this image">¶</a></p>
+</div>
+<p>可以帮助确定结点的位置的一条建议是根据分位数而不是统一放置它们。在代码 <a class="reference internal" href="#knot-list"><span class="std std-ref">knot_list</span></a> 中，我们可以使用 <code class="docutils literal notranslate"><span class="pre">knot_list</span> <span class="pre">=</span> <span class="pre">np.quantile(data.hour,</span> <span class="pre">np.linspace(0,</span> <span class="pre">1,</span> <span class="pre">num_knots))</span></code> 定义<code class="docutils literal notranslate"><span class="pre">knot_list</span></code>。通过这种方式，我们将在我们拥有更多数据的地方放置更多的结点，而在数据较少的地方放置更少的结点。这转化为数据更丰富部分的更灵活的近似值。</p>
+<div class="section" id="regularizing-prior-for-splines">
+<span id="id19"></span><h3>5.6.1 样条的正则化先验<a class="headerlink" href="#regularizing-prior-for-splines" title="Permalink to this headline">¶</a></h3>
+<p>由于选择过少的结点可能会导致欠拟合，而过多的结点可能会导致过拟合，因此我们可能希望使用<em>相当大</em>数量的结点，然后选择正则化先验。从样条线和 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 的定义可以看出，连续的 <span class="math notranslate nohighlight">\(\boldsymbol{\beta}\)</span> 系数越接近，得到的函数就越平滑。想象一下，你在 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中删除了设计矩阵的两个连续列，实际上将这些系数设置为 0，拟合将大大降低<em>平滑</em>，因为我们在预测变量中没有足够的信息来覆盖一些子区域（回想一下样条线是<em>本地</em>）。因此，我们可以通过选择 <span class="math notranslate nohighlight">\(\boldsymbol{\beta}\)</span> 系数的先验来实现更平滑的拟合回归线，使得 <span class="math notranslate nohighlight">\(\beta_{i+1}\)</span> 的值与 <span class="math notranslate nohighlight">\(\beta_{i}\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\begin{split}
+\beta_i \sim&amp; \mathcal{N}(0, 1) \\
+\tau\sim&amp; \mathcal{N}(0,1) \\
+\beta \sim&amp; \mathcal{N}(\beta_{i-1}, \tau) 
+\end{split}\end{aligned}\end{split}\]</div>
+<p>使用 PyMC3，我们可以使用高斯随机游走先验分布编写等效版本：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\begin{split}
+\tau\sim&amp; \mathcal{N}(0, 1) \\
+\beta \sim&amp; \mathcal{G}RW(\beta, \tau) 
+\end{split}\end{aligned}\end{split}\]</div>
+<p>要查看此先验的效果，我们将重复对自行车数据集的分析，但这次使用“num_knots = 12”。我们使用“样条线”模型和以下模型重新拟合数据：</p>
+<div class="literal-block-wrapper docutils container" id="splines-rw">
+<div class="code-block-caption"><span class="caption-number">Listing 67 </span><span class="caption-text">splines_rw</span><a class="headerlink" href="#splines-rw" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">splines_rw</span><span class="p">:</span>
+    <span class="n">τ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfCauchy</span><span class="p">(</span><span class="s2">"τ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> 
+    <span class="n">β</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">GaussianRandomWalk</span><span class="p">(</span><span class="s2">"β"</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">τ</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">μ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">"μ"</span><span class="p">,</span> <span class="n">pm</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">β</span><span class="p">))</span>
+    <span class="n">σ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">"σ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"c"</span><span class="p">,</span> <span class="n">μ</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"count_normalized"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">trace_splines_rw</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>在 <a class="reference internal" href="#fig-bikes-spline-data-grw"><span class="std std-numref">Fig. 97</span></a> 上，我们可以看到模型 <code class="docutils literal notranslate"><span class="pre">splines_rw</span></code>（黑线）的样条均值函数比没有先验平滑的样条均值函数（灰色粗线）波动小，尽管我们承认差异似乎相当小。</p>
+<div class="figure align-default" id="fig-bikes-spline-data-grw">
+<a class="reference internal image-reference" href="../_images/bikes_spline_data_grw.png"><img alt="../_images/bikes_spline_data_grw.png" src="../_images/bikes_spline_data_grw.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 97 </span><span class="caption-text">符合高斯先验（黑色）或正则化高斯随机游走先验（蓝色）的自行车数据。对于这两种情况，我们都使用 22 节。黑线对应于从“样条”模型计算的平均样条函数。蓝线是模型“splines_rw”的均值函数。</span><a class="headerlink" href="#fig-bikes-spline-data-grw" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="co-2">
+<span id="modeling-co2-uptake-with-splines"></span><h2>5.7 用样条对 <span class="math notranslate nohighlight">\(CO_2\)</span> 吸收量建模<a class="headerlink" href="#co-2" title="Permalink to this headline">¶</a></h2>
+<p>对于样条曲线的最后一个示例，我们将使用来自实验研究的数据 <span id="id20">[<a class="reference internal" href="references.html#id120">50</a>, <a class="reference internal" href="references.html#id121">51</a>]</span>。该实验包括测量 12 种不同植物在不同条件下的二氧化碳吸收量。在这里，我们将只探讨外部 CO₂ 浓度的影响，即环境中的 CO₂ 浓度如何影响不同植物对 CO₂ 的消耗。在每株植物的 7 个 CO 2 浓度下测量了 CO 2 吸收量，12 株植物中的每一种都具有相同的 7 个值。让我们从加载和整理数据开始。</p>
+<div class="literal-block-wrapper docutils container" id="plants-co2-import">
+<div class="code-block-caption"><span class="caption-number">Listing 68 </span><span class="caption-text">plants_co2_import</span><a class="headerlink" href="#plants-co2-import" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plants_CO2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/CO2_uptake.csv"</span><span class="p">)</span>
+<span class="n">plant_names</span> <span class="o">=</span> <span class="n">plants_CO2</span><span class="o">.</span><span class="n">Plant</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+<span class="c1"># Index the first 7 CO2 measurements per plant</span>
+<span class="n">CO2_conc</span> <span class="o">=</span> <span class="n">plants_CO2</span><span class="o">.</span><span class="n">conc</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="mi">7</span><span class="p">]</span>
+
+<span class="c1"># Get full array which are the 7 measurements above repeated 12 times</span>
+<span class="n">CO2_concs</span> <span class="o">=</span> <span class="n">plants_CO2</span><span class="o">.</span><span class="n">conc</span><span class="o">.</span><span class="n">values</span>
+<span class="n">uptake</span> <span class="o">=</span> <span class="n">plants_CO2</span><span class="o">.</span><span class="n">uptake</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>我们要拟合的第一个模型是具有单一结果曲线的模型，即假设所有 12 株植物的结果曲线相同。我们首先使用 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 定义设计矩阵，就像我们之前所做的那样。</p>
+<p>我们设置 <code class="docutils literal notranslate"><span class="pre">num_knots=2</span></code> 因为我们每株植物有 7 个观察值，所以相对较少的结点数应该可以正常工作。在代码 <a class="reference internal" href="#plants-co2-import"><span class="std std-ref">plants_co2_import</span></a> 中，<code class="docutils literal notranslate"><span class="pre">CO2_concs</span></code> 是一个列表，其值 <code class="docutils literal notranslate"><span class="pre">[95,</span> <span class="pre">175,</span> <span class="pre">250,</span> <span class="pre">350,</span> <span class="pre">500,</span> <span class="pre">675,</span> <span class="pre">1000]</span></code> 重复 12 次，每株植物一次。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">num_knots</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">knot_list</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="n">CO2_conc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">CO2_conc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_knots</span><span class="o">+</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">Bg</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span>
+    <span class="s2">"bs(conc, knots=knots, degree=3, include_intercept=True) - 1"</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">"conc"</span><span class="p">:</span> <span class="n">CO2_concs</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span> <span class="n">knot_list</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>这个问题看起来类似于前面章节中的自行车租赁问题，因此我们可以从应用相同的模型开始。使用我们已经在以前的问题中应用过的模型或我们从文献中学到的模型是开始分析的好方法。这种模型-模板方法可以被视为模型设计过程的捷径 <span id="id21">[<a class="reference internal" href="references.html#id78">17</a>]</span>。除了不必从头开始考虑模型的明显优势之外，我们还有其他优势，例如对如何执行模型的探索性分析有更好的直觉，然后可以对模型进行更改以简化它或使它更复杂。</p>
+<div class="literal-block-wrapper docutils container" id="sp-global">
+<div class="code-block-caption"><span class="caption-number">Listing 69 </span><span class="caption-text">sp_global</span><a class="headerlink" href="#sp-global" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">sp_global</span><span class="p">:</span>
+    <span class="n">τ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfCauchy</span><span class="p">(</span><span class="s2">"τ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">β</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"β"</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">τ</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">Bg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">μg</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">"μg"</span><span class="p">,</span> <span class="n">pm</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Bg</span><span class="p">,</span> <span class="n">β</span><span class="p">))</span>
+    <span class="n">σ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">"σ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"up"</span><span class="p">,</span> <span class="n">μg</span><span class="p">,</span> <span class="n">σ</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">uptake</span><span class="p">)</span>
+    <span class="n">idata_sp_global</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>从 <a class="reference internal" href="#fig-sp-global"><span class="std std-numref">Fig. 98</span></a> 我们可以清楚地看到该模型只为某些植物提供了良好的拟合。该模型平均而言是好的，即如果我们将所有物种汇集在一起​​ ，但对于特定植物来说不是很好。</p>
+<div class="figure align-default" id="fig-sp-global">
+<a class="reference internal image-reference" href="../_images/sp_global.png"><img alt="../_images/sp_global.png" src="../_images/sp_global.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 98 </span><span class="caption-text">黑点代表 12 种植物（Qn1、Qn2、Qn3、Qc1、Qc2、Qc3、Mn1、Mn2、Mn3、Mc1、Mc2、Mc3）中的每一种在 7 个 CO2 浓度下测量的 CO2 吸收量。黑线是代码 <a class="reference internal" href="#sp-global"><span class="std std-ref">sp_global</span></a> 中模型的平均样条拟合，灰色阴影曲线表示该拟合的 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间。</span><a class="headerlink" href="#fig-sp-global" title="Permalink to this image">¶</a></p>
+</div>
+<p>现在让我们尝试使用每个工厂具有不同结果的模型，为此我们在代码 <a class="reference internal" href="#bi-matrix"><span class="std std-ref">Bi_matrix</span></a> 中定义设计矩阵“Bi”。为了定义 <code class="docutils literal notranslate"><span class="pre">Bi</span></code>，我们使用列表 <code class="docutils literal notranslate"><span class="pre">CO2_conc</span> <span class="pre">=</span> <span class="pre">[95,</span> <span class="pre">175,</span> <span class="pre">250,</span> <span class="pre">350,</span> <span class="pre">500,</span> <span class="pre">675,</span> <span class="pre">1000]</span></code>，因此 <code class="docutils literal notranslate"><span class="pre">Bi</span></code> 是一个 <span class="math notranslate nohighlight">\(7 \times 7\)</span> 矩阵，而 <code class="docutils literal notranslate"><span class="pre">Bg</span></code> 是一个 <span class="math notranslate nohighlight">\(84 \times 7\)</span> 矩阵。</p>
+<div class="literal-block-wrapper docutils container" id="bi-matrix">
+<div class="code-block-caption"><span class="caption-number">Listing 70 </span><span class="caption-text">Bi_matrix</span><a class="headerlink" href="#bi-matrix" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Bi</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span>
+    <span class="s2">"bs(conc, knots=knots, degree=3, include_intercept=True) - 1"</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">"conc"</span><span class="p">:</span> <span class="n">CO2_conc</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span> <span class="n">knot_list</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<p>相应地，对于 <code class="docutils literal notranslate"><span class="pre">Bi</span></code> 的形状，代码 <a class="reference internal" href="#sp-individual"><span class="std std-ref">sp_individual</span></a> 中的参数 <span class="math notranslate nohighlight">\(\beta\)</span> 现在具有形状 <code class="docutils literal notranslate"><span class="pre">shape=(Bi.shape[1],</span> <span class="pre">groups))</span></code>（而不是 <code class="docutils literal notranslate"><span class="pre">shape=(Bg</span> <span class="pre">.shape[1]))</span></code>) 并且我们重塑<code class="docutils literal notranslate"><span class="pre">μi[:,index].T.ravel()</span></code>。</p>
+<div class="literal-block-wrapper docutils container" id="sp-individual">
+<div class="code-block-caption"><span class="caption-number">Listing 71 </span><span class="caption-text">sp_individual</span><a class="headerlink" href="#sp-individual" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">sp_individual</span><span class="p">:</span>
+    <span class="n">τ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfCauchy</span><span class="p">(</span><span class="s2">"τ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">β</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"β"</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">τ</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">Bi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">groups</span><span class="p">))</span>
+    <span class="n">μi</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">"μi"</span><span class="p">,</span> <span class="n">pm</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Bi</span><span class="p">,</span> <span class="n">β</span><span class="p">))</span>
+    <span class="n">σ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">"σ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"up"</span><span class="p">,</span> <span class="n">μi</span><span class="p">[:,</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">σ</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">uptake</span><span class="p">)</span>
+    <span class="n">idata_sp_individual</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>从 <a class="reference internal" href="#fig-sp-individual"><span class="std std-numref">Fig. 99</span></a> 我们现在可以看到我们对 12 种植物中的每一种都有更好的拟合。</p>
+<div class="figure align-default" id="fig-sp-individual">
+<a class="reference internal image-reference" href="../_images/sp_individual.png"><img alt="../_images/sp_individual.png" src="../_images/sp_individual.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 99 </span><span class="caption-text">在 12 种植物的 7 种 CO2 浓度下测量的 CO2 吸收量。黑线是代码 <a class="reference internal" href="#sp-individual"><span class="std std-ref">sp_individual</span></a> 中模型的平均样条拟合，灰色阴影曲线表示该拟合的 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间。</span><a class="headerlink" href="#fig-sp-individual" title="Permalink to this image">¶</a></p>
+</div>
+<p>我们还可以混合以前的两种模型 <a class="footnote-reference brackets" href="#id36" id="id22">13</a>。如果我们想估计 12 种植物加上个体拟合的全球趋势，这可能会很有趣。代码 <a class="reference internal" href="#sp-mix"><span class="std std-ref">sp_mix</span></a> 中的模型“sp_mix”使用先前定义的设计矩阵“Bg”和“Bi”。</p>
+<div class="literal-block-wrapper docutils container" id="sp-mix">
+<div class="code-block-caption"><span class="caption-number">Listing 72 </span><span class="caption-text">sp_mix</span><a class="headerlink" href="#sp-mix" title="Permalink to this code">¶</a></div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">sp_mix</span><span class="p">:</span>
+    <span class="n">τ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfCauchy</span><span class="p">(</span><span class="s2">"τ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">βg</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"βg"</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">τ</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">Bg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">μg</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">"μg"</span><span class="p">,</span> <span class="n">pm</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Bg</span><span class="p">,</span> <span class="n">βg</span><span class="p">))</span>
+    <span class="n">βi</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"βi"</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">τ</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">Bi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">groups</span><span class="p">))</span>
+    <span class="n">μi</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">"μi"</span><span class="p">,</span> <span class="n">pm</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Bi</span><span class="p">,</span> <span class="n">βi</span><span class="p">))</span>
+    <span class="n">σ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">"σ"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"up"</span><span class="p">,</span> <span class="n">μg</span><span class="o">+</span><span class="n">μi</span><span class="p">[:,</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">σ</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">uptake</span><span class="p">)</span>
+    <span class="n">idata_sp_mix</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p><a class="reference internal" href="#fig-sp-mix-decomposed"><span class="std std-numref">Fig. 100</span></a> 显示模型<code class="docutils literal notranslate"><span class="pre">sp_mix</span></code>的拟合。该模型的一个优点是我们可以将个体拟合（蓝色）分解为两个术语，一个全局趋势，黑色，以及每个植物的趋势偏差，灰色。注意黑色的全局趋势如何在每个子图中重复。我们可以看到，偏差不仅在平均吸收上有所不同，即它们不是平坦的直线，而且在不同程度上，它们的功能反应形状也不同。</p>
+<div class="figure align-default" id="fig-sp-mix-decomposed">
+<a class="reference internal image-reference" href="../_images/sp_mix_decomposed.png"><img alt="../_images/sp_mix_decomposed.png" src="../_images/sp_mix_decomposed.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 100 </span><span class="caption-text">在 12 种植物的 7 种 CO2 浓度下测量的 CO2 吸收量。蓝线是代码 <a class="reference internal" href="#sp-mix"><span class="std std-ref">sp_mix</span></a> 中模型的平均样条拟合，灰色阴影曲线表示该拟合的 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间。这种拟合被分解为两项。黑色和深灰色带表示全局贡献，灰色和浅灰色带表示与全局贡献的偏差。蓝线和蓝带是全球趋势及其偏差的总和。</span><a class="headerlink" href="#fig-sp-mix-decomposed" title="Permalink to this image">¶</a></p>
+</div>
+<p><a class="reference internal" href="#fig-sp-compare"><span class="std std-numref">Fig. 101</span></a> 表明根据 LOO <code class="docutils literal notranslate"><span class="pre">sp_mix</span></code> 是比其他两个更好的模型。我们可以看到，由于“sp_mix”和“sp_individual”模型的标准误差部分重叠，因此该声明仍然存在一些不确定性。我们还可以看到，模型<code class="docutils literal notranslate"><span class="pre">sp_mix</span></code>和<code class="docutils literal notranslate"><span class="pre">sp_individual</span></code>比<code class="docutils literal notranslate"><span class="pre">sp_global</span></code>受到更严重的惩罚（<code class="docutils literal notranslate"><span class="pre">sp_global</span></code>的空圆圈和黑色圆圈之间的距离更短）。我们注意到 LOO 计算返回关于帕累托分布的估计形状参数大于 0.7 的警告。对于此示例，我们将在此停止，但为了进行真正的分析，我们应该进一步注意这些警告，并尝试遵循第 <a class="reference internal" href="chp_02.html#k-paretto"><span class="std std-ref">2.5.3 帕累托形状参数</span></a> 部分中描述的一些操作。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmp</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.compare.html#arviz.compare" title="arviz.compare"><span class="n">az</span><span class="o">.</span><span class="n">compare</span></a><span class="p">({</span><span class="s2">"global"</span><span class="p">:</span><span class="n">idata_sp_global</span><span class="p">,</span> 
+                  <span class="s2">"individual"</span><span class="p">:</span><span class="n">idata_sp_individual</span><span class="p">,</span> 
+                  <span class="s2">"mix"</span><span class="p">:</span><span class="n">idata_sp_mix</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="fig-sp-compare">
+<a class="reference internal image-reference" href="../_images/sp_compare.png"><img alt="../_images/sp_compare.png" src="../_images/sp_compare.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 101 </span><span class="caption-text">使用 LOO 对本章讨论的 3 种不同 CO₂ 吸收模型（<code class="docutils literal notranslate"><span class="pre">sp_global</span></code>、<code class="docutils literal notranslate"><span class="pre">sp_individual</span></code>、<code class="docutils literal notranslate"><span class="pre">sp_mix</span></code>）进行模型比较。</span><a class="headerlink" href="#fig-sp-compare" title="Permalink to this image">¶</a></p>
+<div class="legend">
+<p>模型的预测准确度从高到低排列。空心点代表 LOO 的值，黑点是样本内预测精度。黑色部分代表 LOO 计算的标准误差。以三角形为中心的灰色部分表示每个模型的 LOO 值与排名最佳的模型之间的差值的标准误差。</p>
+</div>
+</div>
+</div>
+<div class="section" id="exercises5">
+<span id="id23"></span><h2>5.8 练习<a class="headerlink" href="#exercises5" title="Permalink to this headline">¶</a></h2>
+<p><strong>5E1.</strong>. Splines are quite powerful so its good to know when and where to use them. To reinforce this explain each of the following</p>
+<ol class="simple">
+<li><p>The differences between linear regression and splines.</p></li>
+<li><p>When you may want to use linear regression over splines</p></li>
+<li><p>Why splines is usually preferred over polynomial regression of high     order.</p></li>
+</ol>
+<p><strong>5E2.</strong> Redo <a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a> but fitting a polynomial of degree 0 and of degree 1. Does they look similar to any other type of model. Hint: you may want to use the code in the GitHub repository.</p>
+<p><strong>5E3.</strong> Redo <a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> but changing the value of one or the two knots. How the position of the knots affects the fit? You will find the code in the GitHub repository.</p>
+<p><strong>5E4.</strong> Below we provide some data. To each data fit a 0, 1, and 3 degree spline. Plot the fit, including the data and position of the knots. Use <code class="docutils literal notranslate"><span class="pre">knots</span> <span class="pre">=</span> <span class="pre">np.linspace(-0.8,</span> <span class="pre">0.8,</span> <span class="pre">4)</span></code>. Describe the fit.</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">np.linspace(-1,</span> <span class="pre">1.,</span> <span class="pre">200)</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">np.random.normal(2*x,</span> <span class="pre">0.25)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">np.linspace(-1,</span> <span class="pre">1.,</span> <span class="pre">200)</span></code> and     <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">np.random.normal(x**2,</span> <span class="pre">0.25)</span></code></p></li>
+<li><p>pick a function you like.</p></li>
+</ol>
+<p><strong>5E5.</strong> In Code Block <a class="reference internal" href="#bikes-dmatrix"><span class="std std-ref">bikes_dmatrix</span></a> we used a non-cyclic aware design matrix. Plot this design matrix. Then generate a cyclic design matrix. Plot this one too what is the difference?</p>
+<p><strong>5E6.</strong> Generate the following design matrices using Patsy.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">knots</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">]</span>
+
+<span class="n">B0</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="s2">"bs(x, knots=knots, degree=3, include_intercept=False) +1"</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span><span class="n">knots</span><span class="p">})</span>
+<span class="n">B1</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="s2">"bs(x, knots=knots, degree=3, include_intercept=True) +1"</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span><span class="n">knots</span><span class="p">})</span>
+<span class="n">B2</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="s2">"bs(x, knots=knots, degree=3, include_intercept=False) -1"</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span><span class="n">knots</span><span class="p">})</span>
+<span class="n">B3</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="s2">"bs(x, knots=knots, degree=3, include_intercept=True) -1"</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"knots"</span><span class="p">:</span><span class="n">knots</span><span class="p">})</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>What is the shape of each one of the matrices? Can you justify the   values for the shapes?</p></li>
+<li><p>Could you explain what the arguments <code class="docutils literal notranslate"><span class="pre">include_intercept=True/False</span></code>   and the <code class="docutils literal notranslate"><span class="pre">+1/-1</span></code> do? Try generating figures like   <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> and <a class="reference internal" href="#fig-design-matrices"><span class="std std-numref">Fig. 92</span></a> to   help you answer this question</p></li>
+</ol>
+<p><strong>5E7.</strong> Refit the bike rental example using the options listed below. Visually compare the results and try to explain the results:</p>
+<ol class="simple">
+<li><p>Code Block <a class="reference internal" href="#knot-list"><span class="std std-ref">knot_list</span></a> but do not remove   the first and last knots (i.e. without using 1:-1)</p></li>
+<li><p>Use quantiles to set the knots instead of spacing them linearly.</p></li>
+<li><p>Repeat the previous two points but with less knots</p></li>
+</ol>
+<p><strong>5E8.</strong> In the GitHub repository you will find the spectra dataset use it to:</p>
+<ol class="simple">
+<li><p>Fit a cubic spline with knots   <code class="docutils literal notranslate"><span class="pre">np.quantile(X,</span> <span class="pre">np.arange(0.1,</span> <span class="pre">1,</span> <span class="pre">0.02))</span></code> and a Gaussian prior (like   in Code Block <a class="reference internal" href="#splines"><span class="std std-ref">splines</span></a>)</p></li>
+<li><p>Fit a cubic spline with knots   <code class="docutils literal notranslate"><span class="pre">np.quantile(X,</span> <span class="pre">np.arange(0.1,</span> <span class="pre">1,</span> <span class="pre">0.02))</span></code> and a Gaussian Random Walk   prior (like in Code Block <a class="reference internal" href="#splines-rw"><span class="std std-ref">splines_rw</span></a>)</p></li>
+<li><p>Fit a cubic spline with knots   <code class="docutils literal notranslate"><span class="pre">np.quantile(X,</span> <span class="pre">np.arange(0.1,</span> <span class="pre">1,</span> <span class="pre">0.1))</span></code> and a Gaussian prior (like   in Code Block <a class="reference internal" href="#splines"><span class="std std-ref">splines</span></a>)</p></li>
+<li><p>compare the fits visually and using LOO</p></li>
+</ol>
+<p><strong>5M9.</strong> Redo <a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> extending <code class="docutils literal notranslate"><span class="pre">x_max</span></code> from 6 to 12.</p>
+<ol class="simple">
+<li><p>How this change affects the fit?</p></li>
+<li><p>What are the implications for extrapolation?</p></li>
+<li><p>add one more knot and make the necessary changes in the code so the   fit actually use the 3 knots.</p></li>
+<li><p>change the position of the third new knot to improve the fit as much   as possible.</p></li>
+</ol>
+<p><strong>5M10.</strong> For the bike rental example increase the number of knots. What is the effect on the fit? Change the width of the prior and visually evaluate the effect on the fit. What do you think the combination of knot number and prior weights controls?</p>
+<p><strong>5M11.</strong> Fit the baby regression example from Chapter <a class="reference internal" href="chp_04.html#chap3"><span class="std std-ref">4</span></a> using splines.</p>
+<p><strong>5M12.</strong> In Code Block <a class="reference internal" href="#bikes-dmatrix"><span class="std std-ref">bikes_dmatrix</span></a> we used a non-circular aware design matrix. Since we describe the hours in a day as cyclic, we want to use cyclic splines. However, there is one wrinkle. In the original dataset the hours range from 0 to 23, so using a circular spline patsy would treat 0 and 23 are the same. Still, we want a circular spline regression so perform the following steps.</p>
+<ol class="simple">
+<li><p>Duplicate the 0 hour data label it as 24.</p></li>
+<li><p>Generate a circular design matrix and a non-circular design matrix   with this modified dataset. Plot the results and compare.</p></li>
+<li><p>Refit the bike spline dataset.</p></li>
+<li><p>Explain what the effect of the circular spine regression was using   plots, numerical summaries, and diagnostics.</p></li>
+</ol>
+<p><strong>5M13.</strong> For the rent bike example we use a Gaussian as likelihood, this can be seen as a reasonable approximation when the number of counts is large, but still brings some problems, like predicting negative number of rented bikes (for example, at night when the observed number of rented bikes is close to zero). To fix this issue and improve our models we can try with other likelihoods:</p>
+<ol class="simple">
+<li><p>use a Poisson likelihood (hint you may need to restrict the <span class="math notranslate nohighlight">\(\beta\)</span>   coefficients to be positive, and you can not normalize the data as   we did in the example). How the fit differs from the example in the   book. is this a better fit? In what sense?</p></li>
+<li><p>use a NegativeBinomial likelihood, how the fit differs from the   previous two? Could you explain the differences (hint, the   NegativeBinomial can be considered as a mixture model of Poisson   distributions, which often helps to model overdispersed data)</p></li>
+<li><p>Use LOO to compare the spline model with Poisson and   NegativeBinomial likelihoods. Which one has the best predictive   performance?</p></li>
+<li><p>Can you justify the values of <code class="docutils literal notranslate"><span class="pre">p_loo</span></code> and the values of   <span class="math notranslate nohighlight">\(\hat \kappa\)</span>?</p></li>
+<li><p>Use LOO-PIT to compare Gaussian, NegativeBinomial and Poisson models</p></li>
+</ol>
+<p><strong>5M14.</strong> Using the model in Code Block <a class="reference internal" href="#splines"><span class="std std-ref">splines</span></a> as a guide and for <span class="math notranslate nohighlight">\(X \in [0, 1]\)</span>, set <span class="math notranslate nohighlight">\(\tau \sim \text{Laplace}(0, 1)\)</span>:</p>
+<ol class="simple">
+<li><p>Sample and plot realizations from the prior for <span class="math notranslate nohighlight">\(\mu\)</span>. Use different   number and locations for the knots</p></li>
+<li><p>What is the prior expectation for <span class="math notranslate nohighlight">\(\mu(x_i)\)</span> and how does it depend   on the knots and X?</p></li>
+<li><p>What is the prior expectation for the standard deviations of   <span class="math notranslate nohighlight">\(\mu(x_i)\)</span> and how does it depend on the knots and X?</p></li>
+<li><p>Repeat the previous points for the prior predictive distribution</p></li>
+<li><p>Repeat the previous points using a <span class="math notranslate nohighlight">\(\mathcal{H}\text{C}(1)\)</span></p></li>
+</ol>
+<p><strong>5M15.</strong> Fit the following data. Notice that the response variable is binary so you will need to adjust the likelihood accordingly and use a link function.</p>
+<ol class="simple">
+<li><p>a logistic regression from a previous chapter. Visually compare the   results between both models.</p></li>
+<li><p>Space Influenza is a disease which affects mostly young and old   people, but not middle-age folks. Fortunately, Space Influenza is   not a serious concern as it is completely made up. In this dataset   we have a record of people that got tested for Space Influenza and   whether they are sick (1) or healthy (0) and also their age. Could   you have solved this problem using logistic regression?</p></li>
+</ol>
+<p><strong>5M16.</strong> Besides “hour” the bike dataset has other covariates, like “temperature”. Fit a splines using both covariates. The simplest way to do this is by defining a separated spline/design matrix for each covariate. Fit a model with a NegativeBinomial likelihood.</p>
+<ol class="simple">
+<li><p>Run diagnostics to check the sampling is correct and modify the   model and or sample hyperparameters accordingly.</p></li>
+<li><p>How the rented bikes depend on the hours of the day and how on the   temperature?</p></li>
+<li><p>Generate a model with only the hour covariate to the one with the   “hour” and “temperature”. Compare both model using LOO, LOO-PIT and   posterior predictive checks.</p></li>
+<li><p>Summarize all your findings</p></li>
+</ol>
+<hr class="docutils"/>
+<hr class="footnotes docutils"/>
+<dl class="footnote brackets">
+<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dd><p>See Runge’s phenomenon for details. This can also be seen from   Taylor’s theorem, polynomials will be useful to approximate a   function close to a single given point, but it will not be good over   its whole domain. If you got lost try watching this video   <a class="reference external" href="https://www.youtube.com/watch?v=3d6DsjIBzJ4">https://www.youtube.com/watch?v=3d6DsjIBzJ4</a>.</p>
+</dd>
+<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id5">2</a></span></dt>
+<dd><p>A piecewise function is a function that is defined using   sub-functions, where each sub-function applies to a different   interval in the domain.</p>
+</dd>
+<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id6">3</a></span></dt>
+<dd><p>In Chapter <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref">7</span></a> we explore how step-functions have a   central role in Bayesian Additive Regression Trees.</p>
+</dd>
+<dt class="label" id="id27"><span class="brackets"><a class="fn-backref" href="#id7">4</a></span></dt>
+<dd><p>This can also be justified numerically as this reduces the number   of coefficients we need to find to compute a solution.</p>
+</dd>
+<dt class="label" id="id28"><span class="brackets"><a class="fn-backref" href="#id8">5</a></span></dt>
+<dd><p>As usual the identity function is a valid choice.</p>
+</dd>
+<dt class="label" id="id29"><span class="brackets"><a class="fn-backref" href="#id10">6</a></span></dt>
+<dd><p>Other basis functions could be wavelets or Fourier series as we   will see in Chapter <a class="reference internal" href="chp_06.html#chap4"><span class="std std-ref">6</span></a>.</p>
+</dd>
+<dt class="label" id="id30"><span class="brackets"><a class="fn-backref" href="#id12">7</a></span></dt>
+<dd><p>Also known as break points, which is arguably a more memorable   name, but still knots is widely used in the literature.</p>
+</dd>
+<dt class="label" id="id31"><span class="brackets"><a class="fn-backref" href="#id13">8</a></span></dt>
+<dd><p>In the limit of infinite degree a B-spline will span the entire   real line and not only that, it will converge to a Gaussian   <a class="reference external" href="https://www.youtube.com/watch/9CS7j5I6aOc">https://www.youtube.com/watch/9CS7j5I6aOc</a>.</p>
+</dd>
+<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id14">9</a></span></dt>
+<dd><p>Check   <a class="reference external" href="https://pclambert.net/interactivegraphs/spline_continuity/spline_continuity">https://pclambert.net/interactivegraphs/spline_continuity/spline_continuity</a>   for further intuition</p>
+</dd>
+<dt class="label" id="id33"><span class="brackets"><a class="fn-backref" href="#id15">10</a></span></dt>
+<dd><p>If interested you can check   <a class="reference external" href="https://en.wikipedia.org/wiki/De_Boor%27s_algorithm">https://en.wikipedia.org/wiki/De_Boor%27s_algorithm</a>.</p>
+</dd>
+<dt class="label" id="id34"><span class="brackets"><a class="fn-backref" href="#id16">11</a></span></dt>
+<dd><p><a class="reference external" href="https://patsy.readthedocs.io">https://patsy.readthedocs.io</a></p>
+</dd>
+<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id17">12</a></span></dt>
+<dd><p><a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset">https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset</a></p>
+</dd>
+<dt class="label" id="id36"><span class="brackets"><a class="fn-backref" href="#id22">13</a></span></dt>
+<dd><p>Yes, this is also known as a mixed-effect model, you might recall   the related concept we discussed in Chapter <a class="reference internal" href="chp_04.html#chap3"><span class="std std-ref">4</span></a>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./zh_CN"
+        },
+        predefinedOutput: true
+    }
+    </script>
+<script>kernelName = 'python3'</script>
+</div>
+<!-- Previous / next buttons -->
+<div class="prev-next-area">
+<a class="left-prev" href="chp_04.html" id="prev-link" title="previous page">
+<i class="fas fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">第四章：扩展线性模型</p>
+</div>
+</a>
+<a class="right-next" href="chp_06.html" id="next-link" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">第六章: 时间序列</p>
+</div>
+<i class="fas fa-angle-right"></i>
+</a>
+</div>
+</div>
+</div>
+<footer class="footer">
+<p>
+    
+      By Martin, Kumar, Lao<br/>
+    
+        © Copyright 2021.<br/>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</body>
+</html>
