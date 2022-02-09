@@ -537,7 +537,7 @@
 <p>在底部子图上，我们有来自后验的样本，每个样本都是 <span class="math notranslate nohighlight">\(m\)</span> 树的总和。</p>
 <div class="figure align-default" id="fig-bart-bikes-samples">
 <a class="reference internal image-reference" href="../_images/BART_bikes_samples.png"><img alt="../_images/BART_bikes_samples.png" src="../_images/BART_bikes_samples.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 124 </span><span class="caption-text">后树实现。顶部子图，从后部取样的三棵树。底部子图，三个后验样本，每个样本都是 <span class="math notranslate nohighlight">\(m\)</span> 树的总和。实际 BART 采样值由圆圈表示，而虚线是视觉辅助。小圆点（仅在底部子图中）表示观察到的租用自行车数量。</span><a class="headerlink" href="#fig-bart-bikes-samples" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 124 </span><span class="caption-text">后树实现。顶部子图，从后验取样的三棵树。底部子图，三个后验样本，每个样本都是 <span class="math notranslate nohighlight">\(m\)</span> 树的总和。实际 BART 采样值由圆圈表示，而虚线是视觉辅助。小圆点（仅在底部子图中）表示观察到的租用自行车数量。</span><a class="headerlink" href="#fig-bart-bikes-samples" title="Permalink to this image">¶</a></p>
 </div>
 <p><a class="reference internal" href="#fig-bart-bikes"><span class="std std-numref">Fig. 125</span></a> 显示了将 BART 拟合到自行车数据集的结果（租用自行车的数量与一天中的小时数）。与使用样条线创建的 <a class="reference internal" href="chp_05.html#fig-bikes-data2"><span class="std std-numref">Fig. 95</span></a> 相比，该图提供了类似的拟合。与使用样条曲线获得的拟合相比，BART 拟合的锯齿状特征越明显，差异越明显。</p>
 <p>这并不是说没有其他差异，例如 HDI 的宽度。</p>
