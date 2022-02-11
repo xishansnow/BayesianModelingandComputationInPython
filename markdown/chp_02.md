@@ -621,10 +621,7 @@ of samples will not reduce the variance of the estimation further.
 Nevertheless, in practice it is better to just think of it as a
 diagnostic tool without trying to over-interpret it.
 
-The $\hat R$ for the parameter $\theta$ is computed as the standard
-deviation of all the samples of $\theta$, that is including all chains
-together, divided by the root mean square of the separated within-chain
-standard deviations. The actual computation is a little bit more
+The $\hat R$ for the parameter $\theta$ is computed as the standard deviation of all the samples of $\theta$ divided by the root mean square of the separated within-chain standard deviations. The actual computation is a little bit more
 involved but the overall idea remains true {cite:p}`vehtari_rank_2019`. Ideally
 we should get a value of 1, as the variance between chains should be the
 same as the variance within-chain. From a practical point of view values
@@ -796,8 +793,7 @@ be somehow similar to the one from `good_chains`, but a more careful
 inspection reveals the presence of long regions of monotonicity (the
 lines parallel to the x-axis). This is a clear indication that the
 sampler is getting stuck in some regions of the parameter space, maybe
-because we have a multimodal posterior with barrier between modes of
-very low probability or perhaps because we have some regions of the
+because we have a multimodal posterior with barrier between modes of very low probability or perhaps because we have some regions of the
 parameter space with a curvature that is too different from the rest.
 
 (autocorr_plot)=
@@ -825,8 +821,7 @@ indicate large values of autocorrelation, which is undesirable. The gray
 band represents the 95% confidence interval.
 ```
 
-What we see in {numref}`fig:autocorrelation_plot` is at least
-qualitatively expected after seeing the results from `az.ess`.
+it is at least expected after seeing the results from `az.ess`.
 `good_chains` shows essentially zero autocorrelation, `bad_chains0` is
 highly correlated and `bad_chains1` is not that bad, but autocorrelation
 is still noticeable and is long-range, i.e. it does not drop quickly.
@@ -896,8 +891,6 @@ do and as a result, we need to explore many different alternatives. As
 we progress and the model or models start to make more sense we can then
 check that the ESS, $\hat R$, and MCSE are okay and if not okay know
 that our model needs further refinements.
-
-(divergences)=
 
 ### Divergences
 
@@ -1184,8 +1177,7 @@ computed using LOO-CV is $\text{ELPD}_\text{LOO-CV}$:
 
 Computing Equation {eq}`eq:elpd_loo_cv` can easily become too costly as
 in practice we do not know $\boldsymbol{\theta}$ and thus we need to
-compute $n$ posteriors, i.e. as many values of
-$\boldsymbol{\theta_{-i}}$ as observations we have in our dataset.
+compute $n$ posteriors, i.e. as many values as observations we have in our dataset.
 Fortunately, we can approximate $\text{ELPD}_\text{LOO-CV}$ from a
 single fit to the data by using a method known as Pareto smoothed
 importance sampling leave-one-out cross validation PSIS-LOO-CV (see Section
