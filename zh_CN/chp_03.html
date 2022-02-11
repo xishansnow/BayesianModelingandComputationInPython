@@ -383,7 +383,7 @@
 <div class="section" id="comparing-distributions">
 <span id="id2"></span><h2>3.1 比较两个或多个组<a class="headerlink" href="#comparing-distributions" title="Permalink to this headline">¶</a></h2>
 <p>如果你正在寻找一些可以比较的东西，那么企鹅是最合适不过的了。</p>
-<p>我们的第一个问题可能是 “每个企鹅物种的平均质量是多少？”，或者可能是“这些平均质量有什么不同？”，或者用统计学术语来说 “平均值的离散度是多少？” 。</p>
+<p>我们的第一个问题可能是 “每个企鹅物种的平均质量是多少？”，或者可能是“这些平均质量有什么不同？”，或者用统计学术语来说 “均值的离散度是多少？” 。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Kristen</span> <span class="pre">Gorman</span></code> 很喜欢研究企鹅，她访问了 <span class="math notranslate nohighlight">\(3\)</span> 个南极岛屿并收集了有关 <code class="docutils literal notranslate"><span class="pre">Adelie</span></code>、<code class="docutils literal notranslate"><span class="pre">Gentoo</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Chinstrap</span></code> 物种的数据，这些数据被编撰进了 <code class="docutils literal notranslate"><span class="pre">Palmer</span> <span class="pre">Penguins</span> <span class="pre">数据集</span></code>中 <span id="id3">[<a class="reference internal" href="references.html#id58">28</a>]</span>。观测数据包括企鹅的质量、鳍状肢的长度、性别的物理特征、所居住的岛屿等。</p>
 <p>我们首先通过代码 <a class="reference internal" href="#penguin-load"><span class="std std-ref">penguin_load</span></a> 加载数据，并过滤掉存在缺失数据的行。这种方式被称为<strong>完整案例分析</strong>，顾名思义，我们只使用所有观测值都存在的行。虽然有一些处理缺失数据的成熟方法，但此处我们将采用最简单的剔除法。</p>
 <div class="literal-block-wrapper docutils container" id="penguin-load">
@@ -398,7 +398,7 @@
 </pre></div>
 </div>
 </div>
-<p>然后，我们可以用代码 <a class="reference internal" href="#penguin-mass-empirical"><span class="std std-ref">penguin_mass_empirical</span></a> 计算企鹅质量的经验平均值  <code class="docutils literal notranslate"><span class="pre">body_mass_g</span></code> ，其结果展示在 <a class="reference internal" href="#tab-penguin-mass-parameters-point-estimates"><span class="std std-numref">Table 3</span></a> 中。</p>
+<p>然后，我们可以用代码 <a class="reference internal" href="#penguin-mass-empirical"><span class="std std-ref">penguin_mass_empirical</span></a> 计算企鹅质量的经验均值  <code class="docutils literal notranslate"><span class="pre">body_mass_g</span></code> ，其结果展示在 <a class="reference internal" href="#tab-penguin-mass-parameters-point-estimates"><span class="std std-numref">Table 3</span></a> 中。</p>
 <div class="literal-block-wrapper docutils container" id="penguin-mass-empirical">
 <div class="code-block-caption"><span class="caption-number">Listing 15 </span><span class="caption-text">penguin_mass_empirical</span><a class="headerlink" href="#penguin-mass-empirical" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summary_stats</span> <span class="o">=</span> <span class="p">(</span><span class="n">penguins</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">"species"</span><span class="p">,</span> <span class="s2">"body_mass_g"</span><span class="p">]]</span>
@@ -520,12 +520,12 @@
 </table>
 <div class="figure align-default" id="fig-single-penguins-rank-kde-plot">
 <a class="reference internal image-reference" href="../_images/SingleSpecies_KDE_RankPlot.png"><img alt="../_images/SingleSpecies_KDE_RankPlot.png" src="../_images/SingleSpecies_KDE_RankPlot.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 33 </span><span class="caption-text">企鹅质量的代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中贝叶斯模型后验的 KDE 和秩图。该图用作采样的可视化诊断，以辅助判断在跨多个链的采样过程中是否存在问题。</span><a class="headerlink" href="#fig-single-penguins-rank-kde-plot" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 33 </span><span class="caption-text">企鹅质量的代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中贝叶斯模型后验的核密度估计和秩图。该图用作采样的可视化诊断，以辅助判断在跨多个链的采样过程中是否存在问题。</span><a class="headerlink" href="#fig-single-penguins-rank-kde-plot" title="Permalink to this image">¶</a></p>
 </div>
 <p>为了理解拟合结果，我们在 <a class="reference internal" href="#fig-singlespecies-mass-posteriorplot"><span class="std std-numref">Fig. 34</span></a> 中绘制了一个结合所有链的后验图；并将来自 <a class="reference internal" href="#tab-penguin-mass-parameters-point-estimates"><span class="std std-numref">Table 3</span></a> 的均值和标准差的点估计值与贝叶斯估计值进行比较。</p>
 <div class="figure align-default" id="fig-singlespecies-mass-posteriorplot">
 <a class="reference internal image-reference" href="../_images/SingleSpecies_Mass_PosteriorPlot.png"><img alt="../_images/SingleSpecies_Mass_PosteriorPlot.png" src="../_images/SingleSpecies_Mass_PosteriorPlot.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 34 </span><span class="caption-text">Adelie 种企鹅质量的代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中，贝叶斯模型的后验分布图，其中，垂直线是经验均值和标准差。</span><a class="headerlink" href="#fig-singlespecies-mass-posteriorplot" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 34 </span><span class="caption-text">Adelie 种企鹅质量的代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中，贝叶斯模型的后验分布图，其中，垂线是经验均值和标准差。</span><a class="headerlink" href="#fig-singlespecies-mass-posteriorplot" title="Permalink to this image">¶</a></p>
 </div>
 <p>通过贝叶斯估计，我们得到了合理参数的分布。使用表 <a class="reference internal" href="#tab-penguin-mass-parameters-bayesian-estimates"><span class="std std-numref">Table 4</span></a> 中的摘要信息，来自 <a class="reference internal" href="#fig-single-penguins-rank-kde-plot"><span class="std std-numref">Fig. 33</span></a> 中相同的后验分布，从 <span class="math notranslate nohighlight">\(3632\)</span> 到 <span class="math notranslate nohighlight">\(3772\)</span> 克的均值相当合理。</p>
 <p>注意，边缘后验分布的标准差也有很大差异。请记住，后验分布不是单个企鹅质量的分布，而是描述企鹅质量的高斯分布的参数。</p>
@@ -668,7 +668,7 @@
 </pre></div>
 </div>
 </div>
-<p>在代码 <a class="reference internal" href="#tfp-posterior-inference"><span class="std std-ref">tfp_posterior_inference</span></a> 中，我们运行了 4 个 MCMC 链，每个链在 1000 个适应步骤后有 1000 个后验样本。在内部，它通过使用观测到的（附加关键字参数“mass=body_mass_g”最后）调节模型（作为参数传递给函数）来调用“experimental_pin”方法。</p>
+<p>在代码 <a class="reference internal" href="#tfp-posterior-inference"><span class="std std-ref">tfp_posterior_inference</span></a> 中，我们运行了 4 个 MCMC 链，每条链在 1000 个适应步骤后有 1000 个后验样本。在内部，它通过使用观测到的（附加关键字参数“mass=body_mass_g”最后）调节模型（作为参数传递给函数）来调用“experimental_pin”方法。</p>
 <p>第 8-18 行将采样结果解析为 ArviZ InferenceData，我们现在可以在 ArviZ 中对贝叶斯模型进行诊断和探索性分析。我们还可以在下面的代码 <a class="reference internal" href="#tfp-idata-additional"><span class="std std-ref">tfp_idata_additional</span></a> 中以透明的方式将先验和后验预测样本和数据对数似然添加到<code class="docutils literal notranslate"><span class="pre">inf_data_model_penguin_mass_all_species2</span></code>。请注意，我们使用了 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 的 <code class="docutils literal notranslate"><span class="pre">sample_distributions</span></code> 方法，该方法抽取样本<em>并</em>生成以后验样本为条件的分布。</p>
 <div class="literal-block-wrapper docutils container" id="tfp-idata-additional">
 <div class="code-block-caption"><span class="caption-number">Listing 24 </span><span class="caption-text">tfp_idata_additional</span><a class="headerlink" href="#tfp-idata-additional" title="Permalink to this code">¶</a></div>
@@ -695,7 +695,7 @@
 </div>
 <div class="section" id="linear-regression">
 <span id="id10"></span><h2>3.2 线性回归<a class="headerlink" href="#linear-regression" title="Permalink to this headline">¶</a></h2>
-<p>在上一节中，我们通过在高斯分布的均值和标准差上设置先验分布来模拟企鹅质量的分布。重要的是，我们假设质量不随数据中的其他特征而变化。然而，我们希望其他观测数据点可以提供有关预期企鹅质量的信息。直观地说，如果我们看到两只企鹅，一只长鳍，一只短鳍，我们会认为较大的企鹅，即长鳍的企鹅，即使我们手头没有秤来精确测量它们的质量，也会有更大的质量。估计观测到的鳍状肢长度与估计质量的关系的最简单方法之一是拟合线性回归模型，其中平均值<em>有条件</em>建模为其他变量的线性组合。</p>
+<p>在上一节中，我们通过在高斯分布的均值和标准差上设置先验分布来模拟企鹅质量的分布。重要的是，我们假设质量不随数据中的其他特征而变化。然而，我们希望其他观测数据点可以提供有关预期企鹅质量的信息。直观地说，如果我们看到两只企鹅，一只长鳍，一只短鳍，我们会认为较大的企鹅，即长鳍的企鹅，即使我们手头没有秤来精确测量它们的质量，也会有更大的质量。估计观测到的鳍状肢长度与估计质量的关系的最简单方法之一是拟合线性回归模型，其中均值<em>有条件</em>建模为其他变量的线性组合。</p>
 <div class="math notranslate nohighlight" id="equation-eq-expanded-regression">
 <span class="eqno">(25)<a class="headerlink" href="#equation-eq-expanded-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
   \mu =&amp; \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m \\
@@ -764,7 +764,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 <div class="figure align-default" id="fig-flipper-length-mass-regression">
 <a class="reference internal image-reference" href="../_images/Flipper_length_mass_regression.png"><img alt="../_images/Flipper_length_mass_regression.png" src="../_images/Flipper_length_mass_regression.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 41 </span><span class="caption-text">观测到的鳍状肢长度与 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code> 的质量数据作散点图，似然的平均值估计为黑线，平均值的 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 为灰色区间。请注意估计的均值如何随着鳍状肢长度变化而变化。</span><a class="headerlink" href="#fig-flipper-length-mass-regression" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 41 </span><span class="caption-text">观测到的鳍状肢长度与 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code> 的质量数据作散点图，似然的均值估计为黑线，均值的 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 为灰色区间。请注意估计的均值如何随着鳍状肢长度变化而变化。</span><a class="headerlink" href="#fig-flipper-length-mass-regression" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="chp2-predictions">
@@ -1296,7 +1296,7 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">array</span><span class="p">([</span><span class="mf">2.14705882</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>赔率由与概率相同的组分组成，但以一种更直接地方式，解释了一个事件发生与另一个事件发生的比率。以赔率表示，如果从 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code>和 <code class="docutils literal notranslate"><span class="pre">Chinstrap</span> <span class="pre">种</span></code>企鹅中随机抽样，则根据代码 <a class="reference internal" href="#adelie-odds"><span class="std std-ref">adelie_odds</span></a> 计算，我们预计最终得到的 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code>企鹅的赔率比 <code class="docutils literal notranslate"><span class="pre">Chinstrap</span> <span class="pre">种</span></code> 企鹅高 <span class="math notranslate nohighlight">\(2.14\)</span>。</p>
+<p>赔率由与概率相同的组分组成，但以一种更直接地方式，解释了一个事件发生与另一个事件发生的比率。以赔率表示，如果从 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code>和 <code class="docutils literal notranslate"><span class="pre">Chinstrap</span> <span class="pre">种</span></code>企鹅中随机采样，则根据代码 <a class="reference internal" href="#adelie-odds"><span class="std std-ref">adelie_odds</span></a> 计算，我们预计最终得到的 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code>企鹅的赔率比 <code class="docutils literal notranslate"><span class="pre">Chinstrap</span> <span class="pre">种</span></code> 企鹅高 <span class="math notranslate nohighlight">\(2.14\)</span>。</p>
 <p>利用对赔率的了解，我们可以定义 <code class="docutils literal notranslate"><span class="pre">logit</span></code>。 <code class="docutils literal notranslate"><span class="pre">logit</span></code> 是赔率的自然对数，它是公式 <a class="reference internal" href="#equation-eq-logit">(30)</a> 中显示的分数。我们可以用 <code class="docutils literal notranslate"><span class="pre">logit</span></code> 重写公式 <a class="reference internal" href="#equation-eq-logistic">(29)</a> 中的逻辑斯谛回归。</p>
 <div class="math notranslate nohighlight" id="equation-eq-logit">
 <span class="eqno">(30)<a class="headerlink" href="#equation-eq-logit" title="Permalink to this equation">¶</a></span>\[\log \left(\frac{p}{1-p} \right) = \boldsymbol{X} \beta \]</div>
@@ -1360,7 +1360,7 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 </div>
 <p>名义上，我们将假设出生在男性和女性之间平均分配，并且吸引力对性别比例没有影响。这意味着将截距 <span class="math notranslate nohighlight">\(\beta_0\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(50\)</span>，将系数 <span class="math notranslate nohighlight">\(\beta_1\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(0\)</span>。我们还设置了宽的离散度来表达我们对截距和吸引力对性别比影响的不确定性。这并不是一个完全<em>无信息的先验</em>，我们在第 <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 量化先验信息的几种选择</span></a> 节中介绍过它，不过它是一个非常宽的先验。</p>
 <p>根据上述选择，我们在代码 <a class="reference internal" href="#uninformative-prior-sex-ratio"><span class="std std-ref">uninformative_prior_sex_ratio</span></a>) 中编写了模型、运行推断、并生成样本来估计后验分布。
-根据数据和模型，我们估计 <span class="math notranslate nohighlight">\(\beta_1\)</span> 的平均值为 <span class="math notranslate nohighlight">\(1.4\)</span>，这意味着与最具吸引力的群体相比，吸引力最小的群体的出生率平均相差 <span class="math notranslate nohighlight">\(7.4\%\)</span> 。在 <a class="reference internal" href="#fig-posterioruninformativelinearregression"><span class="std std-numref">Fig. 55</span></a> 中，如果我们包括不确定性，则在将参数条件化为数据之前，从 <span class="math notranslate nohighlight">\(50\)</span> 条可能的“拟合线”随机样本中，每单位吸引力的出生比率可以变化超过 <span class="math notranslate nohighlight">\(20\%\)</span> 。</p>
+根据数据和模型，我们估计 <span class="math notranslate nohighlight">\(\beta_1\)</span> 的均值为 <span class="math notranslate nohighlight">\(1.4\)</span>，这意味着与最具吸引力的群体相比，吸引力最小的群体的出生率平均相差 <span class="math notranslate nohighlight">\(7.4\%\)</span> 。在 <a class="reference internal" href="#fig-posterioruninformativelinearregression"><span class="std std-numref">Fig. 55</span></a> 中，如果我们包括不确定性，则在将参数条件化为数据之前，从 <span class="math notranslate nohighlight">\(50\)</span> 条可能的“拟合线”随机样本中，每单位吸引力的出生比率可以变化超过 <span class="math notranslate nohighlight">\(20\%\)</span> 。</p>
 <p>从数学角度来看，该结果是有效的。但从常识和我们对该研究之外的出生性别比来理解，这些结果值得怀疑。出生时的“自然”性别比约为 “ <span class="math notranslate nohighlight">\(105\)</span> 个男孩/<span class="math notranslate nohighlight">\(100\)</span> 个女孩” ( 大约 <span class="math notranslate nohighlight">\(103\)</span> 到 <span class="math notranslate nohighlight">\(107\)</span> 个男孩 )，这意味着出生时的性别比为 <span class="math notranslate nohighlight">\(48.5%\)</span> ，标准差为 <span class="math notranslate nohighlight">\(0.5\)</span>。此外，即便与人类生物学更内在联系的因素，也不会对出生率影响到这种大的程度，这主观上削弱了吸引力应该具有这种影响程度的信念。鉴于此信息，两组之间 <span class="math notranslate nohighlight">\(8%\)</span> 的变化将需要特殊的观测。</p>
 <p>让我们再次运行模型，但这次使用代码 <a class="reference internal" href="#informative-prior-sex-ratio"><span class="std std-ref">informative_prior_sex_ratio</span></a> 中显示的更具信息性的先验。绘制后验样本，会发现系数的非常集中，并且在考虑可能的比率时，绘制的后验直线落入了更合理的范围内。</p>
 <div class="literal-block-wrapper docutils container" id="informative-prior-sex-ratio">

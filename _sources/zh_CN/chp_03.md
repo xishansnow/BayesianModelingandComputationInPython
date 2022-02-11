@@ -36,7 +36,7 @@ kernelspec:
 
 如果你正在寻找一些可以比较的东西，那么企鹅是最合适不过的了。
 
-我们的第一个问题可能是 “每个企鹅物种的平均质量是多少？”，或者可能是“这些平均质量有什么不同？”，或者用统计学术语来说 “平均值的离散度是多少？” 。
+我们的第一个问题可能是 “每个企鹅物种的平均质量是多少？”，或者可能是“这些平均质量有什么不同？”，或者用统计学术语来说 “均值的离散度是多少？” 。
 
 `Kristen Gorman` 很喜欢研究企鹅，她访问了 $3$ 个南极岛屿并收集了有关 `Adelie`、`Gentoo` 和 `Chinstrap` 物种的数据，这些数据被编撰进了 `Palmer Penguins 数据集`中 {cite:p}`PalmerPenguins`。观测数据包括企鹅的质量、鳍状肢的长度、性别的物理特征、所居住的岛屿等。
 
@@ -55,7 +55,7 @@ missing_data = penguins.isnull()[
 penguins = penguins.loc[~missing_data]
 ``` 
 
-然后，我们可以用代码 [penguin_mass_empirical](penguin_mass_empirical) 计算企鹅质量的经验平均值  `body_mass_g` ，其结果展示在 {numref}`tab:penguin_mass_parameters_point_estimates` 中。
+然后，我们可以用代码 [penguin_mass_empirical](penguin_mass_empirical) 计算企鹅质量的经验均值  `body_mass_g` ，其结果展示在 {numref}`tab:penguin_mass_parameters_point_estimates` 中。
 
 ```{code-block} ipython3 
 :name: penguin_mass_empirical
@@ -171,7 +171,7 @@ with pm.Model() as model_adelie_penguin_mass:
 :name: fig:single_penguins_rank_kde_plot 
 :width: 7.00in 
 
-企鹅质量的代码 [penguin_mass](penguin_mass) 中贝叶斯模型后验的 KDE 和秩图。该图用作采样的可视化诊断，以辅助判断在跨多个链的采样过程中是否存在问题。
+企鹅质量的代码 [penguin_mass](penguin_mass) 中贝叶斯模型后验的核密度估计和秩图。该图用作采样的可视化诊断，以辅助判断在跨多个链的采样过程中是否存在问题。
 ``` 
 
 为了理解拟合结果，我们在 {numref}`fig:SingleSpecies_Mass_PosteriorPlot` 中绘制了一个结合所有链的后验图；并将来自 {numref}`tab:penguin_mass_parameters_point_estimates` 的均值和标准差的点估计值与贝叶斯估计值进行比较。
@@ -180,7 +180,7 @@ with pm.Model() as model_adelie_penguin_mass:
 :name: fig:SingleSpecies_Mass_PosteriorPlot 
 :width: 7.00in 
 
-Adelie 种企鹅质量的代码 [penguin_mass](penguin_mass) 中，贝叶斯模型的后验分布图，其中，垂直线是经验均值和标准差。
+Adelie 种企鹅质量的代码 [penguin_mass](penguin_mass) 中，贝叶斯模型的后验分布图，其中，垂线是经验均值和标准差。
 ``` 
 
 通过贝叶斯估计，我们得到了合理参数的分布。使用表 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的摘要信息，来自 {numref}`fig:single_penguins_rank_kde_plot` 中相同的后验分布，从 $3632$ 到 $3772$ 克的均值相当合理。
@@ -361,7 +361,7 @@ inf_data_model_penguin_mass_all_species2 = az.from_dict(
 )
 ``` 
 
-在代码 [tfp_posterior_inference](tfp_posterior_inference) 中，我们运行了 4 个 MCMC 链，每个链在 1000 个适应步骤后有 1000 个后验样本。在内部，它通过使用观测到的（附加关键字参数“mass=body_mass_g”最后）调节模型（作为参数传递给函数）来调用“experimental_pin”方法。
+在代码 [tfp_posterior_inference](tfp_posterior_inference) 中，我们运行了 4 个 MCMC 链，每条链在 1000 个适应步骤后有 1000 个后验样本。在内部，它通过使用观测到的（附加关键字参数“mass=body_mass_g”最后）调节模型（作为参数传递给函数）来调用“experimental_pin”方法。
 
 第 8-18 行将采样结果解析为 ArviZ InferenceData，我们现在可以在 ArviZ 中对贝叶斯模型进行诊断和探索性分析。我们还可以在下面的代码 [tfp_idata_additional](tfp_idata_additional) 中以透明的方式将先验和后验预测样本和数据对数似然添加到`inf_data_model_penguin_mass_all_species2`。请注意，我们使用了 `tfd.JointDistribution` 的 `sample_distributions` 方法，该方法抽取样本*并*生成以后验样本为条件的分布。
 
@@ -392,7 +392,7 @@ inf_data_model_penguin_mass_all_species2.add_groups(
 
 ## 3.2 线性回归 
 
-在上一节中，我们通过在高斯分布的均值和标准差上设置先验分布来模拟企鹅质量的分布。重要的是，我们假设质量不随数据中的其他特征而变化。然而，我们希望其他观测数据点可以提供有关预期企鹅质量的信息。直观地说，如果我们看到两只企鹅，一只长鳍，一只短鳍，我们会认为较大的企鹅，即长鳍的企鹅，即使我们手头没有秤来精确测量它们的质量，也会有更大的质量。估计观测到的鳍状肢长度与估计质量的关系的最简单方法之一是拟合线性回归模型，其中平均值*有条件*建模为其他变量的线性组合。
+在上一节中，我们通过在高斯分布的均值和标准差上设置先验分布来模拟企鹅质量的分布。重要的是，我们假设质量不随数据中的其他特征而变化。然而，我们希望其他观测数据点可以提供有关预期企鹅质量的信息。直观地说，如果我们看到两只企鹅，一只长鳍，一只短鳍，我们会认为较大的企鹅，即长鳍的企鹅，即使我们手头没有秤来精确测量它们的质量，也会有更大的质量。估计观测到的鳍状肢长度与估计质量的关系的最简单方法之一是拟合线性回归模型，其中均值*有条件*建模为其他变量的线性组合。
 
 ```{math}
 :label: eq:expanded_regression
@@ -509,7 +509,7 @@ with pm.Model() as model_adelie_flipper_regression:
 :name: fig:Flipper_length_mass_regression
 :width: 7.00in 
 
-观测到的鳍状肢长度与 `Adelie 种` 的质量数据作散点图，似然的平均值估计为黑线，平均值的 $94\%$ HDI 为灰色区间。请注意估计的均值如何随着鳍状肢长度变化而变化。
+观测到的鳍状肢长度与 `Adelie 种` 的质量数据作散点图，似然的均值估计为黑线，均值的 $94\%$ HDI 为灰色区间。请注意估计的均值如何随着鳍状肢长度变化而变化。
 ``` 
 
 (chp2_predictions)= 
@@ -1126,7 +1126,7 @@ adelie_count / chinstrap_count
 array([2.14705882])
 ```
 
-赔率由与概率相同的组分组成，但以一种更直接地方式，解释了一个事件发生与另一个事件发生的比率。以赔率表示，如果从 `Adelie 种`和 `Chinstrap 种`企鹅中随机抽样，则根据代码 [adelie_odds](adelie_odds) 计算，我们预计最终得到的 `Adelie 种`企鹅的赔率比 `Chinstrap 种` 企鹅高 $2.14$。
+赔率由与概率相同的组分组成，但以一种更直接地方式，解释了一个事件发生与另一个事件发生的比率。以赔率表示，如果从 `Adelie 种`和 `Chinstrap 种`企鹅中随机采样，则根据代码 [adelie_odds](adelie_odds) 计算，我们预计最终得到的 `Adelie 种`企鹅的赔率比 `Chinstrap 种` 企鹅高 $2.14$。
 
 利用对赔率的了解，我们可以定义 `logit`。 `logit` 是赔率的自然对数，它是公式 {eq}`eq:logit` 中显示的分数。我们可以用 `logit` 重写公式 {eq}`eq:logistic` 中的逻辑斯谛回归。
 
@@ -1210,7 +1210,7 @@ with pm.Model() as model_uninformative_prior_sex_ratio:
 名义上，我们将假设出生在男性和女性之间平均分配，并且吸引力对性别比例没有影响。这意味着将截距 $\beta_0$ 的先验均值设置为 $50$，将系数 $\beta_1$ 的先验均值设置为 $0$。我们还设置了宽的离散度来表达我们对截距和吸引力对性别比影响的不确定性。这并不是一个完全*无信息的先验*，我们在第 {ref}`make_prior_count` 节中介绍过它，不过它是一个非常宽的先验。
 
 根据上述选择，我们在代码 [uninformative_prior_sex_ratio](uninformative_prior_sex_ratio)) 中编写了模型、运行推断、并生成样本来估计后验分布。
-根据数据和模型，我们估计 $\beta_1$ 的平均值为 $1.4$，这意味着与最具吸引力的群体相比，吸引力最小的群体的出生率平均相差 $7.4\%$ 。在 {numref}`fig:PosteriorUninformativeLinearRegression` 中，如果我们包括不确定性，则在将参数条件化为数据之前，从 $50$ 条可能的“拟合线”随机样本中，每单位吸引力的出生比率可以变化超过 $20\%$ 。
+根据数据和模型，我们估计 $\beta_1$ 的均值为 $1.4$，这意味着与最具吸引力的群体相比，吸引力最小的群体的出生率平均相差 $7.4\%$ 。在 {numref}`fig:PosteriorUninformativeLinearRegression` 中，如果我们包括不确定性，则在将参数条件化为数据之前，从 $50$ 条可能的“拟合线”随机样本中，每单位吸引力的出生比率可以变化超过 $20\%$ 。
 
 从数学角度来看，该结果是有效的。但从常识和我们对该研究之外的出生性别比来理解，这些结果值得怀疑。出生时的“自然”性别比约为 “ $105$ 个男孩/$100$ 个女孩” ( 大约 $103$ 到 $107$ 个男孩 )，这意味着出生时的性别比为 $48.5%$ ，标准差为 $0.5$。此外，即便与人类生物学更内在联系的因素，也不会对出生率影响到这种大的程度，这主观上削弱了吸引力应该具有这种影响程度的信念。鉴于此信息，两组之间 $8%$ 的变化将需要特殊的观测。
 

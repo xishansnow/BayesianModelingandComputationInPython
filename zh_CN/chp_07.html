@@ -499,7 +499,7 @@
 </div>
 <div class="section" id="mu-ij-m">
 <span id="bart-mu-m-priors"></span><h3>7.3.3 叶子结点 <span class="math notranslate nohighlight">\(\mu_{ij}\)</span> 和树数目 <span class="math notranslate nohighlight">\(m\)</span> 的先验<a class="headerlink" href="#mu-ij-m" title="Permalink to this headline">¶</a></h3>
-<p>默认情况下，PyMC3 不会为叶值设置先验值，而是在采样算法的每次迭代中返回残差的平均值。</p>
+<p>默认情况下，PyMC3 不会为叶值设置先验值，而是在采样算法的每次迭代中返回残差的均值。</p>
 <p>关于集合 <span class="math notranslate nohighlight">\(m\)</span> 中的树数。这通常也是由用户预定义的。在实践中已经观察到，通常通过设置 <span class="math notranslate nohighlight">\(m=200\)</span> 甚至低至 <span class="math notranslate nohighlight">\(m=10\)</span> 的值来获得良好的结果。此外，据观察，推断对于 <span class="math notranslate nohighlight">\(m\)</span> 的确切值可能非常稳健。因此，一般的经验法则是尝试一些 <span class="math notranslate nohighlight">\(m\)</span> 的值并执行交叉验证以选择最适合特定问题的值 <a class="footnote-reference brackets" href="#id44" id="id13">4</a>。</p>
 </div>
 </div>
@@ -544,7 +544,7 @@
 <div class="figure align-default" id="fig-bart-bikes">
 <a class="reference internal image-reference" href="../_images/BART_bikes.png"><img alt="../_images/BART_bikes.png" src="../_images/BART_bikes.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 125 </span><span class="caption-text">使用 BART（特别是 <code class="docutils literal notranslate"><span class="pre">bart_model</span></code>）拟合的自行车数据（黑点）。
-阴影曲线代表 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间（平均值），蓝色曲线代表平均趋势。与 <a class="reference internal" href="chp_05.html#fig-bikes-data2"><span class="std std-numref">Fig. 95</span></a> 进行比较。</span><a class="headerlink" href="#fig-bart-bikes" title="Permalink to this image">¶</a></p>
+阴影曲线代表 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间（均值），蓝色曲线代表平均趋势。与 <a class="reference internal" href="chp_05.html#fig-bikes-data2"><span class="std std-numref">Fig. 95</span></a> 进行比较。</span><a class="headerlink" href="#fig-bart-bikes" title="Permalink to this image">¶</a></p>
 </div>
 <p>围绕 BART 的文献倾向于强调其通常无需调整即可提供有竞争力的答案的能力 <a class="footnote-reference brackets" href="#id45" id="id17">5</a>。例如，与拟合样条曲线相比，我们无需担心手动设置节点或选择先验来调整节点。当然，有人可能会争辩说，对于某些问题，能够调整结对手头的问题可能是有益的，这很好。</p>
 </div>
@@ -597,13 +597,13 @@
 <a class="reference internal image-reference" href="../_images/partial_dependence_plot_bikes.png"><img alt="../_images/partial_dependence_plot_bikes.png" src="../_images/partial_dependence_plot_bikes.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 129 </span><span class="caption-text">部分依赖图。变量、小时、温度、湿度和风速对租用自行车数量的部分贡献，同时边缘化其余变量的贡献（<span class="math notranslate nohighlight">\(X_{-i}\)</span>）。灰色带代表 HDI <span class="math notranslate nohighlight">\(94\%\)</span>。均值和 HDI 波段均已平滑（请参阅 <code class="docutils literal notranslate"><span class="pre">plot_ppd</span></code> 函数）。地毯图（每个子图底部的黑条）显示了每个协变量的观察值。</span><a class="headerlink" href="#fig-partial-dependence-plot-bikes" title="Permalink to this image">¶</a></p>
 </div>
-<p>计算部分依赖图时的一个假设是变量 <span class="math notranslate nohighlight">\(X_i\)</span> 和 <span class="math notranslate nohighlight">\(X_{-i}\)</span> 不相关，因此我们在边际上执行平均值。在大多数实际问题中，情况并非如此，然后部分依赖图可以隐藏数据中的关系。</p>
+<p>计算部分依赖图时的一个假设是变量 <span class="math notranslate nohighlight">\(X_i\)</span> 和 <span class="math notranslate nohighlight">\(X_{-i}\)</span> 不相关，因此我们在边际上执行均值。在大多数实际问题中，情况并非如此，然后部分依赖图可以隐藏数据中的关系。</p>
 <p>然而，如果所选变量的子集之间的依赖性不是太强，那么部分依赖性图可能是有用的总结 <span id="id25">[<a class="reference internal" href="references.html#id72">77</a>]</span>。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">部分依赖的计算成本</p>
 <p>计算部分依赖图的计算要求很高。</p>
 <p>因为在我们想要评估变量 <span class="math notranslate nohighlight">\(X_i\)</span> 的每一点，我们都需要计算 <span class="math notranslate nohighlight">\(n\)</span> 预测（其中 <span class="math notranslate nohighlight">\(n\)</span> 是样本大小）。</p>
-<p>为了 BART 获得预测 <span class="math notranslate nohighlight">\(\tilde Y\)</span>，我们需要首先对 <span class="math notranslate nohighlight">\(m\)</span> 树求和以获得 <span class="math notranslate nohighlight">\(Y\)</span> 的点估计，然后我们还要对树总和的整个后验分布进行平均以获得可信区间。这最终需要相当多的计算！如果需要，减少计算的一种方法是在 <span class="math notranslate nohighlight">\(p\)</span> 点处以 <span class="math notranslate nohighlight">\(p &lt;&lt; n\)</span> 评估 <span class="math notranslate nohighlight">\(X_i\)</span>。我们可以选择 <span class="math notranslate nohighlight">\(p\)</span> 等间距的点，也可以选择一些分位数。或者，如果我们将它们固定在它们的平均值上，而不是边缘化 <span class="math notranslate nohighlight">\(\boldsymbol{X}_{-ij}\)</span>，我们可以实现显着的加速。当然，这意味着我们将丢失信息，并且平均值可能实际上并不能很好地代表基础分布。另一个对大型数据集特别有用的选项是对 <span class="math notranslate nohighlight">\(\boldsymbol{X}_{-ij}\)</span> 进行二次采样。</p>
+<p>为了 BART 获得预测 <span class="math notranslate nohighlight">\(\tilde Y\)</span>，我们需要首先对 <span class="math notranslate nohighlight">\(m\)</span> 树求和以获得 <span class="math notranslate nohighlight">\(Y\)</span> 的点估计，然后我们还要对树总和的整个后验分布进行平均以获得可信区间。这最终需要相当多的计算！如果需要，减少计算的一种方法是在 <span class="math notranslate nohighlight">\(p\)</span> 点处以 <span class="math notranslate nohighlight">\(p &lt;&lt; n\)</span> 评估 <span class="math notranslate nohighlight">\(X_i\)</span>。我们可以选择 <span class="math notranslate nohighlight">\(p\)</span> 等间距的点，也可以选择一些分位数。或者，如果我们将它们固定在它们的均值上，而不是边缘化 <span class="math notranslate nohighlight">\(\boldsymbol{X}_{-ij}\)</span>，我们可以实现显着的加速。当然，这意味着我们将丢失信息，并且均值可能实际上并不能很好地代表基础分布。另一个对大型数据集特别有用的选项是对 <span class="math notranslate nohighlight">\(\boldsymbol{X}_{-ij}\)</span> 进行二次采样。</p>
 </div>
 </div>
 <div class="section" id="individual-conditional-expectation">
@@ -612,7 +612,7 @@
 <div class="figure align-default" id="fig-individual-conditional-expectation-plot-bikes">
 <a class="reference internal image-reference" href="../_images/individual_conditional_expectation_plot_bikes.png"><img alt="../_images/individual_conditional_expectation_plot_bikes.png" src="../_images/individual_conditional_expectation_plot_bikes.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 130 </span><span class="caption-text">个体条件期望图。变量对租用自行车数量的部分贡献；小时、温度、湿度和风速，同时将其余部分 (<span class="math notranslate nohighlight">\(X_{-i}\)</span>) 固定在一个观察值。
-蓝色曲线对应于灰色曲线的平均值。所有曲线都经过平滑处理（参见 <code class="docutils literal notranslate"><span class="pre">plot_ice</span></code> 函数）。地毯图（每个子图底部的黑条）显示了每个协变量的观察值。</span><a class="headerlink" href="#fig-individual-conditional-expectation-plot-bikes" title="Permalink to this image">¶</a></p>
+蓝色曲线对应于灰色曲线的均值。所有曲线都经过平滑处理（参见 <code class="docutils literal notranslate"><span class="pre">plot_ice</span></code> 函数）。地毯图（每个子图底部的黑条）显示了每个协变量的观察值。</span><a class="headerlink" href="#fig-individual-conditional-expectation-plot-bikes" title="Permalink to this image">¶</a></p>
 </div>
 <p>单个条件期望图最适合变量具有强交互作用的问题，当情况并非如此时，部分依赖图和单个条件期望图传达相同的信息。 <a class="reference internal" href="#fig-pdp-vs-ice-toy"><span class="std std-numref">Fig. 131</span></a> 显示了一个示例，其中部分依赖图隐藏了数据中的关系，但单个条件期望图能够更好地显示它。该图是通过将 BART 模型拟合到合成数据中生成的： <span class="math notranslate nohighlight">\(Y = 0.2X_0 - 5X_1 + 10X_1 \unicode{x1D7D9}_{X_2 \geq 0} + \epsilon\)</span> 其中 <span class="math notranslate nohighlight">\(X \sim \mathcal{U}( -1, 1)\)</span>\epsilon \sim \mathcal{N}(0, 0.5)$。</p>
 <p>请注意 <span class="math notranslate nohighlight">\(X_1\)</span> 的值如何取决于 <span class="math notranslate nohighlight">\(X_2\)</span> 的值。</p>
@@ -621,7 +621,7 @@
 <p class="caption"><span class="caption-number">Fig. 131 </span><span class="caption-text">部分依赖图与个体条件期望图。第一个子图，<span class="math notranslate nohighlight">\(X_1\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span> 之间的散点图，中间子图部分依赖图，最后一个子图个体条件期望图。</span><a class="headerlink" href="#fig-pdp-vs-ice-toy" title="Permalink to this image">¶</a></p>
 </div>
 <p>在 <a class="reference internal" href="#fig-pdp-vs-ice-toy"><span class="std std-numref">Fig. 131</span></a> 的第一个子图中，我们绘制了 <span class="math notranslate nohighlight">\(X_1\)</span> 与 <span class="math notranslate nohighlight">\(Y\)</span>。考虑到 <span class="math notranslate nohighlight">\(Y\)</span> 的值可以根据 <span class="math notranslate nohighlight">\(X_2\)</span> 变量的值随 <span class="math notranslate nohighlight">\(X_1\)</span> 线性增加或减少的交互效应，该图显示了 <em>X 形</em> 模式。中间子图显示了一个部分依赖图，我们可以看到，根据这个图，关系是平坦的，<em>平均</em>是正确的，但隐藏了交互作用。相反，最后一个子图，一个单独的条件期望图有助于揭示这种关系。原因是每条灰色曲线代表一个<span class="math notranslate nohighlight">\(X_{0,2}\)</span> <a class="footnote-reference brackets" href="#id47" id="id27">7</a> 的值。</p>
-<p>蓝色曲线是灰色曲线的平均值，虽然与部分相关平均曲线不完全相同，但它显示了相同的信息 <a class="footnote-reference brackets" href="#id48" id="id28">8</a>。</p>
+<p>蓝色曲线是灰色曲线的均值，虽然与部分相关平均曲线不完全相同，但它显示了相同的信息 <a class="footnote-reference brackets" href="#id48" id="id28">8</a>。</p>
 </div>
 </div>
 <div class="section" id="sec-variable-selection">

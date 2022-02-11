@@ -1143,10 +1143,10 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <div class="section" id="the-law-of-large-numbers">
 <span id="id37"></span><h4>大数定律<a class="headerlink" href="#the-law-of-large-numbers" title="Permalink to this headline">¶</a></h4>
 <p>大数定律告诉我们，一个独立同分布随机变量的样本均值随着样本数量的增加而收敛到随机变量的期望值。对于某些分布，例如柯西分布（没有均值或有限方差），情况并非如此。</p>
-<p>大数定律经常被误解，导致赌徒谬误。这种悖论的一个例子是相信在彩票中投注一个很长时间没有出现的号码是明智的。这里的错误推理是，如果某个特定数字有一段时间没有出现，那么一定有某种力量会增加该数字在下一次抽奖中出现的概率。重新建立数字的等概率性和宇宙的<em>自然秩序</em>的力量。</p>
+<p>大数定律经常被误解，导致赌徒谬误。这种悖论的一个例子是相信在彩票中投注一个很长时间没有出现的号码是明智的。这里的错误推理是，如果某个特定数字有一段时间没有出现，那么一定有某种力量会增加该数字在下一次抽取中出现的概率。重新建立数字的等概率性和宇宙的<em>自然秩序</em>的力量。</p>
 <div class="figure align-default" id="fig-law-of-large-numbers">
 <a class="reference internal image-reference" href="../_images/law_of_large_numbers.png"><img alt="../_images/law_of_large_numbers.png" src="../_images/law_of_large_numbers.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 188 </span><span class="caption-text">来自 <span class="math notranslate nohighlight">\(\mathcal{U}(0, 1)\)</span> 分布的运行值。 0.5 处的虚线表示预期值。随着抽签次数的增加，经验平均值接近预期值。每条线代表一个不同的样本。</span><a class="headerlink" href="#fig-law-of-large-numbers" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 188 </span><span class="caption-text">来自 <span class="math notranslate nohighlight">\(\mathcal{U}(0, 1)\)</span> 分布的运行值。 0.5 处的虚线表示预期值。随着抽样次数的增加，经验均值接近预期值。每条线代表一个不同的样本。</span><a class="headerlink" href="#fig-law-of-large-numbers" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="appendix-clt">
@@ -1161,8 +1161,8 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <li><p>每个值都来自相同的分布</p></li>
 <li><p>分布的均值和标准差必须是有限的</p></li>
 </ul>
-<p>标准 1 和 2 可以放宽一些<em>相当多</em>，我们仍然会得到大致的高斯分布，但没有办法摆脱标准 3。对于没有定义均值或方差的分布，例如 Cauchy 分布，这个定理不适用。来自 Cauchy 分布的 <span class="math notranslate nohighlight">\(N\)</span> 值的平均值不遵循高斯分布，而是遵循 Cauchy 分布。</p>
-<p>中心极限定理解释了自然界中高斯分布的普遍性。我们研究的许多现象可以解释为围绕平均值的波动，或者是许多不同因素总和的结果。</p>
+<p>标准 1 和 2 可以放宽一些<em>相当多</em>，我们仍然会得到大致的高斯分布，但没有办法摆脱标准 3。对于没有定义均值或方差的分布，例如 Cauchy 分布，这个定理不适用。来自 Cauchy 分布的 <span class="math notranslate nohighlight">\(N\)</span> 值的均值不遵循高斯分布，而是遵循 Cauchy 分布。</p>
+<p>中心极限定理解释了自然界中高斯分布的普遍性。我们研究的许多现象可以解释为围绕均值的波动，或者是许多不同因素总和的结果。</p>
 <p><a class="reference internal" href="#fig-central-limit"><span class="std std-numref">Fig. 189</span></a> 显示了 3 种不同分布的中心极限定理，<span class="math notranslate nohighlight">\(\text{Pois}(2.3)\)</span>, <span class="math notranslate nohighlight">\(\mathcal{U}(0, 1)\)</span>, <span class="math notranslate nohighlight">\(\text{Beta} (1, 10)\)</span>，随着 <span class="math notranslate nohighlight">\(n\)</span> 的增加。</p>
 <div class="figure align-default" id="fig-central-limit">
 <a class="reference internal image-reference" href="../_images/central_limit.png"><img alt="../_images/central_limit.png" src="../_images/central_limit.png" style="width: 8.00in;"/></a>
@@ -1538,12 +1538,12 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <p>不幸的是，好消息不会持续太久。为了接近正确答案，输入公式 <a class="reference internal" href="#equation-eq-harmonic-mean-approx">(108)</a> 所需的样本 <span class="math notranslate nohighlight">\(s\)</span> 的数量通常非常大，以至于调和平均估计器在实践中不是很有用 {cite :p}<code class="docutils literal notranslate"><span class="pre">Neal_1994,</span> <span class="pre">Friel_2011</span></code>。直观地，我们可以看到总和将由可能性非常低的样本主导。更糟糕的是，调和平均估计器可以有无限的方差。无限方差意味着即使我们增加 <span class="math notranslate nohighlight">\(s\)</span> 也不会得到更好的答案，因此有时即使是大量的样本仍然可能不够用。调和平均估计器的另一个问题是它对先验的变化相当不敏感。但即使是精确的边缘似然实际上也对先验分布的变化非常敏感（我们稍后会展示，参见 <a class="reference internal" href="#fig-posterior-ml"><span class="std std-numref">Fig. 196</span></a>）。</p>
 <p>当可能性相对于先验变得更加集中时，或者当可能性和先验集中到参数空间的不同区域时，这两个问题将更加严重。</p>
 <p>通过使用来自峰值更高的后验的样本，相对于先验，我们将丢失先验中具有低后验密度的所有区域。粗略地说，我们可以将贝叶斯推理视为使用数据将先验更新为后验。只有在数据不是很丰富的情况下，先验和后验才会相似。</p>
-<p><a class="reference internal" href="#fig-harmonic-mean-heatmap"><span class="std std-numref">Fig. 195</span></a> 显示了一个热图，其中计算调和平均估计量的相对误差与分析值相比。我们可以看到，即使对于像 Beta-Binomial 模型这样的简单一维问题，谐波估计器也可能会严重失败。</p>
+<p><a class="reference internal" href="#fig-harmonic-mean-heatmap"><span class="std std-numref">Fig. 195</span></a> 显示了一个热图，其中计算调和平均估计量的相对误差与分析值相比。我们可以看到，即使对于像 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>这样的简单一维问题，谐波估计器也可能会严重失败。</p>
 <div class="figure align-default" id="fig-harmonic-mean-heatmap">
 <a class="reference internal image-reference" href="../_images/harmonic_mean_heatmap.png"><img alt="../_images/harmonic_mean_heatmap.png" src="../_images/harmonic_mean_heatmap.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 195 </span><span class="caption-text">热图显示使用调和平均估计器逼近 Beta-Binomial 模型的边缘似然时的相对误差。行对应于不同的先验分布。每列是不同的观察场景，括号中的数字对应于成功和失败的数量。</span><a class="headerlink" href="#fig-harmonic-mean-heatmap" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 195 </span><span class="caption-text">热图显示使用调和平均估计器逼近 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>的边缘似然时的相对误差。行对应于不同的先验分布。每列是不同的观察场景，括号中的数字对应于成功和失败的数量。</span><a class="headerlink" href="#fig-harmonic-mean-heatmap" title="Permalink to this image">¶</a></p>
 </div>
-<p>正如我们将在 <a class="reference internal" href="#high-dimensions"><span class="std std-ref">11.8 走出平地</span></a> 部分中看到的那样，当我们增加模型的维度时，后验更多地集中在一个薄的超壳中。从这个薄壳外部获取样本与计算良好的后验近似无关。相反，当计算边缘似然时，仅从这个薄壳中获取样本是不够的。相反，我们需要对整个先验分布进行抽样，而以正确的方式完成这可能是一项非常艰巨的任务。</p>
+<p>正如我们将在 <a class="reference internal" href="#high-dimensions"><span class="std std-ref">11.8 走出平地</span></a> 部分中看到的那样，当我们增加模型的维度时，后验更多地集中在一个薄的超壳中。从这个薄壳外部获取样本与计算良好的后验近似无关。相反，当计算边缘似然时，仅从这个薄壳中获取样本是不够的。相反，我们需要对整个先验分布进行采样，而以正确的方式完成这可能是一项非常艰巨的任务。</p>
 <p>有一些计算方法更适合计算边缘似然，但即使是那些也不是万无一失的。在第[8]章（第8章）中，我们讨论了序列蒙特卡罗（SMC）方法，主要是为了进行近似贝叶斯计算，但这种方法也可以计算边缘似然。它起作用的主要原因是因为 SMC 使用一系列中间分布来表示从先验分布到后验分布的过渡。拥有这些<em>桥接</em>分布缓解了从广泛的先验采样和在更集中的后验进行评估的问题。</p>
 </div>
 <div class="section" id="bayes-factors">
@@ -1579,7 +1579,7 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-1.2655121234846454
 </pre></div>
 </div>
-<p>如果您将先前参数 <span class="math notranslate nohighlight">\(\sigma_0\)</span> 的值更改为 2.5 而不是 1，边缘似然将小约 2 倍，而将其更改为 10 将小约 7 倍。您可以使用 PPL 计算此模型的后验，并亲自了解先验在后验中的变化有多大影响。此外，您可以在下一节中检查 <a class="reference internal" href="#fig-posterior-ml"><span class="std std-numref">Fig. 196</span></a>。</p>
+<p>如果您将先前参数 <span class="math notranslate nohighlight">\(\sigma_0\)</span> 的值更改为 2.5 而不是 1，边缘似然将小约 2 倍，而将其更改为 10 将小约 7 倍。您可以使用概率编程语言计算此模型的后验，并亲自了解先验在后验中的变化有多大影响。此外，您可以在下一节中检查 <a class="reference internal" href="#fig-posterior-ml"><span class="std std-numref">Fig. 196</span></a>。</p>
 </div>
 <div class="section" id="waic-loo">
 <span id="bayes-factor-vs-waic-and-loo"></span><h3>贝叶斯因子与 WAIC 和 LOO<a class="headerlink" href="#waic-loo" title="Permalink to this headline">¶</a></h3>
@@ -1844,7 +1844,7 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <a class="reference internal image-reference" href="../_images/normal_leapfrog.png"><img alt="../_images/normal_leapfrog.png" src="../_images/normal_leapfrog.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 201 </span><span class="caption-text">Three HMC trajectories <em>around</em> a 2D multivariate normal. The momentum is indicated by the size and direction of the arrows, with small arrows indicating small kinetic energy. All these trajectories are computed in such a way that they end at their starting position, which completing an elliptical trajectory.</span><a class="headerlink" href="#fig-normal-leapgrog" title="Permalink to this image">¶</a></p>
 </div>
-<p>We show another example in <a class="reference internal" href="#fig-funnel-leapgrog"><span class="std std-numref">Fig. 202</span></a>, which contains 3 different trajectory around the same Neal’s funnel, a common geometry arising in (centered) hierarchical models as we showed in Section <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.1 分层模型的新问题 — 后验几何形态带来采样难题</span></a>.  This is an example of a trajectory failing to properly simulate following the correct distribution, we call such trajectories divergent trajectories, or simply divergences. They are useful diagnostics as explained in Section <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 散度</span></a>. Usually, Symplectic integrators like leapfrog integrator are highly accurate even for long trajectories, as they tend to be tolerant of small errors and <em>oscillate</em> around the correct trajectory. Moreover, these small errors can be corrected exactly by applying the metropolis criteria to accept or reject the Hamiltonian proposal. However, there is an importance exception to this ability to generate small, easy to fix errors: when the exact trajectories lie on regions of high curvature, the numerical trajectories generated by symplectic integrators can diverge, generating trajectory that rapidly get off towards the boundaries of the distribution we are trying to explore.</p>
+<p>We show another example in <a class="reference internal" href="#fig-funnel-leapgrog"><span class="std std-numref">Fig. 202</span></a>, which contains 3 different trajectory around the same Neal’s funnel, a common geometry arising in (centered) hierarchical models as we showed in Section <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.1 分层模型的新问题 — 后验几何形态带来采样难题</span></a>.  This is an example of a trajectory failing to properly simulate following the correct distribution, we call such trajectories divergent trajectories, or simply divergences. They are useful diagnostics as explained in Section <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 发散性</span></a>. Usually, Symplectic integrators like leapfrog integrator are highly accurate even for long trajectories, as they tend to be tolerant of small errors and <em>oscillate</em> around the correct trajectory. Moreover, these small errors can be corrected exactly by applying the metropolis criteria to accept or reject the Hamiltonian proposal. However, there is an importance exception to this ability to generate small, easy to fix errors: when the exact trajectories lie on regions of high curvature, the numerical trajectories generated by symplectic integrators can diverge, generating trajectory that rapidly get off towards the boundaries of the distribution we are trying to explore.</p>
 <div class="figure align-default" id="fig-funnel-leapgrog">
 <a class="reference internal image-reference" href="../_images/funnel_leapfrog.png"><img alt="../_images/funnel_leapfrog.png" src="../_images/funnel_leapfrog.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 202 </span><span class="caption-text">Three HMC trajectories <em>around</em> a 2D Neal’s funnel. This kind geometry turns up in centered hierarchical models. We can see that all these trajectories when wrong. We call this kind these divergences and we can used as diagnostics of the HMC samplers.</span><a class="headerlink" href="#fig-funnel-leapgrog" title="Permalink to this image">¶</a></p>
@@ -2065,7 +2065,7 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <dd><p>Code copied from our good friend Colin Carroll’s blogpost on HMC   <a class="reference external" href="https://colindcarroll.com/2019/04/11/hamiltonian-monte-carlo-from-scratch/">https://colindcarroll.com/2019/04/11/hamiltonian-monte-carlo-from-scratch/</a></p>
 </dd>
 <dt class="label" id="id132"><span class="brackets"><a class="fn-backref" href="#id85">27</a></span></dt>
-<dd><p>This value is in the interval <span class="math notranslate nohighlight">\([0, 1]\)</span>, and by default this value   is 0.8. See Section <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 散度</span></a>.</p>
+<dd><p>This value is in the interval <span class="math notranslate nohighlight">\([0, 1]\)</span>, and by default this value   is 0.8. See Section <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 发散性</span></a>.</p>
 </dd>
 <dt class="label" id="id133"><span class="brackets"><a class="fn-backref" href="#id90">28</a></span></dt>
 <dd><p>We mean true purely from a mathematical point of view, without   any reference to how adequate is such posterior to any particular   practical problem.</p>
