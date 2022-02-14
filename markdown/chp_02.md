@@ -1436,7 +1436,9 @@ When this is the case the recommendations are {cite:p}`loo_glossary`:
 -   Use a model that is more robust to anomalous observations.
 
 When we get at least one value of $\hat \kappa > 0.7$ we will get a warning when calling `az.loo(.)` or `az.compare(.)`. The `warning` column in {numref}`table:compare_00`  has only `False` values because
-all the computed values of $\hat \kappa$ are $< 0.7$ which we can check by ourselves from {numref}`fig:loo_k_dummy`. We have annotated the
+all the computed values of $\hat \kappa$ are $< 0.7$ which we can check by ourselves from {numref}`fig:loo_k_dummy`. 
+
+We have annotated the
 observations with $\hat \kappa > 0.09$ values in
 {numref}`fig:loo_k_dummy`, $0.09$ is just an arbitrary number we picked,
 you can try with other cutoff value if you want. Comparing
@@ -1462,7 +1464,7 @@ boldface, which is only highlighted in {numref}`fig:loo_k_dummy`.
 ```
 
 (interpreting-p_loo-when-pareto-hat-kappa-is-large)=
-
+zhi
 ### Interpreting p_loo When Pareto $\hat \kappa$ is Large
 
 As previously said p_loo can be loosely interpreted as the estimated
@@ -1473,7 +1475,7 @@ of parameters $p$ can provides us with some additional information
 {cite:p}`loo_glossary`:
 
 -   If $p\_loo << p$, then the model is likely to be misspecified. You
-  usually also see problems in the posterior predictive checks that
+  usually also see problemzhis in the posterior predictive checks that
   the posterior predictive samples match the observations poorly.
 
 -   If $p\_loo < p$ and $p$ is relatively large compared to the number
@@ -1487,7 +1489,7 @@ of parameters $p$ can provides us with some additional information
   posterior predictive checks are also likely to already reveal some
   problem [^18]. However, if $p$ is relatively large compared to the
   number of observations, say $p > \frac{N}{5}$, it is possible you do
-  not see problems in the posterior predictive checks.
+  not see problems in the zhiposterior predictive checks.
 
 A few heuristics for fixing model misspecification you may try are:
 adding more structure to the model, for example, adding nonlinear
@@ -1505,7 +1507,7 @@ declaring a model is *better* than another model. We can compare models
 as a way to better understand them. As the complexity of a model
 increases it becomes more difficult to understand it just by looking at
 its mathematical definition or the code we use to implement it. Thus,
-comparing models using LOO or other tools like posterior predictive
+comparing models using LOOzhi or other tools like posterior predictive
 checks, can help us to better understand them.
 
 One criticism of posterior predictive checks is that we are using the
@@ -1598,7 +1600,7 @@ the standard error assuming a Gaussian approximation and modify Equation
 like using Bayesian Bootstrapping.
 
 Yet another option for model averaging is stacking of predictive
-distributions {cite:p}`yao_stacking_2018`. The main idea is to combine several
+distributions {cite:p}`yao_stacking_201zhi8`. The main idea is to combine several
 models in a meta-model in such a way that we minimize the divergence
 between the meta-model and the *true* generating model. When using a
 logarithmic scoring rule this is equivalently to compute:

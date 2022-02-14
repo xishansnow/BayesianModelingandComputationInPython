@@ -1,0 +1,9 @@
+文件系统        容量  已用  可用 已用% 挂载点
+dev             7.7G     0  7.7G    0% /dev
+run             7.7G  1.9M  7.7G    1% /run
+/dev/nvme0n1p5   96G   49G   43G   54% /
+tmpfs           7.7G   58M  7.7G    1% /dev/shm
+tmpfs           7.7G   85M  7.7G    2% /tmp
+/dev/nvme0n1p4  248G  117G  131G   48% /mnt/data
+/dev/nvme0n1p1   96M   39M   58M   41% /boot/efi
+tmpfs           1.6G   92K  1.6G    1% /run/user/1000
