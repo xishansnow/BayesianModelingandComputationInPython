@@ -18,17 +18,15 @@ kernelspec:
 
 <style>p{text-indent:2em;2}</style>
 
-随着概率编程语言的出现，现代贝叶斯建模只需要编码一个模型和 "按一个按钮 "那样简单。
+随着概率编程语言的出现，现代贝叶斯建模只需要编码一个模型和 "按一个按钮 "那样简单。然而，有效模型的建立和分析通常需要更多的工作。
 
-然而，有效模型的建立和分析通常需要更多的工作。
+随着本书的推进，我们将建立许多不同类型的模型，但在本章中将从最简单的线性模型开始。线性模型是一类广泛应用的模型，其中一个指定观测值（ 响应变量 ）的**期望值**是相关预测因子（ 预测变量 ）的**线性组合**。
 
-随着本书的推进，我们将建立许多不同类型的模型，但在本章中我们将从简单的线性模型开始。线性模型是一类广泛的模型，其中一个给定观测值（ 响应变量 ）的期望值是相关预测因子（ 预测变量 ）的线性组合。深刻理解拟合和解释线性模型的方法，是后续模型的坚实基础；并将有助于我们巩固『贝叶斯推断（第 [1](chap1) 章）』和『贝叶斯模型的探索性分析（第 [2](chap1bis) 章）』的基本知识。
+深刻理解拟合和解释线性模型的方法，是后续很多模型的坚实基础；并将有助于我们巩固『贝叶斯推断（第 [1](chap1) 章）』和『贝叶斯模型的探索性分析（第 [2](chap1bis) 章）』的基本知识。
 
-本章将介绍在本书大部分内容中使用的两种概率编程语言：`PyMC3` 和 `TensorFlow Probability (TFP)`。当我们使用这两种概率编程语言 中构建模型时，应当重点关注同样一种基础统计思想在两种概率编程语言 中是如何实现的。
+本章将介绍两种概率编程语言：`PyMC3` 和 `TensorFlow Probability (TFP)`。当我们使用这两种概率编程语言构建模型时，应当重点关注同一基础统计思想是如何在两种概率编程语言中实现的。
 
-我们将首先拟合一个仅包含截距的模型（ 即没有预测变量的模型 ），然后通过添加一个或多个预测变量来增加复杂性，并扩展到广义线性模型。
-
-在本章结束时，你将更加理解线性模型，更加熟悉贝叶斯工作流程中的常用步骤，并且更轻松地使用 `PyMC3`、`TFP` 和 `ArviZ` 进行贝叶斯工作流程。
+我们将首先拟合一个仅包含截距的模型（ 即没有预测变量的模型 ），然后通过添加一个或多个预测变量来增加复杂性，并扩展到广义线性模型。在本章结束时，你将更加理解线性模型，更加熟悉贝叶斯工作流中的常见步骤，并且更轻松地使用 `PyMC3`、`TFP` 和 `ArviZ` 实施贝叶斯工作流。
 
 (comparing_distributions)= 
 
@@ -36,11 +34,11 @@ kernelspec:
 
 如果你正在寻找一些可以比较的东西，那么企鹅是最合适不过的了。
 
-我们的第一个问题可能是 “每个企鹅物种的平均质量是多少？”，或者可能是“这些平均质量有什么不同？”，或者用统计学术语来说 “平均值的离散度是多少？” 。
+我们的第一个问题可能是 “每个企鹅物种的平均体重是多少？”，或者可能是“它们的平均体重有什么不同？”，或者用统计学术语来说 “均值的离散度是多少？” 。
 
-`Kristen Gorman` 很喜欢研究企鹅，她访问了 $3$ 个南极岛屿并收集了有关 `Adelie`、`Gentoo` 和 `Chinstrap` 物种的数据，这些数据被编撰进了 `Palmer Penguins 数据集`中 {cite:p}`PalmerPenguins`。观测数据包括企鹅的质量、鳍状肢的长度、性别的物理特征、所居住的岛屿等。
+`Kristen Gorman` 很喜欢研究企鹅，她访问了 $3$ 个南极岛屿并收集了有关 `Adelie`、`Gentoo` 和 `Chinstrap` 三个物种的数据，这些数据被编撰进了 `Palmer Penguins 数据集` 中 {cite:p}`PalmerPenguins`。观测数据包括企鹅的体重、鳍状肢长度、性别特征、所居住岛屿等。
 
-我们首先通过代码 [penguin_load](penguin_load) 加载数据，并过滤掉存在缺失数据的行。这种方式被称为**完整案例分析**，顾名思义，我们只使用所有观测值都存在的行。虽然有一些处理缺失数据的成熟方法，但此处我们将采用最简单的剔除法。
+我们首先通过代码 [penguin_load](penguin_load) 加载数据，并过滤掉存在缺失数据的行。这种方式被称为**完整案例分析（ complete case analysis ）**，顾名思义，我们只使用所有观测值都存在的行。尽管有一些处理缺失数据的成熟方法，但此处我们将采用最简单的剔除法。
 
 ```{code-block} ipython3 
 :name: penguin_load
@@ -55,7 +53,7 @@ missing_data = penguins.isnull()[
 penguins = penguins.loc[~missing_data]
 ``` 
 
-然后，我们可以用代码 [penguin_mass_empirical](penguin_mass_empirical) 计算企鹅质量的经验平均值  `body_mass_g` ，其结果展示在 {numref}`tab:penguin_mass_parameters_point_estimates` 中。
+然后，可以用代码 [penguin_mass_empirical](penguin_mass_empirical) 计算企鹅体重的经验均值  `body_mass_g` ，其结果展示在 {numref}`tab:penguin_mass_parameters_point_estimates` 中。
 
 ```{code-block} ipython3 
 :name: penguin_mass_empirical
@@ -65,7 +63,7 @@ summary_stats = (penguins.loc[:, ["species", "body_mass_g"]]
                          .agg(["mean", "std", "count"]))
 ``` 
 
-```{list-table} 企鹅质量的经验均值和标准差。计数栏表示观测到的各物种企鹅数量。
+```{list-table} 企鹅体重的经验均值和标准差。计数栏表示观测到的各物种企鹅数量。
 :name: tab:penguin_mass_parameters_point_estimates
 
 * - **species**
@@ -86,18 +84,16 @@ summary_stats = (penguins.loc[:, ["species", "body_mass_g"]]
   - 119
 ``` 
 
-现在我们有了均值和离散性的点估计，但并不知道这些统计数据的不确定性。获得不确定性估计的方法之一就是贝叶斯方法。为此，需要推测观测与参数之间的关系，例如：
+现在我们有了均值和离散度（用标准差来描述）的点估计，但并不知道这些统计数据的不确定性。获得不确定性估计的方法之一就是贝叶斯方法。为此，需要推测观测与参数之间的关系，例如：
 
 ```{math} 
 :label: eq:gaussian_bayes 
 
 \overbrace{p(\mu, \sigma \mid Y)}^{Posterior} \propto \overbrace{\mathcal{N}(Y \mid \mu, \sigma)}^{Likelihood}\;  \overbrace{\underbrace{\mathcal{N}(4000, 3000)}_{\mu}
-   \underbrace{\mathcal{H}\text{T}(100, 2000)}_{\sigma}}^{Prior}
+\underbrace{\mathcal{H}\text{T}(100, 2000)}_{\sigma}}^{Prior}
 ``` 
 
-公式 {eq}`eq:gaussian_bayes` 是公式 [eq:proportional_bayes](eq:proportional_bayes) 的重述，其中明确列出了本例中的每个参数。由于我们没有特定理由选择信息性先验，因此对 $\mu$ 和 $\sigma$ 使用宽的无信息先验。目前情况下，先验是根据观测数据的经验均值和标准差来选择的。
-
-我们首先从 `Adelie 种企鹅` 的质量开始，而不是估计所有物种的质量。一般而言，高斯是企鹅质量（ 以及其他生物质量 ）似然函数的合理选择，因此我们采用它，并将公式 {eq}`eq:gaussian_bayes` 转换为如下计算模型：
+公式 {eq}`eq:gaussian_bayes` 是公式 [eq:proportional_bayes](eq:proportional_bayes) 的重述，其中明确列出了本例中的每个参数。由于没有特定理由选择信息性的先验，因此对 $\mu$ 和 $\sigma$ 使用了宽泛的无信息先验。目前情况下，先验的选择依据是观测数据的经验均值和标准差。然后我们从 `Adelie 种企鹅` 的体重开始，而不是估计所有物种的体重。一般而言，高斯是企鹅体重（ 以及其他生物体重 ）似然函数的合理选择，因此根据公式 {eq}`eq:gaussian_bayes` 转换为如下计算模型：
 
 ```{code-block} ipython3 
 :name: penguin_mass
@@ -116,23 +112,23 @@ with pm.Model() as model_adelie_penguin_mass:
     inf_data_adelie_penguin_mass = az.from_PyMC3(prior=prior, trace=trace)
 ``` 
 
-在开始计算后验分布之前，我们有必要先检查一下先验。特别是，我们需要检查并确认模型采样（ 因为大多数情况采用蒙特卡洛近似推断方法 ）在计算上是否可行，并确认基于领域知识选择的先验是否合理。
+在计算后验分布之前，我们有必要先检查一下先验。特别是，我们需要检查并确认当前模型的采样在计算上是否可行（ 这里的采样主要针对 MCMC 近似推断方法，对于变分推断等推断方法会有区别 ），并确认基于领域知识选择的先验是否合理。
 
-我们在 {numref}`fig:SingleSpecies_Prior_Predictive` 中绘制了先验样本。通过图形，我们可以判断该模型并没有“明显的”计算问题，例如，形状问题、错误指定的随机变量、错误指定的似然等。从先验样本可以看出，我们并没有过度限制企鹅可能的质量，尽管实际上我们可能会受到先验的限制，因为质量均值的先验目前还包括不合理的负值。
+{numref}`fig:SingleSpecies_Prior_Predictive` 中绘制了先验样本。通过图形，我们可以判断该模型并没有“明显的”计算问题，例如，形状问题、错误指定的随机变量、错误指定的似然等。从先验样本可以看出，我们并没有过度限制企鹅可能的体重，尽管实际上可能会受到先验的限制，因为体重均值的先验目前还包括不合理的负值。
 
-然而，这是一个简单的模型，并且有相当数量的观测结果，因此我们将只留意这种情况但不去处理它，而是继续估计后验分布。
+然而，这是一个简单的模型，并且有相当数量的观测结果，因此暂时只留意这种情况但不去处理它，继续估计后验分布。
 
 ```{figure} figures/SingleSpecies_Prior_Predictive.png 
 :name: fig:SingleSpecies_Prior_Predictive 
 :width: 7.00in 
 
-在代码 [penguin_mass](penguin_mass) 中生成的先验样本。可以看出，企鹅质量的均值和标准差的分布估计，涵盖了广泛的可能性。
+在代码 [penguin_mass](penguin_mass) 中生成的先验样本。可以看出，企鹅体重的均值和标准差的分布估计涵盖了广泛的可能性。
 ``` 
 
-从模型中做后验采样后，我们可以创建 {numref}`fig:single_penguins_rank_kde_plot`，其中包括 $4$ 个子图，右边的两个是秩图，左边是参数的 `KDE`，每条线为一个链。我们还可以参考 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的数值诊断来确认我们对链收敛的信念。使用在第 [2](chap1bis) 章中建立的直觉，我们大致能够判断这些拟合可以接受，并继续进行分析。
+从模型中做后验采样后，我们可以创建 {numref}`fig:single_penguins_rank_kde_plot`，其中包括 $4$ 个子图，右边的两个是秩图，左边是参数的 `KDE`，每条线为一个链。我们还可以参考 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的数值诊断来了解采样链的收敛情况。根据第 [2](chap1bis) 章建立的直觉，我们大致能够判断该拟合可以接受，可以继续进行分析。
 
 
-```{list-table} 企鹅质量的均值 (μ) 和标准差 (σ) 的贝叶斯估计，以及采样诊断。
+```{list-table} 企鹅体重的均值 (μ) 和标准差 (σ) 的贝叶斯估计，以及采样诊断。
 :name: tab:penguin_mass_parameters_bayesian_estimates
 
 * -
@@ -171,25 +167,23 @@ with pm.Model() as model_adelie_penguin_mass:
 :name: fig:single_penguins_rank_kde_plot 
 :width: 7.00in 
 
-企鹅质量的代码 [penguin_mass](penguin_mass) 中贝叶斯模型后验的 KDE 和秩图。该图用作采样的可视化诊断，以辅助判断在跨多个链的采样过程中是否存在问题。
+代码 [penguin_mass](penguin_mass) 中企鹅体重贝叶斯模型后验的核密度估计和秩图。该图用作采样的可视化诊断，以辅助判断在跨多个链的采样过程中是否存在问题。
 ``` 
 
-为了理解拟合结果，我们在 {numref}`fig:SingleSpecies_Mass_PosteriorPlot` 中绘制了一个结合所有链的后验图；并将来自 {numref}`tab:penguin_mass_parameters_point_estimates` 的均值和标准差的点估计值与贝叶斯估计值进行比较。
+为了理解拟合结果，我们在 {numref}`fig:SingleSpecies_Mass_PosteriorPlot` 中绘制了一个结合所有链的后验图；并对 {numref}`tab:penguin_mass_parameters_point_estimates` 中均值和标准差的点估计值做了标记，以便与贝叶斯估计值进行比较。
 
 ```{figure} figures/SingleSpecies_Mass_PosteriorPlot.png
 :name: fig:SingleSpecies_Mass_PosteriorPlot 
 :width: 7.00in 
 
-Adelie 种企鹅质量的代码 [penguin_mass](penguin_mass) 中，贝叶斯模型的后验分布图，其中，垂直线是经验均值和标准差。
+代码 [penguin_mass](penguin_mass) 中，`Adelie 种企鹅`体重贝叶斯模型的后验分布图，其中，垂线是经验均值和标准差。
 ``` 
 
-通过贝叶斯估计，我们得到了合理参数的分布。使用表 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的摘要信息，来自 {numref}`fig:single_penguins_rank_kde_plot` 中相同的后验分布，从 $3632$ 到 $3772$ 克的均值相当合理。
+通过贝叶斯估计，我们得到了合理的参数分布。使用 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的汇总信息，以及来自 {numref}`fig:single_penguins_rank_kde_plot` 中的后验分布，该企鹅物种的体重均值从 $3632$ 到 $3772$ 克相当合理；此外边缘后验分布的标准差也比较大。
 
-注意，边缘后验分布的标准差也有很大差异。请记住，后验分布不是单个企鹅质量的分布，而是描述企鹅质量的高斯分布的参数。
+切记，后验分布是高斯分布参数（均值和标准差）的分布，而非高斯分布本身（即企鹅体重的分布），千万不要混淆。因此如果想要企鹅体重的分布估计，我们需要基于均值和标准差参数的后验样本生成后验预测分布。也就是说，根据当前模型设定，企业体重的分布应该是以 $\mu$ 和 $\sigma$ 的后验分布为条件的高斯分布。
 
-如果想要个体企鹅质量的分布估计，我们需要生成一个后验预测分布。目前，它是以 $\mu$ 和 $\sigma$ 的后验为条件的一个高斯分布。
-
-现在我们已经描述了 Adelie 种企鹅的质量，可以对其他物种做同样的事情。我们可以通过编写另外两个模型来做到这一点，但我们也可以只运行一个模型，其中包含 $3$ 个独立的组，每个物种对应一个组。
+现在已经描述了 `Adelie 种企鹅`的体重，我们可以继续对其他物种做同样的工作。在编程上，我们可以编写三个独立的模型来实现，但也可以只编写一个模型，其中包含 $3$ 个独立的组，每个物种对应一个组。
 
 ```{code-block} ipython3
 :name: nocovariate_mass
@@ -213,17 +207,17 @@ with pm.Model() as model_penguin_mass_all_species:
                 "σ_dim_0": all_species.categories})
 ```
 
-我们在每个参数中使用可选的形状参数，并在似然中添加一个索引，以指示 `PyMC3` 我们想要独立地调节每个物种的后验。在编程语言设计中，使表达思想更加无缝的小技巧被称为**语法糖**。概率编程开发人员也使用一些语法糖；概率编程语言努力让表达模型更容易且错误更少。
+我们为每个参数使用了可选的 **形状（ Shape ，Python 中描述多维张量各维度大小的术语 ）** 参数，并在似然中添加一个索引，以告诉 `PyMC3` 我们希望独立调节每个物种的后验。在编程语言设计中，使表达思想更加无缝的小技巧被称为**语法糖**。概率编程开发人员也会使用一些语法糖；概率编程语言会努力让表达模型更容易且错误更少。
 
-运行模型后，我们再次检查 `KDE` 和秩图，请参阅 {numref}`fig:all_penguins_rank_kde_plot`。与 {numref}`fig:single_penguins_rank_kde_plot` 相比，你将看到 $4$ 个额外的图，每个物种添加的参数有 $2$ 个。花点时间将均值的估计值与 {numref}`tab:penguin_mass_parameters_point_estimates` 中每个物种的汇总均值进行比较。为了更好地可视化每个物种分布之间的差异，我们使用代码 [mass_forest_plot](mass_forest_plot) 在森林图中再次绘制后验图。
+运行模型后，再次检查核密度估计曲线和秩图，参阅 {numref}`fig:all_penguins_rank_kde_plot`。与 {numref}`fig:single_penguins_rank_kde_plot` 相比，你将看到 $4$ 个额外的图，每个物种添加了 $2$ 个参数。花点时间将均值的估计与 {numref}`tab:penguin_mass_parameters_point_estimates` 中各物种的汇总均值进行比较。为了更好地可视化各物种分布之间的差异，可以使用代码 [mass_forest_plot](mass_forest_plot) 来绘制多个后验分布的森林图。
 
-{numref}`fig:forest_plot_means` 使我们更容易比较对不同物种的估计，并注意到 `Gentoo 种企鹅`似乎比 `Adelie 种` 或 `Chinstrap 种` 有更大的质量。
+{numref}`fig:forest_plot_means` 使我们更容易对不同物种的估计做比较，注意 `Gentoo 种企鹅` 似乎比 `Adelie 种` 或 `Chinstrap 种` 有更大的体重。
 
 ```{figure} figures/AllSpecies_KDE_RankPlot.png
 :name: fig:all_penguins_rank_kde_plot
 :width: 7.00in
 
-`penguins_masses` 模型中的每种企鹅质量分布参数后验估计的 `KDE` 和秩图 。注意每个物种都有自己的一对估计值。
+`penguins_masses` 模型中的各种企鹅体重分布参数的后验估计核密度估计曲线和秩图 。注意各物种都有自己的一对估计值。
 ```
 
 ```{code-block} ipython3
@@ -237,9 +231,9 @@ az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["μ"])
 :name: fig:forest_plot_means
 :width: 7.00in
 
-`model_penguin_mass_all_species` 中每个物种组的质量均值的森林图。每条线代表采样器中的一条链，点代表点估计，目前情况下为均值，细线是后验的 $25\%$ 到 $75\%$ 四分位数范围，粗线是 $94\%$ 最高密度区间 ( HDPI )。
+`model_penguin_mass_all_species` 中各物种组体重均值参数的后验森林图。每条线代表采样器中的一条链，点代表点估计，目前情况下指经验均值，细线是后验的 $25\%$ 到 $75\%$ 四分位数范围，粗线是 $94\%$ 最高密度区间 ( HDPI )。
 ```
-{numref}`fig:forest_plot_means` 让我们更容易比较估计结果，并且很容易注意到 Gentoo 种企鹅的质量比 Adelie 种或 Chinstrap 种企鹅更大。让我们也看看 {numref}`fig:forest_plot_sigma` 中的标准差。后验的 $94\%$ 最高密度区间报告了大约 $100$ 克的不确定性。
+{numref}`fig:forest_plot_means` 让我们更容易比较估计结果，并且很容易注意到 `Gentoo 种`企鹅的体重比 `Adelie 种` 或 `Chinstrap 种` 企鹅更大。让我们也看看 {numref}`fig:forest_plot_sigma` 中的标准差。后验的 $94\%$ 最高密度区间报告了大约存在 $100$ 克的不确定性。
 
 ```{code-block} ipython3
 az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"]) 
@@ -249,7 +243,7 @@ az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"])
 :name: fig:forest_plot_sigma 
 :width: 7.00in 
 
-`model_penguin_mass_all_species` 中每个物种组的质量标准差的森林图。该图描述了我们对企鹅质量离散性的估计，例如，给定 Gentoo 种企鹅分布的平均估计值，相关标准差可能在 $450$ 克到 $550$ 克之间。
+`model_penguin_mass_all_species` 中各物种组的体重标准差参数的后验森林图，描述了对各组企鹅体重离散度的估计，例如，给定 `Gentoo 种企鹅`体重分布均值的估计后，相关标准差可能在 $450$ 克到 $550$ 克之间。
 
 ``` 
 
@@ -257,15 +251,19 @@ az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"])
 
 ### 3.1.1 比较两种概率编程语言 
 
-在进一步扩展统计和建模思想之前，我们将花点时间讨论概率编程语言，并介绍将在本书中使用的另一种概率编程语言：`TensorFlow Probability (TFP)`。我们在代码 [nocovariate_mass](nocovariate_mass) 中，将 `PyMC3` 的截距模型转换为 `TFP` 来介绍这一点。
+在进一步扩展统计建模思想之前，我们先花点时间讨论概率编程语言，并介绍将在本书中使用的另一种概率编程语言：`TensorFlow Probability (TFP)`。我们将在代码 [nocovariate_mass](nocovariate_mass) 中，将 `PyMC3` 的截距模型转换为 `TFP` ，以便于大家理解。
 
-学习不同的概率编程语言似乎没有必要。然而，在本书中我们选择使用两个概率编程语言而不是一个有特殊原因。在不同的概率编程语言中看到相同的工作流程将使你对计算贝叶斯建模有更透彻的理解，帮助你将计算细节与统计思想分开，并使你成为一个更强大的建模者。此外，不同的概率编程语言有不同的实力和重点。 `PyMC3` 是更高级别的概率编程语言，可以更轻松地用更少的代码表达模型，而 TFP 为可堆肥建模和推断提供更低级别的概率编程语言。另一个是并非所有概率编程语言都能够像彼此一样容易地表达所有模型。例如，时间序列模型（第 [6] 章（第 4 章））在 TFP 中更容易定义，而贝叶斯加性回归树在 `PyMC3` 中更容易表达（第 [7] 章（第 6 章））。通过这种对多种语言的接触，你将对贝叶斯建模的基本元素以及它们如何在计算上实现有更深入的了解。
+学习不同的概率编程语言似乎没有必要。但本书中选择使用两种概率编程语言有些特殊的原因：*在不同概率编程语言中看到相同的工作流程，将使你对贝叶斯建模和计算有更透彻的理解，帮助你将计算细节与统计思想分开，并使你成为一个更强大的建模者*。
 
-概率编程语言（强调语言）由原语组成。编程语言中的原语是可用于构建更复杂程序的最简单元素。你可以认为基元就像自然语言中的单词，可以形成更复杂的结构，比如句子。由于不同的语言使用不同的词，不同的概率编程语言 使用不同的原语。这些原语主要用于表达模型、执行推断或表达工作流的其他部分。在 `PyMC3` 中，与模型构建相关的原语包含在命名空间“pm”下。例如，在代码 [penguin_mass](penguin_mass) 中，我们看到“pm.HalfStudentT(.)”和“pm.Normal(.)”，其中代表一个随机变量。 `with pm.Model() as .` 语句调用 Python 上下文管理器，`PyMC3` 使用它通过收集上下文管理器中的随机变量来构建模型 `model_adelie_penguin_mass`。然后我们使用 pm.sample_prior_predictive(.) 和 pm.sample(.) 分别从先验预测分布和后验分布中获取样本。
+此外，不同概率编程语言有不同的能力和重点。 `PyMC3` 是更高级别的概率编程语言，可以轻松地以更少代码表达模型，而 `TFP` 为建模和推断提供了更低级别的概率编程能力。并非所有概率编程语言都能够像彼此一样非常容易地表达所有模型。例如，时间序列模型（ [第 6 章](chap4) ）在 `TFP` 中更容易定义，而贝叶斯加性回归树在 `PyMC3` 中更容易表达（ [第 7 章](chap6) ）。通过对多种语言的接触，你将对贝叶斯建模的基本要素以及其在在计算上的实现有更深入了解。
 
-类似地，TFP 为用户提供了在 `tfp.distributions`、运行 MCMC (`tfp.mcmc`) 等中指定分布和模型的原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 `tfd.JointDistribution` {cite:p}`piponi2020joint` API 的原语。在本章和本书的其余部分中，我们主要使用 `tfd.JointDistributionCoroutine`，但还有 `tfd.JointDistribution` 的其他变体可能更适合你的用例 [^1]。由于基本数据导入和统计量与代码 [penguin_load](penguin_load) 和 [penguin_mass_empirical](penguin_mass_empirical) 保持相同，我们可以专注于模型构建和推断。
+概率编程语言由原语组成，在编程语言中，原语是用于构建更复杂程序的最简单元素。你可以将原语理解成自然语言中的单词，能够形成更复杂的结构，比如句子。由于不同语言使用不同的词，不同概率编程语言也会使用不同的原语。这些原语主要用于表达模型、执行推断或表达工作流的其他部分。
 
-`model_penguin_mass_all_species` 以 TFP 表示，如下面的代码 [penguin_mass_tfp](penguin_mass_tfp) 所示
+在 `PyMC3` 中，与模型构建相关的原语包含在命名空间 `pm` 下。例如，在代码 [penguin_mass](penguin_mass) 中，可以看到 `pm.HalfStudentT(.)` 和 `pm.Normal(.)`，其中“ $.$` ”代表一个随机变量。 `with pm.Model() as .` 语句调用 Python 的上下文环境管理器，`PyMC3` 使用该语句来收集上下文管理器中的随机变量，并构建模型 `model_adelie_penguin_mass`。然后可以使用 `pm.sample_prior_predictive(.)` 和 `pm.sample(.)` 分别获得先验预测分布和后验分布的样本。
+
+类似地，TFP 为用户提供了在  `tfp.distributions` 中指定分布和模型、运行 MCMC 推断( `tfp.mcmc` ) 等原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 `tfd.JointDistribution` 的 API 原语 {cite:p}`piponi2020joint`。在本书的其余部分中，我们会主要使用 `tfd.JointDistributionCoroutine`，但读者应当知道还有 `tfd.JointDistribution` 的一些变体可能更适合你的应用 [^1]。由于导入数据和计算汇总统计量的代码和 [penguin_load](penguin_load) 和 [penguin_mass_empirical](penguin_mass_empirical) 一致，因此这里我们专注于模型构建和推断。
+
+`model_penguin_mass_all_species` 以 TFP 表示为代码 [penguin_mass_tfp](penguin_mass_tfp) ：
 
 ```{code-block} ipython3
 :name: penguin_mass_tfp
@@ -297,11 +295,17 @@ def jd_penguin_mass_all_species():
         name="mass")
 ```
 
-由于这是我们第一次遇到用 TFP 编写的贝叶斯模型，所以让我们花几段时间来详细介绍一下 API。原语是 `tfp.distributions` 中的分布类，我们为其分配一个较短的别名 `tfd = tfp.distributions`。 `tfd` 包含常用的分布，例如 `tfd.Normal(.)`。我们还使用了 `tfd.Sample`，它返回基本分布的多个独立副本（从概念上讲，我们实现了与在 `PyMC3` 中使用语法糖 `shape=(.)` 类似的目标）。 `tfd.Independent` 用于指示分布包含多个副本，我们希望在计算对数似然时在某个轴上求和，这由 `reinterpreted_batch_ndims` 函数参数指定。通常我们用 `tfd.Independent` [^2] 包装与观测相关的分布。你可以在 {ref}`shape_PPL` 部分阅读更多关于 TFP 和概率编程语言 中的形状处理的信息。
+这是我们第一次遇到用 TFP 编写的贝叶斯模型，所以花点时间来详细介绍一下。 `tfp.distributions` 是原语中的分布类，我们通常为其赋予一个较短的别名 `tfd = tfp.distributions` 。 `tfd` 中包含了常用的分布，例如正态分布 `tfd.Normal(.)` 。代码中还使用了 `tfd.Sample`，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 `PyMC3` 语法糖 `shape=(.)` 的功能 ）。 `tfd.Independent` 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 `reinterpreted_batch_ndims` 函参指定。通常用 `tfd.Independent` 封装与观测相关的分布 [^2] 。你可以在 {ref}`shape_PPL` 部分阅读更多关于 TFP 和概率编程语言中的形状处理的信息。
 
-`tfd.JointDistributionCoroutine` 模型的一个有趣的签名，顾名思义，就是在 Python 中使用协程。无需过多介绍生成器和协程，这里的分布的 `yield` 语句会为你提供模型函数内部的一些随机变量。你可以将 `y = yield Normal(.)` 视为 $y \sim \text{Normal(.)}$ 的表达方式。此外，我们需要通过用 `tfd.JointDistributionCoroutine.Root` 包装它们来将没有依赖关系的随机变量识别为根节点。该模型被编写为没有输入参数和返回值的 Python 函数。最后，将 `@tfd.JointDistributionCoroutine` 放在 Python 函数之上作为装饰器可以方便地直接获取模型（即 `tfd.JointDistribution`）。
+代码中的模型签名 `@tfd.JointDistributionCoroutine` 很有意思，顾名思义，就是在 Python 中使用协程（ Coroutine ），不过我们在此不过多地介绍生成器和协程的概念。 
 
-生成的 `jd_penguin_mass_all_species` 是 TFP 中重述的代码 [nocovariate_mass](nocovariate_mass) 中的仅截距回归模型。它具有与其他 `tfd.Distribution` 类似的方法，我们可以在贝叶斯工作流程中使用这些方法。例如，要绘制先验和先验预测样本，我们可以调用 `.sample(.)` 方法，该方法返回类似于 `namedtuple` 的自定义嵌套 Python 结构。在代码 [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive) 中，我们绘制了 1000 个先验和先验预测样本。
+`yield` 语句会为你提供模型函数内部的一些随机变量，你可以将 `y = yield Normal(.)` 视为 $y \sim \text{Normal(.)}$ 的代码表达方式。
+
+此外，我们通过 `tfd.JointDistributionCoroutine.Root` 来包装没有依赖关系的随机变量。
+
+该模型被编写为没有输入参数和返回值的 Python 函数，将 `@tfd.JointDistributionCoroutine` 放在 Python 函数之上作为装饰器，以方便直接获取模型（即 `tfd.JointDistribution`）。
+
+结果的 `jd_penguin_mass_all_species` 是代码 [nocovariate_mass](nocovariate_mass) 中的截距回归模型在 TFP 中的重写。它具有与其他 `tfd.Distribution` 类似的、可以在贝叶斯工作流中使用的方法。例如，抽取先验和先验预测样本可以调用 `.sample(.)` 方法，该方法返回一个类似于 `namedtuple` 的自定义嵌套 Python 结构体。在代码 [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive) 中，我们抽取了 $10004 个先验和先验预测样本。
 
 ```{code-block} ipython3
 :name: penguin_mass_tfp_prior_predictive
@@ -310,7 +314,7 @@ def jd_penguin_mass_all_species():
 prior_predictive_samples = jd_penguin_mass_all_species.sample(1000)
 ```
 
-`tfd.JointDistribution` 的 `.sample(.)` 方法也可以绘制条件样本，这是我们将用来绘制后验预测样本的机制。你可以运行代码 [penguin_mass_tfp_prior_predictive2](penguin_mass_tfp_prior_predictive2) 并检查输出以查看如果你将模型中的某些随机变量设置为某些特定值，随机样本如何变化。总的来说，我们在调用 `.sample(.)` 时会调用 *forward* 生成过程。
+`tfd.JointDistribution` 的 `.sample(.)` 方法也可以抽取条件样本，这也是将来抽取后验预测样本时采用的机制。你可以运行代码 [penguin_mass_tfp_prior_predictive2](penguin_mass_tfp_prior_predictive2) ，检查输出，查看将模型中某些随机变量被设置为特定值时，随机样本的变化情况。总体来说，我们在调用 `.sample(.)` 函数时，会调用 *前向* 的数据生成过程。
 
 ```{code-block} ipython3
 :name: penguin_mass_tfp_prior_predictive2
@@ -319,9 +323,9 @@ jd_penguin_mass_all_species.sample(sigma=tf.constant([.1, .2, .3]))
 jd_penguin_mass_all_species.sample(mu=tf.constant([.1, .2, .3]))
 ``` 
 
-一旦我们将生成模型“jd_penguin_mass_all_species”调整为观测到的企鹅体重，我们就可以获得后验分布。
+一旦将生成模型 `jd_penguin_mass_all_species` 调整为企鹅体重的观测值（即为模型指定数据），就能够获得模型参数的后验分布。
 
-从计算的角度来看，我们希望生成一个函数，该函数返回在输入处评估的后验对数概率（直到某个常数）。这可以通过创建 Python 函数闭包或使用 `.experimental_pin` 方法来完成，如代码 [tfp_posterior_generation](tfp_posterior_generation) 所示：
+从计算角度来看，我们希望生成一个能够返回输入点处后验对数概率的函数。这可以通过创建 Python 函数闭包或使用 `.experimental_pin` 方法来实现，如代码 [tfp_posterior_generation](tfp_posterior_generation) 所示：
 
 ```{code-block} ipython3
 :name: tfp_posterior_generation
@@ -361,7 +365,7 @@ inf_data_model_penguin_mass_all_species2 = az.from_dict(
 )
 ``` 
 
-在代码 [tfp_posterior_inference](tfp_posterior_inference) 中，我们运行了 4 个 MCMC 链，每个链在 1000 个适应步骤后有 1000 个后验样本。在内部，它通过使用观测到的（附加关键字参数“mass=body_mass_g”最后）调节模型（作为参数传递给函数）来调用“experimental_pin”方法。
+在代码 [tfp_posterior_inference](tfp_posterior_inference) 中，我们运行了 4 个 MCMC 链，每条链在 1000 个适应步骤后有 1000 个后验样本。在内部，它通过使用观测到的（附加关键字参数“mass=body_mass_g”最后）调节模型（作为参数传递给函数）来调用“experimental_pin”方法。
 
 第 8-18 行将采样结果解析为 ArviZ InferenceData，我们现在可以在 ArviZ 中对贝叶斯模型进行诊断和探索性分析。我们还可以在下面的代码 [tfp_idata_additional](tfp_idata_additional) 中以透明的方式将先验和后验预测样本和数据对数似然添加到`inf_data_model_penguin_mass_all_species2`。请注意，我们使用了 `tfd.JointDistribution` 的 `sample_distributions` 方法，该方法抽取样本*并*生成以后验样本为条件的分布。
 
@@ -392,7 +396,7 @@ inf_data_model_penguin_mass_all_species2.add_groups(
 
 ## 3.2 线性回归 
 
-在上一节中，我们通过在高斯分布的均值和标准差上设置先验分布来模拟企鹅质量的分布。重要的是，我们假设质量不随数据中的其他特征而变化。然而，我们希望其他观测数据点可以提供有关预期企鹅质量的信息。直观地说，如果我们看到两只企鹅，一只长鳍，一只短鳍，我们会认为较大的企鹅，即长鳍的企鹅，即使我们手头没有秤来精确测量它们的质量，也会有更大的质量。估计观测到的鳍状肢长度与估计质量的关系的最简单方法之一是拟合线性回归模型，其中平均值*有条件*建模为其他变量的线性组合。
+在上一节中，我们通过在高斯分布的均值和标准差上设置先验分布来模拟企鹅体重的分布。重要的是，我们假设体重不随数据中的其他特征而变化。然而，我们希望其他观测数据点可以提供有关预期企鹅体重的信息。直观地说，如果我们看到两只企鹅，一只长鳍，一只短鳍，我们会认为较大的企鹅，即长鳍的企鹅，即使我们手头没有秤来精确测量它们的体重，也会有更大的体重。估计观测到的鳍状肢长度与估计体重的关系的最简单方法之一是拟合线性回归模型，其中均值*有条件*建模为其他变量的线性组合。
 
 ```{math}
 :label: eq:expanded_regression
@@ -450,7 +454,7 @@ Y = \mathbf{X}\boldsymbol{\beta} + \epsilon,\; \epsilon \sim \mathcal{N}(0, \sig
 
 ### 3.2.1 线性的企鹅模型
 
-如果回顾企鹅示例，我们对使用额外数据来估计企鹅的平均质量更感兴趣。我们在代码 [non_centered_regression](non_centered_regression) 中编写了一个线性回归模型，其中包括两个新参数 $\beta_0$ 和 $\beta_1$，通常称为截距和斜率。对于这个例子，我们设置了 $\mathcal{N}(0, 4000)$ 的宽泛先验，这也与我们没有领域知识的假设一致。随后运行采样器，它现在估计了三个参数 $\sigma$ 、$\beta_1$ 和 $\beta_0$。
+如果回顾企鹅示例，我们对使用额外数据来估计企鹅的平均体重更感兴趣。我们在代码 [non_centered_regression](non_centered_regression) 中编写了一个线性回归模型，其中包括两个新参数 $\beta_0$ 和 $\beta_1$，通常称为截距和斜率。对于这个例子，我们设置了 $\mathcal{N}(0, 4000)$ 的宽泛先验，这也与我们没有领域知识的假设一致。随后运行采样器，它现在估计了三个参数 $\sigma$ 、$\beta_1$ 和 $\beta_0$。
 
 ```{code-block} ipython3
 :name: non_centered_regression
@@ -483,44 +487,44 @@ with pm.Model() as model_adelie_flipper_regression:
 
 在采样器完成运行后，我们可以绘制 {numref}`fig:adelie_coefficient_posterior_plots`，它显示了检查 $\beta_0$ 和 $\beta_1$ 的完整后验图。
 
-系数 $\beta_1$ 表示，对于 `Adelie 种`来说，鳍状肢长度的每毫米变化，理论上上我们预计会产生 $32$ 克的质量变化，尽管在 $22$ 克到 $41$ 克之间的任何地方都是可能发生的变化。此外，从 {numref}`fig:adelie_coefficient_posterior_plots` 中可以看到 $$94\%$$ 的最高密度区间未覆盖 $0$ 克，这支持了我们的假设，即质量和鳍状肢长度之间存在关系。这一观察对于解释 “鳍状肢长度和质量之间如何相关” 非常有用。但我们应该注意：**不要过度解释系数或认为线性模型必然意味着因果关系**。例如，如果对一只企鹅进行脚蹼的扩展手术，这不一定会造成体重增加，而实际上由于企鹅获取食物的障碍，体重反而可能降低。相反的关系也不一定正确，给企鹅提供更多食物有助于其拥有更大的鳍状肢，但也可能使其成为一只更胖的企鹅。
+系数 $\beta_1$ 表示，对于 `Adelie 种`来说，鳍状肢长度的每毫米变化，理论上上我们预计会产生 $32$ 克的体重变化，尽管在 $22$ 克到 $41$ 克之间的任何地方都是可能发生的变化。此外，从 {numref}`fig:adelie_coefficient_posterior_plots` 中可以看到 $$94\%$$ 的最高密度区间未覆盖 $0$ 克，这支持了我们的假设，即体重和鳍状肢长度之间存在关系。这一观察对于解释 “鳍状肢长度和体重之间如何相关” 非常有用。但我们应该注意：**不要过度解释系数或认为线性模型必然意味着因果关系**。例如，如果对一只企鹅进行脚蹼的扩展手术，这不一定会造成体重增加，而实际上由于企鹅获取食物的障碍，体重反而可能降低。相反的关系也不一定正确，给企鹅提供更多食物有助于其拥有更大的鳍状肢，但也可能使其成为一只更胖的企鹅。
 
-现在看一下 $\beta_0$，它代表什么？根据后验估计结果，如果看到一只鳍状肢长度为 $0$ 毫米的`Adelie 种`企鹅，我们预计这只不可能的企鹅的质量在 $-4213$ 到 $-546$ 克之间。根据模型，这个陈述是正确的，但负的质量并没有意义。这不一定是问题，没有规定模型中的每个参数都必须可解释，也没有规定模型对每个参数值都必须提供合理预测。
+现在看一下 $\beta_0$，它代表什么？根据后验估计结果，如果看到一只鳍状肢长度为 $0$ 毫米的`Adelie 种`企鹅，我们预计这只不可能的企鹅的体重在 $-4213$ 到 $-546$ 克之间。根据模型，这个陈述是正确的，但负的体重并没有意义。这不一定是问题，没有规定模型中的每个参数都必须可解释，也没有规定模型对每个参数值都必须提供合理预测。
 
-在我们整书旅程中的当下，上述特定模型的有限目的只是估计鳍状肢长度和`企鹅质量`之间的关系，而通过后验估计，我们已经成功实现了这个目标。
+在我们整书旅程中的当下，上述特定模型的有限目的只是估计鳍状肢长度和`企鹅体重`之间的关系，而通过后验估计，我们已经成功实现了这个目标。
 
 ::: {admonition} 模型: 数学和现实之间的平衡 
 
-在企鹅示例中，即使模型允许，企鹅质量低于 $0$（ 甚至接近 $0$ ）也是没有意义的。由于建模和拟合时使用了远离 $0$ 的质量值，所以当我们想要推断接近 $0$ 或低于 $0$ 的结果时，不应该对模型失败感到惊讶。模型不一定必须为所有可能的值提供合理预测，它只需要为构建它时的有限目的提供合理预测。
+在企鹅示例中，即使模型允许，企鹅体重低于 $0$（ 甚至接近 $0$ ）也是没有意义的。由于建模和拟合时使用了远离 $0$ 的体重值，所以当我们想要推断接近 $0$ 或低于 $0$ 的结果时，不应该对模型失败感到惊讶。模型不一定必须为所有可能的值提供合理预测，它只需要为构建它时的有限目的提供合理预测。
 
 ::: 
 
-本节中，我们设想加入预测变量会更好地预测企鹅的质量。我们可以通过 {numref}`fig:SingleSpecies_SingleRegression_Forest_Sigma_Comparison` 比较固定均值模型和线性变化均值模型的 $\sigma$ 后验估计来验证此设想，我们对似然的标准差估计已经从平均约 $460$ 克降到了 $380$ 克。
+本节中，我们设想加入预测变量会更好地预测企鹅的体重。我们可以通过 {numref}`fig:SingleSpecies_SingleRegression_Forest_Sigma_Comparison` 比较固定均值模型和线性变化均值模型的 $\sigma$ 后验估计来验证此设想，我们对似然的标准差估计已经从平均约 $460$ 克降到了 $380$ 克。
 
 ```{figure} figures/SingleSpecies_SingleRegression_Forest_Sigma_Comparison.png 
 :name: fig:SingleSpecies_SingleRegression_Forest_Sigma_Comparison  
 :width: 7.00in 
 
  
-在估计企鹅质量时,通过使用鳍状肢长度作为预测变量，估计误差从略高于 $460$ 克的均值减少到大约 $380$ 克。直觉上这是有道理的，就像我们得到了关于估计量的信息，可以利用这些信息来做出更好的估计。
+在估计企鹅体重时,通过使用鳍状肢长度作为预测变量，估计误差从略高于 $460$ 克的均值减少到大约 $380$ 克。直觉上这是有道理的，就像我们得到了关于估计量的信息，可以利用这些信息来做出更好的估计。
 ``` 
 
 ```{figure} figures/Flipper_length_mass_regression.png 
 :name: fig:Flipper_length_mass_regression
 :width: 7.00in 
 
-观测到的鳍状肢长度与 `Adelie 种` 的质量数据作散点图，似然的平均值估计为黑线，平均值的 $94\%$ HDI 为灰色区间。请注意估计的均值如何随着鳍状肢长度变化而变化。
+观测到的鳍状肢长度与 `Adelie 种` 的体重数据作散点图，似然的均值估计为黑线，均值的 $94\%$ HDI 为灰色区间。请注意估计的均值如何随着鳍状肢长度变化而变化。
 ``` 
 
 (chp2_predictions)= 
 
 ### 3.2.2 预测 
 
-在 {ref}`linear_regression_intro` 中，我们估计了鳍状肢长度和质量之间的线性关系。回归的另一用途是利用此关系进行预测。在本例中，给定企鹅的鳍状肢长度，我们能够预测它的质量吗？事实上可以。我们可以使用 `model_adelie_flipper_regression` 的结果来执行此预测操作。
+在 {ref}`linear_regression_intro` 中，我们估计了鳍状肢长度和体重之间的线性关系。回归的另一用途是利用此关系进行预测。在本例中，给定企鹅的鳍状肢长度，我们能够预测它的体重吗？事实上可以。我们可以使用 `model_adelie_flipper_regression` 的结果来执行此预测操作。
 
-由于在贝叶斯统计中，我们处理的是都是分布，因此最终不会得到关于质量的单个预测值，而是所有可能质量值的分布。该分布就是公式 [eq:post_pred_dist](eq:post_pred_dist) 中定义的后验预测分布。
+由于在贝叶斯统计中，我们处理的是都是分布，因此最终不会得到关于体重的单个预测值，而是所有可能体重值的分布。该分布就是公式 [eq:post_pred_dist](eq:post_pred_dist) 中定义的后验预测分布。
 
-在实践中，我们通常不会（也可能无法）解析地计算预测，但使用概率编程语言，可以用后验分布样本来估计预测值的分布。例如，如果有一只平均鳍状肢长度的企鹅，并且想使用 `PyMC3` 预测其可能的质量，我们可以编写代码 [penguins_ppd](penguins_ppd)：
+在实践中，我们通常不会（也可能无法）解析地计算预测，但使用概率编程语言，可以用后验分布样本来估计预测值的分布。例如，如果有一只平均鳍状肢长度的企鹅，并且想使用 `PyMC3` 预测其可能的体重，我们可以编写代码 [penguins_ppd](penguins_ppd)：
 
 ```{code-block} ipython3
 :name: penguins_ppd
@@ -534,18 +538,18 @@ with model_adelie_flipper_regression:
         inf_data_adelie_flipper_regression.posterior, var_names=["mass", "μ"])
 ```
 
-在代码 [penguins_ppd](penguins_ppd) 的第一行中，我们将鳍状肢长度的值固定为观测到的鳍状肢的平均长度。然后使用回归模型 `model_adelie_flipper_regression`，可以在该固定值处生成企鹅质量的后验预测样本。在 {numref}`fig:Flipper_length_mass_posterior_predictive` 中，我们绘制了具有平均鳍状肢长度的企鹅，其质量的后验预测分布，沿着均值的后验。
+在代码 [penguins_ppd](penguins_ppd) 的第一行中，我们将鳍状肢长度的值固定为观测到的鳍状肢的平均长度。然后使用回归模型 `model_adelie_flipper_regression`，可以在该固定值处生成企鹅体重的后验预测样本。在 {numref}`fig:Flipper_length_mass_posterior_predictive` 中，我们绘制了具有平均鳍状肢长度的企鹅，其体重的后验预测分布，沿着均值的后验。
 
 ```{figure} figures/Flipper_length_mass_posterior_predictive.png 
 :name: fig:Flipper_length_mass_posterior_predictive 
 :width: 7.00in 
  
-在平均鳍状肢长度处评估的均值参数 $\mu$ 的后验分布，标记为蓝色；同时，在平均鳍状肢长度处评估的企鹅质量的后验预测分布标记为黑色。可以看出，黑色曲线更宽，因为它描述了（给定鳍状肢长度时）所以可能预测结果的分布，而蓝色曲线仅表达了其中均值的分布。
+在平均鳍状肢长度处评估的均值参数 $\mu$ 的后验分布，标记为蓝色；同时，在平均鳍状肢长度处评估的企鹅体重的后验预测分布标记为黑色。可以看出，黑色曲线更宽，因为它描述了（给定鳍状肢长度时）所以可能预测结果的分布，而蓝色曲线仅表达了其中均值的分布。
 ``` 
 
-简而言之，我们不仅可以使用代码 [non_centered_regression](non_centered_regression) 中的模型来估计鳍状肢长度和企鹅质量之间的关系，还可以在任意鳍状肢长度处获得其对应的企鹅质量估计值。
+简而言之，我们不仅可以使用代码 [non_centered_regression](non_centered_regression) 中的模型来估计鳍状肢长度和企鹅体重之间的关系，还可以在任意鳍状肢长度处获得其对应的企鹅体重估计值。
 
-换句话说，我们可以利用贝叶斯估计得出的 $\beta_1$ 和 $\beta_0$ 系数，通过后验预测分布来预测任意鳍状肢长度的企鹅质量。
+换句话说，我们可以利用贝叶斯估计得出的 $\beta_1$ 和 $\beta_0$ 系数，通过后验预测分布来预测任意鳍状肢长度的企鹅体重。
 
 因此，后验预测分布在贝叶斯环境中是一个特别强大的工具，它让我们不仅可以预测最可能的值，还可以预测包含不确定性的合理值分布，如公式 [eq:post_pred_dist](eq:post_pred_dist) 。
 
@@ -553,7 +557,7 @@ with model_adelie_flipper_regression:
 
 ### 3.2.3 中心化处理 
 
-我们在代码 [non_centered_regression](non_centered_regression) 中的模型在估计鳍状肢长度和企鹅质量之间的相关性以及预测给定鳍状肢长度下的企鹅质量方面效果很好。
+我们在代码 [non_centered_regression](non_centered_regression) 中的模型在估计鳍状肢长度和企鹅体重之间的相关性以及预测给定鳍状肢长度下的企鹅体重方面效果很好。
 
 遗憾的是，数据和模型提供的对 $\beta_0$ 的估计并不是特别有用。但我们可以通过数据转换来使 $\beta_0$ 更易于解释。通常我们会选择中心化处理，即采纳一组数据并将其均值中心化为零，如代码 [flipper_centering](flipper_centering) 所示。
 
@@ -612,12 +616,12 @@ inf_data_adelie_flipper_length_c = az.from_dict(
 :width: 7.00in 
 
 来自代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 的系数估计。
-注意，$beta\_1$ 的分布与 {numref}`fig:adelie_coefficient_posterior_plots` 中相同，但 $beta\_0$ 的分布发生了偏移。因为我们在鳍状肢长度的均值处做了中心化处理，$beta\_0$ 现在代表具有平均鳍状肢长度的企鹅的概率质量分布。
+注意，$beta\_1$ 的分布与 {numref}`fig:adelie_coefficient_posterior_plots` 中相同，但 $beta\_0$ 的分布发生了偏移。因为我们在鳍状肢长度的均值处做了中心化处理，$beta\_0$ 现在代表具有平均鳍状肢长度的企鹅的概率体重分布。
 ``` 
 
 在代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 中定义的数学模型与代码 [non_centered_regression](non_centered_regression) 中的 `PyMC3` 模型 `model_adelie_flipper_regression` 相同，唯一区别是对预测变量做的中心化处理。然而，在概率编程语言方面，`TFP` 的结构需要在各行中添加 `tensor_x[..., None]` 以扩展一批标量，以便它们能够与一批向量一起广播。具体来说，`None` 会添加一个新轴，这也可以使用 `np.newaxis` 或 `tf.newaxis` 来完成。此外，`TFP` 还将模型包装在一个函数中，以便轻松地以不同的预测变量作为条件。当然，此处使用中心化后的鳍状肢长度作为预测变量，但其实也可以项 `PyMC3` 一样使用非中心化的方式，两者结果是相似的。
 
-当我们再次绘制系数时，$\beta_1$ 与 `PyMC3` 模型相同，但 $\beta_0$ 的分布发生了变化。由于我们将输入的数据中心化到了其均值上，$\beta_0$ 的分布与我们对非中心化数据集的组均值的预测相同。通过将数据中心化，现在可以直接将 $\beta_0$ 解释为具有平均鳍状肢长度的 `Adelie 种`企鹅的平均质量分布。
+当我们再次绘制系数时，$\beta_1$ 与 `PyMC3` 模型相同，但 $\beta_0$ 的分布发生了变化。由于我们将输入的数据中心化到了其均值上，$\beta_0$ 的分布与我们对非中心化数据集的组均值的预测相同。通过将数据中心化，现在可以直接将 $\beta_0$ 解释为具有平均鳍状肢长度的 `Adelie 种`企鹅的平均体重分布。
 
 转换输入变量的想法也可以在任意选择的值上执行。例如，我们可以减去最小鳍状肢长度后拟合模型。在这种转换中，会将 $\beta_0$ 的解释更改为观测到的最小鳍状肢长度的均值分布。
 
@@ -627,7 +631,7 @@ inf_data_adelie_flipper_length_c = az.from_dict(
 
 ## 3.3 多元线性回归 
 
-在许多物种中，不同性别之间存在双态性或差异。企鹅性别双态性的研究实际上是收集 `Palmer Penguin 数据集` {cite:p}`gorman_williams_fraser_2014` 的出发点之一。为了更仔细地研究企鹅的双态性，我们添加第二个预测变量：性别，将其编码为类别型变量，看看我们是否可以更精确地估计企鹅的质量。
+在许多物种中，不同性别之间存在双态性或差异。企鹅性别双态性的研究实际上是收集 `Palmer Penguin 数据集` {cite:p}`gorman_williams_fraser_2014` 的出发点之一。为了更仔细地研究企鹅的双态性，我们添加第二个预测变量：性别，将其编码为类别型变量，看看我们是否可以更精确地估计企鹅的体重。
 
 ```{code-block} ipython3
 :name: penguin_mass_multi
@@ -657,7 +661,7 @@ with pm.Model() as model_penguin_mass_categorical:
 :name: fig:adelie_sex_coefficient_posterior
 :width: 7.00in
 
-估计模型中的性别预测变量系数 $\beta_{2}$ 。雄性企鹅编码为 $0$，雌性企鹅编码为 $1$ ，这表示我们预计，具有相同鳍状肢长度的雄性和雌性 `Adelie 种` 企鹅之间存在额外的质量差别。
+估计模型中的性别预测变量系数 $\beta_{2}$ 。雄性企鹅编码为 $0$，雌性企鹅编码为 $1$ ，这表示我们预计，具有相同鳍状肢长度的雄性和雌性 `Adelie 种` 企鹅之间存在额外的体重差别。
 ```
 
 ::: {admonition} Syntactic Linear Sugar 
@@ -678,16 +682,16 @@ trace = model.fit()
 
 ::: 
 
-由于我们将 “雄性” 编码为 $0$，因此来自 `model_penguin_mass_categorical` 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的质量差异。最后一部分非常重要，通过添加第二个预测变量，我们现在有了一个多元线性回归，而同时在解释系数时必须更加小心。在这种情况下，系数通常提供了：**如果**所有其他预测变量保持不变的情况下，某个预测变量与响应变量之间的关系 [^5]。
+由于我们将 “雄性” 编码为 $0$，因此来自 `model_penguin_mass_categorical` 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。最后一部分非常重要，通过添加第二个预测变量，我们现在有了一个多元线性回归，而同时在解释系数时必须更加小心。在这种情况下，系数通常提供了：**如果**所有其他预测变量保持不变的情况下，某个预测变量与响应变量之间的关系 [^5]。
 
 ```{figure} figures/Single_Species_Categorical_Regression.png 
 :name: fig:Single_Species_Categorical_Regression  
 :width: 7.00in 
  
-使用类别型预测变量编码的雄性和雌性 `Adelie 种` 企鹅的鳍状肢长度与质量的多元回归。注意雄性和雌性企鹅之间的质量差异在每个鳍状肢长度上保持不变，该差异相当于 $\beta_2$ 系数的大小。
+使用类别型预测变量编码的雄性和雌性 `Adelie 种` 企鹅的鳍状肢长度与体重的多元回归。注意雄性和雌性企鹅之间的体重差异在每个鳍状肢长度上保持不变，该差异相当于 $\beta_2$ 系数的大小。
 ``` 
 
-我们可以再次在 {numref}`fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison` 中比较三个模型的标准差，看看是否减少了估计中的不确定性，可以看出，额外提供的信息进一步改进了估计。在当前情况下，我们对 $\sigma$ 的估计从无预测变量模型中的平均 $462$ 克下降到了多元线性模型中的平均 $298$ 克。这种不确定性的减少表明，性别确实为估计企鹅质量提供了有用信息。
+我们可以再次在 {numref}`fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison` 中比较三个模型的标准差，看看是否减少了估计中的不确定性，可以看出，额外提供的信息进一步改进了估计。在当前情况下，我们对 $\sigma$ 的估计从无预测变量模型中的平均 $462$ 克下降到了多元线性模型中的平均 $298$ 克。这种不确定性的减少表明，性别确实为估计企鹅体重提供了有用信息。
 
 ```{code-block} ipython3
 :name: forest_multiple_models
@@ -716,7 +720,7 @@ az.plot_forest([inf_data_adelie_penguin_mass,
 
 ### 3.3.1 反事实分析 
 
-在代码 [penguins_ppd](penguins_ppd) 中，我们使用单预测变量模型拟合的参数进行预测，并调整鳍状肢长度以获得相应的质量估计。在多元回归中，我们可以做类似的工作。我们可以保持其他所有预测变量固定，然后查看剩下的那个预测变量如何改变预测结果。这种分析方法通常被称为**反事实分析**。
+在代码 [penguins_ppd](penguins_ppd) 中，我们使用单预测变量模型拟合的参数进行预测，并调整鳍状肢长度以获得相应的体重估计。在多元回归中，我们可以做类似的工作。我们可以保持其他所有预测变量固定，然后查看剩下的那个预测变量如何改变预测结果。这种分析方法通常被称为**反事实分析**。
 
 让我们扩展上一节代码 [penguin_mass_multi](penguin_mass_multi) 的多元回归，这次增加`喙长度（ Bill Length ）`，并在 `TFP` 中运行反事实分析。模型构建和推断见代码 [tfp_flipper_bill_sex](tfp_flipper_bill_sex) 。
 
@@ -759,7 +763,7 @@ mcmc_samples, sampler_stats = run_mcmc(
     mass=tf.constant(adelie_mass_obs, tf.float32))
 ```
 
-在该模型中，你会注意到添加了另一个系数 `beta_3` 以对应于预测变量`喙长度`。推断完成后，我们可以固定企鹅性别为`雄性`、喙长度为数据集均值，然后模拟具有不同鳍状肢长度的企鹅质量。这在代码 [tfp_flipper_bill_sex_counterfactuals](tfp_flipper_bill_sex_counterfactuals) 中实现，结果见 {numref}`fig:LinearCounterfactual` 。由于我们将模型生成过程封装在了 `Python` 函数中（ 一种函数式编程风格的方法 ），因此很容易在新预测变量上做条件化，这对于反事实分析也非常有用。
+在该模型中，你会注意到添加了另一个系数 `beta_3` 以对应于预测变量`喙长度`。推断完成后，我们可以固定企鹅性别为`雄性`、喙长度为数据集均值，然后模拟具有不同鳍状肢长度的企鹅体重。这在代码 [tfp_flipper_bill_sex_counterfactuals](tfp_flipper_bill_sex_counterfactuals) 中实现，结果见 {numref}`fig:LinearCounterfactual` 。由于我们将模型生成过程封装在了 `Python` 函数中（ 一种函数式编程风格的方法 ），因此很容易在新预测变量上做条件化，这对于反事实分析也非常有用。
 
 ```{code-block} ipython3
 :name: tfp_flipper_bill_sex_counterfactuals
@@ -783,7 +787,7 @@ estimated_mass = ppc_samples[-1].numpy().reshape(-1, 21)
 :name: fig:LinearCounterfactual 
 :width: 7.00in 
 
-来自代码 [tfp_flipper_bill_sex_counterfactuals](tfp_flipper_bill_sex_counterfactuals) 的 `Adelie 种` 企鹅的反事实法质量估计值，其中仅鳍状肢长度变化，所有其他预测变量都保持不变。
+来自代码 [tfp_flipper_bill_sex_counterfactuals](tfp_flipper_bill_sex_counterfactuals) 的 `Adelie 种` 企鹅的反事实法体重估计值，其中仅鳍状肢长度变化，所有其他预测变量都保持不变。
 ``` 
 
 遵循 McElreath{cite:p}`mcelreath_2020` 的提法， {numref}`fig:LinearCounterfactual` 被称为反事实图。正如“反事实”一词所暗示的那样，我们正在评估与观测数据或事实相反的情况。换句话说，我们正在评估尚未发生的情况。反事实图的最简单用途是调整预测变量并探索预测结果。这是一种很棒的方法，因为它使我们能够探索无法实现的 *what-if* 场景 [^6]。但是，我们在解释这种方法时必须谨慎。第一个陷阱是反事实值有可能根本不可能出现，例如，可能永远不会存在鳍状肢长度大于 $1500$ 毫米的企鹅，但该模型会机械地提供对这种情况的估计。第二个陷阱更隐蔽，我们假设可以独立地改变每个预测变量，但实际上这可能几乎不可能出现。例如，随着企鹅鳍状肢长度的增加，它的喙长度也会增加。反事实法的强大之处在于其允许我们探索尚未发生的结果，或者至少没有被观测到发生的结果。但是它们也可以很容易地为**永远**不会发生的情况生成估计值。模型本身无法区分两者，因此作为建模者，你必须得学会识别它们。
@@ -852,7 +856,7 @@ x &= -\frac{\beta_{0}}{\beta_{1}} \\
 
 ### 3.4.2 对企鹅进行分类 
 
-在前面部分中，我们使用企鹅性别和喙长度来估计企鹅的质量。现在改变以下该问题：如果给定企鹅的质量、性别和喙长，我们能够预测其物种吗？
+在前面部分中，我们使用企鹅性别和喙长度来估计企鹅的体重。现在改变以下该问题：如果给定企鹅的体重、性别和喙长，我们能够预测其物种吗？
 
 让我们使用 `Adelie`和 `Chinstrap` 这两个企鹅物种来完成此二元任务。就像上次一样，首先使用一个简单模型，只有一个预测变量，即喙长度。我们在代码 [model_logistic_penguins_bill_length](model_logistic_penguins_bill_length) 中编写这个逻辑斯谛模型：
 
@@ -894,7 +898,7 @@ with pm.Model() as model_logistic_penguins_bill_length:
 :name: fig:Prior_Predictive_Logistic 
 :width: 7.00in 
 
-来自 `model_logistic_penguins_bill_length` 的 $5000$ 个关于类别预测的先验预测样本。这种似然是离散的，更具体地说是二值的，与之前模型中估计的连续型的企鹅质量有所不同。
+来自 `model_logistic_penguins_bill_length` 的 $5000$ 个关于类别预测的先验预测样本。这种似然是离散的，更具体地说是二值的，与之前模型中估计的连续型的企鹅体重有所不同。
 ``` 
 
 在模型中拟合出参数后，我们可以使用 `az.summary(.)` 函数检查系数（ 参见 {numref}`table:logistic_penguins_bill_length` ）。你会发现，此模型的系数并不像线性回归那样可直接解释。在指定正值的 $\beta_1$ 系数（ 其  `HDI` 不过 $0$ ）时，我们可以看出喙长和物种存在某种关系。我们可以相当直接地解释决策边界，看到大约 $44$ 毫米喙长是两个物种之间的标称切分值。在 {numref}`fig:Logistic_bill_length` 中绘制回归的输出更加直观。图中可以看到随着类别变化从左侧 $0$ 逐步移动到右侧 $1$ 的逻辑斯谛曲线，以及在给定数据时的预期决策边界。
@@ -926,7 +930,7 @@ with pm.Model() as model_logistic_penguins_bill_length:
   - 1.347
 ```
 
-现在尝试一些不同的东西，我们仍然想对企鹅进行分类，但这次使用企鹅的质量作为预测变量。代码 [model_logistic_penguins_mass](model_logistic_penguins_mass) 显示了该模型：
+现在尝试一些不同的东西，我们仍然想对企鹅进行分类，但这次使用企鹅的体重作为预测变量。代码 [model_logistic_penguins_mass](model_logistic_penguins_mass) 显示了该模型：
 
 ```{code-block} ipython3
 :name: model_logistic_penguins_mass
@@ -967,7 +971,7 @@ with pm.Model() as model_logistic_penguins_mass:
   - 0.001
 ```
 
-在 {numref}`table:logistic_penguins_mass` 表格展示的摘要信息中， $\beta_1$ 被估计为 $0$ ，表明质量预测变量中并没有足够信息来区分两个物种。这不一定是坏事，只是表明模型在两个物种的质量之间没有发现明显的差异。
+在 {numref}`table:logistic_penguins_mass` 表格展示的摘要信息中， $\beta_1$ 被估计为 $0$ ，表明体重预测变量中并没有足够信息来区分两个物种。这不一定是坏事，只是表明模型在两个物种的体重之间没有发现明显的差异。
 
 一旦我们在 {numref}`fig:Logistic_mass` 中绘制数据和逻辑斯谛回归的拟合结果，这一点就会表现得非常明显。
 
@@ -980,7 +984,7 @@ with pm.Model() as model_logistic_penguins_mass:
 
 我们不应该受到这种关系的缺失影响，因为有效的建模就包含一定的试错环节。这不意味着随意试错，以期能够“瞎猫碰个死耗子”，而是意味着可以使用计算工具为你提供进行下一步的线索。
 
-现在尝试同时使用喙长度和质量，在代码 [model_logistic_penguins_bill_length_mass](model_logistic_penguins_bill_length_mass) 中创建多元逻辑斯谛回归，并在 {numref}`fig:Decision_Boundary_Logistic_mass_bill_length` 中绘制决策边界。这次图中的坐标轴有点不同， Y 轴不再是分类概率，而是企鹅的质量。这样就可以明显地看到预测变量之间的决策边界。所有这些目视检查都是有帮助的，但也是主观的。我们可以使用一些诊断工具来量化拟合程度。
+现在尝试同时使用喙长度和体重，在代码 [model_logistic_penguins_bill_length_mass](model_logistic_penguins_bill_length_mass) 中创建多元逻辑斯谛回归，并在 {numref}`fig:Decision_Boundary_Logistic_mass_bill_length` 中绘制决策边界。这次图中的坐标轴有点不同， Y 轴不再是分类概率，而是企鹅的体重。这样就可以明显地看到预测变量之间的决策边界。所有这些目视检查都是有帮助的，但也是主观的。我们可以使用一些诊断工具来量化拟合程度。
 
 ```{code-block} ipython3
 :name: model_logistic_penguins_bill_length_mass
@@ -1011,10 +1015,10 @@ with pm.Model() as model_logistic_penguins_bill_length_mass:
 :name: fig:Decision_Boundary_Logistic_mass_bill_length 
 :width: 7.00in 
 
-针对喙长度和质量绘制的物种类别决策边界。可以看到大部分可分离性来自喙长度，尽管质量也添加了一些关于可分离性的额外信息，如线的斜率。
+针对喙长度和体重绘制的物种类别决策边界。可以看到大部分可分离性来自喙长度，尽管体重也添加了一些关于可分离性的额外信息，如线的斜率。
 ``` 
 
-为了评估模型是否适合逻辑斯谛回归，可以使用`分离图` {cite:p}`separation_plot`，如代码 [separability_plot](separability_plot) 和 {numref}`fig:Penguins_Separation_Plot` 所示。分离图是一种评估二值观测数据模型校准的方法。它显示了每个类的预测排序，当两个类完美分离时，应当体现为两个不同颜色的矩形。在本示例中，可以看到我们的模型没有一个能够完美地分离两个物种，但包含喙长度的模型比仅包含质量的模型表现得更好。一般来说，完美校准不是贝叶斯分析的目标，使用分离图（以及其他校准评估方法，如 LOO-PIT）的目的是帮助我们比较模型并揭示改进它们的机会。
+为了评估模型是否适合逻辑斯谛回归，可以使用`分离图` {cite:p}`separation_plot`，如代码 [separability_plot](separability_plot) 和 {numref}`fig:Penguins_Separation_Plot` 所示。分离图是一种评估二值观测数据模型校准的方法。它显示了每个类的预测排序，当两个类完美分离时，应当体现为两个不同颜色的矩形。在本示例中，可以看到我们的模型没有一个能够完美地分离两个物种，但包含喙长度的模型比仅包含体重的模型表现得更好。一般来说，完美校准不是贝叶斯分析的目标，使用分离图（以及其他校准评估方法，如 LOO-PIT）的目的是帮助我们比较模型并揭示改进它们的机会。
 
 ```{code-block} ipython3
 :name: separability_plot
@@ -1034,10 +1038,10 @@ for (label, model), ax in zip(models.items(), axes):
 :name: fig:Penguins_Separation_Plot 
 :width: 7.00in 
 
-三个企鹅模型的分离图。明暗值表示二分类标签。图中明显看出，仅含质量的模型在区分两个物种方面做得很差，而 `单喙长度` 模型和 `质量-喙` 模型表现更好。
+三个企鹅模型的分离图。明暗值表示二分类标签。图中明显看出，仅含体重的模型在区分两个物种方面做得很差，而 `单喙长度` 模型和 `体重-喙` 模型表现更好。
 ``` 
 
-我们还可以使用 `留一法（ LOO ）` 来比较刚创建的三个模型：单质量模型、单喙长度模型和代码 [penguin_model_loo](penguin_model_loo) 和 {numref}`tab:penguin_loo` 中的“质量+喙长度”二元预测模型。根据 `LOO`，单质量模型在分离物种方面表现最差，单喙长模型是中间候选模型，“质量+喙长度” 模型表现最好。上面分离图中的结果，现在得到了数值上的确认。
+我们还可以使用 `留一法（ LOO ）` 来比较刚创建的三个模型：单体重模型、单喙长度模型和代码 [penguin_model_loo](penguin_model_loo) 和 {numref}`tab:penguin_loo` 中的“体重+喙长度”二元预测模型。根据 `LOO`，单体重模型在分离物种方面表现最差，单喙长模型是中间候选模型，“体重+喙长度” 模型表现最好。上面分离图中的结果，现在得到了数值上的确认。
 
 ```{code-block} ipython3
 :name: penguin_model_loo
@@ -1126,7 +1130,7 @@ adelie_count / chinstrap_count
 array([2.14705882])
 ```
 
-赔率由与概率相同的组分组成，但以一种更直接地方式，解释了一个事件发生与另一个事件发生的比率。以赔率表示，如果从 `Adelie 种`和 `Chinstrap 种`企鹅中随机抽样，则根据代码 [adelie_odds](adelie_odds) 计算，我们预计最终得到的 `Adelie 种`企鹅的赔率比 `Chinstrap 种` 企鹅高 $2.14$。
+赔率由与概率相同的组分组成，但以一种更直接地方式，解释了一个事件发生与另一个事件发生的比率。以赔率表示，如果从 `Adelie 种`和 `Chinstrap 种`企鹅中随机采样，则根据代码 [adelie_odds](adelie_odds) 计算，我们预计最终得到的 `Adelie 种`企鹅的赔率比 `Chinstrap 种` 企鹅高 $2.14$。
 
 利用对赔率的了解，我们可以定义 `logit`。 `logit` 是赔率的自然对数，它是公式 {eq}`eq:logit` 中显示的分数。我们可以用 `logit` 重写公式 {eq}`eq:logistic` 中的逻辑斯谛回归。
 
@@ -1210,11 +1214,11 @@ with pm.Model() as model_uninformative_prior_sex_ratio:
 名义上，我们将假设出生在男性和女性之间平均分配，并且吸引力对性别比例没有影响。这意味着将截距 $\beta_0$ 的先验均值设置为 $50$，将系数 $\beta_1$ 的先验均值设置为 $0$。我们还设置了宽的离散度来表达我们对截距和吸引力对性别比影响的不确定性。这并不是一个完全*无信息的先验*，我们在第 {ref}`make_prior_count` 节中介绍过它，不过它是一个非常宽的先验。
 
 根据上述选择，我们在代码 [uninformative_prior_sex_ratio](uninformative_prior_sex_ratio)) 中编写了模型、运行推断、并生成样本来估计后验分布。
-根据数据和模型，我们估计 $\beta_1$ 的平均值为 $1.4$，这意味着与最具吸引力的群体相比，吸引力最小的群体的出生率平均相差 $7.4\%$ 。在 {numref}`fig:PosteriorUninformativeLinearRegression` 中，如果我们包括不确定性，则在将参数条件化为数据之前，从 $50$ 条可能的“拟合线”随机样本中，每单位吸引力的出生比率可以变化超过 $20\%$ 。
+根据数据和模型，我们估计 $\beta_1$ 的均值为 $1.4$，这意味着与最具吸引力的群体相比，吸引力最小的群体的出生率平均相差 $7.4\%$ 。在 {numref}`fig:PosteriorUninformativeLinearRegression` 中，如果我们包括不确定性，则在将参数条件化为数据之前，从 $50$ 条可能的“拟合线”随机样本中，每单位吸引力的出生比率可以变化超过 $20\%$ 。
 
 从数学角度来看，该结果是有效的。但从常识和我们对该研究之外的出生性别比来理解，这些结果值得怀疑。出生时的“自然”性别比约为 “ $105$ 个男孩/$100$ 个女孩” ( 大约 $103$ 到 $107$ 个男孩 )，这意味着出生时的性别比为 $48.5%$ ，标准差为 $0.5$。此外，即便与人类生物学更内在联系的因素，也不会对出生率影响到这种大的程度，这主观上削弱了吸引力应该具有这种影响程度的信念。鉴于此信息，两组之间 $8%$ 的变化将需要特殊的观测。
 
-让我们再次运行模型，但这次使用代码 [informative_prior_sex_ratio](informative_prior_sex_ratio) 中显示的更具信息性的先验。绘制后验样本，会发现系数的非常集中，并且在考虑可能的比率时，绘制的后验直线落入了更合理的范围内。
+让我们再次运行模型，但这次使用代码 [informative_prior_sex_ratio](informative_prior_sex_ratio) 中显示的更具信息性的先验。抽取后验样本，会发现系数的非常集中，并且在考虑可能的比率时，抽取的后验直线落入了更合理的范围内。
 
 ```{code-block} ipython3
 :name: informative_prior_sex_ratio

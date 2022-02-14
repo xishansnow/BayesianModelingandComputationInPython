@@ -345,7 +345,7 @@ ArviZ 在许多绘图函数中都会使用 KDE，甚至在内部进行一些计�
 :name: fig:plot_posterior
 :width: 4in 
  
-用后验图对代码 [metropolis_hastings](metropolis_hastings) 生成的样本进行可视化。后验分布使用 KDE 表示，均值和 $94\%$ 最高密度区间均在图中有所展示。
+用后验图对代码 [metropolis_hastings](metropolis_hastings) 生成的样本进行可视化。后验分布使用核密度估计曲线表示，均值和 $94\%$ 最高密度区间均在图中有所展示。
 
 ``` 
 
@@ -375,7 +375,7 @@ with pm.Model() as model:
 # Sample from the posterior distribution     
 idata = pm.sample(1000, return_inferencedata=True) 
 ``` 
-你可以自己检查一下这段代码的结果是否与之前自制采样器的结果一致，但在 PPL 支持下，工作量要少得多。如果你不熟悉 PyMC3 语法，现阶段只需关注代码注释中表达的每一行的意图。
+你可以自己检查一下这段代码的结果是否与之前自制采样器的结果一致，但在概率编程语言支持下，工作量要少得多。如果你不熟悉 PyMC3 语法，现阶段只需关注代码注释中表达的每一行的意图。
 
 由于我们已经在 PyMC3 语法中定义了模型，因此可以利用 `pm.model_to_graphviz(model)` 在代码 [beta_binom](beta_binom) 中生成模型的概率图表示（参见 {numref}`fig:BetaBinomModelGraphViz`）。
 
