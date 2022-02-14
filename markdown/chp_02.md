@@ -176,7 +176,9 @@ incorporate further geometric insights. Alternatively we can use a prior
 that reduces the chance of nonsensical results even if we do not exclude
 them completely, or we can just fit the data and see if the data is
 informative enough to estimate a posterior that excludes nonsensical
-values. {numref}`fig:prior_predictive_check_01` shows another example of
+values. 
+
+{numref}`fig:prior_predictive_check_01` shows another example of
 what we may consider unexpected [^5]. The example shows how for a
 logistic regression [^6] with binary predictors and priors
 $\mathcal{N}(0, 1)$ on the regression coefficients. As we increase the
