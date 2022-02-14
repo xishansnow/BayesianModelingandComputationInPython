@@ -561,7 +561,7 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 </div>
 <div class="section" id="automating-inference">
 <span id="id24"></span><h2>1.3 人工建模与自动推断<a class="headerlink" href="#automating-inference" title="Permalink to this headline">¶</a></h2>
-<p>我们可以利用 <strong>概率编程语言 Probabilistic Programming Languages</strong> (PPL) 的帮助，而不是编写自己的采样器从头定义自己的模型。概率编程语言允许用户使用代码表达贝叶斯模型，然后借助通用推断引擎以相当自动化的方式执行贝叶斯推断。简而言之，概率编程语言帮助贝叶斯实践者更多地关注模型构建本身，而不是数学和计算细节。</p>
+<p>我们可以利用 <strong>概率编程语言 ( Probabilistic Programming Languages, PPL )</strong> 的帮助，而不是编写自己的采样器从头定义自己的模型。概率编程语言允许用户使用代码表达贝叶斯模型，然后借助通用推断引擎以相当自动化的方式执行贝叶斯推断。简而言之，PPL 帮助贝叶斯实践者更多地关注模型构建本身，而不是数学和计算细节。</p>
 <p>在过去的几十年中，此类工具的可用性大大提升了贝叶斯方法的普及度和实用性。不幸的是，这些通用推断引擎方法并不是真正通用的，因为它们无法有效地解决所有贝叶斯模型。现代贝叶斯实践者的部分工作是能够理解并且9999解决这些限制。</p>
 <p>在本书中，我们将使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> <span id="id25">[<a class="reference internal" href="references.html#id124">1</a>]</span> 和 <code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span></code> <span id="id26">[<a class="reference internal" href="references.html#id141">2</a>]</span>。让我们使用 PyMC3 为公式 <a class="reference internal" href="#equation-eq-beta-binomial">(8)</a> 编写模型：</p>
 <div class="literal-block-wrapper docutils container" id="beta-binom">
@@ -683,7 +683,7 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <div class="section" id="objective-priors">
 <span id="id32"></span><h3>1.4.2 客观先验<a class="headerlink" href="#objective-priors" title="Permalink to this headline">¶</a></h3>
 <p>在没有先验信息的情况下，遵循 <em>无差别原则</em> 听起来似乎更合理。此原则基本上是说，如果你没有关于某个问题的信息，那么你没有任何理由相信一个结果会比任何其他结果更有可能发生。</p>
-<p>在贝叶斯统计背景下，这一原则激发了**客观先验（ Objective Priors ）**的研究和应用。这些是生成“对给定分析影响最小的先验”的系统方法。有些统计学者偏爱客观先验，因为此类先验消除了先验的主观性。但其实这并没有消除其他来源的主观性，例如：似然的选择、数据的选择、问题的选择等等。</p>
+<p>在贝叶斯统计背景下，这一原则激发了 <strong>客观先验（ Objective Priors ）</strong> 的研究和应用。这些是生成“对给定分析影响最小的先验”的系统方法。有些统计学者偏爱客观先验，因为此类先验消除了先验的主观性。但其实这并没有消除其他来源的主观性，例如：似然的选择、数据的选择、问题的选择等等。</p>
 <p>获得客观先验的一种方法是 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span> <span class="pre">(</span> <span class="pre">JP</span> <span class="pre">)</span></code>。此类先验通常被称为<em>非信息性</em>，即便其总是以某种方式提供了信息。更好的描述是说： <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span> <span class="pre">(</span> <span class="pre">JP</span> <span class="pre">)</span></code>具有在<strong>重参数化</strong>下保持不变性的性质，即以不同但在数学上等效的方式编写表达式。让我们用一个例子来解释这究竟意味着什么。</p>
 <p>假设 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 具有参数为 <span class="math notranslate nohighlight">\(\theta\)</span> 的二项似然，她选择某种先验并计算后验。而她的朋友 <code class="docutils literal notranslate"><span class="pre">Bob</span></code>，对同一问题感兴趣，但不关心成功的次数 <span class="math notranslate nohighlight">\(\theta\)</span> ，而关心成功的<strong>赔率（ odds ）</strong>，即 <span class="math notranslate nohighlight">\(\kappa\)</span> ，<span class="math notranslate nohighlight">\(\kappa = \frac{\ theta}{1-\theta}\)</span> 。 <code class="docutils literal notranslate"><span class="pre">Bob</span></code> 有两种选择：一是使用 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 在 <span class="math notranslate nohighlight">\(\theta\)</span> 上的后验来计算 <span class="math notranslate nohighlight">\(\kappa\)</span> <a class="footnote-reference brackets" href="#id59" id="id33">16</a> ，二是选择 <span class="math notranslate nohighlight">\(\kappa\)</span> 上的先验来计算自己的后验。 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 保证：如果 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Bob</span></code> 都使用了 Jeffreys 先验，那么无论 <code class="docutils literal notranslate"><span class="pre">Bob</span></code> 做出哪种选择，都会得到相同的结果。从此意义上说，最终结果相对于所选择的参数具有不变性。此解释的一个推论是，除非使用 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>，否则无法保证模型的两种（或更多）参数化必然会导致一致的后验。</p>
 <p>对于一维 <span class="math notranslate nohighlight">\(\theta\)</span> 的情况， <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 为：</p>
@@ -797,7 +797,7 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <p>因为弱信息先验可以将后验分布保持在一定的合理范围内，所以它们也被称为正则化先验。正则化是一种添加信息的过程，目的是解决不适定问题或减少过拟合的机会，先验提供了一种执行正则化的原则方法。</p>
 <p>在本书中，我们经常使用弱信息先验。有时会在没有太多理由的情况下在模型中使用先验，仅仅是因为示例的重点可能与贝叶斯建模工作流程的其他方面有关。但我们也会展示一些使用先验预测检查来校准先验分布的例子。</p>
 <div class="admonition-overfitting admonition">
-<p class="admonition-title">Overfitting</p>
+<p class="admonition-title">过拟合（ Overfitting ） </p>
 <p>当模型生成的预测非常接近用于拟合它的有限数据集时，就会发生过拟合，但它无法拟合新数据和/或不能很好地预测未来的观测结果。也就是说，它未能将其预测推广到更广泛的可观测结果。过拟合的对应物是欠拟合，即模型未能充分捕捉数据的底层结构。我们将在 <a class="reference internal" href="chp_02.html#model-cmp"><span class="std std-ref">2.5 模型比较</span></a> 和 <a class="reference internal" href="chp_11.html#information-criterion"><span class="std std-ref">11.4 信息准则</span></a> 部分讨论此主题的更多信息。</p>
 </div>
 </div>
