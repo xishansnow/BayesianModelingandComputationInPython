@@ -261,9 +261,9 @@ az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"])
 
 在 `PyMC3` 中，与模型构建相关的原语包含在命名空间 `pm` 下。例如，在代码 [penguin_mass](penguin_mass) 中，可以看到 `pm.HalfStudentT(.)` 和 `pm.Normal(.)`，其中“ $.$` ”代表一个随机变量。 `with pm.Model() as .` 语句调用 Python 的上下文环境管理器，`PyMC3` 使用该语句来收集上下文管理器中的随机变量，并构建模型 `model_adelie_penguin_mass`。然后可以使用 `pm.sample_prior_predictive(.)` 和 `pm.sample(.)` 分别获得先验预测分布和后验分布的样本。
 
-类似地，TFP 为用户提供了在 `tfp.distributions`、运行 MCMC (`tfp.mcmc`) 等中指定分布和模型的原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 `tfd.JointDistribution` {cite:p}`piponi2020joint` API 的原语。在本章和本书的其余部分中，我们主要使用 `tfd.JointDistributionCoroutine`，但还有 `tfd.JointDistribution` 的其他变体可能更适合你的用例 [^1]。由于基本数据导入和统计量与代码 [penguin_load](penguin_load) 和 [penguin_mass_empirical](penguin_mass_empirical) 保持相同，我们可以专注于模型构建和推断。
+类似地，TFP 为用户提供了在  `tfp.distributions` 中指定分布和模型、运行 MCMC 推断( `tfp.mcmc` ) 等原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 `tfd.JointDistribution` 的 API 原语 {cite:p}`piponi2020joint`。在本书的其余部分中，我们会主要使用 `tfd.JointDistributionCoroutine`，但读者应当知道还有 `tfd.JointDistribution` 的一些变体可能更适合你的应用 [^1]。由于导入数据和计算汇总统计量的代码和 [penguin_load](penguin_load) 和 [penguin_mass_empirical](penguin_mass_empirical) 一致，因此这里我们专注于模型构建和推断。
 
-`model_penguin_mass_all_species` 以 TFP 表示，如下面的代码 [penguin_mass_tfp](penguin_mass_tfp) 所示
+`model_penguin_mass_all_species` 以 TFP 表示为代码 [penguin_mass_tfp](penguin_mass_tfp) ：
 
 ```{code-block} ipython3
 :name: penguin_mass_tfp
@@ -295,11 +295,17 @@ def jd_penguin_mass_all_species():
         name="mass")
 ```
 
-由于这是我们第一次遇到用 TFP 编写的贝叶斯模型，所以让我们花几段时间来详细介绍一下 API。原语是 `tfp.distributions` 中的分布类，我们为其分配一个较短的别名 `tfd = tfp.distributions`。 `tfd` 包含常用的分布，例如 `tfd.Normal(.)`。我们还使用了 `tfd.Sample`，它返回基本分布的多个独立副本（从概念上讲，我们实现了与在 `PyMC3` 中使用语法糖 `shape=(.)` 类似的目标）。 `tfd.Independent` 用于指示分布包含多个副本，我们希望在计算对数似然时在某个轴上求和，这由 `reinterpreted_batch_ndims` 函数参数指定。通常我们用 `tfd.Independent` [^2] 包装与观测相关的分布。你可以在 {ref}`shape_PPL` 部分阅读更多关于 TFP 和概率编程语言 中的形状处理的信息。
+这是我们第一次遇到用 TFP 编写的贝叶斯模型，所以花点时间来详细介绍一下。 `tfp.distributions` 是原语中的分布类，我们通常为其赋予一个较短的别名 `tfd = tfp.distributions` 。 `tfd` 中包含了常用的分布，例如正态分布 `tfd.Normal(.)` 。代码中还使用了 `tfd.Sample`，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 `PyMC3` 语法糖 `shape=(.)` 的功能 ）。 `tfd.Independent` 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 `reinterpreted_batch_ndims` 函参指定。通常用 `tfd.Independent` 封装与观测相关的分布 [^2] 。你可以在 {ref}`shape_PPL` 部分阅读更多关于 TFP 和概率编程语言中的形状处理的信息。
 
-`tfd.JointDistributionCoroutine` 模型的一个有趣的签名，顾名思义，就是在 Python 中使用协程。无需过多介绍生成器和协程，这里的分布的 `yield` 语句会为你提供模型函数内部的一些随机变量。你可以将 `y = yield Normal(.)` 视为 $y \sim \text{Normal(.)}$ 的表达方式。此外，我们需要通过用 `tfd.JointDistributionCoroutine.Root` 包装它们来将没有依赖关系的随机变量识别为根节点。该模型被编写为没有输入参数和返回值的 Python 函数。最后，将 `@tfd.JointDistributionCoroutine` 放在 Python 函数之上作为装饰器可以方便地直接获取模型（即 `tfd.JointDistribution`）。
+代码中的模型签名 `@tfd.JointDistributionCoroutine` 很有意思，顾名思义，就是在 Python 中使用协程（ Coroutine ），不过我们在此不过多地介绍生成器和协程的概念。 
 
-生成的 `jd_penguin_mass_all_species` 是 TFP 中重述的代码 [nocovariate_mass](nocovariate_mass) 中的仅截距回归模型。它具有与其他 `tfd.Distribution` 类似的方法，我们可以在贝叶斯工作流程中使用这些方法。例如，要绘制先验和先验预测样本，我们可以调用 `.sample(.)` 方法，该方法返回类似于 `namedtuple` 的自定义嵌套 Python 结构。在代码 [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive) 中，我们绘制了 1000 个先验和先验预测样本。
+`yield` 语句会为你提供模型函数内部的一些随机变量，你可以将 `y = yield Normal(.)` 视为 $y \sim \text{Normal(.)}$ 的代码表达方式。
+
+此外，我们通过 `tfd.JointDistributionCoroutine.Root` 来包装没有依赖关系的随机变量。
+
+该模型被编写为没有输入参数和返回值的 Python 函数，将 `@tfd.JointDistributionCoroutine` 放在 Python 函数之上作为装饰器，以方便直接获取模型（即 `tfd.JointDistribution`）。
+
+结果的 `jd_penguin_mass_all_species` 是代码 [nocovariate_mass](nocovariate_mass) 中的截距回归模型在 TFP 中的重写。它具有与其他 `tfd.Distribution` 类似的、可以在贝叶斯工作流中使用的方法。例如，抽取先验和先验预测样本可以调用 `.sample(.)` 方法，该方法返回一个类似于 `namedtuple` 的自定义嵌套 Python 结构体。在代码 [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive) 中，我们抽取了 $10004 个先验和先验预测样本。
 
 ```{code-block} ipython3
 :name: penguin_mass_tfp_prior_predictive
@@ -308,7 +314,7 @@ def jd_penguin_mass_all_species():
 prior_predictive_samples = jd_penguin_mass_all_species.sample(1000)
 ```
 
-`tfd.JointDistribution` 的 `.sample(.)` 方法也可以绘制条件样本，这是我们将用来绘制后验预测样本的机制。你可以运行代码 [penguin_mass_tfp_prior_predictive2](penguin_mass_tfp_prior_predictive2) 并检查输出以查看如果你将模型中的某些随机变量设置为某些特定值，随机样本如何变化。总的来说，我们在调用 `.sample(.)` 时会调用 *forward* 生成过程。
+`tfd.JointDistribution` 的 `.sample(.)` 方法也可以抽取条件样本，这也是将来抽取后验预测样本时采用的机制。你可以运行代码 [penguin_mass_tfp_prior_predictive2](penguin_mass_tfp_prior_predictive2) ，检查输出，查看将模型中某些随机变量被设置为特定值时，随机样本的变化情况。总体来说，我们在调用 `.sample(.)` 函数时，会调用 *前向* 的数据生成过程。
 
 ```{code-block} ipython3
 :name: penguin_mass_tfp_prior_predictive2
@@ -317,9 +323,9 @@ jd_penguin_mass_all_species.sample(sigma=tf.constant([.1, .2, .3]))
 jd_penguin_mass_all_species.sample(mu=tf.constant([.1, .2, .3]))
 ``` 
 
-一旦我们将生成模型“jd_penguin_mass_all_species”调整为观测到的企鹅体重，我们就可以获得后验分布。
+一旦将生成模型 `jd_penguin_mass_all_species` 调整为企鹅体重的观测值（即为模型指定数据），就能够获得模型参数的后验分布。
 
-从计算的角度来看，我们希望生成一个函数，该函数返回在输入处评估的后验对数概率（直到某个常数）。这可以通过创建 Python 函数闭包或使用 `.experimental_pin` 方法来完成，如代码 [tfp_posterior_generation](tfp_posterior_generation) 所示：
+从计算角度来看，我们希望生成一个能够返回输入点处后验对数概率的函数。这可以通过创建 Python 函数闭包或使用 `.experimental_pin` 方法来实现，如代码 [tfp_posterior_generation](tfp_posterior_generation) 所示：
 
 ```{code-block} ipython3
 :name: tfp_posterior_generation
@@ -1212,7 +1218,7 @@ with pm.Model() as model_uninformative_prior_sex_ratio:
 
 从数学角度来看，该结果是有效的。但从常识和我们对该研究之外的出生性别比来理解，这些结果值得怀疑。出生时的“自然”性别比约为 “ $105$ 个男孩/$100$ 个女孩” ( 大约 $103$ 到 $107$ 个男孩 )，这意味着出生时的性别比为 $48.5%$ ，标准差为 $0.5$。此外，即便与人类生物学更内在联系的因素，也不会对出生率影响到这种大的程度，这主观上削弱了吸引力应该具有这种影响程度的信念。鉴于此信息，两组之间 $8%$ 的变化将需要特殊的观测。
 
-让我们再次运行模型，但这次使用代码 [informative_prior_sex_ratio](informative_prior_sex_ratio) 中显示的更具信息性的先验。绘制后验样本，会发现系数的非常集中，并且在考虑可能的比率时，绘制的后验直线落入了更合理的范围内。
+让我们再次运行模型，但这次使用代码 [informative_prior_sex_ratio](informative_prior_sex_ratio) 中显示的更具信息性的先验。抽取后验样本，会发现系数的非常集中，并且在考虑可能的比率时，抽取的后验直线落入了更合理的范围内。
 
 ```{code-block} ipython3
 :name: informative_prior_sex_ratio
