@@ -193,7 +193,7 @@
 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#transforming-covariates">
-   4.1 预测变量的变换
+   4.1 对预测变量进行变换
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -280,7 +280,7 @@
 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#transforming-covariates">
-   4.1 预测变量的变换
+   4.1 对预测变量进行变换
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -356,17 +356,19 @@
 <div class="tex2jax_ignore mathjax_ignore section" id="chap3">
 <span id="id1"></span><h1>第四章：扩展线性模型<a class="headerlink" href="#chap3" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
-<p>在第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中，我们展示了扩展线性回归的各种方法。但是其实还可以用线性模型做更多的事情，从“预测变量变换”、“可变方差” 到 “分层模型”。这些想法为在更广泛环境中使用线性回归提供了额外的灵活性。</p>
+<p>在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中，我们展示了扩展线性回归的几种方法。但其实还可以用线性模型做更多的事情，从“预测变量变换”，到“可变方差”，再到 “分层模型”。这些想法为为更广泛地使用线性回归提供了灵活性。</p>
 <div class="section" id="transforming-covariates">
-<span id="id2"></span><h2>4.1 预测变量的变换<a class="headerlink" href="#transforming-covariates" title="Permalink to this headline">¶</a></h2>
-<p>在第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中，通过最简单线性模型和恒等链接函数，在任意 <span class="math notranslate nohighlight">\(X_i\)</span> 的取值处，<span class="math notranslate nohighlight">\(x_i\)</span> 的一个单位变化导致预期响应变量 <span class="math notranslate nohighlight">\(Y\)</span> 的 <span class="math notranslate nohighlight">\(\beta_i\)</span> 个单位的变化。然后，我们学习了如何通过改变似然函数（ 例如从高斯到伯努利 ）来创建广义线性模型，这通常需要改变链接函数。</p>
-<p>对简单线性模型的另一种改进是对预测变量 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 进行变换，以使 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span> 之间产生非线性关系。例如，我们可以假设 <span class="math notranslate nohighlight">\(x_i\)</span> 平方根的单位变化、或对数的单位变化等，会导致预期响应变量 <span class="math notranslate nohighlight">\(Y\)</span> 中 <span class="math notranslate nohighlight">\(\beta_i\)</span> 个单位的变化。在数学形式上，可以使用应用于每个预测变量 <span class="math notranslate nohighlight">\((X_i)\)</span> 的任意变换 <span class="math notranslate nohighlight">\(f(.)\)</span> 来扩展方程 <a class="reference internal" href="chp_03.html#equation-eq-expanded-regression">(25)</a> ：</p>
+<span id="id2"></span><h2>4.1 对预测变量进行变换<a class="headerlink" href="#transforming-covariates" title="Permalink to this headline">¶</a></h2>
+<p>在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中，通过最简单的线性模型和恒等链接函数，在任意 <span class="math notranslate nohighlight">\(X_i\)</span> 的取值处，<span class="math notranslate nohighlight">\(x_i\)</span> 的一个单位变化导致结果变量 <span class="math notranslate nohighlight">\(Y\)</span> 的 <span class="math notranslate nohighlight">\(\beta_i\)</span> 个单位的预期变化。然后，我们学习了如何通过改变似然函数（ 例如从高斯到伯努利 ）来创建广义线性模型，这通常需要改变链接函数。</p>
+<p>本节介绍对简单线性模型的另一种改进方法，即对预测变量 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 进行变换，使 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span> 之间产生一种非线性关系，进而为更复杂的情况建模。</p>
+<p>例如，我们可以假设 <span class="math notranslate nohighlight">\(x_i\)</span> 平方根的单位变化（或者 <span class="math notranslate nohighlight">\(x_i\)</span> 对数的单位变化等），会导致结果变量 <span class="math notranslate nohighlight">\(Y\)</span> 中 <span class="math notranslate nohighlight">\(\beta_i\)</span> 个单位的预期变化。在数学形式上，可以通过对任一预测变量 <span class="math notranslate nohighlight">\((X_i)\)</span> 实施变换 <span class="math notranslate nohighlight">\(f(.)\)</span> ，来扩展方程 <a class="reference internal" href="chp_03.html#equation-eq-expanded-regression">(25)</a> ：</p>
 <div class="math notranslate nohighlight" id="equation-eq-covariate-transformation-regression">
 <span class="eqno">(31)<a class="headerlink" href="#equation-eq-covariate-transformation-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
-   \mu =&amp; \beta_0 + \beta_1 f_1(X_1) + \dots + \beta_m f_m(X_m) \\
-   Y \sim&amp; \mathcal{N}(\mu, \sigma)
+\mu =&amp; \beta_0 + \beta_1 f_1(X_1) + \dots + \beta_m f_m(X_m) \\
+Y \sim&amp; \mathcal{N}(\mu, \sigma)
 \end{split}\end{split}\]</div>
-<p>实际上之前的大多数示例都存在 <span class="math notranslate nohighlight">\(f(.)\)</span>，只不过它表现为恒等函数被习惯性省略了。在前面几个示例中，我们曾经对预测变量做了居中处理，以使系数更易于解释。这种居中处理其实就是一种对预测变量的变换，只是相对而言，<span class="math notranslate nohighlight">\(f(.)\)</span> 可以是任意变换。为了说明，此处借用 <span id="id3">[<a class="reference internal" href="references.html#id68">41</a>]</span> 中的一个示例，并为婴儿的身高创建一个模型。首先，加载数据并在代码 <a class="reference internal" href="#babies-data"><span class="std std-ref">babies_data</span></a> 中绘图，并在 <a class="reference internal" href="#fig-baby-length-scatter"><span class="std std-numref">Fig. 57</span></a> 中显示月龄。</p>
+<p>实际上之前的示例都存在 <span class="math notranslate nohighlight">\(f(.)\)</span> ，只不过由于它表现为恒等函数而被习惯性省略了。另外，在前面示例中，我们曾经对预测变量做过中心化处理，以使系数更易于解释。本质上来说，中心化处理就是一种对预测变量的变换，只是更一般性地，<span class="math notranslate nohighlight">\(f(.)\)</span> 可以是任意变换。</p>
+<p>为了说明此方法，这里借用 <span id="id3">[<a class="reference internal" href="references.html#id68">41</a>]</span> 中的一个示例，为婴儿的身高创建一个模型。首先，在代码 <a class="reference internal" href="#babies-data"><span class="std std-ref">babies_data</span></a> 中加载数据， <a class="reference internal" href="#fig-baby-length-scatter"><span class="std std-numref">Fig. 57</span></a> 中展示了月龄和身高之间关系的散点图。</p>
 <div class="literal-block-wrapper docutils container" id="babies-data">
 <div class="code-block-caption"><span class="caption-number">Listing 44 </span><span class="caption-text">婴儿数据</span><a class="headerlink" href="#babies-data" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">babies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/babies.csv"</span><span class="p">)</span>
@@ -379,7 +381,7 @@
 <a class="reference internal image-reference" href="../_images/Baby_Length_Scatter.png"><img alt="../_images/Baby_Length_Scatter.png" src="../_images/Baby_Length_Scatter.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 57 </span><span class="caption-text">婴儿的月龄与身高之间的非线性相关散点图。</span><a class="headerlink" href="#fig-baby-length-scatter" title="Permalink to this image">¶</a></p>
 </div>
-<p>我们在代码 <a class="reference internal" href="#babies-linear"><span class="std std-ref">babies_linear</span></a> 中制定一个模型，可以用它来预测婴儿每个月的身高，并确定孩子每个月的生长速度。请注意，该模型不包含任何对预测变量的变换，也没有第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章的逆连接函数变换。</p>
+<p>我们在代码 <a class="reference internal" href="#babies-linear"><span class="std std-ref">babies_linear</span></a> 中指定了一个模型，可以用它来预测婴儿每个月的身高，并确定孩子每个月的生长速度。请注意，该模型不包含任何对预测变量的变换，也没有<a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 的逆连接函数变换。</p>
 <div class="literal-block-wrapper docutils container" id="babies-linear">
 <div class="code-block-caption"><span class="caption-number">Listing 45 </span><span class="caption-text">babies_linear</span><a class="headerlink" href="#babies-linear" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model_baby_linear</span><span class="p">:</span>
@@ -397,10 +399,11 @@
 </pre></div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">model_linear</span></code> 提供了如图 <a class="reference internal" href="#fig-baby-length-linear"><span class="std std-numref">Fig. 58</span></a> 所示的线性增长率。根据模型和数据，婴儿在观测期间的每个月都会以大约 <span class="math notranslate nohighlight">\(1.4\)</span> 厘米的稳定速度增长。但常识告诉我们，人在一生中的成长速度并不相同，而且在生命早期阶段往往成长得更快。换句话说，年龄和身高之间的关系是非线性的。仔细观测 <a class="reference internal" href="#fig-baby-length-linear"><span class="std std-numref">Fig. 58</span></a>，可以看到线性趋势和基础数据存在一些问题。该模型倾向于高估接近 <span class="math notranslate nohighlight">\(0\)</span> 月龄的婴儿身高、高估 <span class="math notranslate nohighlight">\(10\)</span> 月龄的婴儿身高，但低估 <span class="math notranslate nohighlight">\(25\)</span> 月龄的婴儿身高。</p>
+<p><code class="docutils literal notranslate"><span class="pre">model_linear</span></code> 提供了如图 <a class="reference internal" href="#fig-baby-length-linear"><span class="std std-numref">Fig. 58</span></a> 所示的线性增长率。根据模型和数据，婴儿在观测期间，每个月都会以大约 <span class="math notranslate nohighlight">\(1.4\)</span> 厘米的稳定速度增长。但是，常识告诉我们，人在一生中的成长速度并不相同，而且在生命早期阶段往往长得更快。换句话说，年龄和身高之间的关系是非线性的。</p>
+<p>仔细观测 <a class="reference internal" href="#fig-baby-length-linear"><span class="std std-numref">Fig. 58</span></a>，可以看到线性趋势和基础数据存在一些问题。该模型倾向于高估接近 <span class="math notranslate nohighlight">\(0\)</span> 月龄的婴儿身高、高估 <span class="math notranslate nohighlight">\(10\)</span> 月龄的婴儿身高，但低估 <span class="math notranslate nohighlight">\(25\)</span> 月龄的婴儿身高。</p>
 <div class="figure align-default" id="fig-baby-length-linear">
 <a class="reference internal image-reference" href="../_images/Baby_Length_Linear_Fit.png"><img alt="../_images/Baby_Length_Linear_Fit.png" src="../_images/Baby_Length_Linear_Fit.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 58 </span><span class="caption-text">婴儿身高的线性预测，其中均值为蓝线，后验预测的 <span class="math notranslate nohighlight">\(50\%\)</span> 最高密度区间为深灰色，后验预测的 <span class="math notranslate nohighlight">\(94\%\)</span> 最高密度区间为浅灰色。平均拟合线附近的最高密度区间覆盖了大部分数据点，尽管预测往往在早期（ <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(3\)</span> 月）以及后期（ <span class="math notranslate nohighlight">\(22\)</span> 到 <span class="math notranslate nohighlight">\(25\)</span> 月）偏高，并且在中间（ <span class="math notranslate nohighlight">\(10\)</span> 到 <span class="math notranslate nohighlight">\(15\)</span> 月 ）偏低。</span><a class="headerlink" href="#fig-baby-length-linear" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 58 </span><span class="caption-text">婴儿身高的线性预测，其中均值为蓝线，后验预测的 <span class="math notranslate nohighlight">\(50\%\)</span> 最高密度区间为深灰色，后验预测的 <span class="math notranslate nohighlight">\(94\%\)</span> 最高密度区间为浅灰色。平均拟合线附近的最高密度区间覆盖了大部分数据点，可以明显看出在早期（ <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(3\)</span> 月）以及后期（ <span class="math notranslate nohighlight">\(22\)</span> 到 <span class="math notranslate nohighlight">\(25\)</span> 月）存在预测偏高的情况，而在中间（ <span class="math notranslate nohighlight">\(10\)</span> 到 <span class="math notranslate nohighlight">\(15\)</span> 月 ）则存在预测偏低的情况。</span><a class="headerlink" href="#fig-baby-length-linear" title="Permalink to this image">¶</a></p>
 </div>
 <p>回顾一下模型的选择，我们仍然可以认为，在任何年龄的垂直切片中，婴儿身高的分布类似于高斯分布；但在水平方向上，月份和平均身高之间的关系似乎是非线性的。具体来说，我们决定让这种非线性体现为代码 <a class="reference internal" href="#babies-transformed"><span class="std std-ref">babies_transformed</span></a> 中的 <code class="docutils literal notranslate"><span class="pre">model_sqrt</span></code> ，即对月份预测变量实施平方根变换。</p>
 <div class="literal-block-wrapper docutils container" id="babies-transformed">
