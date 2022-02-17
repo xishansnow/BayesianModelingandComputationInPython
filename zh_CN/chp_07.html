@@ -281,7 +281,13 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#pymc3-bart">
-   7.8 PyMC3 中 BART 先验的选择
+   7.8
+   <code class="docutils literal notranslate">
+<span class="pre">
+     PyMC3
+    </span>
+</code>
+   中 BART 先验的选择
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -397,7 +403,13 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#pymc3-bart">
-   7.8 PyMC3 中 BART 先验的选择
+   7.8
+   <code class="docutils literal notranslate">
+<span class="pre">
+     PyMC3
+    </span>
+</code>
+   中 BART 先验的选择
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -472,7 +484,7 @@
 <p>例如，我们可以将 <span class="math notranslate nohighlight">\(\phi\)</span> 设置为高斯，然后我们将有：</p>
 <div class="math notranslate nohighlight">
 \[Y = \mathcal{N}\left(\mu = \sum_{j=0}^m g_j(\boldsymbol{X}; \mathcal{T}_j, \mathcal{M}_j), \sigma \right)\]</div>
-<p>或者我们可以像在第 [3] 章（第 2 章）中对广义线性模型所做的那样，尝试其他分布。例如，如果 <span class="math notranslate nohighlight">\(\phi\)</span> 是泊松分布，我们得到</p>
+<p>或者我们可以像在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中对广义线性模型所做的那样，尝试其他分布。例如，如果 <span class="math notranslate nohighlight">\(\phi\)</span> 是泊松分布，我们得到</p>
 <div class="math notranslate nohighlight">
 \[Y = \text{Pois}\left(\lambda = \sum_{j}^m g_j(\boldsymbol{X}; \mathcal{T}_j, \mathcal{M}_j)\right)\]</div>
 <p>或者 <span class="math notranslate nohighlight">\(\phi\)</span> 是学生的 t 分布，那么：</p>
@@ -483,7 +495,7 @@
 <div class="section" id="priors-for-bart">
 <span id="id7"></span><h2>7.3 BART 模型的先验<a class="headerlink" href="#priors-for-bart" title="Permalink to this headline">¶</a></h2>
 <p>原始 BART 论文 <span id="id8">[<a class="reference internal" href="references.html#id5">71</a>]</span>，以及大多数后续修改和实现都依赖于共轭先验。</p>
-<p>PyMC3 中的 BART 实现不使用共轭先验，并且在其他方​​面也存在偏差。我们将专注于 PyMC3 实现，而不是讨论差异，这是我们将用于示例的实现。</p>
+<p>PyMC3 中的 BART 实现不使用共轭先验，并且在其他方​​面也存在偏差。我们将专注于 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 实现，而不是讨论差异，这是我们将用于示例的实现。</p>
 <div class="section" id="prior-independence">
 <span id="id9"></span><h3>7.3.1 先验独立性<a class="headerlink" href="#prior-independence" title="Permalink to this headline">¶</a></h3>
 <p>为了简化先验的说明，我们假设树的结构 <span class="math notranslate nohighlight">\(\mathcal{T}_j\)</span> 和叶值 <span class="math notranslate nohighlight">\(\mathcal{M}_j\)</span> 是独立的。此外，这些先验独立于其他参数，即方程 <a class="reference internal" href="#equation-eq-bart">(71)</a> 中的 <span class="math notranslate nohighlight">\(\theta\)</span>。通过假设独立性，我们可以将先前的规范分成几部分。否则，我们应该设计一种方法来指定树空间上的单个先验 <a class="footnote-reference brackets" href="#id41" id="id10">2</a>。</p>
@@ -506,9 +518,9 @@
 <div class="section" id="fitting-bayesian-additive-regression-trees">
 <span id="id14"></span><h2>7.4 拟合贝叶斯加性回归树<a class="headerlink" href="#fitting-bayesian-additive-regression-trees" title="Permalink to this headline">¶</a></h2>
 <p>到目前为止，我们已经讨论了如何使用决策树来编码分段函数，我们可以使用这些函数来建模回归或分类问题。我们还讨论了如何为决策树指定先验。我们现在将讨论如何有效地对树进行采样，以便找到给定数据集的树的后验分布。有很多策略可以做到这一点，而且细节对于本书来说太具体了。出于这个原因，我们将只描述主要元素。</p>
-<p>为了拟合 BART 模型，我们不能使用像 Hamiltonian MonteCarlo 这样的基于梯度的采样器，因为树的空间是离散的，因此对梯度不友好。出于这个原因，研究人员开发了针对树木量身定制的 MCMC 和顺序蒙特卡洛 (SMC) 变体。 PyMC3 中实现的 BART 采样器以顺序和迭代的方式工作。简而言之，我们从一棵树开始并将其拟合到 <span class="math notranslate nohighlight">\(Y\)</span> 响应变量，然后残差 <span class="math notranslate nohighlight">\(R\)</span> 计算为 <span class="math notranslate nohighlight">\(R = Y - g_0(\boldsymbol{X}; \mathcal{T}_0, \数学{M}_0)\)</span>。第二棵树适合<span class="math notranslate nohighlight">\(R\)</span>，而不是<span class="math notranslate nohighlight">\(Y\)</span>。然后我们通过考虑到目前为止我们已经拟合的树的总和来更新残差 <span class="math notranslate nohighlight">\(R\)</span>，因此 <span class="math notranslate nohighlight">\(R - g_1(\boldsymbol{X}; \mathcal{T}_0, \mathcal{M}_0) + g_0( \boldsymbol{X}; \mathcal{T}_1, \mathcal{M}_1)\)</span> 我们一直这样做，直到我们适合 <span class="math notranslate nohighlight">\(m\)</span> 树。</p>
+<p>为了拟合 BART 模型，我们不能使用像 Hamiltonian MonteCarlo 这样的基于梯度的采样器，因为树的空间是离散的，因此对梯度不友好。出于这个原因，研究人员开发了针对树木量身定制的 MCMC 和顺序蒙特卡洛 (SMC) 变体。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中实现的 BART 采样器以顺序和迭代的方式工作。简而言之，我们从一棵树开始并将其拟合到 <span class="math notranslate nohighlight">\(Y\)</span> 结果变量，然后残差 <span class="math notranslate nohighlight">\(R\)</span> 计算为 <span class="math notranslate nohighlight">\(R = Y - g_0(\boldsymbol{X}; \mathcal{T}_0, \数学{M}_0)\)</span>。第二棵树适合<span class="math notranslate nohighlight">\(R\)</span>，而不是<span class="math notranslate nohighlight">\(Y\)</span>。然后我们通过考虑到目前为止我们已经拟合的树的总和来更新残差 <span class="math notranslate nohighlight">\(R\)</span>，因此 <span class="math notranslate nohighlight">\(R - g_1(\boldsymbol{X}; \mathcal{T}_0, \mathcal{M}_0) + g_0( \boldsymbol{X}; \mathcal{T}_1, \mathcal{M}_1)\)</span> 我们一直这样做，直到我们适合 <span class="math notranslate nohighlight">\(m\)</span> 树。</p>
 <p>此过程将导致后验分布的单个样本，一个具有 <span class="math notranslate nohighlight">\(m\)</span> 树的样本。请注意，第一次迭代很容易导致次优树，主要原因是：第一次拟合的树会比必要的更复杂，树可能会陷入局部最小值，最后后面的树的拟合会受到影响以前的树。当我们继续采样时，所有这些影响将趋于消失，因为采样方法将多次重新访问以前拟合的树，并让它们有机会重新适应更新的残差。事实上，在拟合 BART 模型时，一个常见的观察结果是，在第一轮中，树往往更深，然后它们 <em>塌陷</em> 成较浅的树。</p>
-<p>在文献中，特定的 BART 模型通常是为特定的采样器量身定制的，因为它们依赖于共轭性，因此具有高斯似然的 BART 模型与具有泊松似然的 BART 模型不同。 PyMC3 使用基于粒子 Gibbs 采样器 <span id="id15">[<a class="reference internal" href="references.html#id9">73</a>]</span> 的采样器，该采样器专门用于处理树木。 PyMC3 会自动将此采样器分配给“pm.BART”分布，如果模型中存在其他随机变量，PyMC3 会将其他采样器（如 NUTS）分配给这些变量。</p>
+<p>在文献中，特定的 BART 模型通常是为特定的采样器量身定制的，因为它们依赖于共轭性，因此具有高斯似然的 BART 模型与具有泊松似然的 BART 模型不同。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 使用基于粒子 Gibbs 采样器 <span id="id15">[<a class="reference internal" href="references.html#id9">73</a>]</span> 的采样器，该采样器专门用于处理树木。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 会自动将此采样器分配给“pm.BART”分布，如果模型中存在其他随机变量，PyMC3 会将其他采样器（如 NUTS）分配给这些变量。</p>
 </div>
 <div class="section" id="bart-bike">
 <span id="id16"></span><h2>7.5 BART 自行车<a class="headerlink" href="#bart-bike" title="Permalink to this headline">¶</a></h2>
@@ -520,7 +532,7 @@
   \sigma \sim&amp; \; \mathcal{HN}(1) \\
   Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 \end{split}\end{aligned}\end{split}\]</div>
-<p>在 PyMC3 中构建 BART 模型与构建其他类型的模型非常相似，不同之处在于指定随机变量 <code class="docutils literal notranslate"><span class="pre">pm.BART</span></code> 需要知道自变量和因变量。主要原因是用于拟合 BART 模型的采样方法在残差方面提出了一个新树，如上一节所述。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中构建 BART 模型与构建其他类型的模型非常相似，不同之处在于指定随机变量 <code class="docutils literal notranslate"><span class="pre">pm.BART</span></code> 需要知道自变量和因变量。主要原因是用于拟合 BART 模型的采样方法在残差方面提出了一个新树，如上一节所述。</p>
 <p>在做了所有这些澄清之后，PyMC3 中的模型如下所示：</p>
 <div class="literal-block-wrapper docutils container" id="bart-model-gauss">
 <div class="code-block-caption"><span class="caption-number">Listing 102 </span><span class="caption-text">bart_model_gauss</span><a class="headerlink" href="#bart-model-gauss" title="Permalink to this code">¶</a></div>
@@ -550,7 +562,7 @@
 </div>
 <div class="section" id="generalized-bart-models">
 <span id="id18"></span><h2>7.6 广义 BART 模型<a class="headerlink" href="#generalized-bart-models" title="Permalink to this headline">¶</a></h2>
-<p>BART 的 PyMC3 实现试图使使用不同的可能性 <a class="footnote-reference brackets" href="#id46" id="id19">6</a> 变得容易，类似于我们在第 [3] 章（第 2 章）中看到的广义线性模型所做的那样。让我们看看如何在 BART 中使用伯努利似然。对于这个例子，我们将使用太空流感疾病的数据集，该疾病主要影响年轻人和老年人，但不影响中年人。幸运的是，太空流感并不是一个严重的问题，因为它已经完全弥补了。在这个数据集中，我们记录了接受太空流感检测的人，以及他们是生病 (1) 还是健康 (0) 以及他们的年龄。使用来自代码 <a class="reference internal" href="#bart-model-gauss"><span class="std std-ref">bart_model_gauss</span></a> 的具有高斯似然的 BART 模型作为参考，我们看到差异很小：</p>
+<p>BART 的 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 实现试图使使用不同的可能性 <a class="footnote-reference brackets" href="#id46" id="id19">6</a> 变得容易，类似于我们在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中看到的广义线性模型所做的那样。让我们看看如何在 BART 中使用伯努利似然。对于这个例子，我们将使用太空流感疾病的数据集，该疾病主要影响年轻人和老年人，但不影响中年人。幸运的是，太空流感并不是一个严重的问题，因为它已经完全弥补了。在这个数据集中，我们记录了接受太空流感检测的人，以及他们是生病 (1) 还是健康 (0) 以及他们的年龄。使用来自代码 <a class="reference internal" href="#bart-model-gauss"><span class="std std-ref">bart_model_gauss</span></a> 的具有高斯似然的 BART 模型作为参考，我们看到差异很小：</p>
 <div class="literal-block-wrapper docutils container" id="bart-model-bern">
 <div class="code-block-caption"><span class="caption-number">Listing 103 </span><span class="caption-text">bart_model_bern</span><a class="headerlink" href="#bart-model-bern" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
@@ -561,7 +573,7 @@
 </pre></div>
 </div>
 </div>
-<p>首先，我们不再需要定义 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数，因为伯努利分布只有一个参数“p”。对于 BART 本身的定义，我们有一个新参数，<code class="docutils literal notranslate"><span class="pre">inv_link</span></code>，这是反向链接函数，我们需要将 <span class="math notranslate nohighlight">\(\mu\)</span> 的值限制在区间 <span class="math notranslate nohighlight">\([0, 1]\)</span> 内。为此，我们指示 PyMC3 使用逻辑函数，就像我们在第 [3] 章（第 2 章）中对逻辑回归所做的那样）。</p>
+<p>首先，我们不再需要定义 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数，因为伯努利分布只有一个参数“p”。对于 BART 本身的定义，我们有一个新参数，<code class="docutils literal notranslate"><span class="pre">inv_link</span></code>，这是反向链接函数，我们需要将 <span class="math notranslate nohighlight">\(\mu\)</span> 的值限制在区间 <span class="math notranslate nohighlight">\([0, 1]\)</span> 内。为此，我们指示 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 使用逻辑函数，就像我们在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中对逻辑回归所做的那样）。</p>
 <p><a class="reference internal" href="#fig-bart-space-flu-comp"><span class="std std-numref">Fig. 126</span></a> 显示了代码 <a class="reference internal" href="#bart-model-bern"><span class="std std-ref">bart_model_bern</span></a>  中的模型与 <span class="math notranslate nohighlight">\(m\)</span> 的 4 个值的比较，即 (2, 10, 20, 50) 使用 LOO。 <a class="reference internal" href="#fig-bart-space-flu-fit"><span class="std std-numref">Fig. 127</span></a> 显示数据加上拟合函数和 HDI <span class="math notranslate nohighlight">\(94\%\)</span> 波段。我们可以看到，根据 LOO，<span class="math notranslate nohighlight">\(m=10\)</span> 和 <span class="math notranslate nohighlight">\(m=20\)</span> 提供了很好的拟合。这与目视检查在定性上一致，因为 <span class="math notranslate nohighlight">\(m=2\)</span> 明显欠拟合（ELPD 的值很低，但样本内和样本外 ELPD 之间的差异并不大）和 <span class="math notranslate nohighlight">\( m=50\)</span> 似乎过拟合（ELPD 的值很低，样本内和样本外 ELPD 之间的差异很大）。</p>
 <div class="figure align-default" id="fig-bart-space-flu-comp">
 <a class="reference internal image-reference" href="../_images/BART_space_flu_comp.png"><img alt="../_images/BART_space_flu_comp.png" src="../_images/BART_space_flu_comp.png" style="width: 8.00in;"/></a>
@@ -571,7 +583,7 @@
 <a class="reference internal image-reference" href="../_images/BART_space_flu_fit.png"><img alt="../_images/BART_space_flu_fit.png" src="../_images/BART_space_flu_fit.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 127 </span><span class="caption-text">BART 适合具有 4 个 <span class="math notranslate nohighlight">\(m\)</span> 值的 Space Influenza 数据集（2、10、20、50）。与 LOO 一致，具有 <span class="math notranslate nohighlight">\(m\)</span> 的模型是欠拟合的，而具有 <span class="math notranslate nohighlight">\(m=50\)</span> 的模型是过拟合的。</span><a class="headerlink" href="#fig-bart-space-flu-fit" title="Permalink to this image">¶</a></p>
 </div>
-<p>到目前为止，我们已经讨论了具有单个协变量的回归，我们这样做是为了简单起见。但是，可以使用更多协变量来拟合数据集。从 PyMC3 的实现角度来看，这是微不足道的，我们只需要传递一个包含超过 1 个协变量的 <span class="math notranslate nohighlight">\(X\)</span> 二维数组。但它提出了一些有趣的统计问题，例如如何轻松解释具有许多协变量的 BART 模型，或者如何找出每个协变量对结果的贡献程度。在接下来的部分中，我们将展示这是如何完成的。</p>
+<p>到目前为止，我们已经讨论了具有单个协变量的回归，我们这样做是为了简单起见。但是，可以使用更多协变量来拟合数据集。从 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 的实现角度来看，这是微不足道的，我们只需要传递一个包含超过 1 个协变量的 <span class="math notranslate nohighlight">\(X\)</span> 二维数组。但它提出了一些有趣的统计问题，例如如何轻松解释具有许多协变量的 BART 模型，或者如何找出每个协变量对结果的贡献程度。在接下来的部分中，我们将展示这是如何完成的。</p>
 </div>
 <div class="section" id="interpretability-of-barts">
 <span id="id20"></span><h2>7.7 BART 的可解释性<a class="headerlink" href="#interpretability-of-barts" title="Permalink to this headline">¶</a></h2>
@@ -583,7 +595,7 @@
 <div class="math notranslate nohighlight" id="equation-eq-partial-dependence">
 <span class="eqno">(72)<a class="headerlink" href="#equation-eq-partial-dependence" title="Permalink to this equation">¶</a></span>\[\tilde{Y}_{\boldsymbol{X}_i}= \mathbb{E}_{\boldsymbol{X}_{-i}}[\tilde{Y}(\boldsymbol{X}_i, \boldsymbol{X}_{-i})] \approx \frac{1}{n}\sum_{j=1}^{n} \tilde{Y}(\boldsymbol{X}_i, \boldsymbol{X}_{-ij})\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(\tilde{Y}_{\boldsymbol{X}_i}\)</span> 是预测变量的值，作为 <span class="math notranslate nohighlight">\(\boldsymbol{X}_i\)</span> 的函数，而除了 <span class="math notranslate nohighlight">\(i\)</span> (<span class="math notranslate nohighlight">\(\boldsymbol{X }_{-i}\)</span>) 已被边缘化。通常 <span class="math notranslate nohighlight">\(X_i\)</span> 将是 1 或 2 个变量的子集，原因是在更高维度上绘图通常很困难。</p>
-<p>如方程 <a class="reference internal" href="#equation-eq-partial-dependence">(72)</a> 所示，期望可以通过对以观察到的 <span class="math notranslate nohighlight">\(\boldsymbol{X}_{-i}\)</span> 为条件的预测值进行平均来在数值上近似。但是请注意，这意味着 <span class="math notranslate nohighlight">\(\boldsymbol{X}_i、\boldsymbol{X}_{-ij}\)</span> 中的某些组合可能与实际观察到的组合不对应。此外，甚至可能无法观察到某些组合。这类似于我们已经讨论过的关于第 [3] 章（第 2 章）中介绍的反事实图。事实上，部分依赖图是一种反事实装置。</p>
+<p>如方程 <a class="reference internal" href="#equation-eq-partial-dependence">(72)</a> 所示，期望可以通过对以观察到的 <span class="math notranslate nohighlight">\(\boldsymbol{X}_{-i}\)</span> 为条件的预测值进行平均来在数值上近似。但是请注意，这意味着 <span class="math notranslate nohighlight">\(\boldsymbol{X}_i、\boldsymbol{X}_{-ij}\)</span> 中的某些组合可能与实际观察到的组合不对应。此外，甚至可能无法观察到某些组合。这类似于我们已经讨论过的关于 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中介绍的反事实图。事实上，部分依赖图是一种反事实装置。</p>
 <div class="figure align-default" id="fig-pdp-fake-example">
 <a class="reference internal image-reference" href="../_images/partial_dependence_plot.png"><img alt="../_images/partial_dependence_plot.png" src="../_images/partial_dependence_plot.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 128 </span><span class="caption-text">部分依赖图。每个变量 <span class="math notranslate nohighlight">\(X_i\)</span> 对 <span class="math notranslate nohighlight">\(Y\)</span> 的部分贡献，同时边缘化其余变量 (<span class="math notranslate nohighlight">\(X_{-i}\)</span>) 的贡献。灰色带代表 HDI <span class="math notranslate nohighlight">\(94\%\)</span>。均值和 HDI 波段都已被平滑（参见 <code class="docutils literal notranslate"><span class="pre">plot_ppd</span></code> 函数）。地毯图（每个子图底部的黑条）显示了每个协变量的观察值。</span><a class="headerlink" href="#fig-pdp-fake-example" title="Permalink to this image">¶</a></p>
@@ -635,7 +647,7 @@
 </ul>
 <p>请注意，虽然前 5 个随机变量与 <span class="math notranslate nohighlight">\(Y\)</span> 相关（不同程度地），但后 5 个则不相关。</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\boldsymbol{X}_{0:9} \sim \mathcal{N}(0, 1)\)</span> 和 <span class="math notranslate nohighlight">\(Y \sim \mathcal{N}(0, 1)\)</span>。所有变量都与响应变量无关。</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{X}_{0:9} \sim \mathcal{N}(0, 1)\)</span> 和 <span class="math notranslate nohighlight">\(Y \sim \mathcal{N}(0, 1)\)</span>。所有变量都与结果变量无关。</p></li>
 </ul>
 <div class="figure align-default" id="fig-bart-vi-toy">
 <a class="reference internal image-reference" href="../_images/bart_vi_toy.png"><img alt="../_images/bart_vi_toy.png" src="../_images/bart_vi_toy.png" style="width: 8.00in;"/></a>
@@ -660,10 +672,10 @@
 </div>
 </div>
 <div class="section" id="pymc3-bart">
-<span id="priors-for-bart-in-pymc3"></span><h2>7.8 PyMC3 中 BART 先验的选择<a class="headerlink" href="#pymc3-bart" title="Permalink to this headline">¶</a></h2>
+<span id="priors-for-bart-in-pymc3"></span><h2>7.8 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中 BART 先验的选择<a class="headerlink" href="#pymc3-bart" title="Permalink to this headline">¶</a></h2>
 <p>与本书中的其他模型相比，BART 是最“黑盒”的。</p>
 <p>我们无法设置我们想要生成 BART 模型的任何先验。</p>
-<p>相反，我们通过一些参数来控制预定义的先验。 PyMC3 允许使用 3 个参数控制 BARTS 的先验：</p>
+<p>相反，我们通过一些参数来控制预定义的先验。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 允许使用 3 个参数控制 BARTS 的先验：</p>
 <ul class="simple">
 <li><p>树的数量 <span class="math notranslate nohighlight">\(m\)</span></p></li>
 <li><p>树的深度<span class="math notranslate nohighlight">\(\alpha\)</span></p></li>
@@ -672,7 +684,7 @@
 <p>我们看到了改变树的数量的效果，这已被证明可以为 50-200 区间内的值提供可靠的预测。还有很多例子表明使用交叉验证来确定这个数字可能是有益的。我们还看到，通过扫描 <span class="math notranslate nohighlight">\(m\)</span> 寻找相对较低的值，例如 25-100 范围内的值，我们可以评估变量的重要性。我们没有费心去改变 <span class="math notranslate nohighlight">\(\alpha=0.25\)</span> 的默认值，因为这个改变似乎影响更小，尽管仍然需要研究来更好地理解这个先前的 <span id="id36">[<a class="reference internal" href="references.html#id67">72</a>]</span>。</p>
 <p>与 <span class="math notranslate nohighlight">\(m\)</span> 一样，交叉验证也可用于调整它以提高效率。最后，PyMC3 提供了传递权重向量的选项，因此不同的变量具有不同的先验概率被选中，当用户有证据表明某些变量可能比其他变量更重要时，这可能很有用，否则最好保持统一。已经提出了更复杂的基于 Dirichlet 的先验 <a class="footnote-reference brackets" href="#id50" id="id37">10</a> 来实现这一目标，并在需要诱导稀疏性时允许更好的推理。这在我们有很多协变量的情况下很有用，但只有少数可能有贡献，而且我们事先不知道哪些是最相关的。这是一个常见的情况，例如，在基因研究中，测量数百或更多基因的活性相对容易，但它们之间的关系不仅未知，而且是研究的目标。</p>
 <p>大多数 BART 实施都是在单个软件包的上下文中完成的，在某些情况下甚至面向特定的子学科。</p>
-<p>它们通常不是概率编程语言的一部分，因此不希望用户过多地调整 BART 模型。因此，即使可以将先验直接放在树的数量上，但在实践中通常不是这样做的。相反，BART 文献赞扬了 BART 在默认参数下的良好性能，同时认识到可以使用交叉验证来获得额外的收益。 PyMC3 中的 BART 实现稍微偏离了这一传统，并允许一些额外的灵活性，但与我们使用其他像高斯或泊松分布，甚至像高斯过程这样的非参数分布相比，仍然非常有限。我们预计这可能会在不远的将来发生变化，部分原因是我们有兴趣探索更灵活的 BART 实现，这可以允许用户构建灵活和针对问题的模型，这通常是概率编程语言的情况。</p>
+<p>它们通常不是概率编程语言的一部分，因此不希望用户过多地调整 BART 模型。因此，即使可以将先验直接放在树的数量上，但在实践中通常不是这样做的。相反，BART 文献赞扬了 BART 在默认参数下的良好性能，同时认识到可以使用交叉验证来获得额外的收益。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中的 BART 实现稍微偏离了这一传统，并允许一些额外的灵活性，但与我们使用其他像高斯或泊松分布，甚至像高斯过程这样的非参数分布相比，仍然非常有限。我们预计这可能会在不远的将来发生变化，部分原因是我们有兴趣探索更灵活的 BART 实现，这可以允许用户构建灵活和针对问题的模型，这通常是概率编程语言的情况。</p>
 </div>
 <div class="section" id="exercises7">
 <span id="id38"></span><h2>7.9 练习<a class="headerlink" href="#exercises7" title="Permalink to this headline">¶</a></h2>

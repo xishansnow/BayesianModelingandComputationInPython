@@ -680,7 +680,7 @@ Effect handlers {cite:p}`kammar2013handlers` are an abstraction in programming l
 
 (example-effect-handling-in-tfp-and-numpyro)= 
 
-### 10.6.1 示例： TFP 和 Numpyro 中的效果处理 
+### 10.6.1 示例： `TFP` 和 Numpyro 中的效果处理 
 
 In the rest of this section we will see how effect handling works in TensorFlow Probability and NumPyro. Briefly NumPyro is another PPL based on Jax. Specifically, we will compare the high level API between `tfd.JointDistributionCoroutine` and model written with NumPyro primitives, which both represent Bayesian model with a Python function in a similar way. Also, we will be using the JAX substrate of TFP, so that both API share the same base language and numerical computation backend. Again consider the model in Equation {eq}`eq:simple_normal_model`, in Code Block [tfp_vs_numpyro](tfp_vs_numpyro) we import the libraries and write the model: 
 

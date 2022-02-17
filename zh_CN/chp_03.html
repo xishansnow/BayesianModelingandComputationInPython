@@ -210,7 +210,7 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#linear-regression-intro">
-     3.2.1 线性的企鹅模型
+     3.2.1 线性企鹅模型
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
@@ -306,7 +306,7 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#linear-regression-intro">
-     3.2.1 线性的企鹅模型
+     3.2.1 线性企鹅模型
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
@@ -375,8 +375,8 @@
 <span id="id1"></span><h1>第三章：线性模型与概率编程语言<a class="headerlink" href="#chap2" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
 <p>随着概率编程语言的出现，现代贝叶斯建模只需要编码一个模型和 “按一个按钮 “那样简单。然而，有效模型的建立和分析通常需要更多的工作。</p>
-<p>随着本书的推进，我们将建立许多不同类型的模型，但在本章中将从最简单的线性模型开始。线性模型是一类广泛应用的模型，其中一个指定观测值（ 响应变量 ）的<strong>期望值</strong>是相关预测因子（ 预测变量 ）的<strong>线性组合</strong>。</p>
-<p>深刻理解拟合和解释线性模型的方法，是后续很多模型的坚实基础；并将有助于我们巩固『贝叶斯推断（第 <a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref">1</span></a> 章）』和『贝叶斯模型的探索性分析（第 <a class="reference internal" href="chp_02.html#chap1bis"><span class="std std-ref">2</span></a> 章）』的基本知识。</p>
+<p>随着本书的推进，我们将建立许多不同类型的模型，但在本章中将从最简单的线性模型开始。线性模型是一类广泛应用的模型，其中一个指定观测值（ 结果变量 ）的<strong>期望值</strong>是相关预测因子（ 预测变量 ）的<strong>线性组合</strong>。</p>
+<p>深刻理解拟合和解释线性模型的方法，是后续很多模型的坚实基础；并将有助于我们巩固『贝叶斯推断（ <a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref"> 第 1 章 </span></a> ）』和『贝叶斯模型的探索性分析（第 <a class="reference internal" href="chp_02.html#chap1bis"><span class="std std-ref">2</span></a> 章）』的基本知识。</p>
 <p>本章将介绍两种概率编程语言：<code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span> <span class="pre">(TFP)</span></code>。当我们使用这两种概率编程语言构建模型时，应当重点关注同一基础统计思想是如何在两种概率编程语言中实现的。</p>
 <p>我们将首先拟合一个仅包含截距的模型（ 即没有预测变量的模型 ），然后通过添加一个或多个预测变量来增加复杂性，并扩展到广义线性模型。在本章结束时，你将更加理解线性模型，更加熟悉贝叶斯工作流中的常见步骤，并且更轻松地使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code>、<code class="docutils literal notranslate"><span class="pre">TFP</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 实施贝叶斯工作流。</p>
 <div class="section" id="comparing-distributions">
@@ -384,7 +384,7 @@
 <p>如果你正在寻找一些可以比较的东西，那么企鹅是最合适不过的了。</p>
 <p>我们的第一个问题可能是 “每个企鹅物种的平均体重是多少？”，或者可能是“它们的平均体重有什么不同？”，或者用统计学术语来说 “均值的离散度是多少？” 。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Kristen</span> <span class="pre">Gorman</span></code> 很喜欢研究企鹅，她访问了 <span class="math notranslate nohighlight">\(3\)</span> 个南极岛屿并收集了有关 <code class="docutils literal notranslate"><span class="pre">Adelie</span></code>、<code class="docutils literal notranslate"><span class="pre">Gentoo</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Chinstrap</span></code> 三个物种的数据，这些数据被编撰进了 <code class="docutils literal notranslate"><span class="pre">Palmer</span> <span class="pre">Penguins</span> <span class="pre">数据集</span></code> 中 <span id="id3">[<a class="reference internal" href="references.html#id58">28</a>]</span>。观测数据包括企鹅的体重、鳍状肢长度、性别特征、所居住岛屿等。</p>
-<p>我们首先通过代码 <a class="reference internal" href="#penguin-load"><span class="std std-ref">penguin_load</span></a> 加载数据，并过滤掉存在缺失数据的行。这种方式被称为<strong>完整案例分析（ complete case analysis ）</strong>，顾名思义，我们只使用所有观测值都存在的行。尽管有一些处理缺失数据的成熟方法，但此处我们将采用最简单的剔除法。</p>
+<p>我们首先通过代码 <a class="reference internal" href="#penguin-load"><span class="std std-ref">penguin_load</span></a> 加载数据，并过滤掉存在缺失数据的行。这种方式被称为<strong>完整案例分析（ complete case analysis ）</strong>，顾名思义，我们只使用所有观测值都存在的行。尽管有一些处理缺失数据的成熟方法，但此处将采用最简单的剔除法。</p>
 <div class="literal-block-wrapper docutils container" id="penguin-load">
 <div class="code-block-caption"><span class="caption-number">Listing 14 </span><span class="caption-text">penguin_load</span><a class="headerlink" href="#penguin-load" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">penguins</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/penguins.csv"</span><span class="p">)</span>
@@ -437,7 +437,7 @@
 </tr>
 </tbody>
 </table>
-<p>现在我们有了均值和离散度（用标准差来描述）的点估计，但并不知道这些统计数据的不确定性。获得不确定性估计的方法之一就是贝叶斯方法。为此，需要推测观测与参数之间的关系，例如：</p>
+<p>现在有了均值和离散度（用标准差来描述）的点估计，但无法掌握这些统计数据的不确定性。获得不确定性估计的方法之一就是贝叶斯方法。为此，需要推测观测数据与参数之间的关系，例如：</p>
 <div class="math notranslate nohighlight" id="equation-eq-gaussian-bayes">
 <span class="eqno">(24)<a class="headerlink" href="#equation-eq-gaussian-bayes" title="Permalink to this equation">¶</a></span>\[\overbrace{p(\mu, \sigma \mid Y)}^{Posterior} \propto \overbrace{\mathcal{N}(Y \mid \mu, \sigma)}^{Likelihood}\;  \overbrace{\underbrace{\mathcal{N}(4000, 3000)}_{\mu}
 \underbrace{\mathcal{H}\text{T}(100, 2000)}_{\sigma}}^{Prior}\]</div>
@@ -465,7 +465,7 @@
 <a class="reference internal image-reference" href="../_images/SingleSpecies_Prior_Predictive.png"><img alt="../_images/SingleSpecies_Prior_Predictive.png" src="../_images/SingleSpecies_Prior_Predictive.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 32 </span><span class="caption-text">在代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中生成的先验样本。可以看出，企鹅体重的均值和标准差的分布估计涵盖了广泛的可能性。</span><a class="headerlink" href="#fig-singlespecies-prior-predictive" title="Permalink to this image">¶</a></p>
 </div>
-<p>从模型中做后验采样后，我们可以创建 <a class="reference internal" href="#fig-single-penguins-rank-kde-plot"><span class="std std-numref">Fig. 33</span></a>，其中包括 <span class="math notranslate nohighlight">\(4\)</span> 个子图，右边的两个是秩图，左边是参数的 <code class="docutils literal notranslate"><span class="pre">KDE</span></code>，每条线为一个链。我们还可以参考 <a class="reference internal" href="#tab-penguin-mass-parameters-bayesian-estimates"><span class="std std-numref">Table 4</span></a> 中的数值诊断来了解采样链的收敛情况。根据第 <a class="reference internal" href="chp_02.html#chap1bis"><span class="std std-ref">2</span></a> 章建立的直觉，我们大致能够判断该拟合可以接受，可以继续进行分析。</p>
+<p>从模型中做后验采样后，我们可以创建 <a class="reference internal" href="#fig-single-penguins-rank-kde-plot"><span class="std std-numref">Fig. 33</span></a>，其中包括 <span class="math notranslate nohighlight">\(4\)</span> 个子图，右边的两个是秩图，左边是参数的核密度估计，每条线为一个链。我们还可以参考 <a class="reference internal" href="#tab-penguin-mass-parameters-bayesian-estimates"><span class="std std-numref">Table 4</span></a> 中的数值诊断来了解采样链的收敛情况。根据第 <a class="reference internal" href="chp_02.html#chap1bis"><span class="std std-ref">2</span></a> 章建立的直觉，我们大致能够判断该拟合可以接受，可以继续进行分析。</p>
 <table class="table" id="tab-penguin-mass-parameters-bayesian-estimates">
 <caption><span class="caption-number">Table 4 </span><span class="caption-text">企鹅体重的均值 (μ) 和标准差 (σ) 的贝叶斯估计，以及采样诊断。</span><a class="headerlink" href="#tab-penguin-mass-parameters-bayesian-estimates" title="Permalink to this table">¶</a></caption>
 <colgroup>
@@ -526,7 +526,7 @@
 <p class="caption"><span class="caption-number">Fig. 34 </span><span class="caption-text">代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中，<code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种企鹅</span></code>体重贝叶斯模型的后验分布图，其中，垂线是经验均值和标准差。</span><a class="headerlink" href="#fig-singlespecies-mass-posteriorplot" title="Permalink to this image">¶</a></p>
 </div>
 <p>通过贝叶斯估计，我们得到了合理的参数分布。使用 <a class="reference internal" href="#tab-penguin-mass-parameters-bayesian-estimates"><span class="std std-numref">Table 4</span></a> 中的汇总信息，以及来自 <a class="reference internal" href="#fig-single-penguins-rank-kde-plot"><span class="std std-numref">Fig. 33</span></a> 中的后验分布，该企鹅物种的体重均值从 <span class="math notranslate nohighlight">\(3632\)</span> 到 <span class="math notranslate nohighlight">\(3772\)</span> 克相当合理；此外边缘后验分布的标准差也比较大。</p>
-<p>切记，后验分布是高斯分布参数（均值和标准差）的分布，而非高斯分布本身（即企鹅体重的分布），千万不要混淆。因此如果想要企鹅体重的分布估计，我们需要基于均值和标准差参数的后验样本生成后验预测分布。也就是说，根据当前模型设定，企业体重的分布应该是以 <span class="math notranslate nohighlight">\(\mu\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 的后验分布为条件的高斯分布。</p>
+<p>切记，后验分布是高斯分布参数（均值和标准差）的分布，而非高斯分布本身（即企鹅体重的分布），千万不要混淆。因此如果想要企鹅体重的分布估计，我们需要基于均值和标准差参数的后验样本生成后验预测分布。也就是说，根据当前模型设定，企鹅体重的分布应该是以 <span class="math notranslate nohighlight">\(\mu\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 的后验分布为条件的高斯分布。</p>
 <p>现在已经描述了 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种企鹅</span></code>的体重，我们可以继续对其他物种做同样的工作。在编程上，我们可以编写三个独立的模型来实现，但也可以只编写一个模型，其中包含 <span class="math notranslate nohighlight">\(3\)</span> 个独立的组，每个物种对应一个组。</p>
 <div class="literal-block-wrapper docutils container" id="nocovariate-mass">
 <div class="code-block-caption"><span class="caption-number">Listing 17 </span><span class="caption-text">nocovariate_mass</span><a class="headerlink" href="#nocovariate-mass" title="Permalink to this code">¶</a></div>
@@ -583,7 +583,7 @@
 <p>概率编程语言由原语组成，在编程语言中，原语是用于构建更复杂程序的最简单元素。你可以将原语理解成自然语言中的单词，能够形成更复杂的结构，比如句子。由于不同语言使用不同的词，不同概率编程语言也会使用不同的原语。这些原语主要用于表达模型、执行推断或表达工作流的其他部分。</p>
 <p>在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中，与模型构建相关的原语包含在命名空间 <code class="docutils literal notranslate"><span class="pre">pm</span></code> 下。例如，在代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中，可以看到 <code class="docutils literal notranslate"><span class="pre">pm.HalfStudentT(.)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pm.Normal(.)</span></code>，其中“ <span class="math notranslate nohighlight">\(.\)</span><code class="docutils literal notranslate"><span class="pre">”代表一个随机变量。</span></code>with pm.Model() as .<code class="docutils literal notranslate"> <span class="pre">语句调用</span> <span class="pre">Python</span> <span class="pre">的上下文环境管理器，</span></code>PyMC3<code class="docutils literal notranslate"><span class="pre">使用该语句来收集上下文管理器中的随机变量，并构建模型</span></code>model_adelie_penguin_mass<code class="docutils literal notranslate"><span class="pre">。然后可以使用</span> </code>pm.sample_prior_predictive(.)<code class="docutils literal notranslate"><span class="pre">和</span></code>pm.sample(.)` 分别获得先验预测分布和后验分布的样本。</p>
 <p>类似地，TFP 为用户提供了在  <code class="docutils literal notranslate"><span class="pre">tfp.distributions</span></code> 中指定分布和模型、运行 MCMC 推断( <code class="docutils literal notranslate"><span class="pre">tfp.mcmc</span></code> ) 等原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 的 API 原语 <span id="id5">[<a class="reference internal" href="references.html#id128">29</a>]</span>。在本书的其余部分中，我们会主要使用 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code>，但读者应当知道还有 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 的一些变体可能更适合你的应用 <a class="footnote-reference brackets" href="#id41" id="id6">1</a>。由于导入数据和计算汇总统计量的代码和 <a class="reference internal" href="#penguin-load"><span class="std std-ref">penguin_load</span></a> 和 <a class="reference internal" href="#penguin-mass-empirical"><span class="std std-ref">penguin_mass_empirical</span></a> 一致，因此这里我们专注于模型构建和推断。</p>
-<p><code class="docutils literal notranslate"><span class="pre">model_penguin_mass_all_species</span></code> 以 TFP 表示为代码 <a class="reference internal" href="#penguin-mass-tfp"><span class="std std-ref">penguin_mass_tfp</span></a> ：</p>
+<p><code class="docutils literal notranslate"><span class="pre">model_penguin_mass_all_species</span></code> 以 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 表示为代码 <a class="reference internal" href="#penguin-mass-tfp"><span class="std std-ref">penguin_mass_tfp</span></a> ：</p>
 <div class="literal-block-wrapper docutils container" id="penguin-mass-tfp">
 <div class="code-block-caption"><span class="caption-number">Listing 19 </span><span class="caption-text">penguin_mass_tfp</span><a class="headerlink" href="#penguin-mass-tfp" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
@@ -613,12 +613,12 @@
 </pre></div>
 </div>
 </div>
-<p>这是我们第一次遇到用 TFP 编写的贝叶斯模型，所以花点时间来详细介绍一下。 <code class="docutils literal notranslate"><span class="pre">tfp.distributions</span></code> 是原语中的分布类，我们通常为其赋予一个较短的别名 <code class="docutils literal notranslate"><span class="pre">tfd</span> <span class="pre">=</span> <span class="pre">tfp.distributions</span></code> 。 <code class="docutils literal notranslate"><span class="pre">tfd</span></code> 中包含了常用的分布，例如正态分布 <code class="docutils literal notranslate"><span class="pre">tfd.Normal(.)</span></code> 。代码中还使用了 <code class="docutils literal notranslate"><span class="pre">tfd.Sample</span></code>，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 语法糖 <code class="docutils literal notranslate"><span class="pre">shape=(.)</span></code> 的功能 ）。 <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 <code class="docutils literal notranslate"><span class="pre">reinterpreted_batch_ndims</span></code> 函参指定。通常用 <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> 封装与观测相关的分布 <a class="footnote-reference brackets" href="#id42" id="id7">2</a> 。你可以在 <a class="reference internal" href="chp_10.html#shape-ppl"><span class="std std-ref">10.8.1 PPL 中的形状处理</span></a> 部分阅读更多关于 TFP 和概率编程语言中的形状处理的信息。</p>
+<p>这是我们第一次遇到用 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 编写的贝叶斯模型，所以花点时间来详细介绍一下。 <code class="docutils literal notranslate"><span class="pre">tfp.distributions</span></code> 是原语中的分布类，我们通常为其赋予一个较短的别名 <code class="docutils literal notranslate"><span class="pre">tfd</span> <span class="pre">=</span> <span class="pre">tfp.distributions</span></code> 。 <code class="docutils literal notranslate"><span class="pre">tfd</span></code> 中包含了常用的分布，例如高斯分布 <code class="docutils literal notranslate"><span class="pre">tfd.Normal(.)</span></code> 。代码中还使用了 <code class="docutils literal notranslate"><span class="pre">tfd.Sample</span></code>，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 语法糖 <code class="docutils literal notranslate"><span class="pre">shape=(.)</span></code> 的功能 ）。 <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 <code class="docutils literal notranslate"><span class="pre">reinterpreted_batch_ndims</span></code> 函参指定。通常用 <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> 封装与观测相关的分布 <a class="footnote-reference brackets" href="#id42" id="id7">2</a> 。你可以在 <a class="reference internal" href="chp_10.html#shape-ppl"><span class="std std-ref">10.8.1 PPL 中的形状处理</span></a> 部分阅读更多关于 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 和概率编程语言中的形状处理的信息。</p>
 <p>代码中的模型签名 <code class="docutils literal notranslate"><span class="pre">@tfd.JointDistributionCoroutine</span></code> 很有意思，顾名思义，就是在 Python 中使用协程（ Coroutine ），不过我们在此不过多地介绍生成器和协程的概念。</p>
 <p><code class="docutils literal notranslate"><span class="pre">yield</span></code> 语句会为你提供模型函数内部的一些随机变量，你可以将 <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">yield</span> <span class="pre">Normal(.)</span></code> 视为 <span class="math notranslate nohighlight">\(y \sim \text{Normal(.)}\)</span> 的代码表达方式。</p>
 <p>此外，我们通过 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine.Root</span></code> 来包装没有依赖关系的随机变量。</p>
 <p>该模型被编写为没有输入参数和返回值的 Python 函数，将 <code class="docutils literal notranslate"><span class="pre">@tfd.JointDistributionCoroutine</span></code> 放在 Python 函数之上作为装饰器，以方便直接获取模型（即 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code>）。</p>
-<p>结果的 <code class="docutils literal notranslate"><span class="pre">jd_penguin_mass_all_species</span></code> 是代码 <a class="reference internal" href="#nocovariate-mass"><span class="std std-ref">nocovariate_mass</span></a> 中的截距回归模型在 TFP 中的重写。它具有与其他 <code class="docutils literal notranslate"><span class="pre">tfd.Distribution</span></code> 类似的、可以在贝叶斯工作流中使用的方法。例如，抽取先验和先验预测样本可以调用 <code class="docutils literal notranslate"><span class="pre">.sample(.)</span></code> 方法，该方法返回一个类似于 <code class="docutils literal notranslate"><span class="pre">namedtuple</span></code> 的自定义嵌套 Python 结构体。在代码 <a class="reference internal" href="#penguin-mass-tfp-prior-predictive"><span class="std std-ref">penguin_mass_tfp_prior_predictive</span></a> 中，我们抽取了 $10004 个先验和先验预测样本。</p>
+<p>结果的 <code class="docutils literal notranslate"><span class="pre">jd_penguin_mass_all_species</span></code> 是代码 <a class="reference internal" href="#nocovariate-mass"><span class="std std-ref">nocovariate_mass</span></a> 中的截距回归模型在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中的重写。它具有与其他 <code class="docutils literal notranslate"><span class="pre">tfd.Distribution</span></code> 类似的、可以在贝叶斯工作流中使用的方法。例如，抽取先验和先验预测样本可以调用 <code class="docutils literal notranslate"><span class="pre">.sample(.)</span></code> 方法，该方法返回一个类似于 <code class="docutils literal notranslate"><span class="pre">namedtuple</span></code> 的自定义嵌套 Python 结构体。在代码 <a class="reference internal" href="#penguin-mass-tfp-prior-predictive"><span class="std std-ref">penguin_mass_tfp_prior_predictive</span></a> 中，我们抽取了 $10004 个先验和先验预测样本。</p>
 <div class="literal-block-wrapper docutils container" id="penguin-mass-tfp-prior-predictive">
 <div class="code-block-caption"><span class="caption-number">Listing 20 </span><span class="caption-text">penguin_mass_tfp_prior_predictive</span><a class="headerlink" href="#penguin-mass-tfp-prior-predictive" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prior_predictive_samples</span> <span class="o">=</span> <span class="n">jd_penguin_mass_all_species</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
@@ -692,7 +692,7 @@
 </pre></div>
 </div>
 </div>
-<p>我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是<em>以贝叶斯为中心</em>，哪些概念是<em>以概率编程语言为中心</em>。在本章的剩余部分和下一章中，我们将在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 和 TFP 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。</p>
+<p>我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是<em>以贝叶斯为中心</em>，哪些概念是<em>以概率编程语言为中心</em>。在本章的剩余部分和下一章中，我们将在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。</p>
 </div>
 </div>
 <div class="section" id="linear-regression">
@@ -725,7 +725,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 <p class="caption"><span class="caption-number">Fig. 38 </span><span class="caption-text">在 <span class="math notranslate nohighlight">\(3\)</span> 个点处评估使用了高斯似然的线性回归。请注意，此图仅显示了 <span class="math notranslate nohighlight">\(x\)</span> 的每个值处可能的一种高斯分布，在完成整个贝叶斯模型拟合后，将最终得到高斯分布，该高斯分布的参数遵循的并非一定是高斯分布。</span><a class="headerlink" href="#fig-3d-linear-regression" title="Permalink to this image">¶</a></p>
 </div>
 <div class="section" id="linear-regression-intro">
-<span id="id11"></span><h3>3.2.1 线性的企鹅模型<a class="headerlink" href="#linear-regression-intro" title="Permalink to this headline">¶</a></h3>
+<span id="id11"></span><h3>3.2.1 线性企鹅模型<a class="headerlink" href="#linear-regression-intro" title="Permalink to this headline">¶</a></h3>
 <p>如果回顾企鹅示例，我们对使用额外数据来估计企鹅的平均体重更感兴趣。我们在代码 <a class="reference internal" href="#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> 中编写了一个线性回归模型，其中包括两个新参数 <span class="math notranslate nohighlight">\(\beta_0\)</span> 和 <span class="math notranslate nohighlight">\(\beta_1\)</span>，通常称为截距和斜率。对于这个例子，我们设置了 <span class="math notranslate nohighlight">\(\mathcal{N}(0, 4000)\)</span> 的宽泛先验，这也与我们没有领域知识的假设一致。随后运行采样器，它现在估计了三个参数 <span class="math notranslate nohighlight">\(\sigma\)</span> 、<span class="math notranslate nohighlight">\(\beta_1\)</span> 和 <span class="math notranslate nohighlight">\(\beta_0\)</span>。</p>
 <div class="literal-block-wrapper docutils container" id="non-centered-regression">
 <div class="code-block-caption"><span class="caption-number">Listing 25 </span><span class="caption-text">non_centered_regression</span><a class="headerlink" href="#non-centered-regression" title="Permalink to this code">¶</a></div>
@@ -771,7 +771,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 <div class="section" id="chp2-predictions">
 <span id="id12"></span><h3>3.2.2 预测<a class="headerlink" href="#chp2-predictions" title="Permalink to this headline">¶</a></h3>
-<p>在 <a class="reference internal" href="#linear-regression-intro"><span class="std std-ref">3.2.1 线性的企鹅模型</span></a> 中，我们估计了鳍状肢长度和体重之间的线性关系。回归的另一用途是利用此关系进行预测。在本例中，给定企鹅的鳍状肢长度，我们能够预测它的体重吗？事实上可以。我们可以使用 <code class="docutils literal notranslate"><span class="pre">model_adelie_flipper_regression</span></code> 的结果来执行此预测操作。</p>
+<p>在 <a class="reference internal" href="#linear-regression-intro"><span class="std std-ref">3.2.1 线性企鹅模型</span></a> 中，我们估计了鳍状肢长度和体重之间的线性关系。回归的另一用途是利用此关系进行预测。在本例中，给定企鹅的鳍状肢长度，我们能够预测它的体重吗？事实上可以。我们可以使用 <code class="docutils literal notranslate"><span class="pre">model_adelie_flipper_regression</span></code> 的结果来执行此预测操作。</p>
 <p>由于在贝叶斯统计中，我们处理的是都是分布，因此最终不会得到关于体重的单个预测值，而是所有可能体重值的分布。该分布就是公式 <a class="reference internal" href="chp_01.html#equation-eq-post-pred-dist">(6)</a> 中定义的后验预测分布。</p>
 <p>在实践中，我们通常不会（也可能无法）解析地计算预测，但使用概率编程语言，可以用后验分布样本来估计预测值的分布。例如，如果有一只平均鳍状肢长度的企鹅，并且想使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 预测其可能的体重，我们可以编写代码 <a class="reference internal" href="#penguins-ppd"><span class="std std-ref">penguins_ppd</span></a>：</p>
 <div class="literal-block-wrapper docutils container" id="penguins-ppd">
@@ -899,7 +899,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 <p>如果不人为提供先验，软件包会像上述代码一样自动分配先验。在 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 内部几乎存储了 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 生成的所有对象，使用户可以轻松检索、检查和修改这些对象。此外，<code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 返回一个 <code class="docutils literal notranslate"><span class="pre">az.InferenceData</span></code> 对象，可以直接与 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 一起使用。</p>
 </div>
-<p>由于我们将 “雄性” 编码为 <span class="math notranslate nohighlight">\(0\)</span>，因此来自 <code class="docutils literal notranslate"><span class="pre">model_penguin_mass_categorical</span></code> 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。最后一部分非常重要，通过添加第二个预测变量，我们现在有了一个多元线性回归，而同时在解释系数时必须更加小心。在这种情况下，系数通常提供了：<strong>如果</strong>所有其他预测变量保持不变的情况下，某个预测变量与响应变量之间的关系 <a class="footnote-reference brackets" href="#id45" id="id23">5</a>。</p>
+<p>由于我们将 “雄性” 编码为 <span class="math notranslate nohighlight">\(0\)</span>，因此来自 <code class="docutils literal notranslate"><span class="pre">model_penguin_mass_categorical</span></code> 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。最后一部分非常重要，通过添加第二个预测变量，我们现在有了一个多元线性回归，而同时在解释系数时必须更加小心。在这种情况下，系数通常提供了：<strong>如果</strong>所有其他预测变量保持不变的情况下，某个预测变量与结果变量之间的关系 <a class="footnote-reference brackets" href="#id45" id="id23">5</a>。</p>
 <div class="figure align-default" id="fig-single-species-categorical-regression">
 <a class="reference internal image-reference" href="../_images/Single_Species_Categorical_Regression.png"><img alt="../_images/Single_Species_Categorical_Regression.png" src="../_images/Single_Species_Categorical_Regression.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 45 </span><span class="caption-text">使用类别型预测变量编码的雄性和雌性 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code> 企鹅的鳍状肢长度与体重的多元回归。注意雄性和雌性企鹅之间的体重差异在每个鳍状肢长度上保持不变，该差异相当于 <span class="math notranslate nohighlight">\(\beta_2\)</span> 系数的大小。</span><a class="headerlink" href="#fig-single-species-categorical-regression" title="Permalink to this image">¶</a></p>
@@ -989,7 +989,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 <p>遵循 McElreath<span id="id26">[<a class="reference internal" href="references.html#id33">10</a>]</span> 的提法， <a class="reference internal" href="#fig-linearcounterfactual"><span class="std std-numref">Fig. 47</span></a> 被称为反事实图。正如“反事实”一词所暗示的那样，我们正在评估与观测数据或事实相反的情况。换句话说，我们正在评估尚未发生的情况。反事实图的最简单用途是调整预测变量并探索预测结果。这是一种很棒的方法，因为它使我们能够探索无法实现的 <em>what-if</em> 场景 <a class="footnote-reference brackets" href="#id46" id="id27">6</a>。但是，我们在解释这种方法时必须谨慎。第一个陷阱是反事实值有可能根本不可能出现，例如，可能永远不会存在鳍状肢长度大于 <span class="math notranslate nohighlight">\(1500\)</span> 毫米的企鹅，但该模型会机械地提供对这种情况的估计。第二个陷阱更隐蔽，我们假设可以独立地改变每个预测变量，但实际上这可能几乎不可能出现。例如，随着企鹅鳍状肢长度的增加，它的喙长度也会增加。反事实法的强大之处在于其允许我们探索尚未发生的结果，或者至少没有被观测到发生的结果。但是它们也可以很容易地为<strong>永远</strong>不会发生的情况生成估计值。模型本身无法区分两者，因此作为建模者，你必须得学会识别它们。</p>
 <div class="admonition-correlation-causality admonition">
 <p class="admonition-title">相关性（ Correlation ）与因果性（ Causality ）</p>
-<p>在解释线性回归时，很容易将其描述为 “<span class="math notranslate nohighlight">\(X\)</span> 的增加<strong>导致</strong> <span class="math notranslate nohighlight">\(Y\)</span> 的增加”，但情况并不一定如此。事实上因果陈述不能仅从回归中得出。在数学上，回归模型将两个（或更多变量）联系在一起，但这种联系不需要是因果关系。例如，增加为植物提供的水量当然可以（并且因果地）增加植物的生长（至少在一定范围内），但没有什么能阻止我们在模型中颠倒这种关系并使用植物的生长来估计降雨量，即使植物生长不会导致降雨 <a class="footnote-reference brackets" href="#id47" id="id28">7</a>。因果推断的统计子领域涉及在随机实验或观测研究背景下做出因果陈述所必需的工具和程序（ 参见第 <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref">7</span></a> 章进行的简要讨论 ）</p>
+<p>在解释线性回归时，很容易将其描述为 “<span class="math notranslate nohighlight">\(X\)</span> 的增加<strong>导致</strong> <span class="math notranslate nohighlight">\(Y\)</span> 的增加”，但情况并不一定如此。事实上因果陈述不能仅从回归中得出。在数学上，回归模型将两个（或更多变量）联系在一起，但这种联系不需要是因果关系。例如，增加为植物提供的水量当然可以（并且因果地）增加植物的生长（至少在一定范围内），但没有什么能阻止我们在模型中颠倒这种关系并使用植物的生长来估计降雨量，即使植物生长不会导致降雨 <a class="footnote-reference brackets" href="#id47" id="id28">7</a>。因果推断的统计子领域涉及在随机实验或观测研究背景下做出因果陈述所必需的工具和程序（ 参见 <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref"> 第 7 章 </span></a> 进行的简要讨论 ）</p>
 </div>
 </div>
 </div>
@@ -1011,7 +1011,7 @@ Y \sim&amp; \Psi (\mu, \theta)
 <span class="eqno">(29)<a class="headerlink" href="#equation-eq-logistic" title="Permalink to this equation">¶</a></span>\[p = \frac{1}{1+e^{-\mathbf{X}\beta}}\]</div>
 <div class="figure align-default" id="fig-logistic">
 <a class="reference internal image-reference" href="../_images/Logistic.png"><img alt="../_images/Logistic.png" src="../_images/Logistic.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 48 </span><span class="caption-text">一个逻辑斯谛函数示例图。请注意，响应变量已被“压缩”到区间 (0,1) 中。</span><a class="headerlink" href="#fig-logistic" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 48 </span><span class="caption-text">一个逻辑斯谛函数示例图。请注意，结果变量已被“压缩”到区间 (0,1) 中。</span><a class="headerlink" href="#fig-logistic" title="Permalink to this image">¶</a></p>
 </div>
 <p>通过逻辑斯谛回归，我们能够使用线性模型来估计事件的概率。有时，我们想要对给定数据进行分类或预测，此时我们希望将区间 <span class="math notranslate nohighlight">\((-\infty, \infty)\)</span> 内的某个连续预测值转换至 <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(1\)</span> 之间。然后，可以使用决策边界将其划分为集合 <span class="math notranslate nohighlight">\(\{0 ,1\}\)</span> 中的某一个元素。假设将决策边界设置为 <span class="math notranslate nohighlight">\(0.5\)</span> 的概率，则对于具有截距和单预测变量的模型，我们有：</p>
 <div class="math notranslate nohighlight">

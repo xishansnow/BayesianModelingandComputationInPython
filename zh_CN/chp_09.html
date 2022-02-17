@@ -730,7 +730,7 @@
 </div>
 <p>考虑可能性，我们有几个选择。我们可以将其建模为离散的分类分布，其中每一分钟都被分配一个概率。但这可能会带来一些挑战：从统计角度来看，我们需要选择桶的数量。虽然有非参数技术可以改变桶的数量，但这意味着我们还必须创建一个可以估计桶数量的模型，除了估计每个桶的每个概率。</p>
 <p>根据领域专业知识，我们知道每一分钟并不是完全独立的。如果很多飞机晚点 5 分钟，直观的感觉就是很多飞机也会晚点 4 分钟或 6 分钟。因此，连续分布似乎更自然。我们希望对早到和晚到都进行建模，因此分布必须支持负数和正数。结合统计和领域知识，我们知道大多数飞机准点，而且航班通常会早一点或晚一点到达，但如果晚点，他们可能真的会晚点。</p>
-<p>用尽我们的领域专业知识，我们现在可以绘制数据，检查与我们的领域专业知识的一致性以及帮助形成我们的模型的进一步线索。从 <a class="reference internal" href="#fig-arrivaldistributions"><span class="std std-numref">Fig. 153</span></a>，我们有几个合理的似然分布选择：正态分布、偏斜正态分布和 Gumbel 分布。普通正态分布是对称的，与分布的偏度不一致，但它是一种直观的分布，可用于基线比较。顾名思义，Skew-Normal 有一个附加参数 <span class="math notranslate nohighlight">\(\alpha\)</span> 控制分布的偏度。最后，Gumbel 分布专门用于描述一组值的最大值。</p>
+<p>用尽我们的领域专业知识，我们现在可以绘制数据，检查与我们的领域专业知识的一致性以及帮助形成我们的模型的进一步线索。从 <a class="reference internal" href="#fig-arrivaldistributions"><span class="std std-numref">Fig. 153</span></a>，我们有几个合理的似然分布选择：高斯分布、偏斜高斯分布和 Gumbel 分布。普通高斯分布是对称的，与分布的偏度不一致，但它是一种直观的分布，可用于基线比较。顾名思义，Skew-Normal 有一个附加参数 <span class="math notranslate nohighlight">\(\alpha\)</span> 控制分布的偏度。最后，Gumbel 分布专门用于描述一组值的最大值。</p>
 <p>如果我们想象飞机延误是由行李装载、乘客装载和其他潜在因素的最大值引起的，那么这种分布的想法就符合航班到达过程的现实。</p>
 <p>由于航空公司流程受到严格监管，我们认为目前不需要对缺失数据进行建模。此外，我们选择忽略协变量以简化我们的贝叶斯工作流。通常建议从一个简单的模型开始，让完整的贝叶斯工作流通知您根据需要添加复杂性的决定，而不是从一个复杂的模型开始，在以后的步骤中调试变得更具挑战性。
 通常，我们会选择一种可能性，并在尝试另一种可能性之前一直使用贝叶斯工作流。但是为了避免回溯这个例子，我们将继续并行处理两个。现在我们将继续使用代码块 <a class="reference internal" href="#plane-likelihoods"><span class="std std-ref">plane_likelihoods</span></a> 中的 Normal 和 Gumbel 似然，将 Skew-Normal 似然模型留给读者作为练习。</p>
@@ -807,8 +807,8 @@
 <p>话虽如此，我们有一个强大的先验，如果你做到了这一点，那么你就是一个勤奋的读者，并且了解我们迄今为止的所有选择，所以让我们深入推断。</p>
 <div class="section" id="applied-example-running-inference-on-flight-delays-models">
 <span id="id22"></span><h3>9.5.1 应用示例： 运行航班延误模型上的推断<a class="headerlink" href="#applied-example-running-inference-on-flight-delays-models" title="Permalink to this headline">¶</a></h3>
-<p>我们选择使用 PyMC3 中默认的 HMC 采样器从后验分布中采样。</p>
-<p>让我们运行我们的采样器并使用典型的诊断评估我们的 MCMC 链。我们对采样挑战的第一个迹象是 MCMC 采样期间的分歧。有了这些数据和模型，没有人提出来。但是，如果提出了一些问题，则表明应该进行进一步的探索，例如我们在 <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.1 分层模型的新问题 — 后验几何形态带来采样难题</span></a> 部分中执行的步骤。</p>
+<p>我们选择使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中默认的 HMC 采样器从后验分布中采样。</p>
+<p>让我们运行我们的采样器并使用典型的诊断评估我们的 MCMC 链。我们对采样挑战的第一个迹象是 MCMC 采样期间的分歧。有了这些数据和模型，没有人提出来。但是，如果提出了一些问题，则表明应该进行进一步的探索，例如我们在 <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题</span></a> 部分中执行的步骤。</p>
 <div class="literal-block-wrapper docutils container" id="airline-model-inference">
 <div class="code-block-caption"><span class="caption-number">Listing 115 </span><span class="caption-text">airline_model_inference</span><a class="headerlink" href="#airline-model-inference" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">normal_model</span><span class="p">:</span>
@@ -823,7 +823,7 @@
 </div>
 <div class="figure align-default" id="fig-airline-rank-plot">
 <a class="reference internal image-reference" href="../_images/rank_plot_bars_normal.png"><img alt="../_images/rank_plot_bars_normal.png" src="../_images/rank_plot_bars_normal.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 155 </span><span class="caption-text">来自具有正态似然的模型的后验样本的秩图。</span><a class="headerlink" href="#fig-airline-rank-plot" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 155 </span><span class="caption-text">来自具有高斯似然的模型的后验样本的秩图。</span><a class="headerlink" href="#fig-airline-rank-plot" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-rank-plot-bars-gumbel">
 <a class="reference internal image-reference" href="../_images/rank_plot_bars_gumbel.png"><img alt="../_images/rank_plot_bars_gumbel.png" src="../_images/rank_plot_bars_gumbel.png" style="width: 8.00in;"/></a>
@@ -844,7 +844,7 @@
 <p>鉴于决策是我们分析的目标，在快速健全性检查后，我们继续工作流程。</p>
 <div class="figure align-default" id="fig-posterior-plot-normal">
 <a class="reference internal image-reference" href="../_images/posterior_plot_delays_normal.png"><img alt="../_images/posterior_plot_delays_normal.png" src="../_images/posterior_plot_delays_normal.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 157 </span><span class="caption-text">正态模型的后验图。两种分布看起来都是合理的，并且没有分歧增加了更多证据表明我们的采样器已经合理地估计了参数。</span><a class="headerlink" href="#fig-posterior-plot-normal" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 157 </span><span class="caption-text">高斯模型的后验图。两种分布看起来都是合理的，并且没有分歧增加了更多证据表明我们的采样器已经合理地估计了参数。</span><a class="headerlink" href="#fig-posterior-plot-normal" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-posterior-plot-gumbel">
 <a class="reference internal image-reference" href="../_images/posterior_plot_delays_gumbel.png"><img alt="../_images/posterior_plot_delays_gumbel.png" src="../_images/posterior_plot_delays_gumbel.png" style="width: 8.00in;"/></a>
@@ -879,7 +879,7 @@
 </div>
 <div class="figure align-default" id="fig-delays-model-posterior-predictive">
 <a class="reference internal image-reference" href="../_images/Delays_Model_Posterior_Predictive.png"><img alt="../_images/Delays_Model_Posterior_Predictive.png" src="../_images/Delays_Model_Posterior_Predictive.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 159 </span><span class="caption-text">Normal 和 Gumbel 模型的后验预测检查。正态模型不能很好地捕捉长尾，并且还会返回更多低于观察数据界限的预测。 Gumbel 模型拟合更好，但对于低于 0 的值和尾部仍然存在相当多的不匹配。</span><a class="headerlink" href="#fig-delays-model-posterior-predictive" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 159 </span><span class="caption-text">Normal 和 Gumbel 模型的后验预测检查。高斯模型不能很好地捕捉长尾，并且还会返回更多低于观察数据界限的预测。 Gumbel 模型拟合更好，但对于低于 0 的值和尾部仍然存在相当多的不匹配。</span><a class="headerlink" href="#fig-delays-model-posterior-predictive" title="Permalink to this image">¶</a></p>
 </div>
 <p>从 <a class="reference internal" href="#fig-delays-model-posterior-predictive"><span class="std std-numref">Fig. 159</span></a> 我们可以看到 Normal 模型无法捕获到达时间的分布。</p>
 <p>转到 Gumbel 模型，我们可以看到后验预测样本似乎在预测早到的航班方面做得很差，但在模拟晚到的航班方面做得更好。我们可以使用两个测试统计数据运行后验预测检查来确认。第一个是检查航班迟到的比例，第二个是检查后验预测分布和观测数据之间的航班延误中位数（以分钟为单位）。</p>
@@ -895,7 +895,7 @@
 <p>到目前为止，我们已经使用后验预测检查来独立评估每个模型。这种类型的评估对于单独理解每个模型很有用。然而，当我们有多个模型时，这就引出了模型相对于彼此的性能如何的问题。模型比较可以进一步帮助我们了解一个模型在哪些区域可能表现良好，另一个模型在哪里挣扎，或者哪些数据点特别难以拟合。</p>
 <div class="section" id="loo">
 <span id="applied-example-model-comparison-with-loo-of-flight-delays"></span><h3>9.8.1 应用示例： 用 LOO 做航班延误模型的比较<a class="headerlink" href="#loo" title="Permalink to this headline">¶</a></h3>
-<p>对于我们的航班延误模型，我们有两个候选模型。从我们之前的视觉后验预测检查来看，正态似然似乎不能很好地拟合航班延误的偏态分布，特别是与 Gumbel 分布相比。我们可以使用 ArviZ 中的比较方法来验证这一观察结果：</p>
+<p>对于我们的航班延误模型，我们有两个候选模型。从我们之前的视觉后验预测检查来看，高斯似然似乎不能很好地拟合航班延误的偏态分布，特别是与 Gumbel 分布相比。我们可以使用 ArviZ 中的比较方法来验证这一观察结果：</p>
 <div class="literal-block-wrapper docutils container" id="delays-comparison">
 <div class="code-block-caption"><span class="caption-number">Listing 117 </span><span class="caption-text">delays_comparison</span><a class="headerlink" href="#delays-comparison" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"normal"</span><span class="p">:</span> <span class="n">normal_data</span><span class="p">,</span><span class="s2">"gumbel"</span><span class="p">:</span> <span class="n">gumbel_data</span><span class="p">}</span>
@@ -973,7 +973,7 @@
 </div>
 <div class="figure align-default" id="fig-model-comparison-airlines">
 <a class="reference internal image-reference" href="../_images/model_comparison_airlines.png"><img alt="../_images/model_comparison_airlines.png" src="../_images/model_comparison_airlines.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 163 </span><span class="caption-text">使用代码块 <a class="reference internal" href="#delays-comparison-plot"><span class="std std-ref">delays_comparison_plot</span></a> 中的两个航班延误模型的 LOO 进行模型比较。我们证实了我们的观点，即 Gumbel 数据在估计观察到的分布方面比正态模型更好。</span><a class="headerlink" href="#fig-model-comparison-airlines" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 163 </span><span class="caption-text">使用代码块 <a class="reference internal" href="#delays-comparison-plot"><span class="std std-ref">delays_comparison_plot</span></a> 中的两个航班延误模型的 LOO 进行模型比较。我们证实了我们的观点，即 Gumbel 数据在估计观察到的分布方面比高斯模型更好。</span><a class="headerlink" href="#fig-model-comparison-airlines" title="Permalink to this image">¶</a></p>
 </div>
 <p>根据我们之前对后验预测检查的比较，以及我们直接的 LOO 比较，我们可以做出明智的选择，只使用 Gumbel 模型。这并不意味着我们的 Normal 模型没有用，事实上恰恰相反。开发多个模型有助于建立对我们选择一个模型或模型子集的信心。这也不意味着 Gumbel 模型是真实的甚至是最好的模型，事实上我们有证据证明它的缺点。因此，如果我们探索不同的可能性、收集更多数据或进行一些其他修改，仍有改进的空间。在这一步重要的是，我们充分确信 Gumbel 模型是我们评估过的所有合理模型中最“充分”的模型。</p>
 </div>
@@ -1062,7 +1062,7 @@
 <p>在执行分析时，重要的是要注意或保留作为分析基础的原始数据。这就是为什么您会一遍又一遍地看到相同的数据集，例如 Palmer Penguins、Radon 和 Eight Schools。这些数据很容易理解并且很容易获得，这使其成为那些希望共享方法的人的简单参考。标记、识别、存储和访问特定数据的具体方法因情况、规模、组织以及道德和合法性而异，但重要的是要注意这一点。一些示例包括在代码版本控制中包含数据或引用存储在服务器上的数据集的链接。</p>
 <p>接下来是建模和分析代码，例如贯穿本书的所有代码。理想情况下，此代码将使用版本控制系统（例如 git）进行版本控制，并存储在可访问的位置，例如开源存储库。我们想强调版本控制是有用的，即使你是一个单独的从业者而不是在一个团队中工作。使用版本控制将允许您在代码版本之间跳转，它使您能够轻松地测试想法，减少知识丢失或丢失结果的风险。这极大地有助于提高工作流程中步骤之间的迭代速度并比较结果。
 在计算统计中，任何结果的关键部分都是计算机本身。虽然计算机制在很大程度上没有改变，但用于计算的库变化很快。正如我们所见，现代贝叶斯方法至少依赖于概率编程语言，但这只是冰山一角。操作系统版本以及结合使用的数百个其他软件库都在提供结果方面发挥了作用。当环境无法复制时，一个结果是代码正在运行，现在抛出异常或错误并失败。</p>
-<p>这个结果虽然令人沮丧，但至少是有帮助的，因为失败状态是显而易见的。一个更危险但微妙的问题是代码仍然运行但结果不同。这可能是因为库可能会更改，或者算法本身可能会发生变化。例如，TFP 可能会改变调整样本的数量，或者 PyMC3 可能会在一个版本和下一个版本之间重构采样器。不管是什么原因，即使数据和分析代码相同，在没有完整的计算环境规范的情况下，仅靠两者都不足以在计算上完全重现分析。指定环境的一种常见方法是通过显式的依赖项列表，在 Python 包中常见为 <em>requirements.txt</em> 或 <em>environment.yml</em> 文件。</p>
+<p>这个结果虽然令人沮丧，但至少是有帮助的，因为失败状态是显而易见的。一个更危险但微妙的问题是代码仍然运行但结果不同。这可能是因为库可能会更改，或者算法本身可能会发生变化。例如，TFP 可能会改变调整样本的数量，或者 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 可能会在一个版本和下一个版本之间重构采样器。不管是什么原因，即使数据和分析代码相同，在没有完整的计算环境规范的情况下，仅靠两者都不足以在计算上完全重现分析。指定环境的一种常见方法是通过显式的依赖项列表，在 Python 包中常见为 <em>requirements.txt</em> 或 <em>environment.yml</em> 文件。</p>
 <p>另一种方法是通过计算环境虚拟化，例如虚拟机或容器化。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">播种伪随机数生成器</p>

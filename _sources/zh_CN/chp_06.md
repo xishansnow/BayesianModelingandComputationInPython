@@ -20,62 +20,65 @@ kernelspec:
 
 “很难做出预测，尤其是关于未来的预测”。
 
-据称，荷兰政治家 `Karl Kristian Steincke` 在 $1940$ 年代 [^1] 的某个时候说过的这句话确实如此，即便今天仍然如此，特别是你在研究时间序列问题和预报问题的时候。
+据称，荷兰政治家 `Karl Kristian Steincke` 在 $1940$ 年代的某个时候说过的这句话 [^1] 。确实如此，即便今天仍然成立，特别是你在研究时间序列问题和预报问题的时候。
 
-时间序列分析有很多应用，从面向未来的预报、到了解历史趋势中的潜在因素等。在本章中，我们将讨论涉及此问题域的一些贝叶斯方法。
+时间序列分析有很多应用，从面向未来的预报、到了解历史趋势中的潜在因子等。在本章中，我们将讨论涉及此问题域的一些贝叶斯方法。
 
-- 首先，将时间序列建模视为一个回归问题，并且从时间戳中解析设计矩阵。
+- 首先，我们会将时间序列建模视为一个回归问题，从时间戳信息中解析得到设计矩阵。
 
-- 然后，我们将探索使用自回归方法对时间相关性进行建模。
+- 然后，我们会探索使用自回归（Autoregressive）方法对时间相关性进行建模。
 
-- 将上述模型进一步扩展到更一般性的状态空间模型和贝叶斯结构的时间序列模型，并在线性高斯情况下引入一种专门的推断方法：卡尔曼滤波器。
+- 将上述模型进一步扩展，可以得到更具一般性的**状态空间模型（ State Space Model ）** 和 **贝叶斯结构化时间序列模型（ Bayesian Structural Time Series model, BSTS ）** ，我们将在线性高斯假设下，引入一种专门的推断方法：卡尔曼滤波器。
 
-- 本章其余部分简要总结了模型比较问题，以及在为时间序列模型选择先验时需要考虑的因素。
+- 本章其余部分简要介绍了时间序列的模型比较问题，以及建模时选择先验需要考虑的因素。
 
 (an-overview-of-time-series-problems)= 
 
 ## 6.1 时间序列问题概览 
 
-在许多现实生活的应用中，我们按时间顺序观测数据，每次观测时都会生成时间戳。除了观测本身之外，时间戳信息在以下情况中可以提供相当丰富的信息：
+在大量现实生活的应用中，人们会按时间顺序观测数据，每次观测时都会生成时间戳。除了观测本身之外，时间戳信息在以下情况中可以提供相当丰富的信息：
 
-- 存在一个**时间趋势**，例如，地区人口、全球 GDP 、美国的年二氧化碳排放量等。通常这是一种整体模式，可以直观地将其标记为“增长”或“下降”。
+- 存在一个**时间趋势**，例如地区人口、全球 GDP 、美国的年二氧化碳排放量等。通常这是一种整体模式，可以直观地将其标记为“增长”或“下降”。
 
 - 有一些与时间相关的循环模式，称为**季节性（ seasonality ）** [^2]。例如，
 
-  - 每月温度的变化（夏季较高，冬季较低）；
-  - 每月降雨量（在世界许多地区，冬季较低，夏季较高）；
-  - 给定办公楼的每日咖啡消耗量（较高平日，周末减少）；
-  - 每小时的自行车租赁数量（白天比晚上多）。
+  - *每月* 温度的变化（夏季较高，冬季较低）；
+  - *每月* 降雨量（在世界大多数地区，冬季较低，夏季较高）；
+  - 指定办公楼的 *每日* 咖啡消耗量（平日较高，周末减少）；
+  - *每小时* 的自行车租赁数量（白天比晚上多）。
 
 - 当前数据点以某种方式提供了有关下一个数据点的信息。换句话说，**噪声( Noise )**或**残差( Residuals )**是相关的 [^3]。例如，
 
-   - 帮助台每天解决的案例数量；
-   - 股票的价格；
+   - 服务台的每日结案数量；
+   - 股票的每日价格；
    - 每小时的温度；
-   - 每小时的降雨量。
+   - 每小时的降雨量等。
 
-因此，可以考虑将时间序列分解为：
+根据上述分析，可以考虑将时间序列分解为：
 
 ```{math} 
 :label: eq:generic_time_series
 
- y_t = \text{Trend}_t + \text{Seasonality}_t + \text{Residuals}_t
+y_t = \text{Trend}_t + \text{Seasonality}_t + \text{Residuals}_t
 ```
 
-大多数经典的时间序列模型都是基于此分解。在本章中，我们将讨论呈现出某种程度`时间趋势`和`季节性`的时间序列建模方法，并探索捕获其中`有规则`和`无规则`模式的方法。
+大多数经典的时间序列模型都是基于此分解。在本章中，我们将讨论呈现出某种程度 *时间趋势* 和 *季节性* 的时间序列建模方法，并探索其中捕获 *规则模式* 和 *弱规则模式* 的方法。
 
 (time-series-analysis-as-a-regression-problem)= 
 
 ## 6.2 将时间序列视为回归问题 
 
-我们将首先在一些教程中频繁出现和使用的演示数据集上，使用线性回归模型对时间序列建模。它在《机器学习中的高斯过程》一书中被用作示例{cite:t}`Rasmussen2005`。自 $1950$ 年代后期以来，夏威夷的莫纳罗亚天文台每隔一小时就测定一次大气二氧化碳浓度。在许多示例中，该观测结果被汇总为月均值，如 {numref}`fig:fig1_co2_by_month` 所示。我们使用代码 [load_co2_data](load_co2_data) 将数据加载到 Python 中，并将数据集拆分为训练集和测试集。仅使用训练集拟合模型，并根据测试集来评估预测结果。
+我们将首先在一个演示数据集上，用 *线性回归模型* 对时间序列建模。该数据集在著名的《机器学习中的高斯过程》{cite:t}`Rasmussen2005`一书中被用作案例。
 
+### 6.2.1 简单线性回归模型
+
+自 $1950$ 年代后期以来，夏威夷的莫纳罗亚天文台每隔一小时就测定一次大气二氧化碳浓度。在许多示例中，该观测结果被汇总为月均值，如 {numref}`fig:fig1_co2_by_month` 所示。我们使用代码 [load_co2_data](load_co2_data) 将数据加载到 Python 中，然后将数据集拆分为训练集和测试集，并使用训练集拟合模型，用测试集来评估模型的预测性能。
 
 ```{figure} figures/fig1_co2_by_month.png
 :name: fig:fig1_co2_by_month
 :width: 8.00in
 
-从 $1966$ 年 $1$ 月到 $2019$ 年 $2$ 月，莫纳罗亚的月度 $\text{CO}_2$ 测量值，分为训练集（黑色显示）和测试集（蓝色显示）。我们可以在数据中看到强劲的上升趋势和季节性模式。
+从 $1966$ 年 $1$ 月到 $2019$ 年 $2$ 月，莫纳罗亚的 $\text{CO}_2$ 月测量值，分为训练集（黑色显示）和测试集（蓝色显示）。我们可以在数据中看到强劲的上升趋势和季节性模式。
 
 ```
 
@@ -93,8 +96,7 @@ co2_by_month_training_data = co2_by_month[:-num_forecast_steps]
 co2_by_month_testing_data = co2_by_month[-num_forecast_steps:]
 ```
 
-在这里，我们有一个每月大气 $\text{CO}_2$ 浓度 $y_t$ 的观测向量，其中 $t = [0, \dots, 636]$ ；其中每个元素都与时间戳相关联。一年中的月份可以解析为 $[1, 2, 3,\dots, 12, 1, 2,\dots]$ 的向量。对于线性回归，我们可以将似然函数陈述如下：
-
+在这里，我们有一个每月大气 $\text{CO}_2$ 浓度 $y_t$ 的观测向量，其中 $t = [0, \dots, 636]$ ；其中每个元素与一个月时间戳相关联。一年中的月份可以解析为 $[1, 2, 3,\dots, 12, 1, 2,\dots]$ 的向量。对于线性回归，可以将似然函数表述如下：
 
 ```{math} 
 :label: eq:regression_model
@@ -102,7 +104,7 @@ co2_by_month_testing_data = co2_by_month[-num_forecast_steps:]
 Y \sim \mathcal{N}(\mathbf{X} \beta, \sigma)
 ```
 
-考虑到季节性的影响，我们使用年预测变量的月份来索引回归系数的向量。这里使用代码 [generate_design_matrix](generate_design_matrix)，将预测变量独热编码为具有 `shape = (637, 12)` 的设计矩阵。在设计矩阵中，添加一个线性预测变量以捕获数据中的上升趋势，进而得到时间序列的设计矩阵。
+考虑到季节性的影响，我们使用年预测变量的月份来索引回归系数的向量。代码 [generate_design_matrix](generate_design_matrix) 利用独热编码将预测变量转换为 `shape = (637, 12)` 的设计矩阵。在该设计矩阵基础上，增加一个线性预测变量，以捕获数据中的上升趋势，进而得到整个时间序列的设计矩阵。
 
 你可以在 {numref}`fig:fig2_sparse_design_matrix` 中看到设计矩阵的子集。
 
@@ -110,12 +112,12 @@ Y \sim \mathcal{N}(\mathbf{X} \beta, \sigma)
 :name: fig:fig2_sparse_design_matrix
 :width: 5.2in
 
-为时间序列的简单回归模型设计具有年度线性分量和月份分量的矩阵。设计矩阵转置为 $feature * timestamps$ ，以便更易于可视化。在图中，第一行（索引 $0$）包含 $0$ 到 $1$ 之间的连续值，表示时间和线性增长。其余行（索引 $1 - 12$ ）是月份信息的独热编码。颜色编码从代表黑色的 $1$ 到 代表浅灰色的 $0$ 。
+为时间序列的简单回归模型提供的具有线性分量和每年各月份分量的设计矩阵。注意，真实的设计矩阵被转置成 $feature * timestamps$ ，以便更易于可视化。图中第一行（索引 $0$）为 $0$ 到 $1$ 之间的连续值，表示时间的线性增长因子。其余行（索引 $1 - 12$ ）为月份信息的独热编码，黑色代表 $1$ ，浅灰色代表 $0$ 。
 
 ```
 
 ```{code-block} ipython3
-:caption: generate_design_matrix
+:caption: 生成设计矩阵
 :name: generate_design_matrix
 
 trend_all = np.linspace(0., 1., len(co2_by_month))[..., None]
@@ -133,7 +135,7 @@ ax.imshow(X_subset.T)
 
 ::: {admonition} 解析到设计矩阵的时间戳
 
-时间戳的处理可能很乏味，并且容易出错，尤其是在涉及不同时区的时候。我们可以从时间戳中解析出的典型周期性信息包括（按解析顺序排列）：
+时间戳的处理很乏味，并且容易出错，尤其是在涉及不同时区的时候。我们可以从时间戳中解析出的典型周期性信息包括（按解析顺序排列）：
 
 - 小时的秒数 (1, 2, ..., 60)
 
@@ -159,7 +161,7 @@ ax.imshow(X_subset.T)
 
 ::: 
 
-我们现在可以使用 `tfd.JointDistributionCoroutine` 建立第一个面向回归问题的时间序列模型，其作法和第 [3](chap2) 章中介绍的 `tfd.JointDistributionCoroutine` API 和 TFP 贝叶斯建模方法相同。
+我们现在可以使用 `tfd.JointDistributionCoroutine` 建立第一个面向回归问题的时间序列模型，其作法和 [ 第 3 章 ](chap2) 中介绍的 `tfd.JointDistributionCoroutine` API 和 `TFP` 贝叶斯建模方法相同。
 
 ```{code-block} ipython3
 :caption: regression_model_for_timeseries
@@ -186,9 +188,9 @@ def ts_regression_model():
         name="observed")
 ```
 
-正如在前面章节中提到的，与 PyMC3 相比，TFP 提供了较低级别的 API 。虽然与低级模块和分量交互更灵活，但与其他概率编程语言相比，通常需要更多代码，并且需要在模型中使用 `tfp` 进行额外的 `shape` 形状处理。例如，在代码 [regression_model_for_timeseries](regression_model_for_timeseries) 中，我们使用 `einsum` 而不是 `matmul` 以便代码能够处理任意的 *批形状*（详情参阅第 {ref}`shape_ppl` 节）。
+正如在前面章节中提到的，与 `PyMC3` 相比，`TFP` 提供了较低级别的 API 。虽然与低级模块和组件交互更灵活，但与其他概率编程语言相比，也需要更多代码，并且需要在模型中进行额外的 `shape` 形状处理。例如，在代码 [regression_model_for_timeseries](regression_model_for_timeseries) 中，我们使用 `einsum` 而不是 `matmul` 以便代码能够处理任意的 *批形状*（详情参阅  {ref}`shape_ppl` ）。
 
-代码 [regression_model_for_timeseries](regression_model_for_timeseries) 提供了一个回归模型 `ts_regression_model`。它具有和 `tfd.Distribution` 类似的功能，要抽取先验和先验预测样本，我们可以调用 `.sample(.)` 方法（参见代码 [prior_predictive](prior_predictive)，结果显示在 {numref}`fig:fig3_prior_predictive1` 中）。
+代码 [regression_model_for_timeseries](regression_model_for_timeseries) 提供了回归模型 `ts_regression_model`。它具有和 `tfd.Distribution` 类似的功能，要抽取先验和先验预测样本，我们可以调用 `.sample(.)` 方法，参见代码 [prior_predictive](prior_predictive)，其结果显示在 {numref}`fig:fig3_prior_predictive1` 中。
 
 ```{code-block} ipython3
 :caption: prior_predictive
@@ -209,11 +211,11 @@ fig.autofmt_xdate()
 :name: fig:fig3_prior_predictive1
 :width: 8.00in
 
-来自简单回归模型的先验预测样本，用于模拟 Mauna Loa 时间序列中的月 $\text{CO}_2$ 测量值。每条线是一个模拟的时间序列。由于使用了无信息先验，造成先验预测结果的分布范围很广。
+来自简单回归模型的先验预测样本，用于模拟莫纳罗亚时间序列中的月 $\text{CO}_2$ 测量值。每条线是一个模拟的时间序列。由于使用了无信息先验，导致先验预测的结果分布范围很宽泛。
 
 ``` 
 
-在代码 [inference_of_regression_model](inference_of_regression_model) 中，我们运行回归模型的推断，并将结果格式化为 `az.InferenceData` 对象。
+在代码 [inference_of_regression_model](inference_of_regression_model) 中，我们运行了该回归模型的推断，并将结果格式化为 `az.InferenceData` 对象，以便做进一步的诊断。
 
 ```{code-block} ipython3
 :caption: inference_of_regression_model
@@ -238,7 +240,7 @@ regression_idata = az.from_dict(
         for k in ["target_log_prob", "diverging", "accept_ratio", "n_steps"]})
 ```
 
-如果要依据推断结果来抽取后验预测样本，我们可以使用 `.sample_distributions` 方法先抽取后验样本，并基于后验样本的条件化生成后验预测样本。本例中，我们还希望能够为时间序列中的`趋势性`和`季节性`分量绘制后验预测样本。为了可视化模型的预测能力，我们在代码 [posterior_predictive_with_component](posterior_predictive_with_component) 中构建了后验预测分布，结果显示在趋势性和季节性分量的 {numref}`fig:fig4_posterior_predictive_components1` 中，以及整体模型拟合和预测的 {numref}`fig:fig5_posterior_predictive1` 。
+如果要依据推断结果来抽取后验预测样本，可以使用 `.sample_distributions` 方法先抽取后验样本，然后基于后验样本的条件化生成后验预测样本。本例中，我们还希望能够为时间序列中的 *趋势性* 和 *季节性* 分量分别抽取后验预测样本。为了可视化模型的预测能力，我们在代码 [posterior_predictive_with_component](posterior_predictive_with_component) 中生成了后验预测分布，结果显示在 *趋势性* 和 *季节性* 分量的后验预测分布图 {numref}`fig:fig4_posterior_predictive_components1` 中，以及整体模型拟合和后验预测分布 {numref}`fig:fig5_posterior_predictive1` 。
 
 ```{code-block} ipython3
 :caption: posterior_predictive_with_component
@@ -264,7 +266,7 @@ posterior_predictive_samples = posterior_predictive_dist.sample()
 :name: fig:fig4_posterior_predictive_components1
 :width: 8.00in
 
-时间序列回归模型的趋势分量和季节性分量的后验预测样本。
+时间序列回归模型的趋势性分量和季节性分量的后验预测样本。
 
 ``` 
 
@@ -272,7 +274,7 @@ posterior_predictive_samples = posterior_predictive_dist.sample()
 :name: fig:fig5_posterior_predictive1
 :width: 8.00in
 
-来自时间序列简单回归模型的后验预测样本（灰色），实际数据为黑色和蓝色。虽然训练集的整体拟合（绘制为黑色）是合理的，但预测结果（样本外预测）很差，因为数据中隐含的加速趋势超过了线性关系。
+时间序列简单回归模型的后验预测样本（灰色），实际数据为黑色和蓝色。虽然训练集的整体拟合（绘制为黑色）是合理的，但预测结果（样本外预测）很差，因为数据中隐含的加速趋势超出了线性关系。
 
 ``` 
 
@@ -280,17 +282,17 @@ posterior_predictive_samples = posterior_predictive_dist.sample()
 
 1. 当对未来预测时，线性趋势表现不佳，给出的预测始终低于实际观测值。具体来说，大气中的二氧化碳不会以恒定的斜率线性增加 [^4]
 
-2. 不确定性的范围几乎是恒定的（有时也称为预测锥），但直觉上判断，当预测更远的未来时，似乎不确定性应当增加才对。
+2. 不确定性的范围几乎是恒定的，但直觉上判断，当预测更远的未来时，似乎不确定性应当增加才对（有时也称为预测锥）。
 
 (design-matrices-for-time-series)= 
 
-### 6.2.1 时间序列的设计矩阵 
+### 6.2.2 时间序列的设计矩阵 
 
 在上面的回归模型中，使用了一个相当简单的设计矩阵。通过向设计矩阵添加额外信息，可以获得更好的模型来捕获我们对时间序列的理解。
 
-更好的趋势分量通常是提高预测性能最重要的方面，因为季节性分量*通常*是平稳的 [^5]，具有易于估计的参数。重申：存在一种重复的模式导致了一种重复的测量。因此，大多数时间序列建模都包含如何设计一个能够捕获趋势中非平稳性的隐过程。
+更好的趋势性分量模型通常是提高预测性能最重要的方面，因为相对而言，季节性分量 *通常* 是平稳的，具有易于估计的参数 [^5]。因此，大多数时间序列建模都包含一个能够捕获趋势中非平稳性的隐过程（Latent Process ）。
 
-一种非常成功的方法是对趋势分量使用局部线性过程。基本上，它是一个在某个范围内呈线性的平滑趋势，截距和系数在观测到的时间跨度内缓慢变化或漂移。这种应用程序的一个典型例子是 Facebook Prophet [^6]，其中使用 *半平滑阶跃线性函数* 对趋势 {cite:p}`TaylorLetham2018` 进行建模。通过允许斜率在某些特定断点处发生变化，我们可以生成能够比直线更好捕获长期趋势的趋势线。这类似于我们在第 {ref}`expanding_feature_space` 中讨论的指示函数的想法。在时间序列上下文中，我们在公式 {eq}`eq:step_linear_function` 中以数学方式表达了这个想法。
+一种非常成功的方法是对趋势性分量使用 *局部线性过程* 。基本上，它是一个在某个范围内呈线性的平滑趋势，模型中的截距和系数在可观测的时间跨度内缓慢变化或漂移。这种应用的一个典型例子是 Facebook Prophet [^6]，其中使用了 *半平滑阶跃线性函数（ Semi-smooth Step Linear Function ）* 对趋势进行建模 {cite:p}`TaylorLetham2018` 。该模型允许斜率在某些特定断点处发生变化，进而允许我们生成比直线更好的捕获长期趋势的拟合结果。这类似于在 {ref}`expanding_feature_space` 中讨论的指示函数的想法。在时间序列场景中，我们在公式 {eq}`eq:step_linear_function` 中以数学方式表达了此想法。
 
 ```{math} 
 :label: eq:step_linear_function
@@ -323,16 +325,16 @@ trend = growth + offset
 :name: fig:fig6_step_linear_function
 :width: 8.00in
 
-作为时间序列模型趋势分量的阶跃线性函数，使用代码 [step_linear_function_for_trend](step_linear_function_for_trend) 生成。第一个子图是设计矩阵 $\mathbf{A}$，其颜色编码相同，黑色代表 $1$，浅灰色代表 $0$。最后一个子图是公式 {eq}`eq:step_linear_function` 中可以在时间序列模型中用作趋势的结果函数 $g(t)$ 。中间两个子图是公式 {eq}`eq:step_linear_function` 中两个分量的分解。请注意两者是如何结合使结果趋势连续的。
+作为时间序列模型趋势性分量的阶跃线性函数，使用代码 [step_linear_function_for_trend](step_linear_function_for_trend) 生成。第一个子图是设计矩阵 $\mathbf{A}$，其颜色编码相同，黑色代表 $1$，浅灰色代表 $0$。最后一个子图是公式 {eq}`eq:step_linear_function` 中可以在时间序列模型中用作趋势的结果函数 $g(t)$ 。中间两个子图是公式 {eq}`eq:step_linear_function` 中两个分量的分解。请注意两者是如何结合使结果趋势连续的。
 ``` 
 
 在实践中，我们通常会先验地指定有多少变化点，因此可以静态生成 $\mathbf{A}$。一种常见的方法是指定比你认为时间序列实际显示的更多的变化点，并在 $\delta$ 上放置一个更稀疏的先验以将后验调节到 0。自动变化点检测也是可能的 {cite:p}`adams2007bayesian`。
 
 (chp4_gam)= 
 
-### 6.2.2 基函数和广义可加模型 
+### 6.2.3 基函数和广义可加模型 
 
-在代码 [regression_model_for_timeseries](regression_model_for_timeseries) 中定义的回归模型中，我们使用稀疏索引矩阵对季节性分量进行建模。另一种方法是使用基样条（ 参见第 [5](chap3_5) 章 ）之类的基函数，或 Facebook Prophet 模型中的傅里叶基函数。作为设计矩阵的基函数可能会提供一些很好的属性，如正交性（参见**设计矩阵的数学性质**），这使得数值求解线性公式更稳定 {cite:p}`strang09`。
+在代码 [regression_model_for_timeseries](regression_model_for_timeseries) 中定义的回归模型中，我们使用了稀疏索引矩阵对季节性分量进行建模。还有一种方法是使用基样条（ 参见第 [5](chap3_5) 章 ）之类的基函数，或 `Facebook Prophet 模型`中的傅里叶基函数。作为设计矩阵的基函数可能会提供一些很好的属性，如正交性（参见**设计矩阵的数学性质**），这会使数值化求解线性公式更稳定 {cite:p}`strang09`。
 
 傅里叶基函数是正弦和余弦函数的集合，可用于逼近任意平滑的季节性效应 {cite:p}`109876`：
 
@@ -342,8 +344,7 @@ trend = growth + offset
 s(t) = \sum^N_{n=1} \left[a_n \text{cos}\left(\frac{2 \pi nt}{P} \right) + b_n \text{sin}\left(\frac{2 \pi nt}{P}\right) \right]
 ```
 
-其中 $P$ 是时间序列具有的常规周期（例如，对于年度数据，$P = 365.25$ 或对于每周数据，当时间变量以天为单位时，$P = 7$）。我们可以使用代码 [fourier_basis_as_seasonality](fourier_basis_as_seasonality) 中所示的公式静态生成它们，并在 {numref}`fig:fig7_fourier_basis` 中将其可视化。
-
+其中 $P$ 是时间序列具有的常规周期（例如，对于年度数据，$P = 365.25$ 或对于每周数据，当时间变量以天为单位时，$P = 7$）。可以使用代码 [fourier_basis_as_seasonality](fourier_basis_as_seasonality) 中所示的公式静态生成它们，并在 {numref}`fig:fig7_fourier_basis` 中将其可视化。
 
 ```{code-block} ipython3
 :caption: fourier_basis_as_seasonality 
@@ -375,11 +376,13 @@ $n=3$ 的傅立叶基函数。总共有 $6$ 个预测变量，我们通过将其
 
 ::: {admonition} 设计矩阵的数学性质 
 
-设计矩阵的数学性质在线性最小二乘问题设置中得到了相当广泛的研究，我们想要求解 $min \mid Y - \mathbf{X} \beta \mid ^{2}$ 的 $\beta$。通过检查矩阵 $\mathbf{X}^T \mathbf{X}$ 的性质，我们通常可以了解 $\beta$ 解的稳定程度，甚至可能得到一个解。其中一个性质是条件数，它表明 $\beta$ 的解是否容易出现较大的数值误差。例如，如果设计矩阵包含高相关（多重共线性）的列，则条件数会很大，并且矩阵 $\mathbf{X}^T \mathbf{X}$ 是病态的。类似原理也适用于贝叶斯建模。无论你采用何种建模方法，在分析工作流程中做深入的探索性分析都是非常有用的。基函数作为设计矩阵通常需要具备良好的条件。
+设计矩阵的数学性质在线性最小二乘问题设置中得到了相当广泛的研究，我们想要求解 $min \mid Y - \mathbf{X} \beta \mid ^{2}$ 的 $\beta$。通过检查矩阵 $\mathbf{X}^T \mathbf{X}$ 的性质，我们通常可以了解 $\beta$ 解的稳定程度，甚至可能得到一个解。其中一个性质是条件数，它是 $\beta$ 的解是否容易出现较大数值误差的指示器。例如，如果设计矩阵包含高相关（多重共线性）的列，则条件数会很大，并且矩阵 $\mathbf{X}^T \mathbf{X}$ 是病态的。类似原理也适用于贝叶斯建模。
+
+无论你采用哪种建模方法，在分析工作流程中做深入的探索性分析都是非常有用的。基函数作为设计矩阵通常需要具备良好的条件。
 
 ::: 
 
-用于每月二氧化碳测量结果的类似 Facebook Prophet 的广义可加模型见代码 [gam](gam) 。我们为 `k` 和 `m` 分配了弱信息先验，以表达我们对月指标总体呈上升趋势的认知。这里得到了与实际观测非常接近的先验预测样本（参见 {numref}`fig:fig8_prior_predictive2`）。
+用于每月二氧化碳测量结果的`类 Facebook Prophet` 广义可加模型见代码 [gam](gam) 。我们为 `k` 和 `m` 分配了弱信息先验，以表达我们对月指标总体呈上升趋势的认知。这里得到了与实际观测非常接近的先验预测样本（参见 {numref}`fig:fig8_prior_predictive2`）。
 
 ```{code-block} ipython3
 :caption: gam
@@ -429,19 +432,19 @@ def gam():
 :name: fig:fig8_prior_predictive2
 :width: 8.00in
 
-从代码 [gam](gam) 生成的、来自类 Facebook Prophet 广义加法模型的先验预测样本，与趋势分量相关的参数具有弱信息先验。每条线是一个模拟时间序列。预测样本与实际观测值的范围相似，尤其是将此图与 {numref}`fig:fig3_prior_predictive1` 进行比较时表现更明显。
+从代码 [gam](gam) 生成的、来自`类 Facebook Prophet` 广义可加模型的先验预测样本，与趋势性分量相关的参数具有弱信息先验。每条线是一个预测生成的时间序列。预测样本与实际观测值的范围相似，尤其是将此图与 {numref}`fig:fig3_prior_predictive1` 进行比较时更为明显。
 
 ``` 
 
-经过推断，我们可以生成后验预测样本，如 {numref}`fig:fig9_posterior_predictive2` 所示，预测性能优于 {numref}`fig:fig5_posterior_predictive1` 中的简单回归模型。
+经过推断，我们还能够得到后验预测样本，如 {numref}`fig:fig9_posterior_predictive2` 所示，预测性能优于 {numref}`fig:fig5_posterior_predictive1` 中的简单回归模型。
 
-请注意，在 {cite:t}`TaylorLetham2018` 中预测的生成过程与此处的生成模型不同，因为阶跃线性函数与预定的变化点均匀分布。对于预测而言，在每个时间点，建议首先确定该时间点是否为变化点，然后从后验分布 $\delta_{new} \sim \text{Laplace}(0, \tau)$ 中生成新的 `delta`。在这里，我们为了简化生成过程，简单地使用上一时段的线性趋势。
+请注意，在 {cite:t}`TaylorLetham2018` 中，预测结果的生成过程与此处的生成模型不一样，因为阶跃线性函数被预定的变化点均匀切分开了。对于预测而言，建议在每个时间点处首先确定其是否为变化点，然后再从后验分布 $\delta_{new} \sim \text{Laplace}(0, \tau)$ 中生成新样本。在这里，为了简化生成过程，我们简单地使用上一时段的线性趋势。
 
 ```{figure} figures/fig9_posterior_predictive2.png
 :name: fig:fig9_posterior_predictive2
 :width: 8.00in
 
-来自代码 [gam](gam) 的类 Facebook Prophet 模型的后验预测样本以灰色显示，实际数据以黑色和蓝色显示。
+来自代码 [gam](gam) 的`类 Facebook Prophet` 模型的后验预测样本以灰色显示，实际数据以黑色和蓝色显示。
 
 ``` 
 
@@ -451,7 +454,7 @@ def gam():
 
 ### 6.3.1 基础的自回归模型
 
-时间序列的一个特征是观测值的顺序依赖性。这通常会引入在时间上与先前观测（或观测误差）相关的结构化误差，其中比较典型的是自回归性。在自回归模型中，时间 $t$ 处的分布被先前观测值的线性函数参数化。考虑一个具有高斯似然的一阶自回归模型（ 通常写为 $AR(1)$ ）：
+时间序列的特征之一是观测值之间存在顺序依赖性。这通常会引入与先前观测（或观测误差）相关的结构化误差，其中典型的是自回归性。在自回归模型中，时间 $t$ 处的分布被先前观测值的线性函数参数化。考虑一个具有高斯似然的一阶自回归模型（ 通常记作 $AR(1)$ ）：
 
 ```{math} 
 :label: eq:ar1
@@ -459,7 +462,11 @@ def gam():
 y_t \sim \mathcal{N}(\alpha + \rho y_{t-1}, \sigma)
 ```
 
-$y_t$ 遵循在该位置处的高斯分布，并且是 $y_{t-1}$ 的线性函数。在 Python 中，可以用一个 `for` 循环来编写这样一个自回归模型。例如，在代码 [ar1_with_forloop](ar1_with_forloop) 中，我们使用 $\alpha = 0$ 的 `tfd.JointDistributionCoroutine` 创建了一个 AR(1) 过程，并以 $\sigma = 1$ 和 不同的 $\rho$ 值做条件化抽取了随机样本，其结果显示在 {numref}`fig:fig10_ar1_process` 中。
+$y_t$ 遵循在该位置处的高斯分布，并且是 $y_{t-1}$ 的线性函数。
+
+**（ 1 ）采用循环语句实现自回归**
+
+在 Python 中，可以用一个 `for` 循环来编写这样一个自回归模型。例如，在代码 [ar1_with_forloop](ar1_with_forloop) 中，我们使用 $\alpha = 0$ 的 `tfd.JointDistributionCoroutine` 创建了一个 $AR(1)$ 过程，并以 $\sigma = 1$ 和 不同的 $\rho$ 值做条件化抽取了随机样本，其结果显示在 {numref}`fig:fig10_ar1_process` 中。
 
 ```{code-block} ipython3
 :caption: ar1_with_forloop
@@ -491,11 +498,13 @@ for ax, rho in zip(axes, np.linspace(-1.01, 1.01, nplot)):
 :name: fig:fig10_ar1_process
 :width: 8.00in
 
-$\sigma = 1$ 和不同 $\rho$ 值时 AR(1) 过程的随机样本。请注意，当 $\mid \rho \mid > 1$ 时，AR(1) 过程是非平稳的。
+$\sigma = 1$ 和不同 $\rho$ 值时 $AR(1)$ 自回归过程的随机样本。请注意，当 $\mid \rho \mid > 1$ 时，$AR(1)$ 过程是非平稳的。
 
 ``` 
 
-使用 `for` 循环生成时间序列随机变量非常简单，但现在每个时间点都是一个随机变量，使其应用起来非常困难（ 例如，难以适应大规模的时间点数据 ）。如果可能，我们更喜欢编写使用向量化操作的模型。上面的模型可以在不使用 `for` 循环的情况下，通过 TFP 中的自回归分布 `tfd.Autoregressive` 来重写模型，它采用`distribution_fn` 函数来表示公式 {eq}`eq:ar1` ，该函数输入 $y_{t -1}$ 并返回 $y_t$ 的分布。但 TFP 中的自回归分布仅保留了过程的最终状态，即初始值 $y_0$ 迭代 $t$ 步骤后，随机变量 $y_t$ 的分布。为了获得自回归过程中的所有时间步，我们需要使用后移运算符（也称为滞后运算符）$\mathbf{B}$ 表达公式 {eq}`eq:ar1`，该运算符会对所有 $t > 0$ 移动时间序列 $\mathbf{B} y_t = y_{t-1}$ 。用后移运算符 $\mathbf{B}$ 重新表示公式 {eq}`eq:ar1` 为 $Y \sim \mathcal{N}(\rho \mathbf{B} Y, \sigma)$ 。从概念上讲，你可以将其视为对向量化似然 `Normal(ρ * y[:-1], σ).log_prob(y[1:])` 的估计。在代码 [ar1_without_forloop](ar1_without_forloop) 中，我们用 `tfd.Autoregressive` API 为 `n_t` 步骤构建了相同的生成式 AR(1) 模型。请注意，我们并没有在代码 [ar1_without_forloop](ar1_without_forloop) 中通过生成输出结果 $y_{t-1}$ 来显式地构造后移运算符 $\mathbf{B}$ ，而是使用了 Python 函数 `ar1_fun` 完成后移操作并为下一时间步生成分布。
+**（ 2 ）使用向量化实现自回归**
+
+使用 `for` 循环生成时间序列随机变量非常简单，但现在每个时间点都是一个随机变量，其应用起来非常困难（ 例如，难以适应大规模的时间点数据 ）。如果可能，我们更喜欢编写使用向量化操作的模型。上面的模型可以在不使用 `for` 循环的情况下，通过 `TFP` 中的自回归分布 `tfd.Autoregressive` 来重写。它采用`distribution_fn` 函数来定义公式 {eq}`eq:ar1` ，该函数输入 $y_{t -1}$ 并返回 $y_t$ 的分布。但 `TFP` 中的自回归分布仅保留了过程的最终状态，即初始值 $y_0$ 迭代 $t$ 步后，随机变量 $y_t$ 的分布。为了获得自回归过程中的所有时间步，需要使用后移运算符（也称为滞后运算符）$\mathbf{B}$ 表达公式 {eq}`eq:ar1`，该运算符会对时间序列中所有 $t > 0$ 做移动，使得 $\mathbf{B} y_t = y_{t-1}$ 。用后移运算符 $\mathbf{B}$ 重新表示公式 {eq}`eq:ar1` 为 $Y \sim \mathcal{N}(\rho \mathbf{B} Y, \sigma)$ 。从概念上讲，可以将其视为对向量化似然 `Normal(ρ * y[:-1], σ).log_prob(y[1:])` 的估计。在代码 [ar1_without_forloop](ar1_without_forloop) 中，我们用 `tfd.Autoregressive` API 构建了步数为 `n_t` 的同一生成式 $AR(1)$ 模型。请注意，在代码 [ar1_without_forloop](ar1_without_forloop) 中并没有通过生成输出结果 $y_{t-1}$ 来显式地构造后移运算符 $\mathbf{B}$ ，而是使用了 Python 函数 `ar1_fun` 完成后移运算并为下一时间步生成分布。
 
 ```{code-block} ipython3
 :caption: ar1_without_forloop
@@ -519,7 +528,7 @@ def ar1_without_forloop():
         num_steps=n_t)
 ```
 
-现在我们以 AR(1) 过程作为似然函数来扩展上述类 Facebook Prophet 的广义可加模型。但在这样做之前，先将代码 [gam](gam) 中的 `GAM` 重写为代码 [gam_alternative](gam_alternative)。
+现在以 $AR(1)$ 过程作为似然函数来扩展上述 *类 Facebook Prophet* 的广义可加模型。但需要先将代码 [gam](gam) 中的 `GAM` 改写为代码 [gam_alternative](gam_alternative)。
 
 ```{code-block} ipython3
 :caption: gam_alternative
@@ -566,11 +575,11 @@ gam = generate_gam()
 
 比较代码 [gam_alternative](gam_alternative) 和代码 [gam](gam)，可以看到两个主要区别：
 
-1. 我们将趋势和季节性分量（及其先验）的构造拆分成了独立函数，并且在 `tfd.JointDistributionCoroutine` 的模型块中，使用了 `yield from` 语句，从而在不同代码中能够获得相同的 `tfd.JointDistributionCoroutine ` 模型；
+1. 将趋势性分量和季节性分量（及其先验）的构造拆分成了独立函数，并且在 `tfd.JointDistributionCoroutine` 的模型块中，使用了 `yield from` 语句，从而在不同代码中能够获得相同的 `tfd.JointDistributionCoroutine ` 模型；
 
-2. 我们将 `tfd.JointDistributionCoroutine` 包装在另一个 Python 函数中，这样更容易在训练集和测试集上实现条件化。
+2. 将 `tfd.JointDistributionCoroutine` 封装在另一个 Python 函数中，这样更容易在训练集和测试集上进行条件化。
 
-代码 [gam_alternative](gam_alternative) 是一种更加模块化的方法。我们可以通过改变似然函数部分来写出一个具有 AR(1) 似然函数的 GAM。这就是在代码 [gam_with_ar_likelihood](gam_with_ar_likelihood) 中所做的。
+代码 [gam_alternative](gam_alternative) 是一种更加模块化的方法。我们可以通过改变似然部分来写出一个具有 $AR(1)$ 似然的 GAM 。这正是代码 [gam_with_ar_likelihood](gam_with_ar_likelihood) 所做的。
 
 ```{code-block} ipython3
 :caption: gam_with_ar_likelihood
@@ -604,17 +613,21 @@ def generate_gam_ar_likelihood(training=True):
 gam_with_ar_likelihood = generate_gam_ar_likelihood()
 ```
 
-在这里考虑 AR(1) 模型的另一种方法，是将线性回归概念扩展为在设计矩阵中包含一个观测相关列，并将该列的元素 $x_i$ 设置为 $y_{i-1}$。然后，自回归系数 $\rho$ 与任何其他回归系数没有什么不同，这只是告诉我们，先前观测对当前观测的期望的线性贡献是什么 [^8]。在这个模型中，我们通过检查 $\rho$ 的后验分布发现这种影响几乎可以忽略不计（ 参见 {numref}`fig:fig11_ar1_likelihood_rho` ）：
+**（3）通过修改设计矩阵实现自回归**
+
+另外一种实现 $AR(1)$ 模型方法，是将线性回归概念扩展为在设计矩阵中包含一个观测相关列，并将该列的元素 $x_i$ 设置为 $y_{i-1}$。然后，自回归系数 $\rho$ 与任何其他回归系数没有什么不同，这只是告诉我们，先前观测对当前观测的期望的线性贡献是什么 [^8]。在这个模型中，检查 $\rho$ 的后验分布后，我们发现这种影响几乎可以忽略不计（ 参见 {numref}`fig:fig11_ar1_likelihood_rho` ）：
 
 ```{figure} figures/fig11_ar1_likelihood_rho.png
 :name: fig:fig11_ar1_likelihood_rho
 :width: 8.00in
 
-在代码 [gam_with_ar_likelihood](gam_with_ar_likelihood) 中定义的类 Facebook Prophet 的 GAM 模型的似然函数参数的后验分布。最左边的子图是具有正态似然的模型中的 $\sigma$，中间和最右边的子图是具有 AR(1) 似然的模型中的 $\sigma$ 和 $\rho$。两个模型都返回了相似的 $\sigma$ 估计值，$\rho$ 估计值以 $0$ 为中心。
+在代码 [gam_with_ar_likelihood](gam_with_ar_likelihood) 中定义的 *类 Facebook Prophet* 似然函数参数的后验分布。最左边的子图是具有高斯似然的模型中的 $\sigma$，中间和最右边的子图是具有 $AR(1)$ 似然的模型中的 $\sigma$ 和 $\rho$。两个模型都返回了相似的 $\sigma$ 估计值，$\rho$ 估计值以 $0$ 为中心。
 
 ``` 
 
-除了采用 AR(k) 似然函数这种方式之外，我们还可以通过在线性预测中添加隐自回归分量，来达到将自回归包含在时间序列模型中的目的。这就是代码 [gam_with_latent_ar](gam_with_latent_ar) 中的 `gam_with_latent_ar` 隐自回归模型。
+**（ 4 ）隐自回归分量的引入**
+
+除了采用 AR(k) 似然函数这种方式之外，还可以在线性预测中添加隐自回归分量，来达到将自回归包含在时间序列模型中的目的。这就是代码 [gam_with_latent_ar](gam_with_latent_ar) 中的 `gam_with_latent_ar` 隐自回归模型。
 
 ```{code-block} ipython3
 :caption: gam_with_latent_ar
@@ -658,25 +671,25 @@ def generate_gam_ar_latent(training=True):
 gam_with_latent_ar = generate_gam_ar_latent()
 ```
 
-通过显式的隐自回归过程，我们将一个与观测数据大小相同的随机变量添加到模型中。由于它现在是添加到线性预测 $\hat{Y}$ 中的显式分量，因此可以将自回归过程解释为趋势分量的补充，甚至是其一部分。
+通过显式的隐自回归过程，我们在模型中添加到一个与观测数据集大小相同的随机变量。由于它现在是添加到线性预测 $\hat{Y}$ 中的显式分量，因此可以将自回归过程解释对趋势性分量的补充，或者解释为趋势性分量的一部分。
 
-我们可以在完成推断后，可视化隐自回归分量，类似于时间序列模型的趋势和季节性分量（参见 {numref}`fig:fig12_posterior_predictive_ar1`）。
+我们可以在完成推断后，可视化隐自回归分量，类似于时间序列模型的趋势性分量和季节性分量（参见 {numref}`fig:fig12_posterior_predictive_ar1`）。
 
 ```{figure} figures/fig12_posterior_predictive_ar1.png
 :name: fig:fig12_posterior_predictive_ar1
 :width: 8.00in
 
-在代码 [gam_with_latent_ar](gam_with_latent_ar) 中指定的基于 GAM 的时间序列模型 `gam_with_latent_ar` 的趋势、季节性和 AR(1) 分量的后验预测样本。
+在代码 [gam_with_latent_ar](gam_with_latent_ar) 中指定的时间序列模型 `gam_with_latent_ar` 中，趋势性分量、季节性分量和 $AR(1)$ 分量的后验预测样本。
 
 ``` 
 
-解释显式隐自回归过程的另一种方法是认为它捕获了时间相关的残差，因此我们预期 $\sigma_{noise}$ 的后验估计较没有此分量的模型更小。在 {numref}`fig:fig13_ar1_likelihood_rho2` 中，我们展示了模型 `gam_with_latent_ar` 的 $\sigma_{noise}$、$\sigma_{AR}$ 和 $\rho$ 的后验分布。与模型 `gam_with_ar_likelihood` 相比，确实得到了 $\sigma_{noise}$ 的较低估计，而 $\rho$ 的估计则要高得多。
+还有一种解释隐自回归过程的方法，即认为它捕获了和时间相关的残差，因此我们预期 $\sigma_{noise}$ 的后验估计会比没有隐自回归过程分量时的模型小。在 {numref}`fig:fig13_ar1_likelihood_rho2` 中，我们展示了模型 `gam_with_latent_ar` 的 $\sigma_{noise}$、$\sigma_{AR}$ 和 $\rho$ 的后验分布。与模型 `gam_with_ar_likelihood` 相比，确实得到了 $\sigma_{noise}$ 的较低估计，而 $\rho$ 的估计则明显更高一些。
 
 ```{figure} figures/fig13_ar1_likelihood_rho2.png
 :name: fig:fig13_ar1_likelihood_rho2
 :width: 8.00in
 
-代码 [gam_with_latent_ar](gam_with_latent_ar) 中 `gam_with_latent_ar` 模型的 AR(1) 潜在分量的 $\sigma_{noise}$、$\sigma_{AR}$ 和 $\rho$ 的后验分布。注意不要与 {numref}`fig:fig11_ar1_likelihood_rho` 混淆，其中我们展示了来自 $2$ 个不同 GAM 的参数的后验分布。
+代码 [gam_with_latent_ar](gam_with_latent_ar) 指定的 `gam_with_latent_ar` 模型中， $AR(1)$ 分量的 $\sigma_{noise}$、$\sigma_{AR}$ 和 $\rho$ 的后验分布。注意不要与 {numref}`fig:fig11_ar1_likelihood_rho` 混淆，在那幅图中，我们展示了来自 $2$ 个不同 GAM 模型的参数的后验分布。
 
 ``` 
 
@@ -684,7 +697,7 @@ gam_with_latent_ar = generate_gam_ar_latent()
 
 ### 6.3.2 隐自回归过程和平滑 
 
-隐过程在捕获时间观测序列中的微妙趋势方面非常强大。它甚至可以逼近任意函数。为了看到这一点，让我们考虑使用包含隐 (GRW) 分量的时间序列模型对玩具数据进行建模，如公式 {eq}`eq:gw_formulation1` 所示。
+隐过程在捕获时间观测序列中的微妙趋势方面非常强大。它甚至可以近似任意的函数。为了证明这一点，让我们考虑使用一个包含隐高斯随机游走分量（ GRW ）的时间序列模型，对玩具数据集进行建模，如公式 {eq}`eq:gw_formulation1` 所示。
 
 
 ```{math} 
@@ -696,9 +709,9 @@ y_i & \sim \mathcal{N}(z_i,  \sigma_{y}^2)
 \end{split}
 ```
 
-这里的 GRW 等同于 $\rho = 1$ 时的 AR(1) 过程。
+此处的高斯随机游走等同于 $\rho = 1$ 时的 $AR(1)$ 过程。
 
-通过在公式 {eq}`eq:gw_formulation1` 中对 $\sigma_{z}$ 和 $\sigma_{y}$ 设置不同先验，我们可以强调在 GRW 中应解释多少观测数据中的方差，以及其中有多少是独立同分布的噪声。我们还可以计算比率 $\alpha = \frac{\sigma_{y}^2}{\sigma_{z}^2 + \sigma_{y}^2}$ ，其中 $\alpha$ 在 $[0, 1]$ 区间内，可以解释为平滑度。因此，我们可以将公式 {eq}`eq:gw_formulation1` 中的模型等价地表示为公式 {eq}`eq:gw_formulation2`。
+通过在公式 {eq}`eq:gw_formulation1` 中对 $\sigma_{z}$ 和 $\sigma_{y}$ 设置不同先验，可以突出表达高斯随机游走应当解释多少观测数据中的方差，以及其中有多少是独立同分布的噪声。我们还可以计算一个位于 $[0, 1]$ 区间内的比率值 $\alpha = \frac{\sigma_{y}^2}{\sigma_{z}^2 + \sigma_{y}^2}$ ，并将其解释为平滑度。因此，可以将公式 {eq}`eq:gw_formulation1` 中的模型等价地表示为公式 {eq}`eq:gw_formulation2`。
 
 ```{math} 
 :label: eq:gw_formulation2
@@ -709,7 +722,7 @@ y_i & \sim \mathcal{N}(z_i,   \alpha \sigma^2)
 \end{split}
 ```
 
-我们在公式 {eq}`eq:gw_formulation2` 中的隐 GRW 模型可以用代码 [gw_tfp](gw_tfp) 编写。通过在 $\alpha$ 上放置信息先验，我们可以控制希望在隐 GRW 中看到多少 “平滑”（较大的 $\alpha$ 给出更平滑的近似值）。让我们用从任意函数模拟的一些含噪声观测来拟合模型 `smoothing_grw`。数据在 {numref}`fig:fig14_smoothing_with_gw` 中显示为黑色实心点，拟合的隐随机游走显示在同一图中。
+公式 {eq}`eq:gw_formulation2` 中的隐高斯随机游走模型可以编写为代码 [gw_tfp](gw_tfp) 。通过在 $\alpha$ 上放置信息性先验，我们可以控制希望在隐高斯随机游走分量中看到多少平滑度， $\alpha$ 越大获得的近似值越平滑。让我们用一些含噪声的观测来拟合代码中的模型 `smoothing_grw`。观测数据在 {numref}`fig:fig14_smoothing_with_gw` 中被显示为黑色实心点，拟合的隐随机游走过程在图中显示为灰色。
 
 ```{code-block} ipython3
 :caption: gw_tfp
@@ -734,23 +747,21 @@ def smoothing_grw():
 
 ``` 
 
-自回归过程还有一些其他有趣的性质，与高斯过程 {cite:p}`Rasmussen2005` 有关。例如，你可能会发现*单独的*自回归模型无法捕获长期趋势。尽管模型似乎很适合观测结果，但在预测时，你会观察到预测值很快就回归到了最后几个时间步的均值。与使用具有恒定平均函数 [^9] 的高斯过程所观测到的相同。
+自回归过程还有一些其他有趣的性质，与高斯过程 {cite:p}`Rasmussen2005` 有关。例如，你可能会发现单单靠自回归模型无法捕获长期的趋势。尽管模型对观测数据拟合得很好，但预测结果会快速回归到最后几个时间步的均值，与均值函数为常数的高斯过程表现相似 [^9] 。
 
-作为额外趋势分量的自回归分量可能会给模型推断带来一些挑战。例如，规模化可能是一个问题，因为我们正在添加一个时间观测序列具有相同形状的随机变量。当趋势分量和自回归过程都灵活时，我们可能会得到一个无法识别的模型，因为自回归过程本身已经有能力近似观测数据的潜在趋势（平滑函数）了。
+自回归分量作为一个加性的趋势性分量，可能会给模型推断带来一些挑战。例如，难以适应大规模数据，因为我们需要添加一个与时间观测序列大小相同的随机变量。当趋势性分量和自回归过程都灵活时，我们可能会得到一个无法辨识的模型，因为自回归过程本身已经有能力近似观测数据的潜在趋势（平滑函数）了。
 
 (sarimax)= 
 
 ### 6.3.3 自回归移动平均 (S)AR(I)MA(X) 
 
-许多经典时间序列模型共享相似的类自回归模式，在此类模式中，时间 $t$ 处有一些隐参数依赖于自身的观测值或 $t-k$ 处的另外一个参数。其中两个典型的例子是：
+许多经典的时间序列模型，共享一个相似的类自回归模式，其中在时间 $t$ 处存在一些依赖于当前观测值（和/或 $t-k$ 处的另外一个参数值）的隐参数。其中两个典型的例子是：
 
-- 自回归条件异方差 (ARCH) 模型，其中残差的规模随时间变化；
+- `自回归条件异方差 ( ARCH ) 模型` ，该模型中残差的尺度会随时间变化；
 
-- 移动平均 (MA) 模型，它将先前残差的线性组合添加到时间系列均值中。
+- `移动平均 ( MA ) 模型`，该模型在时间序列的均值上，加入历史时间步残差的某种线性组合值作为当前点处的残差。
 
-这些经典时间序列模型中可以组合成更复杂的模型，其中一种扩展是 SARIMAX 模型。虽然命名可能看起来很吓人，但基本概念在很大程度上是自回归和移动平均模型的直接组合。
-
-用移动平均扩展自回归模型，我们得到一般性的 ARMA 模型：
+这些经典的时间序列模型，可以组合形成更复杂的模型。其中一种扩展是 `具有外生回归量的季节性自回归移动平均模型（ Seasonal AutoRegressive Integrated Moving Average with eXogenous regressors model, SARIMAX）`。虽然命名看起来吓人，但基本上就是自回归和移动平均模型的直接组合。用移动平均来扩展自回归模型，可以得到具有一般性的 `自回归移动平均（ ARMA ） 模型`：
 
 ```{math} 
 :label: eq:arma
@@ -761,7 +772,7 @@ y_t & = \alpha + \sum_{i=1}^{p}\phi_i y_{t-i} + \sum_{j=1}^{q}\theta_j \epsilon_
 \end{split}
 ```
 
-其中 $p$ 是自回归模型的阶数，$q$ 是移动平均模型的阶数。通常，我们将模型记为 $ARMA(p, q)$ 。同样，对于季节性 ARMA，我们有：
+其中 $p$ 是自回归模型的阶数，$q$ 是移动平均模型的阶数。通常会将此模型记为 $ARMA(p, q)$ 。进一步的，对于季节性自回归移动平均模型（ SARMA ），我们有：
 
 ```{math} 
 :label: eq:sarma
@@ -771,7 +782,7 @@ y_t = \alpha + \sum_{i=1}^{p}\phi_i y_{t-period-i} + \sum_{j=1}^{q}\theta_j \eps
 \end{split}
 ```
 
-在 ARIMA 模型中，积分部分是指时间序列的统计量：积分阶数。表示为 $I(d)$，如果一个时间序列重复差分 $d$ 次后仍然产生平稳序列，则称其被积分至 $d$ 阶。遵从 {cite:t}`box2008time` ，我们将反复获取时间观测序列的差作为预处理步骤，来解释 $ARIMA(p,d,q)$ 模型的 $I(d)$ 部分，并对差分序列结果建模为一个带 $ARMA(p,q)$ 的平稳过程。该运算本身在 Python 中也相当标准。我们可以使用 `numpy.diff`，其中计算的第一个差分是沿给定轴的 `delta_y[i] = y[i] - y[i-1]`，通过在给定轴上递归重复相同运算来计算更高阶的差分结果数组。
+而在 `自回归积分移动平均（AutoRegressive Integrated Moving Average, ARIMA） 模型` 中，积分部分是指时间序列的一个被称为 **积分阶数（ Order of Integration ）** 的统计量，表示为 $I(d)$ 。如果一个时间序列重复做 $d$ 次差分后仍然能够产生平稳序列，就称其被积分到了 $d$ 阶。遵从 {cite:t}`box2008time` 的定义 ，我们将反复获取时间观测序列的差作为预处理步骤，来解释 $ARIMA(p,d,q)$ 模型的 $I(d)$ 部分，并对差分序列结果建模为一个带 $ARMA(p,q)$ 的平稳过程。该运算本身在 Python 中相当普遍，可以使用 `numpy.diff` 实现，其中计算的第一个差分是沿给定轴的 `delta_y[i] = y[i] - y[i-1]`，通过在给定轴上递归重复相同运算来计算更高阶的差分结果数组。
 
 如果我们有一个额外的回归量 $\mathbf{X}$，在上面模型中 $\alpha$ 被线性预测 $\mathbf{X} \beta$ 替换。如果 $d > 0$，我们将对 $\mathbf{X}$ 应用相同的差分运算。
 
@@ -938,7 +949,7 @@ X_0 & \sim p(X_0) \\
 
 ::: {admonition} 实现高效计算的状态空间模型
 
-使用 `tf.while_loop` 或 `tf.scan`  等 API 实现的状态空间模型和数学公式之间存在某种调谐。与使用 Python 的 `for` 循环或 `while` 循环不同，在 TFP 中，需要将循环体编译成一个函数，该函数采用相同的张量结构作为输入和输出。这种函数风格的实现方式有助于显式表示 “在每个时间步隐状态是如何转换的？” 以及 “隐状态如果转换到为观测结果的？”。值得注意的是，实现状态空间模型及其相关推断算法（ 如卡尔曼滤波器 ）也涉及在何处放置初始计算的设计决策。在上式中，我们在初始隐条件上放置了一个先验，并且第一个观测值直接来自初始状态的测量值。不过，在第 $0$ 步中，对隐状态进行转换同样有效，然后通过修改先验分布进行第一次观测，这两种方法是等效的。
+使用 `tf.while_loop` 或 `tf.scan`  等 API 实现的状态空间模型和数学公式之间存在某种调谐。与使用 Python 的 `for` 循环或 `while` 循环不同，在 `TFP` 中，需要将循环体编译成一个函数，该函数采用相同的张量结构作为输入和输出。这种函数风格的实现方式有助于显式表示 “在每个时间步隐状态是如何转换的？” 以及 “隐状态如果转换到为观测结果的？”。值得注意的是，实现状态空间模型及其相关推断算法（ 如卡尔曼滤波器 ）也涉及在何处放置初始计算的设计决策。在上式中，我们在初始隐条件上放置了一个先验，并且第一个观测值直接来自初始状态的测量值。不过，在第 $0$ 步中，对隐状态进行转换同样有效，然后通过修改先验分布进行第一次观测，这两种方法是等效的。
 
 然而，在为时间序列问题实现滤波器时，在形状处理上有一些微妙的技巧。主要挑战是时间维度的放置位置。一个明显选择是将其放置在轴 $0$ 上，因为使用 `t` 作为时间索引来执行 `time_series[t]` 是很自然的事情。使用 `tf.scan` 或 `theano.scan` 等循环结构在时间序列上实现循环时，会自动将时间维度放在轴 $0$ 上。但是，这与通常作为引导轴的批处理维有冲突。例如，如果我们想对 $N$ 批 $k$ 维时间序列进行向量化，每个时间序列总共有 $T$ 个时间戳，则数组的形状为 `[N, T, ...]`，但 `tf.scan ` 的输出形状为 `[T, N, ...]` 。目前，建模人员似乎不可避免地需要对 `scan` 的输出执行转置，以使其与输入张量的批处理维和时间维语义相匹配。
 
@@ -1035,7 +1046,7 @@ Y_t \sim p(Y_t \mid Y_{0:t-1}) & \equiv \mathcal{N}(\mathbf{H}_t m_{t \mid t-1},
    \end{split}
    ```
 
-卡尔曼滤波方程的推导主要使用了多元高斯联合分布。在实践中，还有一些技巧来确保计算在数值上是稳定的。例如，避免逆矩阵 $\mathbf{S}_t$ ，在计算 $\mathbf{P}_{t\mid t}$ 时使用 Jordan 范数更新，以确保结果是正定矩阵 {cite:p}`westharrison1997`。在 TFP 中，线性高斯状态空间模型和卡尔曼滤波器可以通过分布`tfd.LinearGaussianStateSpaceModel` 方便地实现。
+卡尔曼滤波方程的推导主要使用了多元高斯联合分布。在实践中，还有一些技巧来确保计算在数值上是稳定的。例如，避免逆矩阵 $\mathbf{S}_t$ ，在计算 $\mathbf{P}_{t\mid t}$ 时使用 Jordan 范数更新，以确保结果是正定矩阵 {cite:p}`westharrison1997`。在 `TFP` 中，线性高斯状态空间模型和卡尔曼滤波器可以通过分布`tfd.LinearGaussianStateSpaceModel` 方便地实现。
 
 线性高斯状态空间模型的实际挑战之一是将未知参数表示为高斯隐状态。我们将用一个简单的线性增长时间序列作为第一个示例进行演示（ 参见《贝叶斯滤波和平滑》 {cite:p}`sarkka2013bayesian` 的第 3 章 ）：
 
@@ -1211,7 +1222,7 @@ y_t\\
 \end{split}
 ```
 
-你可能注意到状态转移与上面定义的略有不同，因为转换噪声不是从多元高斯分布中抽取的。 $\eta$ 的协方差矩阵是 $\mathbf{Q}_t = \mathbf{A} \sigma^2 \mathbf{A}^T$ ，在这种情况下会产生奇异的随机变量 $\eta$ 。但无论如何，我们可以在 TFP 中定义模型了。例如，在代码 [tfd_lgssm_arma_simulate](tfd_lgssm_arma_simulate) 中，我们定义了一个 $ARMA(2,1)$ 模型，其中 $\phi = [-0.1, 0.5]$ 、 $\theta = -0.25$ 、 $\sigma = 1.25$ ，并抽取了一个随机时间序列。
+你可能注意到状态转移与上面定义的略有不同，因为转换噪声不是从多元高斯分布中抽取的。 $\eta$ 的协方差矩阵是 $\mathbf{Q}_t = \mathbf{A} \sigma^2 \mathbf{A}^T$ ，在这种情况下会产生奇异的随机变量 $\eta$ 。但无论如何，我们可以在 `TFP` 中定义模型了。例如，在代码 [tfd_lgssm_arma_simulate](tfd_lgssm_arma_simulate) 中，我们定义了一个 $ARMA(2,1)$ 模型，其中 $\phi = [-0.1, 0.5]$ 、 $\theta = -0.25$ 、 $\sigma = 1.25$ ，并抽取了一个随机时间序列。
 
 ```{code-block} ipython3
 :caption: tfd_lgssm_arma_simulate
@@ -1348,7 +1359,7 @@ y_{t-1}\\
 
 ### 6.4.3 贝叶斯结构时间序列 
 
-时间序列模型的线性高斯状态空间表达形式具有另一个优点，即它很容易与其他线性高斯状态空间模型一起扩展。为了将两个模型组合在一起，我们可以对隐空间中的两个正态随机变量做连接。我们使用两个协方差矩阵生成一个块对角矩阵，连接事件轴上的均值。在测量空间中，该操作相当于对两个正态随机变量求和。
+时间序列模型的线性高斯状态空间表达形式具有另一个优点，即它很容易与其他线性高斯状态空间模型一起扩展。为了将两个模型组合在一起，我们可以对隐空间中的两个高斯随机变量做连接。我们使用两个协方差矩阵生成一个块对角矩阵，连接事件轴上的均值。在测量空间中，该操作相当于对两个高斯随机变量求和。
 
 更具体地说，我们有：
 
@@ -1379,9 +1390,9 @@ X_{2,t}\\
 
 从概念上讲，我们可以将其理解为从 $Y_t$ 中减去 $\mathcal{M}$ 的预测并对结果进行建模，因此卡尔曼滤波器和其他线性高斯状态空间模型属性仍然成立。
 
-这种*可组合性*功能可以轻松构建由多个较小的线性高斯状态空间模型分量构建的时间序列模型。我们可以为趋势、季节性和误差项提供单独的状态空间表示，并将它们组合成通常称为*结构时间序列*模型或动态线性模型的模型。 TFP 提供了一种非常方便的方法来构建贝叶斯结构化时间序列，它使用 `tfp.sts` 模块，以及用于解构分量、进行预测、推断和其他诊断的辅助函数。
+这种*可组合性*功能可以轻松构建由多个较小的线性高斯状态空间模型分量构建的时间序列模型。我们可以为趋势、季节性和误差项提供单独的状态空间表示，并将它们组合成通常称为*结构时间序列*模型或动态线性模型的模型。 `TFP` 提供了一种非常方便的方法来构建贝叶斯结构化时间序列，它使用 `tfp.sts` 模块，以及用于解构分量、进行预测、推断和其他诊断的辅助函数。
 
-例如，我们可以使用具有局部线性趋势分量和季节性分量的结构化时间序列对每月出生数据进行建模，以解释代码 [tfp_sts_example2](tfp_sts_example2) 中的每月模式。
+例如，我们可以使用具有局部线性趋势性分量和季节性分量的结构化时间序列对每月出生数据进行建模，以解释代码 [tfp_sts_example2](tfp_sts_example2) 中的每月模式。
 
 ```{code-block} ipython3
 :caption: tfp_sts_example2
@@ -1443,7 +1454,7 @@ bijector=<tensorflow_probability.python.bijectors.chain.Chain object at ...>)]
 :name: fig:fig18_bsts_lgssm
 :width: 8.00in
 
-贝叶斯结构时间序列（蓝色框）与线性高斯状态空间模型（红色框）之间的关系。此处显示的线性高斯状态空间模型是一个包含局部线性趋势分量、季节性分量和自回归分量的示例。
+贝叶斯结构时间序列（蓝色框）与线性高斯状态空间模型（红色框）之间的关系。此处显示的线性高斯状态空间模型是一个包含局部线性趋势性分量、季节性分量和自回归分量的示例。
 
 ``` 
 

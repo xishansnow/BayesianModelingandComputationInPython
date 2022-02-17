@@ -193,27 +193,27 @@
 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#transforming-covariates">
-   4.1 对预测变量进行变换
+   4.1 转换预测变量
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#varying-uncertainty">
-   4.2 变化中的不确定性
+   4.2 可变的方差
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#interaction-effects">
-   4.3 交互效应
+   4.3 引入交互效应
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#robust-regression">
-   4.4 稳健的回归
+   4.4 更稳健的回归
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#multilevel-models">
-   4.5 池化、多层模型和混合效应
+   4.5 池化、多级模型和混合效应
   </a>
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
@@ -228,7 +228,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#mixing-group-and-common-parameters">
-     4.5.3 混合组和常用参数
+     4.5.3 组混合与多级模型
     </a>
 </li>
 </ul>
@@ -239,18 +239,23 @@
   </a>
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id21">
+     4.6.1 什么是分层模型
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#model-geometry">
-     4.6.1 分层模型的新问题 — 后验几何形态带来采样难题
+     4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#predictions-at-multiple-levels">
-     4.6.2 分层模型的优势 — 支持多个层次上的预测
+     4.6.3 分层模型的优势 — 支持多个层次上的预测
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#priors-for-multilevel-models">
-     4.6.3 分层模型的先验选择
+     4.6.4 分层模型的先验选择
     </a>
 </li>
 </ul>
@@ -280,27 +285,27 @@
 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#transforming-covariates">
-   4.1 对预测变量进行变换
+   4.1 转换预测变量
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#varying-uncertainty">
-   4.2 变化中的不确定性
+   4.2 可变的方差
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#interaction-effects">
-   4.3 交互效应
+   4.3 引入交互效应
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#robust-regression">
-   4.4 稳健的回归
+   4.4 更稳健的回归
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#multilevel-models">
-   4.5 池化、多层模型和混合效应
+   4.5 池化、多级模型和混合效应
   </a>
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
@@ -315,7 +320,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#mixing-group-and-common-parameters">
-     4.5.3 混合组和常用参数
+     4.5.3 组混合与多级模型
     </a>
 </li>
 </ul>
@@ -326,18 +331,23 @@
   </a>
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id21">
+     4.6.1 什么是分层模型
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#model-geometry">
-     4.6.1 分层模型的新问题 — 后验几何形态带来采样难题
+     4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#predictions-at-multiple-levels">
-     4.6.2 分层模型的优势 — 支持多个层次上的预测
+     4.6.3 分层模型的优势 — 支持多个层次上的预测
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#priors-for-multilevel-models">
-     4.6.3 分层模型的先验选择
+     4.6.4 分层模型的先验选择
     </a>
 </li>
 </ul>
@@ -358,7 +368,7 @@
 <style>p{text-indent:2em;2}</style>
 <p>在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中，我们展示了扩展线性回归的几种方法。但其实还可以用线性模型做更多的事情，从“预测变量变换”，到“可变方差”，再到 “分层模型”。这些想法为为更广泛地使用线性回归提供了灵活性。</p>
 <div class="section" id="transforming-covariates">
-<span id="id2"></span><h2>4.1 对预测变量进行变换<a class="headerlink" href="#transforming-covariates" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>4.1 转换预测变量<a class="headerlink" href="#transforming-covariates" title="Permalink to this headline">¶</a></h2>
 <p>在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中，通过最简单的线性模型和恒等链接函数，在任意 <span class="math notranslate nohighlight">\(X_i\)</span> 的取值处，<span class="math notranslate nohighlight">\(x_i\)</span> 的一个单位变化导致结果变量 <span class="math notranslate nohighlight">\(Y\)</span> 的 <span class="math notranslate nohighlight">\(\beta_i\)</span> 个单位的预期变化。然后，我们学习了如何通过改变似然函数（ 例如从高斯到伯努利 ）来创建广义线性模型，这通常需要改变链接函数。</p>
 <p>本节介绍对简单线性模型的另一种改进方法，即对预测变量 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 进行变换，使 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span> 之间产生一种非线性关系，进而为更复杂的情况建模。</p>
 <p>例如，我们可以假设 <span class="math notranslate nohighlight">\(x_i\)</span> 平方根的单位变化（或者 <span class="math notranslate nohighlight">\(x_i\)</span> 对数的单位变化等），会导致结果变量 <span class="math notranslate nohighlight">\(Y\)</span> 中 <span class="math notranslate nohighlight">\(\beta_i\)</span> 个单位的预期变化。在数学形式上，可以通过对任一预测变量 <span class="math notranslate nohighlight">\((X_i)\)</span> 实施变换 <span class="math notranslate nohighlight">\(f(.)\)</span> ，来扩展方程 <a class="reference internal" href="chp_03.html#equation-eq-expanded-regression">(25)</a> ：</p>
@@ -426,15 +436,15 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 </div>
 <div class="section" id="varying-uncertainty">
-<span id="id4"></span><h2>4.2 变化中的不确定性<a class="headerlink" href="#varying-uncertainty" title="Permalink to this headline">¶</a></h2>
-<p>到目前为止，我们使用线性模型对 <span class="math notranslate nohighlight">\(Y\)</span> 的均值进行建模，同时假设残差 <a class="footnote-reference brackets" href="#id31" id="id5">1</a> 的方差在响应范围内是恒定的。然而，这种固定方差假设可能是一种不够充分的建模选择。为了能够解释不断变化的不确定性，我们可以将方程 <a class="reference internal" href="#equation-eq-covariate-transformation-regression">(31)</a> 扩展为：</p>
+<span id="id4"></span><h2>4.2 可变的方差<a class="headerlink" href="#varying-uncertainty" title="Permalink to this headline">¶</a></h2>
+<p>到目前为止，我们使用线性模型对 <span class="math notranslate nohighlight">\(Y\)</span> 的均值进行建模，同时假设残差 <a class="footnote-reference brackets" href="#id32" id="id5">1</a> 的方差在响应范围内是恒定的。然而，这种固定方差的假设可能是一种不够充分的建模选择。为了能够解释不断变化的不确定性，我们可以将方程 <a class="reference internal" href="#equation-eq-covariate-transformation-regression">(31)</a> 扩展为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-varying-variance">
 <span class="eqno">(32)<a class="headerlink" href="#equation-eq-varying-variance" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
     \mu =&amp; \beta_0 + \beta_1 f_1(X_1) + \dots + \beta_m f_m(X_m) \\
     \sigma =&amp; \delta_0 + \delta_1 g_1(X_1) + \dots + \delta_m g_m(X_m) \\
     Y \sim&amp; \mathcal{N}(\mu, \sigma)
 \end{split}\end{split}\]</div>
-<p>估计 <span class="math notranslate nohighlight">\(\sigma\)</span> 的第二行代码与对均值建模的线性项非常相似。我们不仅可以使用线性模型对均值/位置参数建模，还可以对其他参数进行建模。让我们扩展在代码 <a class="reference internal" href="#babies-transformed"><span class="std std-ref">babies_transformed</span></a> 中定义的 <code class="docutils literal notranslate"><span class="pre">model_sqrt</span></code>。现在假设当孩子们还小的时候，他们的身高往往会紧密地聚集在一起，但随着年龄的增长，他们的身高往往会变得更加分散。</p>
+<p>估计 <span class="math notranslate nohighlight">\(\sigma\)</span> 的第二行代码与对均值建模的线性项非常相似。我们不仅可以使用线性模型对均值参数建模，还可以对其他参数进行建模。让我们扩展在代码 <a class="reference internal" href="#babies-transformed"><span class="std std-ref">babies_transformed</span></a> 中定义的 <code class="docutils literal notranslate"><span class="pre">model_sqrt</span></code>。现在假设当孩子们小的时候，他们的身高更集中一些，但随着年龄增长，他们的身高变得越来越分散。</p>
 <div class="literal-block-wrapper docutils container" id="babies-varying-variance">
 <div class="code-block-caption"><span class="caption-number">Listing 47 </span><span class="caption-text">babies_varying_variance</span><a class="headerlink" href="#babies-varying-variance" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model_baby_vv</span><span class="p">:</span>
@@ -456,23 +466,24 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </pre></div>
 </div>
 </div>
-<p>为了模拟随着儿童年龄增长而增加的身高离散度，我们将 <span class="math notranslate nohighlight">\(\sigma\)</span> 的定义从固定值更改为随年龄变化的值。换句话说，我们将模型假设从具有恒定方差的 <strong>同质性</strong> 更改为具有变化方差的 <strong>异质性</strong>。模型定义在代码 <a class="reference internal" href="#babies-varying-variance"><span class="std std-ref">babies_varying_variance</span></a> 中，我们需要做的就是更改定义模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 的表达式，然后 <code class="docutils literal notranslate"><span class="pre">PPL</span></code> 会自动处理后验估计。该模型的结果绘制在 <a class="reference internal" href="#fig-baby-length-sqrt-vv-fit-include-error"><span class="std std-numref">Fig. 60</span></a> 中。</p>
+<p>为了模拟随着儿童年龄增长而增加的身高离散度，我们将 <span class="math notranslate nohighlight">\(\sigma\)</span> 的定义从固定值更改为随年龄变化的值。换句话说，我们将模型假设从具有恒定方差的 <strong>同质性</strong> 更改为具有变化方差的 <strong>异质性</strong>。模型定义在代码 <a class="reference internal" href="#babies-varying-variance"><span class="std std-ref">babies_varying_variance</span></a> 中，我们需要做的就是更改定义 <span class="math notranslate nohighlight">\(\sigma\)</span> 的表达式，然后概率编程语言会自动处理后验估计。该模型的结果绘制在 <a class="reference internal" href="#fig-baby-length-sqrt-vv-fit-include-error"><span class="std std-numref">Fig. 60</span></a> 中。</p>
 <div class="figure align-default" id="fig-baby-length-sqrt-vv-fit-include-error">
 <a class="reference internal image-reference" href="../_images/Baby_Length_Sqrt_VV_Fit_Include_Error.png"><img alt="../_images/Baby_Length_Sqrt_VV_Fit_Include_Error.png" src="../_images/Baby_Length_Sqrt_VV_Fit_Include_Error.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 60 </span><span class="caption-text">显示婴儿月龄与身高的参数拟合的两个图。在上图中，用蓝线表示的预期平均预测与 <a class="reference internal" href="#fig-baby-length-non-linear"><span class="std std-numref">Fig. 59</span></a> 相同，但是后验的 <code class="docutils literal notranslate"><span class="pre">HDI</span></code> 区间是非恒定的。底部的图表绘制了预期误差估计 <span class="math notranslate nohighlight">\(\sigma\)</span> 作为月龄的函数。请注意，随着月数增加，误差的预期估计值在增加。</span><a class="headerlink" href="#fig-baby-length-sqrt-vv-fit-include-error" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 60 </span><span class="caption-text">显示婴儿月龄与身高之间关系的拟合图。上图为身高均值与月龄之间关系的拟合图，蓝线表示均值预测的期望值，与 <a class="reference internal" href="#fig-baby-length-non-linear"><span class="std std-numref">Fig. 59</span></a> 中相同，但后验的 <code class="docutils literal notranslate"><span class="pre">HDI</span></code> 区间是非恒定的。下图绘制了误差估计的期望值与月龄之间关系的拟合图。请注意，随着月数增加，误差估计的期望在增加。</span><a class="headerlink" href="#fig-baby-length-sqrt-vv-fit-include-error" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="interaction-effects">
-<span id="id6"></span><h2>4.3 交互效应<a class="headerlink" href="#interaction-effects" title="Permalink to this headline">¶</a></h2>
-<p>到目前为止，在我们所有的模型中，都假设一个预测变量对响应变量的影响独立于任何其他预测变量。这并非总是如此。考虑一种情况，我们想要为特定城镇的冰淇淋销售建模。我们可能会说，如果有很多冰淇淋店，就会有更多的冰淇淋可供选择，因此我们预计会有大量的冰淇淋购买。但如果这个小镇气候寒冷，日平均气温为-5 摄氏度，我们怀疑冰淇淋的销量会不会很多。然而，在相反的情况下，如果小镇处于平均温度为 30 摄氏度的炎热沙漠中，但没有冰淇淋店，冰淇淋的销量也会很低。只有当天气炎热<em>和</em>有很多地方可以购买冰淇淋时，我们才预计销量会增加。对这种联合现象进行建模需要我们引入<em>交互效应</em>，其中一个预测变量对输出变量的影响取决于其他预测变量的值。因此，如果我们假设预测变量独立贡献（如在标准线性回归模型中），我们将无法完全解释这些现象。我们可以将交互作用表示为：</p>
+<span id="id6"></span><h2>4.3 引入交互效应<a class="headerlink" href="#interaction-effects" title="Permalink to this headline">¶</a></h2>
+<p>到目前为止的所有模型中，都假设某个预测变量对结果变量的影响独立于任何其他预测变量，但实践中并非总是如此。考虑一种情形，我们想为特定城镇的冰淇淋销售情况建模。通常我们会自然而然想到：如果冰淇淋店比较多，有了更多的冰淇淋可供选择，则预计冰淇淋的销售业绩会更好；但如果这个城镇气候寒冷，日均气温为 <span class="math notranslate nohighlight">\(-5\)</span> 摄氏度，那么冰淇淋的销量应该会下降。在相反情况下，如果该城镇处于平均温度为 <span class="math notranslate nohighlight">\(30\)</span> 摄氏度的炎热沙漠中，但并没有太多冰淇淋店，则冰淇淋的销量也会很低。只有当天气炎热 <em>和</em> 冰淇淋销售点比较多时，才预计销量肯定会增加。对于这种联合现象进行建模，我们需要引入 <strong>交互效应</strong> 的概念，即某个预测变量对结果变量的影响，取决于其他预测变量的值。如果在建模时，我们假设预测变量均为独立的贡献，则无法完全解释这种现象。</p>
+<p>我们可以将交互作用表示为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-interaction-effect">
 <span class="eqno">(33)<a class="headerlink" href="#equation-eq-interaction-effect" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
-    \mu =&amp; \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2\\
-    Y \sim&amp; \mathcal{N}(\mu, \sigma)
+\mu =&amp; \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2\\
+Y \sim&amp; \mathcal{N}(\mu, \sigma)
 \end{split}\end{split}\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(\beta_3\)</span> 是交互项 <span class="math notranslate nohighlight">\(X_1X_2\)</span> 的系数。</p>
-<p>还有其他引入交互的方法，但计算原始预测变量的乘积是一个非常广泛使用的选项。现在定义了交互效应是什么，我们可以通过对比将主效应定义为一个预测变量对结果变量的影响，而忽略所有其他预测变量。</p>
-<p>为了说明，我们使用另一个示例，代码 <a class="reference internal" href="#tips-no-interaction"><span class="std std-ref">tips_no_interaction</span></a> 中将用餐者留下的小费金额建模为总账单的函数。这听起来很合理，因为小费的金额通常是按总账单的百分比计算的，确切的百分比会因不同因素而异，例如就餐场所类型、服务质量、所在国家等。在此示例中，我们重点关注吸烟者与非吸烟者的小费金额差异。特别是，我们将研究吸烟与总账单金额之间是否存在交互作用 <a class="footnote-reference brackets" href="#id32" id="id7">2</a>。就像模型 <a class="reference internal" href="chp_03.html#penguin-mass-multi"><span class="std std-ref">penguin_mass_multi</span></a> 一样，我们可以在回归中将吸烟者作为独立的分类变量包括在内。</p>
+<p>式中 <span class="math notranslate nohighlight">\(\beta_3\)</span> 是交互项 <span class="math notranslate nohighlight">\(X_1X_2\)</span> 的系数。其实还存在其他引入交互的方法，但采用原始预测变量乘积的形式应用比较广泛。</p>
+<p>现在定义了交互效应是什么，我们就可以对比性地定义 <strong>主效应</strong> ，即一个预测变量对结果变量的影响，只与自身取值有关，与所有其他预测变量取值无关。</p>
+<p>为了说明，我们使用一个消费模型的例子，代码 <a class="reference internal" href="#tips-no-interaction"><span class="std std-ref">tips_no_interaction</span></a> 对用餐者留下的小费金额进行了建模，将小费建模为总账单的函数。这听起来很合理，因为小费金额通常是按总账单的百分比来计算的。不过确切的百分比会因不同因素而异，例如餐厅类型、服务质量、所在国家等。在此示例中，我们重点关注吸烟者与非吸烟者的小费金额差异，重点研究吸烟与总账单金额之间是否存在交互作用 <a class="footnote-reference brackets" href="#id33" id="id7">2</a>。就像模型 <a class="reference internal" href="chp_03.html#penguin-mass-multi"><span class="std std-ref">penguin_mass_multi</span></a> 一样，先将吸烟者作为独立的预测变量添加到回归模型中。</p>
 <div class="literal-block-wrapper docutils container" id="tips-no-interaction">
 <div class="code-block-caption"><span class="caption-number">Listing 48 </span><span class="caption-text">tips_no_interaction</span><a class="headerlink" href="#tips-no-interaction" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tips_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/tips.csv"</span><span class="p">)</span>
@@ -513,30 +524,30 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 <div class="figure align-default" id="fig-smoker-tip-interaction">
 <a class="reference internal image-reference" href="../_images/Smoker_Tip_Interaction.png"><img alt="../_images/Smoker_Tip_Interaction.png" src="../_images/Smoker_Tip_Interaction.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 61 </span><span class="caption-text">两个小费模型的线性估计图。左图显示了来自代码 <a class="reference internal" href="#tips-no-interaction"><span class="std std-ref">tips_no_interaction</span></a> 的非交互估计，其中估计的线是平行的。右图中展示了来自代码 <a class="reference internal" href="#tips-interaction"><span class="std std-ref">tips_interaction</span></a> 的模型，其中包括吸烟者或非吸烟者与账单金额之间的交互项。在交互模型中，不同组的斜率由于添加的交互项而允许变化。</span><a class="headerlink" href="#fig-smoker-tip-interaction" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 61 </span><span class="caption-text">两种小费模型的线性估计图。左图显示了代码 <a class="reference internal" href="#tips-no-interaction"><span class="std std-ref">tips_no_interaction</span></a> 的无交互估计，其中估计的线是平行的。右图展示了来自代码 <a class="reference internal" href="#tips-interaction"><span class="std std-ref">tips_interaction</span></a> 的有交互模型，其中包括吸烟者（或非吸烟者）与账单总金额之间的交互项。该图中不同组的斜率由于添加的交互项而允许变化。</span><a class="headerlink" href="#fig-smoker-tip-interaction" title="Permalink to this image">¶</a></p>
 </div>
-<p>差异在 <a class="reference internal" href="#fig-smoker-tip-interaction"><span class="std std-numref">Fig. 61</span></a> 中可见。比较左侧的非交互模型和右侧的交互模型，平均拟合线不再平行，吸烟者和非吸烟者的斜率不同！</p>
-<p>通过引入交互，我们正在构建一个模型，该模型可以有效地将数据拆分，在本例中分为两类，吸烟者和非吸烟者。你可能认为最好手动拆分数据并拟合两个单独的模型，一个用于吸烟者，一个用于非吸烟者。嗯，没那么快。使用交互的好处之一是我们使用所有可用数据来拟合单个模型，从而提高估计参数的准确性。例如，请注意，通过使用单个模型，我们假设 <span class="math notranslate nohighlight">\(\sigma\)</span> 不受变量 <code class="docutils literal notranslate"><span class="pre">smoker</span></code> 的影响，因此 <span class="math notranslate nohighlight">\(\sigma\)</span> 是从吸烟者和非吸烟者中估计的，这有助于我们获得更好的估计这个参数的。</p>
-<p>另一个好处是我们可以估计交互的大小效应。如果我们只是拆分数据，其隐含地假设了交互作用正好为 <span class="math notranslate nohighlight">\(0\)</span>，而通过对交互作用建模，我们可以估计交互作用的强度。最后，为相同的数据构建一个有和没有交互的模型，以便更容易使用 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 比较模型。如果我们拆分了数据，则最终会得到在不同数据上评估的不同模型，而不是在相同数据上评估不同模型，而后者是 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 的必要条件。总而言之，虽然交互效应模型的主要区别在于对每组不同斜率进行建模的灵活性，但将所有数据建模在一起会产生许多额外的好处。</p>
+<p>两种模型的差异在 <a class="reference internal" href="#fig-smoker-tip-interaction"><span class="std std-numref">Fig. 61</span></a> 中可以看到。比较左侧的无交互模型和右侧的交互模型，在交互模型中，平均拟合线不再平行，吸烟者和非吸烟者的斜率不同！</p>
+<p>通过引入交互项，我们可以构建一个能拆分数据的模型。在本例中拆分为两类：吸烟者和非吸烟者。你可能会认为手动拆分数据并拟合两个单独的模型也是可以的。这没错，但使用交互的好处之一是：我们能够使用所有可用数据来拟合单个模型，从而提高参数估计的准确性。例如，如果我们假设方差 <span class="math notranslate nohighlight">\(\sigma\)</span> 不受变量 <code class="docutils literal notranslate"><span class="pre">smoker</span></code> 影响，则单个模型可以利用所有吸烟者和非吸烟者的数据来估计 <span class="math notranslate nohighlight">\(\sigma\)</span> ，进而获得更好的参数估计。</p>
+<p>另一个好处是我们可以估计交互的效应强度。如果只是为了拆分数据，则其隐含假设交互作用的强度正好为 <span class="math notranslate nohighlight">\(0\)</span> 或 <span class="math notranslate nohighlight">\(1\)</span>。但通过对交互作用建模，我们其实还能够估计交互作用的强度。</p>
+<p>最后，为同一数据构建分别一个有交互模型和一个无交互模型，可以更容易的使用 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 比较模型。如果数据被拆分了，我们最终做比较的是在不同数据上的不同模型，而不是在同一数据上评估的不同模型，而后者是 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 的必要条件。</p>
+<p>总而言之，虽然交互效应模型的主要区别在于对每组不同斜率进行建模的灵活性，但将所有数据建模在一起会产生许多额外的好处。</p>
 </div>
 <div class="section" id="robust-regression">
-<span id="id8"></span><h2>4.4 稳健的回归<a class="headerlink" href="#robust-regression" title="Permalink to this headline">¶</a></h2>
-<p>顾名思义，异常值是位于“合理预期”范围之外的观测值。异常值是不可取的，因为这些数据点中的一个或几个可能会显着改变模型的参数估计。有多种建议的形式化方法 <span id="id9">[<a class="reference internal" href="references.html#id119">42</a>]</span> 处理异常值，但实际上如何处理异常值是统计学家必须做出的选择（因为即使是形式化方法的选择也是主观的）。</p>
-<p>一般来说，至少有两种方法可以解决异常值问题。一种是使用一些预定义标准删除异常值，例如 <span class="math notranslate nohighlight">\(3\)</span> 个标准差或四分位间距的 <span class="math notranslate nohighlight">\(1.5\)</span> 倍。另一种策略是选择一个可以处理异常值并仍然提供有用结果的模型。在回归问题中，后者通常被称为稳健回归模型，特别要注意此类模型对远离大量数据的观测不太敏感。</p>
-<p>从技术上讲，稳健回归旨在减少基础数据生成过程违反假设的影响。在贝叶斯回归中，一个例子是将似然从高斯分布更改为学生 <span class="math notranslate nohighlight">\(t\)</span> 分布。</p>
-<p>回想一下，高斯分布由通常称为位置 <span class="math notranslate nohighlight">\(\mu\)</span> 和尺度 <span class="math notranslate nohighlight">\(\sigma\)</span> 的两个参数定义。这些参数控制高斯分布的均值和标准差。</p>
-<p>学生 <span class="math notranslate nohighlight">\(t\)</span> 分布也分别有一个位置和尺度参数 <a class="footnote-reference brackets" href="#id33" id="id10">3</a>。但是，还有一个附加参数，通常称为自由度 <span class="math notranslate nohighlight">\(\nu\)</span>。该参数控制学生 <span class="math notranslate nohighlight">\(t\)</span> 分布尾部的权重，如 <a class="reference internal" href="#fig-studentt-normal-comparison"><span class="std std-numref">Fig. 62</span></a> 所示。比较 <span class="math notranslate nohighlight">\(3\)</span> 个学生 <span class="math notranslate nohighlight">\(t\)</span> 分布和正态分布，主要区别在于尾部的密度在总概率质量中的比例。当<span class="math notranslate nohighlight">\(\nu\)</span> 较小时，尾部分布的质量更多，随着<span class="math notranslate nohighlight">\(\nu\)</span> 值的增加，向主体集中的密度比例也增加，学生 <span class="math notranslate nohighlight">\(t\)</span> 分布越来越接近高斯分布。实际上，这意味着当 <span class="math notranslate nohighlight">\(\nu\)</span> 较小时，更可能出现远离均值的值。当用学生 <span class="math notranslate nohighlight">\(t\)</span> 分布替换高斯似然性时，这为异常值提供了鲁棒性。</p>
+<span id="id8"></span><h2>4.4 更稳健的回归<a class="headerlink" href="#robust-regression" title="Permalink to this headline">¶</a></h2>
+<p>异常值指位于 “合理预期” 范围之外的观测值。异常值通常不可取，因为其中的某个或几个异常值可能会显著改变模型的参数估计结果。存在多种异常值的处理方法 <span id="id9">[<a class="reference internal" href="references.html#id119">42</a>]</span> ，但无论如何，如何处理异常值都是统计学家必须做出的主观选择。</p>
+<p>一般来说，至少有两种方法可以解决异常值问题。一种是使用一些预定义规则删除异常值，例如 <span class="math notranslate nohighlight">\(3\)</span> 个标准差或四分位间距的 <span class="math notranslate nohighlight">\(1.5\)</span> 倍。另一种策略是选择一个可以处理异常值并仍然提供有用结果的模型。在回归问题中，后者通常被称为稳健（或鲁棒）回归模型，特别要注意：此类模型对远离大量数据的观测点不太敏感。</p>
+<p>从技术上讲，稳健回归模型旨在减少基础数据生成过程那些有违假设的影响。在贝叶斯回归中，一个常见的例子，是将似然函数从高斯分布更改为学生 <span class="math notranslate nohighlight">\(t\)</span> 分布。高斯分布由位置参数 <span class="math notranslate nohighlight">\(\mu\)</span> 和尺度参数 <span class="math notranslate nohighlight">\(\sigma\)</span> 两个参数定义，这些参数控制着高斯分布的均值和标准差（离散度）。</p>
+<p>学生 <span class="math notranslate nohighlight">\(t\)</span> 分布也有位置参数和尺度参数 <a class="footnote-reference brackets" href="#id34" id="id10">3</a>。但还有一个附加的参数，被称为自由度 <span class="math notranslate nohighlight">\(\nu\)</span>。自由度参数控制学生 <span class="math notranslate nohighlight">\(t\)</span> 分布尾部的权重，如 <a class="reference internal" href="#fig-studentt-normal-comparison"><span class="std std-numref">Fig. 62</span></a> 所示。图中比较了 <span class="math notranslate nohighlight">\(3\)</span> 个学生 <span class="math notranslate nohighlight">\(t\)</span> 分布和一个高斯分布，其间的主要区别在于尾部密度在总概率质量中所占的比例。当<span class="math notranslate nohighlight">\(\nu\)</span> 较小时，分布主体处的质量比例减少，尾部分布的质量更多；随着<span class="math notranslate nohighlight">\(\nu\)</span> 值的增加，分布主体处的质量比例也增加，尾部分布的质量相应地减少，此时学生 <span class="math notranslate nohighlight">\(t\)</span> 分布越来越接近于一个高斯分布。这也意味着：当 <span class="math notranslate nohighlight">\(\nu\)</span> 较小时，更可能出现远离均值的值。因此，当用学生 <span class="math notranslate nohighlight">\(t\)</span> 分布替换高斯分布作为似然时，将会为异常值提供稳健性。</p>
 <div class="figure align-default" id="fig-studentt-normal-comparison">
 <a class="reference internal image-reference" href="../_images/StudentT_Normal_Comparison.png"><img alt="../_images/StudentT_Normal_Comparison.png" src="../_images/StudentT_Normal_Comparison.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 62 </span><span class="caption-text">正态分布（蓝色），与 <span class="math notranslate nohighlight">\(3\)</span> 个具有不同 <span class="math notranslate nohighlight">\(\nu\)</span> 参数的学生 <span class="math notranslate nohighlight">\(t\)</span> 分布比较。位置和比例参数都是相同的，这可以分理出 <span class="math notranslate nohighlight">\(\nu\)</span> 对尾部的影响。 <span class="math notranslate nohighlight">\(\nu\)</span> 的值越小，分布尾部的密度越大。</span><a class="headerlink" href="#fig-studentt-normal-comparison" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 62 </span><span class="caption-text">高斯分布（蓝色），与 <span class="math notranslate nohighlight">\(3\)</span> 个具有不同 <span class="math notranslate nohighlight">\(\nu\)</span> 参数的学生 <span class="math notranslate nohighlight">\(t\)</span> 分布比较。位置和比例参数都是相同的，这可以分理出 <span class="math notranslate nohighlight">\(\nu\)</span> 对尾部的影响。 <span class="math notranslate nohighlight">\(\nu\)</span> 的值越小，分布尾部的密度越大。</span><a class="headerlink" href="#fig-studentt-normal-comparison" title="Permalink to this image">¶</a></p>
 </div>
-<p>这可以在一个示例中显示。假设你在阿根廷拥有一家餐厅并出售肉馅卷饼 <a class="footnote-reference brackets" href="#id34" id="id11">4</a>。随着时间推移，你收集了有关每天顾客数量和餐厅赚取的总金额的数据，如 <a class="reference internal" href="#fig-empanada-scatter-plot"><span class="std std-numref">Fig. 63</span></a> 所示。
-大多数数据点沿着一条线排列，除了在几天内，每位客户售出的肉馅卷饼数量远高于周围的数据点。这些可能是大型庆祝活动的日子   <a class="footnote-reference brackets" href="#id35" id="id12">5</a>，人们比平时吃更多的肉馅卷饼。</p>
+<p>稳健回归可以在下面的例子中体现。假设你在阿根廷拥有一家餐厅并出售肉馅馅饼 <a class="footnote-reference brackets" href="#id35" id="id11">4</a>。随着时间推移，你收集了每天顾客数量和餐厅收入总金额的数据，如 <a class="reference internal" href="#fig-empanada-scatter-plot"><span class="std std-numref">Fig. 63</span></a> 所示。其中，大多数数据点沿着一条线排列，只是偶尔有几天，售出的单客馅饼数量远高于邻近数据点。这可能是因为在某些大型庆祝活动日  <a class="footnote-reference brackets" href="#id36" id="id12">5</a>，人们比平时吃的馅饼更多。</p>
 <div class="figure align-default" id="fig-empanada-scatter-plot">
 <a class="reference internal image-reference" href="../_images/Empanada_Scatter_Plot.png"><img alt="../_images/Empanada_Scatter_Plot.png" src="../_images/Empanada_Scatter_Plot.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 63 </span><span class="caption-text">根据客户数量和收入绘制的模拟数据。图表顶部的 <span class="math notranslate nohighlight">\(5\)</span> 个点被视为异常值。</span><a class="headerlink" href="#fig-empanada-scatter-plot" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 63 </span><span class="caption-text">根据顾客数量和收入绘制的模拟数据。图表顶部的 <span class="math notranslate nohighlight">\(5\)</span> 个点被视为异常值。</span><a class="headerlink" href="#fig-empanada-scatter-plot" title="Permalink to this image">¶</a></p>
 </div>
-<p>无论异常值如何，我们都希望能够估计客户与收入之间的关系。在绘制数据时，线性回归似乎是合适的，例如在代码 <a class="reference internal" href="#non-robust-regression"><span class="std std-ref">non_robust_regression</span></a> 中编写的使用高斯似然的线性回归。在估计参数后，我们在 <a class="reference internal" href="#fig-empanada-scatter-non-robust"><span class="std std-numref">Fig. 64</span></a> 中以两个不同的尺度绘制平均回归。在图中，请注意拟合回归线几乎位于所有可见数据点之上。在 <a class="reference internal" href="#tab-non-robust-regression"><span class="std std-numref">Table 8</span></a> 中，我们还可以看到各参数的估计值，特别注意到 <span class="math notranslate nohighlight">\(\sigma\)</span> 与数据图相比，均值似乎过高。对于正态似然，后验分布必须在观测值和 <span class="math notranslate nohighlight">\(5\)</span> 个异常值上“伸缩”自身，这会影响估计。此外，请注意与 <a class="reference internal" href="#fig-empanada-scatter-non-robust"><span class="std std-numref">Fig. 64</span></a> 中的绘图数据相比，<span class="math notranslate nohighlight">\(\sigma\)</span> 的估计值是多么宽泛。</p>
+<p>无论异常值如何，我们都希望能够估计顾客与餐厅收入之间的关系。通过图形绘制，我们发现线性回归似乎是合适的，例如在代码 <a class="reference internal" href="#non-robust-regression"><span class="std std-ref">non_robust_regression</span></a> 中编写的使用高斯似然的线性回归。在完成参数估计后，我们在 <a class="reference internal" href="#fig-empanada-scatter-non-robust"><span class="std std-numref">Fig. 64</span></a> 中以两个不同的尺度绘制了回归的均值。注意图中拟合回归线几乎位于所有可见数据点之上。在 <a class="reference internal" href="#tab-non-robust-regression"><span class="std std-numref">Table 8</span></a> 中，还可以看到各参数的估计值，注意 <span class="math notranslate nohighlight">\(\sigma\)</span> 的均值为 <span class="math notranslate nohighlight">\(2951.1\)</span> ，显著大于图中给人的感觉。对于高斯似然，后验分布必须在主体观测和 <span class="math notranslate nohighlight">\(5\)</span> 个异常值之间做“伸缩”，从而导致了上述估计结果。还要注意到，与 <a class="reference internal" href="#fig-empanada-scatter-non-robust"><span class="std std-numref">Fig. 64</span></a> 中的主体数据相比，<span class="math notranslate nohighlight">\(\sigma\)</span> 的估计值过于宽泛。</p>
 <div class="literal-block-wrapper docutils container" id="non-robust-regression">
 <div class="code-block-caption"><span class="caption-number">Listing 50 </span><span class="caption-text">non_robust_regression</span><a class="headerlink" href="#non-robust-regression" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model_non_robust</span><span class="p">:</span>
@@ -553,7 +564,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 <div class="figure align-default" id="fig-empanada-scatter-non-robust">
 <a class="reference internal image-reference" href="../_images/Empanada_Scatter_Non_Robust.png"><img alt="../_images/Empanada_Scatter_Non_Robust.png" src="../_images/Empanada_Scatter_Non_Robust.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 64 </span><span class="caption-text">来自代码 <a class="reference internal" href="#non-robust-regression"><span class="std std-ref">non_robust_regression</span></a> 的数据、拟合回归线和 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间，顶部为异常值，底部集中在回归本身。系统偏差在底部图中较为明显，因为估计平均回归线大部分高于数据点。</span><a class="headerlink" href="#fig-empanada-scatter-non-robust" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 64 </span><span class="caption-text">来自代码 <a class="reference internal" href="#non-robust-regression"><span class="std std-ref">non_robust_regression</span></a> 的数据、拟合回归线和 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间。在上部子图中，顶部的点为异常值，底部的点为主体数据，蓝色线为回归线；在下部尺度被放大的子图中，可以明显看出拟合线存在系统偏差，估计的均值回归线高于大部分数据点。</span><a class="headerlink" href="#fig-empanada-scatter-non-robust" title="Permalink to this image">¶</a></p>
 </div>
 <table class="table" id="tab-non-robust-regression">
 <caption><span class="caption-number">Table 8 </span><span class="caption-text">Estimate of parameters for model non_robust_regression.</span><a class="headerlink" href="#tab-non-robust-regression" title="Permalink to this table">¶</a></caption>
@@ -585,10 +596,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </tr>
 </tbody>
 </table>
-<p>我们再次运行相同的回归，但这次使用学生 <span class="math notranslate nohighlight">\(t\)</span> 分布作为似然，如代码 <a class="reference internal" href="#code-robust-regression"><span class="std std-ref">code_robust_regression</span></a> 所示。请注意，数据集没有更改，仍然包含异常值。当检查 <a class="reference internal" href="#fig-empanada-scatter-robust"><span class="std std-numref">Fig. 65</span></a> 中的拟合回归线时，我们可以看到拟合落在观测数据点之间，更接近预期位置。检查 <a class="reference internal" href="#tab-robust-regression"><span class="std std-numref">Table 9</span></a> 中的参数估计值（ 注意添加了额外的参数 <span class="math notranslate nohighlight">\(\nu\)</span> ），可以看到 <span class="math notranslate nohighlight">\(\sigma\)</span> 的估计值已从非稳健回归中的约 <span class="math notranslate nohighlight">\(2951\)</span> 比索大幅下降到稳健回归中的 约 <span class="math notranslate nohighlight">\(152\)</span> 比索，表明新模型相对于数据而言，似乎更为合理。似然分布的变化表明，尽管存在异常值，但学生 <span class="math notranslate nohighlight">\(t\)</span> 分布有足够灵活性来合理地对数据进行建模。</p>
-<blockquote>
-<div><p>注意： 请思考学生 <span class="math notranslate nohighlight">\(t\)</span> 分布适用的变量类型，是不是只限于名义型随机变量。</p>
-</div></blockquote>
+<p>我们使用学生 <span class="math notranslate nohighlight">\(t\)</span> 分布作为似然，对同一数据建模，如代码 <a class="reference internal" href="#code-robust-regression"><span class="std std-ref">code_robust_regression</span></a> 所示。请注意，数据集没有更改，仍然包含异常值。当检查 <a class="reference internal" href="#fig-empanada-scatter-robust"><span class="std std-numref">Fig. 65</span></a> 中的拟合回归线时，可以看到拟合落在主体观测数据点之间，更接近预期的位置。查看 <a class="reference internal" href="#tab-robust-regression"><span class="std std-numref">Table 9</span></a> 中的参数估计值（ 注意增加了参数 <span class="math notranslate nohighlight">\(\nu\)</span> ），可以看到 <span class="math notranslate nohighlight">\(\sigma\)</span> 的估计值已从非稳健回归中的约 <span class="math notranslate nohighlight">\(2951\)</span> ，大幅下降到了稳健回归中的 约 <span class="math notranslate nohighlight">\(152\)</span> ，表明新模型对于数据而言似乎更合理。似然分布的变化表明，尽管数据中存在异常值，但学生 <span class="math notranslate nohighlight">\(t\)</span> 分布有足够灵活性来合理地对其进行建模。</p>
 <div class="literal-block-wrapper docutils container" id="code-robust-regression">
 <div class="code-block-caption"><span class="caption-number">Listing 51 </span><span class="caption-text">code_robust_regression</span><a class="headerlink" href="#code-robust-regression" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model_robust</span><span class="p">:</span>
@@ -606,7 +614,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 </div>
 <table class="table" id="tab-robust-regression">
-<caption><span class="caption-number">Table 9 </span><span class="caption-text">Estimate of parameters for model robust_regression.</span><a class="headerlink" href="#tab-robust-regression" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-number">Table 9 </span><span class="caption-text">model robust_regression 模型的参数估计</span><a class="headerlink" href="#tab-robust-regression" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%"/>
 <col style="width: 20%"/>
@@ -643,31 +651,31 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </table>
 <div class="figure align-default" id="fig-empanada-scatter-robust">
 <a class="reference internal image-reference" href="../_images/Empanada_Scatter_Robust.png"><img alt="../_images/Empanada_Scatter_Robust.png" src="../_images/Empanada_Scatter_Robust.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 65 </span><span class="caption-text">来自代码 <a class="reference internal" href="#code-robust-regression"><span class="std std-ref">code_robust_regression</span></a> 的模型 <code class="docutils literal notranslate"><span class="pre">model_robust</span></code>对应的拟合回归线和的 <span class="math notranslate nohighlight">\(94\%\)</span> HDI。异常值未绘制，但存在于数据中。与 <a class="reference internal" href="#fig-empanada-scatter-non-robust"><span class="std std-numref">Fig. 64</span></a> 相比，新模型的拟合线基本落在了数据点范围内。</span><a class="headerlink" href="#fig-empanada-scatter-robust" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 65 </span><span class="caption-text">模型 <code class="docutils literal notranslate"><span class="pre">model_robust</span></code> 对应的拟合回归线和 <span class="math notranslate nohighlight">\(94\%\)</span> HDI。图中未绘制异常值，但其仍然存在于数据中。与 <a class="reference internal" href="#fig-empanada-scatter-non-robust"><span class="std std-numref">Fig. 64</span></a> 相比，新模型的拟合回归线基本落在了数据点范围内。</span><a class="headerlink" href="#fig-empanada-scatter-robust" title="Permalink to this image">¶</a></p>
 </div>
-<p>在这个例子中，“异常值”并不是测量误差、数据输入错误等，而是在某些条件下实际发生的观测结果，我们想要将其作为建模问题的一部分。因此，如果我们的目的是模拟“常规时间”肉馅卷饼的平均数量，就可以将它们视为真的异常值，但如果使用这个均值来制定下一个重大节日的卷饼数量，那它会错的离谱。在此示例中，稳健的线性回归模型避免了显式地单独建模高销售日（ 所谓显式指将“常规时间”和“节假日”区分开建模 ）。此外，使用混合模型或分层模型也可能会实现更好地建模。</p>
+<p>在本例中，异常值并不是测量误差、数据输入错误等，而是在某些条件下实际发生的真实观测结果，我们希望能够将其作为建模问题的组成部分。如果我们的目的仅仅是模拟常规时间的馅饼平均销售数量，那么确实可以将其视为真的异常值，但如果用其拟合的模型来确定下一个重大节日的馅饼数量，结果一定会很离谱。在此示例中，稳健线性回归模型避免了显式地为高销售日单独建模（ 所谓显式指将“常规时间”和“节假日”区分开建模 ）。除了进行稳健回归建模外，使用其他形式的模型（如本书后面将介绍到的混合模型或分层模型）也能实现对异常值的建模。</p>
 <div class="admonition- admonition">
-<p class="admonition-title">面向数据的模型调整</p>
-<p>改变似然以实现稳健性，仅仅是通过修改模型以更好适应观测数据的一种方式，还有很多其他的方法。例如，在检测放射性粒子发射时，由于传感器故障<span id="id13">[<a class="reference internal" href="references.html#id135">43</a>]</span>（或其他一些测量问题），或者实际上没有要记录的事件，可能会出现零计数。这种未知的变化来源具有 <em>夸大零计数</em> 的效果。针对此类问题开发有一种<strong>零膨胀模型</strong>。该模型估计组合的数据生成过程。例如，将泊松似然（通常是建模计数的起点）扩展为零膨胀泊松似然。有了这样的似然，我们可以更好地将正常的泊松过程计数与 <em>超零生成过程的计数</em> 区分开来。</p>
-<p>零膨胀模型是处理混合数据的示例，其中观测来自两个或多个组，而且不知道哪个观测属于哪个组。实际上，我们可以使用混合似然来表达另一种类型的稳健回归，它为每个数据点分配一个潜在标签（异常值或非异常值）。</p>
-<p>在所有这些情况以及更多情况下，贝叶斯模型的定制特性使建模者能够灵活地创建适合形势的模型，而不必强制将形势与预定义的模型做匹配。</p>
+<p class="admonition-title">适应数据的模型调整</p>
+<p>改变似然以实现稳健性，仅仅是通过修改模型以适应观测数据的一种方式，还有许多其他方法。例如，在检测放射性粒子发射时，由于传感器故障 <span id="id13">[<a class="reference internal" href="references.html#id135">43</a>]</span>（或其他一些测量问题），或者实际上没有要记录的事件，因此可能会出现零计数。而这种情况会产生 <em>夸大零计数</em> 的效果。针对此类问题，部分学者开发了一种 <strong>零膨胀模型</strong> 用于估计一种组合的数据生成过程。例如，将泊松似然（通常用于建模时间发生的起点计数）扩展为零膨胀泊松似然。有了这种似然，我们可以更好地将正常的泊松过程计数与 <em>异常零生成过程计数</em> 区分开来。</p>
+<p>零膨胀模型仅是处理混合数据的一种方法，其中观测来自两个或多个组，而且不知道哪个观测属于哪个组。实际上，我们完全可以使用此类<strong>混合似然</strong>来实现另一种稳健回归，它将为每个数据点分配一个隐标签（异常值或非异常值）。</p>
+<p>贝叶斯模型的可定制性使建模者能够灵活地创建适合数据情况的模型，而不必强制将数据情况与预定义的模型做匹配。</p>
 </div>
 </div>
 <div class="section" id="multilevel-models">
-<span id="id14"></span><h2>4.5 池化、多层模型和混合效应<a class="headerlink" href="#multilevel-models" title="Permalink to this headline">¶</a></h2>
-<p>我们的数据集有时候会在预测变量中包含一些嵌套结构，这提供了一些对数据分组的层次性方法。我们也可以将这种分组视为不同的数据生成过程。下面用一个例子来说明。</p>
-<p>假设你在一家销售沙拉的餐馆工作。这家公司在一些区域市场拥有悠久的业务，并且刚刚在一个新市场开设了办事处以响应客户需求。出于财务规划目的，你需要预测这个新市场中的餐厅每天将赚取多少美元。你有两个数据集，<span class="math notranslate nohighlight">\(3\)</span> 天的沙拉销售数据，以及同一市场中大约一年的比萨和三明治的销售数据。数据（模拟的）显示在 <a class="reference internal" href="#fig-restaurant-order-scatter"><span class="std std-numref">Fig. 66</span></a> 中。</p>
+<span id="id14"></span><h2>4.5 池化、多级模型和混合效应<a class="headerlink" href="#multilevel-models" title="Permalink to this headline">¶</a></h2>
+<p>在实际问题中，有时候预测变量之间会包含一些嵌套结构，使得我们能够采用一些层次性方法对数据进行分组。我们可以考虑将这种分组视为不同的数据生成过程。下面用一个例子来说明。</p>
+<p>假设你在一家销售沙拉的公司工作。这家公司在一些区域市场拥有悠久的业务，并且在一个新市场开设了办事处以响应顾客需求。出于财务规划目的，你需要预测这个新市场中的门店每天将赚取多少美元。你有两个数据集，<span class="math notranslate nohighlight">\(3\)</span> 天的沙拉销售数据，以及同一市场中一年的披萨和三明治的销售数据。数据（合成的）显示在 <a class="reference internal" href="#fig-restaurant-order-scatter"><span class="std std-numref">Fig. 66</span></a> 中。</p>
 <div class="figure align-default" id="fig-restaurant-order-scatter">
 <a class="reference internal image-reference" href="../_images/Restaurant_Order_Scatter.png"><img alt="../_images/Restaurant_Order_Scatter.png" src="../_images/Restaurant_Order_Scatter.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 66 </span><span class="caption-text">面向真实世界场景的模拟数据集。在此案例中，一个企业仅有 <span class="math notranslate nohighlight">\(3\)</span> 个有关沙拉的日常销售数据点，但有大量关于披萨和三明治的销售数据。</span><a class="headerlink" href="#fig-restaurant-order-scatter" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 66 </span><span class="caption-text">面向真实世界场景的模拟数据集。在此案例中，一个企业仅有 <span class="math notranslate nohighlight">\(3\)</span> 条有关沙拉的日常销售数据，但有大量关于披萨和三明治的销售数据。</span><a class="headerlink" href="#fig-restaurant-order-scatter" title="Permalink to this image">¶</a></p>
 </div>
-<p>从专业知识和数据来看，一致认为这 <span class="math notranslate nohighlight">\(3\)</span> 种食品的销售额存在相似之处。它们都吸引相同类型的顾客，都是典型的<em>快销食品</em>类别，但它们又不完全相同。在接下来的部分中，我们将讨论如何对这种<em>相似但又不完全相似</em>进行建模。让我们从“所有组彼此无关”的最简单情况开始。</p>
+<p>从专业知识和数据来看，一致认为这 <span class="math notranslate nohighlight">\(3\)</span> 种食品的销售额存在相似之处。因为它们都吸引相同类型的顾客，都是典型的 <em>快销食品</em> 类别，但它们又不完全相同。在接下来的部分中，我们将讨论如何对这种 <em>相似但又不完全相似</em> 的情况进行建模。让我们先从“所有组彼此无关”的最简单情况开始。</p>
 <div class="section" id="unpooled-parameters">
 <span id="id15"></span><h3>4.5.1 非池化的参数<a class="headerlink" href="#unpooled-parameters" title="Permalink to this headline">¶</a></h3>
-<p>我们可以创建一个回归模型，将每个组（在本例中为食物类别）与其他组完全分开。这与为每个类别运行单独的回归相同，这就是我们称其为非池化回归的原因。运行分离回归的唯一区别是我们正在编写一个模型并同时估计所有系数。参数和组之间的关系在 <a class="reference internal" href="#fig-unpooled-model"><span class="std std-numref">Fig. 67</span></a> 和公式 <a class="reference internal" href="#equation-eq-unpooled-regression">(34)</a> 中以数学符号直观表示，其中 <span class="math notranslate nohighlight">\(j\)</span> 是标识每个分离组的索引。</p>
+<p>我们可以创建一个能够将每个组与其他组完全分离的回归模型。这种模型等价于为每个类别运行单独的回归，这也是称其为非池化回归的原因。分离回归模型的唯一不同是同时估计所有组的系数。参数和组之间的关系在 <a class="reference internal" href="#fig-unpooled-model"><span class="std std-numref">Fig. 67</span></a> 和公式 <a class="reference internal" href="#equation-eq-unpooled-regression">(34)</a> 中以数学符号直观表示，其中 <span class="math notranslate nohighlight">\(j\)</span> 为每个分组的索引。</p>
 <div class="figure align-default" id="fig-unpooled-model">
 <a class="reference internal image-reference" href="../_images/unpooled_model.png"><img alt="../_images/unpooled_model.png" src="../_images/unpooled_model.png" style="width: 5.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 67 </span><span class="caption-text">一个非池化模型，其中每组观测值 <span class="math notranslate nohighlight">\(y_1, y_2, ..., y_j\)</span> 都有独立于其他组的自身参数。</span><a class="headerlink" href="#fig-unpooled-model" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 67 </span><span class="caption-text">一个非池化模型，其中每个组的观测 <span class="math notranslate nohighlight">\(y_1, y_2, ..., y_j\)</span> 都有独立于其他组的参数。</span><a class="headerlink" href="#fig-unpooled-model" title="Permalink to this image">¶</a></p>
 </div>
 <div class="math notranslate nohighlight" id="equation-eq-unpooled-regression">
 <span class="eqno">(34)<a class="headerlink" href="#equation-eq-unpooled-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
@@ -676,9 +684,9 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 \mu_{j} =&amp; \beta_{1j} X_1 + \dots + \beta_{mj} X_m \\
 Y \sim&amp; \mathcal{N}(\mu_{j}, \sigma_{j})
 \end{split}\end{split}\]</div>
-<p>这些参数被标记为 <em>group-specific</em> 参数，表示每个组都有一个专用参数。非池化的 PyMC3 模型和一些数据清理体现在代码 <a class="reference internal" href="#model-sales-unpooled"><span class="std std-ref">model_sales_unpooled</span></a> 中，图显示见 <a class="reference internal" href="#fig-salad-sales-basic-regression-model-unpooled"><span class="std std-numref">Fig. 68</span></a> 此处不包括截距参数，原因很简单，如果餐厅的顾客为零，总销售额也将为零，因此对该参数既没有兴趣也没有必要。</p>
+<p>这些参数被标记为 <em>group-specific</em> 参数，表示每个组都有一个专用参数。非池化的 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 模型体现在代码 <a class="reference internal" href="#model-sales-unpooled"><span class="std std-ref">model_sales_unpooled</span></a> 中，拟合结果见 <a class="reference internal" href="#fig-salad-sales-basic-regression-model-unpooled"><span class="std std-numref">Fig. 68</span></a> 。此处所有组都没有截距参数，原因很简单，如果门店顾客为零，总销售额也将为零，因此没有必要为其建模。</p>
 <div class="literal-block-wrapper docutils container" id="model-sales-unpooled">
-<div class="code-block-caption"><span class="caption-number">Listing 52 </span><span class="caption-text">model_sales_unpooled</span><a class="headerlink" href="#model-sales-unpooled" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-number">Listing 52 </span><span class="caption-text">非池化的销售模型</span><a class="headerlink" href="#model-sales-unpooled" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">customers</span> <span class="o">=</span> <span class="n">sales_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">"customers"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">sales_observed</span> <span class="o">=</span> <span class="n">sales_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">"sales"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">food_category</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">sales_df</span><span class="p">[</span><span class="s2">"Food_Category"</span><span class="p">])</span>
@@ -702,28 +710,28 @@ Y \sim&amp; \mathcal{N}(\mu_{j}, \sigma_{j})
 </div>
 <div class="figure align-default" id="fig-salad-sales-basic-regression-model-unpooled">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Basic_Regression_Model_Unpooled.png"><img alt="../_images/Salad_Sales_Basic_Regression_Model_Unpooled.png" src="../_images/Salad_Sales_Basic_Regression_Model_Unpooled.png" style="width: 3.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 68 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_sales_unpooled</span></code> 的示意图。注意参数 <span class="math notranslate nohighlight">\(\beta\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 周围的框在右下角是有一个 <span class="math notranslate nohighlight">\(3\)</span> 的，表明模型为 <span class="math notranslate nohighlight">\(\beta\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 分别估计了 <span class="math notranslate nohighlight">\(3\)</span> 个参数。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-model-unpooled" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 68 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_sales_unpooled</span></code> 模型的示意图。注意参数 <span class="math notranslate nohighlight">\(\beta\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 周围的框在右下角都有一个 <span class="math notranslate nohighlight">\(3\)</span> ，表明模型为 <span class="math notranslate nohighlight">\(\beta\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 分别估计了 <span class="math notranslate nohighlight">\(3\)</span> 个参数。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-model-unpooled" title="Permalink to this image">¶</a></p>
 </div>
-<p>从 <code class="docutils literal notranslate"><span class="pre">model_sales_unpooled</span></code> 采样后，可以创建参数估计的森林图，如图 <a class="reference internal" href="#fig-salad-sales-basic-regression-forestplot-beta"><span class="std std-numref">Fig. 69</span></a> 和 <a class="reference internal" href="#fig-salad-sales-basic-regression-forestplot-sigma"><span class="std std-numref">Fig. 70</span></a> 所示。请注意，与三明治和比萨组相比，沙拉食品类别的 <span class="math notranslate nohighlight">\(\sigma\)</span> 后验估计值相当广泛。当观测数据中某些类别拥有少量数据而其他类别拥有大量数据时，这正是非池化模型应当有的预期结果。</p>
+<p>从 <code class="docutils literal notranslate"><span class="pre">model_sales_unpooled</span></code> 采样后，可以创建参数估计的森林图，如 <a class="reference internal" href="#fig-salad-sales-basic-regression-forestplot-beta"><span class="std std-numref">Fig. 69</span></a> 和 <a class="reference internal" href="#fig-salad-sales-basic-regression-forestplot-sigma"><span class="std std-numref">Fig. 70</span></a> 所示。请注意，与三明治组和披萨组相比，沙拉组的 <span class="math notranslate nohighlight">\(\sigma\)</span> 后验估计相当广泛。当观测数据中某些组的样本少而其他组样本多时，非池化模型应当有此预期结果。</p>
 <div class="figure align-default" id="fig-salad-sales-basic-regression-forestplot-beta">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Basic_Regression_ForestPlot_beta.png"><img alt="../_images/Salad_Sales_Basic_Regression_ForestPlot_beta.png" src="../_images/Salad_Sales_Basic_Regression_ForestPlot_beta.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 69 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_sales_unpooled</span></code> 模型的 <span class="math notranslate nohighlight">\(\beta\)</span> 参数估计对应的森林图。正如预期的那样，沙拉组的 <span class="math notranslate nohighlight">\(\beta\)</span> 系数估计是最宽泛的，因为该组数据量最少。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-forestplot-beta" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-salad-sales-basic-regression-forestplot-sigma">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Basic_Regression_ForestPlot_sigma.png"><img alt="../_images/Salad_Sales_Basic_Regression_ForestPlot_sigma.png" src="../_images/Salad_Sales_Basic_Regression_ForestPlot_sigma.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 70 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_sales_unpooled</span></code> 模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数估计对应的森林图。与 <a class="reference internal" href="#fig-salad-sales-basic-regression-forestplot-beta"><span class="std std-numref">Fig. 69</span></a> 类似，沙拉组的销售额变化 <span class="math notranslate nohighlight">\(\sigma\)</span> 的估计值最大，因为相对于比萨和三明治组的数据点不多。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-forestplot-sigma" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 70 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_sales_unpooled</span></code> 模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数估计对应的森林图。与 <a class="reference internal" href="#fig-salad-sales-basic-regression-forestplot-beta"><span class="std std-numref">Fig. 69</span></a> 类似，沙拉组的销售额变化 <span class="math notranslate nohighlight">\(\sigma\)</span> 的估计值最大，因为相对于披萨组和三明治组而言，其数据点过少。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-forestplot-sigma" title="Permalink to this image">¶</a></p>
 </div>
-<p>非池化模型与使用数据子集创建三个分离的模型没有什么不同，就像 <a class="reference internal" href="chp_03.html#comparing-distributions"><span class="std std-ref">3.1 比较两个或多个组</span></a> 中所做的那样，其中每个组的参数都单独估计，因此我们可以考虑将非池化模型用于对各组进行独立的线性回归建模。</p>
-<p>现在我们可以使用非池化模型及其估计的参数作为基线来比较下面的其他模型，特别是可以了解额外的复杂性是否具备合理性。</p>
+<p>非池化模型与使用数据子集创建三个分离的模型本质上没有什么不同，就像 <a class="reference internal" href="chp_03.html#comparing-distributions"><span class="std std-ref">3.1 比较两个或多个组</span></a> 中所做的那样，其中各组的参数都单独估计，因此可以考虑将非池化模型应用于对各组独立建模的线性回归模型。</p>
+<p>现在可以将非池化模型及其参数估计作为基线，来比较本节后续的其他模型，特别是可以了解额外的复杂性是否具备合理性。</p>
 </div>
 <div class="section" id="pooled-parameters">
 <span id="id16"></span><h3>4.5.2 池化的参数<a class="headerlink" href="#pooled-parameters" title="Permalink to this headline">¶</a></h3>
-<p>既然有非池化的参数，你可能会猜到也应该有池化的参数。没错！顾名思义，池化的参数是忽略了组间区别的参数。从概念上讲，此类型模型显示在 <a class="reference internal" href="#fig-pooled-model"><span class="std std-numref">Fig. 71</span></a> 中，每个组共享相同的参数，因此我们也将它们称为公共参数。</p>
+<p>既然有非池化的参数，你可能会猜到也应该有池化的参数。没错！顾名思义，池化的参数是忽略了组间区别的参数。此类模型显示在 <a class="reference internal" href="#fig-pooled-model"><span class="std std-numref">Fig. 71</span></a> 中，从概念上讲，各组共享相同的参数，因此我们也将池化的参数称为公共参数。</p>
 <div class="figure align-default" id="fig-pooled-model">
 <a class="reference internal image-reference" href="../_images/pooled_model.png"><img alt="../_images/pooled_model.png" src="../_images/pooled_model.png" style="width: 5.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 71 </span><span class="caption-text">一个池化模型，其中各组观测值 <span class="math notranslate nohighlight">\(y_1, y_2, ..., y_j\)</span> 共享参数。</span><a class="headerlink" href="#fig-pooled-model" title="Permalink to this image">¶</a></p>
 </div>
-<p>对于餐厅的示例，模型用公式 <a class="reference internal" href="#equation-eq-pooled-regression">(35)</a> 和代码 <a class="reference internal" href="#model-sales-pooled"><span class="std std-ref">model_sales_pooled</span></a> 编写。 GraphViz 表示也显示在 <a class="reference internal" href="#fig-salad-sales-basic-regression-model-pooled"><span class="std std-numref">Fig. 72</span></a> 中。</p>
+<p>对于餐厅示例，池化的模型见公式 <a class="reference internal" href="#equation-eq-pooled-regression">(35)</a> 和代码 <a class="reference internal" href="#model-sales-pooled"><span class="std std-ref">model_sales_pooled</span></a> 。 该模型的 GraphViz 图表示见 <a class="reference internal" href="#fig-salad-sales-basic-regression-model-pooled"><span class="std std-numref">Fig. 72</span></a> 。</p>
 <div class="math notranslate nohighlight" id="equation-eq-pooled-regression">
 <span class="eqno">(35)<a class="headerlink" href="#equation-eq-pooled-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \beta \sim&amp; \overbrace{\mathcal{N}(\mu_{\beta}, \sigma_{\beta})}^{\text{Common}}\\
@@ -752,17 +760,17 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 <div class="figure align-default" id="fig-salad-sales-basic-regression-forestplot-sigma-comparison">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Basic_Regression_ForestPlot_Sigma_Comparison.png"><img alt="../_images/Salad_Sales_Basic_Regression_ForestPlot_Sigma_Comparison.png" src="../_images/Salad_Sales_Basic_Regression_ForestPlot_Sigma_Comparison.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 73 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_pooled_sales</span></code> 模型和 <code class="docutils literal notranslate"><span class="pre">model_unpooled_sales</span></code> 模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数估计值比较。请注意，与非池化模型相比，池化模型获得一个高得多的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计值，因为其估计的单个线性拟合必须捕获所有池化数据中的方差。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-forestplot-sigma-comparison" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 73 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_pooled_sales</span></code> 模型和 <code class="docutils literal notranslate"><span class="pre">model_unpooled_sales</span></code> 模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数估计值比较。请注意，与非池化模型相比，池化模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计值高很多，因为统一的线性拟合必须捕获所有池化数据中的方差。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-forestplot-sigma-comparison" title="Permalink to this image">¶</a></p>
 </div>
-<p>池化方法的好处是更多的数据将用于估计每个参数。然而，这意味着我们不能单独了解每个组，而只能了解所有食物类别。查看 <a class="reference internal" href="#fig-salad-sales-basic-regression-scatter-pooled"><span class="std std-numref">Fig. 74</span></a>，我们的估计 <span class="math notranslate nohighlight">\(\beta\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 并不表示任何特定的食物组，因为模型将具有非常不同尺度的数据分组在一起。将 <span class="math notranslate nohighlight">\(\sigma\)</span> 的值与 <a class="reference internal" href="#fig-salad-sales-basic-regression-forestplot-sigma-comparison"><span class="std std-numref">Fig. 73</span></a> 中非池化模型的值进行比较。当在 <a class="reference internal" href="#fig-salad-sales-basic-regression-scatter-pooled"><span class="std std-numref">Fig. 74</span></a> 中绘制回归时，我们可以看到，一条线尽管比任何单个组都包含更多的数据，但无法很好地拟合任何一个组。该结果意味着组中的差异太大而无法忽略，因此池化数据对于我们的预期目的并不是特别有用。</p>
+<p>池化方法的好处是有更多数据用于估计每个参数，但这同时意味着我们无法单独地了解每个组，而只能了解更高层次的整个食物类别。查看 <a class="reference internal" href="#fig-salad-sales-basic-regression-scatter-pooled"><span class="std std-numref">Fig. 74</span></a>， <span class="math notranslate nohighlight">\(\beta\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 的估计并不表示任何特定的食物组，因为模型将具有不同尺度的多组数据合并在了一个组里。将 <span class="math notranslate nohighlight">\(\sigma\)</span> 的值与 <a class="reference internal" href="#fig-salad-sales-basic-regression-forestplot-sigma-comparison"><span class="std std-numref">Fig. 73</span></a> 中非池化模型的值进行比较。当在 <a class="reference internal" href="#fig-salad-sales-basic-regression-scatter-pooled"><span class="std std-numref">Fig. 74</span></a> 中绘制回归时，可以看到一条比任何单组都包含更多数据的回归线，但却无法很好地拟合任何一个组。该结果意味着组间差异太大而无法忽略，因此池化数据对于我们的预期目的，可能并不是特别有用。</p>
 <div class="figure align-default" id="fig-salad-sales-basic-regression-scatter-pooled">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Basic_Regression_Scatter_Pooled.png"><img alt="../_images/Salad_Sales_Basic_Regression_Scatter_Pooled.png" src="../_images/Salad_Sales_Basic_Regression_Scatter_Pooled.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 74 </span><span class="caption-text">线性回归m模型  <code class="docutils literal notranslate"><span class="pre">model_sales_pooled</span></code>，所有数据都汇集在一起​​。每个参数都是使用所有数据估计的，但我们最终对每个组的行为估计都很差，因为两个参数的模型不能很好地泛化并捕获每个组的细微差别。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-scatter-pooled" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 74 </span><span class="caption-text">池化的线性回归模型  <code class="docutils literal notranslate"><span class="pre">model_sales_pooled</span></code>，所有数据都汇集在一起​​。每一个参数都是使用所有数据估计的，但最终对各组的估计都非常差，因为一个仅有 <span class="math notranslate nohighlight">\(2\)</span> 个参数的模型，无法很好地泛化并捕获各组之间的细微差别。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-scatter-pooled" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="mixing-group-and-common-parameters">
-<span id="id17"></span><h3>4.5.3 混合组和常用参数<a class="headerlink" href="#mixing-group-and-common-parameters" title="Permalink to this headline">¶</a></h3>
-<p>在非池化方法中，我们具有保留组间差异的优势，能够获得每个组的参数估计结果。在池化方法中，我们利用所有数据来估计一组参数，以得到更通用的估计。幸运的是，我们并不是只能选择其中一个。我们可以将两个概念混合在一个模型中，如公式 <a class="reference internal" href="#equation-eq-multilevel-regression">(36)</a> 所示。在这个公式中，我们保持 各组的 <span class="math notranslate nohighlight">\(\beta\)</span> 估计是非池化的，而 <span class="math notranslate nohighlight">\(\sigma\)</span> 是池化的。在当前示例中，依然没有截距，但应当清楚，在包含截距项的回归中，我们有类似的选择。</p>
+<span id="id17"></span><h3>4.5.3 组混合与多级模型<a class="headerlink" href="#mixing-group-and-common-parameters" title="Permalink to this headline">¶</a></h3>
+<p>在非池化方法中，我们具有保留组间差异的优势，能够获得每个组的参数估计结果。在池化方法中，我们利用了所有数据来估计同一组参数，以得到更通用的估计。幸运的是，我们还可以将两种方法混合在一个模型中，如公式 <a class="reference internal" href="#equation-eq-multilevel-regression">(36)</a> 所示。在该公式中，我们保持各组的 <span class="math notranslate nohighlight">\(\beta\)</span> 估计是非池化的，但 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计是池化的。示例中依然没有考虑截距，但应当清楚有截距项的回归模型也是类似的。</p>
 <div class="math notranslate nohighlight" id="equation-eq-multilevel-regression">
 <span class="eqno">(36)<a class="headerlink" href="#equation-eq-multilevel-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \beta_{mj} \sim&amp; \overbrace{\mathcal{N}(\mu_{\beta m}, \sigma_{\beta m})}^{\text{Group-specific}}\\
@@ -771,11 +779,12 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 Y \sim&amp; \mathcal{N}(\mu_{j}, \sigma)
 \end{split}\end{split}\]</div>
 <div class="admonition- admonition">
-<p class="admonition-title">随机和固定效应以及为什么你应该忘记这些术语</p>
-<p>特定于每个级别的参数和跨级别通用的参数有不同的名称，分别包括随机（或变化）效应，和固定（或恒定）效应。更令人困惑的是，不同的人可能会对这些术语赋予不同的含义，尤其是在谈论固定和随机效应时 <span id="id18">[<a class="reference internal" href="references.html#id80">44</a>]</span>。如果我们必须标记这些术语，我们建议 <em>common</em> 和 <em>group-specific</em> <span id="id19">[<a class="reference internal" href="references.html#id118">33</a>, <a class="reference internal" href="references.html#id83">36</a>]</span>。但是，由于所有这些不同的术语都被广泛使用，我们建议你始终验证模型的细节，以避免混淆和误解。</p>
+<p class="admonition-title">随机效应和固定效应以及为什么你应该忘记这些术语</p>
+<p>特定于每个级别的参数和跨级别的通用参数有着不同的名称，前者被称为随机效应或变化效应，而后者被成为固定效应或恒定效应。经常令人困惑的是，不同的人可能会对这些术语赋予不同含义，尤其是在谈论固定效应和随机效应时 <span id="id18">[<a class="reference internal" href="references.html#id80">44</a>]</span>。</p>
+<p>如果必须有区别地标记这些术语，我们建议采用 <em>组间通用参数</em> 和 <em>组内专用参数</em> <span id="id19">[<a class="reference internal" href="references.html#id118">33</a>, <a class="reference internal" href="references.html#id83">36</a>]</span>。但是，由于所有这些术语都被广泛使用，我们建议你始终验证模型的细节，以避免混淆和误解。</p>
 </div>
-<p>重新审视一下食品销售模型，我们对于池化数据来估计 <span class="math notranslate nohighlight">\(\sigma\)</span> 会非常感兴趣，因为比萨、三明治和沙拉的销售额可能存在相同的方差，但我们对 <span class="math notranslate nohighlight">\(\beta\)</span> 的估计没有池化，因为我们知道各组之间存在差异。有了这些想法之后，我们可以编写 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 模型，如代码 <a class="reference internal" href="#model-sales-mixed-effect"><span class="std std-ref">model_sales_mixed_effect</span></a> 所示，并生成 <a class="reference internal" href="#fig-salad-sales-basic-regression-model-multilevel"><span class="std std-numref">Fig. 75</span></a> 所示模型结构的概率图。从模型中，我们可以得到 <a class="reference internal" href="#fig-salad-sales-basic-regression-scatter-sigma-pooled-slope-unpooled"><span class="std std-numref">Fig. 76</span></a> ，其中显示了叠加在数据上的拟合估计值，还能够得到<a class="reference internal" href="#fig-salad-sales-forestplot-sigma-unpooled-multilevel-comparison"><span class="std std-numref">Fig. 77</span></a> ，其中比较和展示了池化和非池化（分层）方法估计出来的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数。</p>
-<p>这些结果令人鼓舞，对于所有三个类别来说，拟合看起来都是合理的，特别是对于沙拉组来说，这种模型似乎能够对这个新市场的沙拉销售产生合理的推论。</p>
+<p>重新审视食品销售模型，我们对采用池化数据来估计 <span class="math notranslate nohighlight">\(\sigma\)</span> 非常感兴趣，因为披萨组、三明治组和沙拉组的销售额可能存在相同的方差，但我们对各组的 <span class="math notranslate nohighlight">\(\beta\)</span> 参数并没池化，因为我们知道各组之间存在差异。有了这些想法，我们就可以编写 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 模型，如代码 <a class="reference internal" href="#model-sales-mixed-effect"><span class="std std-ref">model_sales_mixed_effect</span></a> 所示，并生成 <a class="reference internal" href="#fig-salad-sales-basic-regression-model-multilevel"><span class="std std-numref">Fig. 75</span></a> 所示的模型结构图。从模型中可以得到 <a class="reference internal" href="#fig-salad-sales-basic-regression-scatter-sigma-pooled-slope-unpooled"><span class="std std-numref">Fig. 76</span></a> ，图中显示了叠加在数据上的拟合结果。此外还能够得到 <a class="reference internal" href="#fig-salad-sales-forestplot-sigma-unpooled-multilevel-comparison"><span class="std std-numref">Fig. 77</span></a> ，其中比较和展示了池化和非池化方法估计出来的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数。</p>
+<p>这些结果令人鼓舞，对于所有三个组别来说，拟合结果看起来都是合理的，特别是对于沙拉组来说，该模型似乎能够对此新市场的沙拉销售产生合理的推论。</p>
 <div class="literal-block-wrapper docutils container" id="model-sales-mixed-effect">
 <div class="code-block-caption"><span class="caption-number">Listing 54 </span><span class="caption-text">model_sales_mixed_effect</span><a class="headerlink" href="#model-sales-mixed-effect" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model_pooled_sigma_sales</span><span class="p">:</span>
@@ -799,26 +808,29 @@ Y \sim&amp; \mathcal{N}(\mu_{j}, \sigma)
 </div>
 <div class="figure align-default" id="fig-salad-sales-basic-regression-model-multilevel">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Basic_Regression_Model_Multilevel.png"><img alt="../_images/Salad_Sales_Basic_Regression_Model_Multilevel.png" src="../_images/Salad_Sales_Basic_Regression_Model_Multilevel.png" style="width: 3.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 75 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_pooled_sigma_sales</span></code> 模型，其中 <span class="math notranslate nohighlight">\(\beta\)</span> 是非池化的，如右上角的含 <span class="math notranslate nohighlight">\(3\)</span> 的框所示，<span class="math notranslate nohighlight">\(\sigma\)</span> 是池化的，因为不含数字框表示所有组具有相同的参数估计。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-model-multilevel" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 75 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_pooled_sigma_sales</span></code> 模型，其中 <span class="math notranslate nohighlight">\(\beta\)</span> 是非池化的，如右上角含 <span class="math notranslate nohighlight">\(3\)</span> 的框所示，<span class="math notranslate nohighlight">\(\sigma\)</span> 是池化的，不含数字框表示所有组具有相同的参数。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-model-multilevel" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-salad-sales-basic-regression-scatter-sigma-pooled-slope-unpooled">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled.png"><img alt="../_images/Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled.png" src="../_images/Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 76 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_pooled_sigma_sales</span></code> 模型，叠加显示 <span class="math notranslate nohighlight">\(50\%\)</span> HDI 。这个模型对于估计沙拉预计销售额的目的更有用，因为每个组的斜率独立，并且所有数据都用来估计相同的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-scatter-sigma-pooled-slope-unpooled" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 76 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_pooled_sigma_sales</span></code> 模型的拟合结果，叠加显示 <span class="math notranslate nohighlight">\(50\%\)</span> HDI 。此模型对于估计沙拉预计销售额的目的更有用，因为每个组的斜率独立，并且所有数据都用来估计相同的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数。</span><a class="headerlink" href="#fig-salad-sales-basic-regression-scatter-sigma-pooled-slope-unpooled" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-salad-sales-forestplot-sigma-unpooled-multilevel-comparison">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_ForestPlot_Sigma_Unpooled_Multilevel_Comparison.png"><img alt="../_images/Salad_Sales_ForestPlot_Sigma_Unpooled_Multilevel_Comparison.png" src="../_images/Salad_Sales_ForestPlot_Sigma_Unpooled_Multilevel_Comparison.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 77 </span><span class="caption-text">比较来自 <code class="docutils literal notranslate"><span class="pre">model_pooled_sigma_sales</span></code> 和 <code class="docutils literal notranslate"><span class="pre">model_pooled_sales</span></code> 的 <span class="math notranslate nohighlight">\(\sigma\)</span>。请注意，分层模型中的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计值在池化模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计值范围之内。</span><a class="headerlink" href="#fig-salad-sales-forestplot-sigma-unpooled-multilevel-comparison" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 77 </span><span class="caption-text">比较来自 <code class="docutils literal notranslate"><span class="pre">model_pooled_sigma_sales</span></code> 模型和 <code class="docutils literal notranslate"><span class="pre">model_pooled_sales</span></code> 模型的 <span class="math notranslate nohighlight">\(\sigma\)</span>。请注意，多级模型 <code class="docutils literal notranslate"><span class="pre">model_pooled_sigma_sales</span></code>  中的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计值在全池化模型 <code class="docutils literal notranslate"><span class="pre">model_pooled_sales</span></code> 的估计值范围之内。</span><a class="headerlink" href="#fig-salad-sales-forestplot-sigma-unpooled-multilevel-comparison" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 </div>
 <div class="section" id="hierarchical-models">
 <span id="id20"></span><h2>4.6 分层模型<a class="headerlink" href="#hierarchical-models" title="Permalink to this headline">¶</a></h2>
-<p>到目前为止，在我们的数据处理中，我们有两个组选项，在组之间没有区别的情况下池化，在组之间完全区别的情况下不池化。回想一下，在我们的激励餐厅示例中，我们认为 3 种食物类别的参数 <span class="math notranslate nohighlight">\(\sigma\)</span> 相似，但并不完全相同。在贝叶斯建模中，我们可以用<em>分层模型</em>来表达这个想法。在分层模型中，参数是<em>部分池化的</em>。部分是指不共享一个固定参数但共享一个描述先验本身参数分布的组的想法。从概念上讲，这个想法显示在 <a class="reference internal" href="#fig-partial-pooled-model"><span class="std std-numref">Fig. 78</span></a> 中。每个组都有自己的参数，这些参数来自一个共同的超先验分布。</p>
+<p>根据上一节内容，我们建模时，对参数有两种可能的组选项：一是在参数在组之间没有区别时做池化，二是在组之间有区别的情况下不做池化。回想一下，在餐厅示例中，我们相信 <span class="math notranslate nohighlight">\(3\)</span> 种食物类别的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数相似，但有可能并不完全相同。此时该如何处理呢？</p>
+<div class="section" id="id21">
+<h3>4.6.1 什么是分层模型<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<p>在贝叶斯建模中，有一种 <em>分层模型（ Hierarchical Models ）</em> 可以来表达这种情形。在分层模型中，参数是 <em>部分池化的</em> 。部分是指各组之间并不共享某个固定的参数，而是共享一个用来生成该参数值的概率分布。这个想法的概念图见 <a class="reference internal" href="#fig-partial-pooled-model"><span class="std std-numref">Fig. 78</span></a> 。图中各组都有自己的参数，但这些参数都来自同一个超先验分布。也就是说，先验分布的建模对象是模型的参数，而超先验的建模对象是模型参数所服从概率分布的参数，因此被成为分层模型。</p>
 <div class="figure align-default" id="fig-partial-pooled-model">
 <a class="reference internal image-reference" href="../_images/partial_pooled_model.png"><img alt="../_images/partial_pooled_model.png" src="../_images/partial_pooled_model.png" style="width: 5.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 78 </span><span class="caption-text">一个部分池化的模型架构，其中每组观测值 <span class="math notranslate nohighlight">\(y_1, y_2, ..., y_k\)</span> 都有自己的一组参数，但各组的参数之间不是独立的，而是来自于一个公共分布。</span><a class="headerlink" href="#fig-partial-pooled-model" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 78 </span><span class="caption-text">一个部分池化的模型架构，其中每个组的观测 <span class="math notranslate nohighlight">\(y_1, y_2, ..., y_k\)</span> 都有自己的参数，但不同组的参数并非完全独立，而是来自于同一个概率分布。</span><a class="headerlink" href="#fig-partial-pooled-model" title="Permalink to this image">¶</a></p>
 </div>
-<p>使用统计符号，我们可以将分层模型写为公式 <a class="reference internal" href="#equation-eq-hierarchical-regression">(37)</a> ，代码 <a class="reference internal" href="#model-hierarchical-sales"><span class="std std-ref">model_hierarchical_sales</span></a> 中编写了其对应的计算模型，在 {numref}`fig:Salad_Sales_Hierarchial_Regression_Model 中绘制了其图形表示。</p>
+<p>使用统计符号，可以将分层模型写为公式 <a class="reference internal" href="#equation-eq-hierarchical-regression">(37)</a> ，代码 <a class="reference internal" href="#model-hierarchical-sales"><span class="std std-ref">model_hierarchical_sales</span></a> 中展示了相应源码，在 {numref}`fig:Salad_Sales_Hierarchial_Regression_Model 中绘制了其图形化表示。</p>
 <div class="math notranslate nohighlight" id="equation-eq-hierarchical-regression">
 <span class="eqno">(37)<a class="headerlink" href="#equation-eq-hierarchical-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \beta_{mj} \sim&amp; \mathcal{N}(\mu_{\beta m}, \sigma_{\beta m}) \\
@@ -827,8 +839,8 @@ Y \sim&amp; \mathcal{N}(\mu_{j}, \sigma)
 \mu_{j} =&amp; \beta_{1j} X_1 + \dots + \beta_{mj} X_m \\
 Y \sim&amp; \mathcal{N}(\mu_{j},\sigma_{j})
 \end{split}\end{split}\]</div>
-<p>注意：与 <a class="reference internal" href="#fig-salad-sales-basic-regression-model-multilevel"><span class="std std-numref">Fig. 75</span></a> 中的分层模型相比，添加了 <span class="math notranslate nohighlight">\(\sigma_{h}\)</span>。这是新的超先验分布，它定义了各组中参数的可能值。我们也可以在代码 <a class="reference internal" href="#model-hierarchical-sales"><span class="std std-ref">model_hierarchical_sales</span></a> 中添加超先验。</p>
-<p>你可能会问 “我们是否也可以为 <span class="math notranslate nohighlight">\(\beta\)</span> 项添加一个超先验？”，答案很简单：可以。只是针对当前问题，我们假设只有方差相关，而斜率完全独立。</p>
+<p>注意：与 <a class="reference internal" href="#fig-salad-sales-basic-regression-model-multilevel"><span class="std std-numref">Fig. 75</span></a> 中的多级模型相比，添加了新的参数 <span class="math notranslate nohighlight">\(\sigma_{h}\)</span>。这是新的超先验分布，用于定义各组中参数的可能值。我们可以在代码 <a class="reference internal" href="#model-hierarchical-sales"><span class="std std-ref">model_hierarchical_sales</span></a> 中添加超先验。</p>
+<p>你可能会问 “我们是否也可以为 <span class="math notranslate nohighlight">\(\beta\)</span> 项添加一个超先验？”，答案很简单：可以。只是针对当前问题，我们假设只有方差存在一定的相关性，而斜率则完全独立。</p>
 <div class="literal-block-wrapper docutils container" id="model-hierarchical-sales">
 <div class="code-block-caption"><span class="caption-number">Listing 55 </span><span class="caption-text">model_hierarchical_sales</span><a class="headerlink" href="#model-hierarchical-sales" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model_hierarchical_sales</span><span class="p">:</span>
@@ -852,16 +864,16 @@ Y \sim&amp; \mathcal{N}(\mu_{j},\sigma_{j})
 </div>
 <div class="figure align-default" id="fig-salad-sales-hierarchial-regression-model">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Hierarchial_Regression_Model.png"><img alt="../_images/Salad_Sales_Hierarchial_Regression_Model.png" src="../_images/Salad_Sales_Hierarchial_Regression_Model.png" style="width: 3.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 79 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_hierarchical_sales</span></code> 模型。其中超先验 <span class="math notranslate nohighlight">\(\sigma_{hyperprior}\)</span> 是用于三个分组 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数分布的同一个高层级分布。</span><a class="headerlink" href="#fig-salad-sales-hierarchial-regression-model" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 79 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_hierarchical_sales</span></code> 分层模型。其中超先验 <span class="math notranslate nohighlight">\(\sigma_{hyperprior}\)</span> 是一个用于获取三个分组 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数的概率分布参数的上层分布（有点拗口）。</span><a class="headerlink" href="#fig-salad-sales-hierarchial-regression-model" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-salad-sales-forestplot-sigma-hierarchical">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_ForestPlot_Sigma_Hierarchical.png"><img alt="../_images/Salad_Sales_ForestPlot_Sigma_Hierarchical.png" src="../_images/Salad_Sales_ForestPlot_Sigma_Hierarchical.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 80 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_hierarchical_sales</span></code> 模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数估计的森林图。请注意超先验倾向于表示落在三组先验的范围内。</span><a class="headerlink" href="#fig-salad-sales-forestplot-sigma-hierarchical" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 80 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">model_hierarchical_sales</span></code> 模型的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数估计的森林图。请注意其中超先验的 <span class="math notranslate nohighlight">\(\sigma_hyperprorior\)</span> 倾向于落在三个分组的 <span class="math notranslate nohighlight">\(\sigma\)</span> 范围中间。</span><a class="headerlink" href="#fig-salad-sales-forestplot-sigma-hierarchical" title="Permalink to this image">¶</a></p>
 </div>
-<p>完成分层模型的拟合后，我们可以检查 <a class="reference internal" href="#fig-salad-sales-forestplot-sigma-hierarchical"><span class="std std-numref">Fig. 80</span></a> 中的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数估计值。注意添加了 <span class="math notranslate nohighlight">\(\sigma_{hyperprior}\)</span> ，这是一个估计三种食物类别中每个类别参数分布的分布。如果比较 <a class="reference internal" href="#tab-unpooled-sales"><span class="std std-numref">Table 10</span></a> 中非池化模型和分层模型的汇总表，我们可以看到分层模型的效果。在非池化的估计中，沙拉的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计的均值是 <span class="math notranslate nohighlight">\(21.3\)</span> ，而在分层模型的估计中，相同参数估计的均值现在是 <span class="math notranslate nohighlight">\(25.5\)</span>，并且被比萨和三明治类别的均值“拉升”。与此同时，在分层类别中，比萨和沙拉类别的估计值虽然略微向均值回归，但与非池化的估计值基本相同。</p>
-<p>请注意各组的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计值明显不同。鉴于观测数据和模型在组之间不共享信息，这与预期基本一致。</p>
+<p>完成分层模型的拟合后，可以检查 <a class="reference internal" href="#fig-salad-sales-forestplot-sigma-hierarchical"><span class="std std-numref">Fig. 80</span></a> 中的 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数估计值。注意模型添加了超先验参数 <span class="math notranslate nohighlight">\(\sigma_{hyperprior}\)</span> ，这是一个估计三个食物类别中 <span class="math notranslate nohighlight">\(\sigma\)</span> 参数分布的分布。如果比较 <a class="reference internal" href="#tab-unpooled-sales"><span class="std std-numref">Table 10</span></a> 中非池化模型和分层模型的汇总表，我们可以看到分层模型的效果。在非池化估计中，沙拉的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计的均值是 <span class="math notranslate nohighlight">\(21.3\)</span> ，而在分层模型的估计中，相同参数估计的均值现在是 <span class="math notranslate nohighlight">\(25.5\)</span>，并且被披萨组和三明治组的均值“拉升”。与此同时，在分层类别中，披萨组和沙拉组的估计值虽然略微向均值回归，但与非池化的估计值基本相同。</p>
+<p>请注意各组的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计值明显不同。鉴于观测数据和模型在组之间并不共享参数，这也符合预期。</p>
 <table class="table" id="tab-unpooled-sales">
-<caption><span class="caption-number">Table 10 </span><span class="caption-text">来自非池化模型的各类别 σ 估计</span><a class="headerlink" href="#tab-unpooled-sales" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-number">Table 10 </span><span class="caption-text">非池化模型中各组别 σ 参数的估计</span><a class="headerlink" href="#tab-unpooled-sales" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%"/>
 <col style="width: 20%"/>
@@ -897,7 +909,7 @@ Y \sim&amp; \mathcal{N}(\mu_{j},\sigma_{j})
 </tbody>
 </table>
 <table class="table" id="tab-hierarchical-sales">
-<caption><span class="caption-number">Table 11 </span><span class="caption-text">Estimates of σ for each category from the hierarchical sales model</span><a class="headerlink" href="#tab-hierarchical-sales" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-number">Table 11 </span><span class="caption-text">分层模型中各组别 σ 参数的估计</span><a class="headerlink" href="#tab-hierarchical-sales" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%"/>
 <col style="width: 20%"/>
@@ -939,24 +951,22 @@ Y \sim&amp; \mathcal{N}(\mu_{j},\sigma_{j})
 </tbody>
 </table>
 <div class="admonition- admonition">
-<p class="admonition-title">我听说你喜欢超先验，所以我在你的超先验上设置了一个超先验</p>
-<p>在代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered"><span class="std std-ref">model_hierarchical_salad_sales_centered</span></a> 中，我们在组级别参数 <span class="math notranslate nohighlight">\(\sigma_j\)</span> 上放置了超先验。同样，我们也可以通过向参数 <span class="math notranslate nohighlight">\(\beta_{mj}\)</span> 添加超先验来扩展模型。请注意，由于 <span class="math notranslate nohighlight">\(\beta_{mj}\)</span> 具有高斯先验，我们实际上可以选择两个超先验 — 每个超参数一个。</p>
-<p>你可能会问：我们能否更进一步，将超超先验添加到参数超先验的参数中？超超超先验呢？</p>
-<p>虽然写下这样的模型并从中采样是可能的，但值得退一步想想超先验在做什么。直观地说，超先验是模型从数据的子组（或子集群）中 “借用” 信息的一种方式，以便为观测较少的其他子组提供估计所需的信息。具有更多观测值的组将信息传递给超参数的后验，然后超参数的后验反过来调节具有较少观测值的子组参数。</p>
-<p>从这个视角看，将超先验放在非 <em>group specific</em> 参数上毫无意义 （ 理解： 是否意指超先验生成的参数首先必须是组相关的，而不是池化的组间通用参数？）。</p>
+<p class="admonition-title">听说你喜欢超先验，所以我在超先验之上又为你设置了一个超先验</p>
+<p>在代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered"><span class="std std-ref">model_hierarchical_salad_sales_centered</span></a> 中，各组的 <span class="math notranslate nohighlight">\(\sigma_j\)</span> 参数上放置了超先验。同样，我们也可以为参数 <span class="math notranslate nohighlight">\(\beta_{mj}\)</span> 添加超先验，来进一步扩展模型。不过由于 <span class="math notranslate nohighlight">\(\beta_{mj}\)</span> 是高斯先验，所以实际上可以设置两个超先验，其中每个超参数对应一个。</p>
+<p>你可能会问：我们是否可以更进一步，将超-超先验添加到参数的超先验分布的参数中呢？是能更进一步，设置超-超-超先验，甚至超-超-超-超先验呢？</p>
+<p>虽然设计这种很多层次的模型并从中采样是可行的，但必须要退一步思考超先验在做什么。直观地说，超先验是模型从数据的子组中 “借用” 信息的一种方式，以便为观测较少的其他子组提供估计所需的信息。具有更多观测的组将信息传递给超参数的后验，然后超参数的后验反过来调节具有较少观测值的子组参数。从这个视角看，将超先验放在 <em>组间通用参数</em> 上毫无意义。</p>
 </div>
-<p>分层估计不仅限于两个级别。例如，餐厅销售模型可以扩展为三层模型，顶层代表公司级别，中间层代表区域市场（纽约、芝加哥、洛杉矶），最低层代表具体门店。</p>
-<p>通过这样做，我们可以拥有一个描述整个公司运作方式的超先验，一个指示某区域如何运作的超先验，以及描述每个门店运作方式的先验。这样就可以轻松比较均值和变异，并基于同一个模型以多种不同方式扩展应用。</p>
+<p>分层模型不仅限于两个级别。例如，餐厅销售模型可以扩展为三层模型，顶层代表公司级别，中间层代表区域市场（纽约、芝加哥、洛杉矶），最低层代表具体门店。此时，我们可以拥有一个描述整个公司运行方式的超先验，一个指示某区域运行方式的超先验，以及描述各门店运行方式的先验。这样就可以轻松地比较均值和变化，并基于同一个模型以多种不同方式扩展应用。</p>
+</div>
 <div class="section" id="model-geometry">
-<span id="id21"></span><h3>4.6.1 分层模型的新问题 — 后验几何形态带来采样难题<a class="headerlink" href="#model-geometry" title="Permalink to this headline">¶</a></h3>
-<p>到目前为止，我们主要关注模型背后的结构和数学，并假设采样器能够提供后验的“准确”估计。对于相对简单的模型，这在很大程度上是正确的，最新版本的通用推断引擎大多能够“正常工作”，但最要命的是它们并不总是能够工作。某些后验几何形态对采样器具有较大挑战性，一个常见例子是在 <a class="reference internal" href="#fig-neals-funnel"><span class="std std-numref">Fig. 81</span></a> 中显示的 <code class="docutils literal notranslate"><span class="pre">Neal</span> <span class="pre">漏斗</span></code> <span id="id22">[<a class="reference internal" href="references.html#id86">45</a>]</span>。正如名字暗示的那样，该图一端的形状很宽，然后变窄成一个小瓶颈。回顾 <a class="reference internal" href="chp_01.html#sampling-methods-intro"><span class="std std-ref">1.2 一个自制的采样器</span></a> 节，采样器的功能是从一组参数值到另一组参数值，其中一个关键设置是在探索后验时要采取多大步骤。在复杂的几何形态中，例如 <code class="docutils literal notranslate"><span class="pre">Neal</span> <span class="pre">漏斗</span></code>，步长在一个区域运行良好，在另一个区域却会惨遭失败。</p>
+<span id="id22"></span><h3>4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题<a class="headerlink" href="#model-geometry" title="Permalink to this headline">¶</a></h3>
+<p>到目前为止，我们主要关注模型背后的结构和数学，并假设采样器能够提供后验的“准确”估计。对于相对简单的模型而言，这在很大程度上是正确的，最新版本的通用推断引擎大多能够“正常工作”，但最要命的是它们并不总是能够工作。某些后验的几何形态对采样器而言具有较大挑战，一个常见例子是在 <a class="reference internal" href="#fig-neals-funnel"><span class="std std-numref">Fig. 81</span></a> 中显示的 <code class="docutils literal notranslate"><span class="pre">Neal</span> <span class="pre">漏斗</span></code> <span id="id23">[<a class="reference internal" href="references.html#id86">45</a>]</span>。正如名字暗示的那样，此类分布的几何形态中，有一端形状很宽，然后在另一端变窄形成瓶颈。回顾 <a class="reference internal" href="chp_01.html#sampling-methods-intro"><span class="std std-ref">1.2 一个自制的采样器</span></a> 节，采样器的功能是从一组参数值转移到另一组参数值，其中一个关键设置是在探索后验时要采取多大步长。在复杂的几何形态中，例如 <code class="docutils literal notranslate"><span class="pre">Neal</span> <span class="pre">漏斗</span></code>，某步长在一个区域运行良好，但在另一个区域却会惨遭失败。</p>
 <div class="figure align-default" id="fig-neals-funnel">
 <a class="reference internal image-reference" href="../_images/Neals_Funnel.png"><img alt="../_images/Neals_Funnel.png" src="../_images/Neals_Funnel.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 81 </span><span class="caption-text">被称为 Neal 漏斗的特定形状相关样本。当在 <span class="math notranslate nohighlight">\(Y\)</span> 值为 <span class="math notranslate nohighlight">\(6\)</span> 到 <span class="math notranslate nohighlight">\(8\)</span> 左右的漏斗顶部采样时，采样器可以采取比如 <span class="math notranslate nohighlight">\(1\)</span> 个单位的大步长，并且保持在后验的密集区域内。但是，如果在 <span class="math notranslate nohighlight">\(Y\)</span> 值约为 <span class="math notranslate nohighlight">\(-6\)</span> 到 <span class="math notranslate nohighlight">\(-84 的漏斗底部附近进行采样，则几乎任何方向上的 \)</span>1$ 个单位步长都可能导致走入低密度区域（图中蓝色点区域表示后验的高密度区域，白色区域表示低密度区域）。后验的几何形态造成的这种巨大差异，是后验估计性能变差的一个主要原因，特别是在基于采样的估计方法中。对于 HMC 采样器，散度的出现有助于诊断此类采样问题。</span><a class="headerlink" href="#fig-neals-funnel" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 81 </span><span class="caption-text">被称为 <code class="docutils literal notranslate"><span class="pre">Neal</span> <span class="pre">漏斗</span></code> 的特定形状概率分布的样本。当在 <span class="math notranslate nohighlight">\(Y\)</span> 值为 <span class="math notranslate nohighlight">\(6\)</span> 到 <span class="math notranslate nohighlight">\(8\)</span> 左右的漏斗顶部采样时，采样器可以采取比如 <span class="math notranslate nohighlight">\(1\)</span> 个单位的大步长，并能够保持在后验的密集区域内。但是，如果在 <span class="math notranslate nohighlight">\(Y\)</span> 值约为 <span class="math notranslate nohighlight">\(-6\)</span> 到 <span class="math notranslate nohighlight">\(-8\)</span> 的漏斗底部附近进行采样，则几乎在任何方向上的 <span class="math notranslate nohighlight">\(1\)</span> 个单位步长，都可能走入低密度区域（图中蓝色点区域表示高密度区域，白色区域表示低密度区域）。后验几何形态造成的这种差异，会造成采样器后验估计性能变差，尤其是在基于采样的近似方法中。对于 HMC 采样器，散度的出现有助于诊断此类采样问题。</span><a class="headerlink" href="#fig-neals-funnel" title="Permalink to this image">¶</a></p>
 </div>
-<p>在分层模型中，后验的几何形态主要由超先验与其他参数的相关性定义，这可能导致难以采样的漏斗几何。不幸的是，这并非是一个理论上可能的问题，而是一个切实存在的问题。幸运的是，有一个被称为“非中心参数化”的模型技巧，有助于缓解此问题。</p>
-<p>继续沙拉示例，假设我们开了 <span class="math notranslate nohighlight">\(6\)</span> 家沙拉餐厅，并且像以前一样希望将销售额预测为客户数量的函数。合成数据集已经由 Python 代码生成，并显示在 <a class="reference internal" href="#fig-multiple-salad-sales-scatter"><span class="std std-numref">Fig. 82</span></a> 中。由于餐厅销售完全相同的产品，因此分层模型适用于跨组共享信息。我们在公式 <a class="reference internal" href="#equation-eq-centered-hierarchical-regression">(38)</a> 和代码 <a class="reference internal" href="#model-hierarchical-salad-sales"><span class="std std-ref">model_hierarchical_salad_sales</span></a> 中以数学方式编写了居中的模型。</p>
-<p>我们将在本章其余部分使用 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 和 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code>，这更容易突出参数化的变化。该模型遵循标准的分层格式，其中一个超先验参数部分池化了斜率 <span class="math notranslate nohighlight">\(\beta_m\)</span> 。</p>
+<p>在分层模型中，后验的几何形态主要由超先验和其他参数之间的相关性定义，这种相关性可能导致上述难以采样的漏斗形态。这并非一种理论上的可能，而是切实存在的问题。幸运的是，有一种被称为“非中心参数化”的建模技巧，有助于缓解此问题。</p>
+<p>继续沙拉示例，假设我们开了 <span class="math notranslate nohighlight">\(6\)</span> 家沙拉餐厅，并且像以前一样，希望将销售额预测为顾客数量的某个函数。合成数据集已经由 Python 代码生成，并显示在 <a class="reference internal" href="#fig-multiple-salad-sales-scatter"><span class="std std-numref">Fig. 82</span></a> 中。由于餐厅销售完全相同的产品，因此分层模型适用于跨组共享信息。我们在公式 <a class="reference internal" href="#equation-eq-centered-hierarchical-regression">(38)</a> 和代码 <a class="reference internal" href="#model-hierarchical-salad-sales"><span class="std std-ref">model_hierarchical_salad_sales</span></a> 中以数学方式编写了中心化后的模型。我们将在本章剩余部分使用 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 和 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code>，这更容易突出参数化的改变。该模型遵循标准的分层格式，其中一个超先验参数被用于部分池化斜率参数 <span class="math notranslate nohighlight">\(\beta_m\)</span> 。</p>
 <div class="math notranslate nohighlight" id="equation-eq-centered-hierarchical-regression">
 <span class="eqno">(38)<a class="headerlink" href="#equation-eq-centered-hierarchical-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \beta_{\mu h} \sim&amp; \mathcal{N} \\
@@ -997,7 +1007,7 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 </pre></div>
 </div>
 </div>
-<p>与在第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中使用的 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 模型类似，该模型被包装在一个函数中，因此可以更轻松地对任意输入进行条件化。除了输入数据，<code class="docutils literal notranslate"><span class="pre">gen_hierarchical_salad_sales</span></code> 还接受一个可调用的 <code class="docutils literal notranslate"><span class="pre">beta_prior_fn</span></code>，它定义了斜率 <span class="math notranslate nohighlight">\(\beta_m\)</span> 的先验。在 <code class="docutils literal notranslate"><span class="pre">Coroutine</span></code> 模型中，我们使用 <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> 语句来调用 <code class="docutils literal notranslate"><span class="pre">beta_prior_fn</span></code>。这个描述在文字上可能过于抽象，但在代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered"><span class="std std-ref">model_hierarchical_salad_sales_centered</span></a> 中更容易看到操作：</p>
+<p>与在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中使用的 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 模型类似，该模型被包装在一个函数中，因此可以更轻松地对任意输入进行条件化。除了输入数据，<code class="docutils literal notranslate"><span class="pre">gen_hierarchical_salad_sales</span></code> 还接受一个可调用的参数 <code class="docutils literal notranslate"><span class="pre">beta_prior_fn</span></code>，它用于定义斜率参数 <span class="math notranslate nohighlight">\(\beta_m\)</span> 的先验。在 <code class="docutils literal notranslate"><span class="pre">Coroutine</span></code> 模型中，我们使用 <code class="docutils literal notranslate"><span class="pre">yield</span> <span class="pre">from</span></code> 语句来调用 <code class="docutils literal notranslate"><span class="pre">beta_prior_fn</span></code>。这个描述在文字上过于抽象，在代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered"><span class="std std-ref">model_hierarchical_salad_sales_centered</span></a> 中可能更容易看到行为动作：</p>
 <div class="literal-block-wrapper docutils container" id="model-hierarchical-salad-sales-centered">
 <div class="code-block-caption"><span class="caption-number">Listing 57 </span><span class="caption-text">model_hierarchical_salad_sales_centered</span><a class="headerlink" href="#model-hierarchical-salad-sales-centered" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">centered_beta_prior_fn</span><span class="p">(</span><span class="n">hyper_mu</span><span class="p">,</span> <span class="n">hyper_sigma</span><span class="p">):</span>
@@ -1010,9 +1020,9 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 </pre></div>
 </div>
 </div>
-<p>如上所示，代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered"><span class="std std-ref">model_hierarchical_salad_sales_centered</span></a> 定义了斜率 <span class="math notranslate nohighlight">\(\beta_m\)</span> 的居中参数化，它遵循具有 <code class="docutils literal notranslate"><span class="pre">hyper_mu</span></code> 和 <code class="docutils literal notranslate"><span class="pre">hyper_sigma</span></code> 的正态分布。</p>
+<p>如上所示，代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered"><span class="std std-ref">model_hierarchical_salad_sales_centered</span></a> 定义了中心化的斜率参数 <span class="math notranslate nohighlight">\(\beta_m\)</span> ，它服从具有超参数 <code class="docutils literal notranslate"><span class="pre">hyper_mu</span></code> 和 <code class="docutils literal notranslate"><span class="pre">hyper_sigma</span></code> 的高斯分布。</p>
 <p><code class="docutils literal notranslate"><span class="pre">centered_beta_prior_fn</span></code> 是一个产生 <code class="docutils literal notranslate"><span class="pre">tfp.distribution</span></code> 的函数，类似于我们编写 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code> 模型的方式。</p>
-<p>现在我们有了模型，我们可以在代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered-inference"><span class="std std-ref">model_hierarchical_salad_sales_centered_inference</span></a> 中运行推断并检查结果。</p>
+<p>现在我们有了模型，可以在代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered-inference"><span class="std std-ref">model_hierarchical_salad_sales_centered_inference</span></a> 中运行推断并检查结果。</p>
 <div class="literal-block-wrapper docutils container" id="model-hierarchical-salad-sales-centered-inference">
 <div class="code-block-caption"><span class="caption-number">Listing 58 </span><span class="caption-text">model_hierarchical_salad_sales_centered_inference</span><a class="headerlink" href="#model-hierarchical-salad-sales-centered-inference" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mcmc_samples_centered</span><span class="p">,</span> <span class="n">sampler_stats_centered</span> <span class="o">=</span> <span class="n">run_mcmc</span><span class="p">(</span>
@@ -1027,13 +1037,13 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>There were [37 31 17 37] divergences after tuning per chain.
 </pre></div>
 </div>
-<p>我们重用之前在代码 <a class="reference internal" href="chp_03.html#tfp-posterior-inference"><span class="std std-ref">tfp_posterior_inference</span></a> 中显示的推断代码来运行我们的模型。运行我们的模型后，问题的第一个迹象是分歧，我们在第 <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 发散性</span></a>中介绍了其细节。样本空间图是下一个诊断，显示在 <a class="reference internal" href="#fig-neals-funnel-salad-centered"><span class="std std-numref">Fig. 83</span></a> 中。</p>
+<p>我们重用之前在代码 <a class="reference internal" href="chp_03.html#tfp-posterior-inference"><span class="std std-ref">tfp_posterior_inference</span></a> 中显示的推断代码来运行模型。结果中的第一个问题迹象是散度，我们在第 <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 发散性</span></a> 中介绍过它。样本空间中的图是下一个诊断工具，展示在 <a class="reference internal" href="#fig-neals-funnel-salad-centered"><span class="std std-numref">Fig. 83</span></a> 中。</p>
 <p>注意随着超先验 <span class="math notranslate nohighlight">\(\beta_{\sigma h}\)</span> 接近零，<span class="math notranslate nohighlight">\(\beta_m\)</span> 参数的后验估计的宽度趋于缩小。特别注意零附近没有样本。换句话说，当 <span class="math notranslate nohighlight">\(\beta_{\sigma h}\)</span> 接近零时，对参数 <span class="math notranslate nohighlight">\(\beta_m\)</span> 进行采样的区域会崩溃，并且采样器无法有效地表征这个后验空间。</p>
 <div class="figure align-default" id="fig-neals-funnel-salad-centered">
 <a class="reference internal image-reference" href="../_images/Neals_Funnel_Salad_Centered.png"><img alt="../_images/Neals_Funnel_Salad_Centered.png" src="../_images/Neals_Funnel_Salad_Centered.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 83 </span><span class="caption-text">来自代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered"><span class="std std-ref">model_hierarchical_salad_sales_centered</span></a> 中定义的 <code class="docutils literal notranslate"><span class="pre">centered_model</span></code> 的超先验和 <span class="math notranslate nohighlight">\(\beta[4]\)</span> 斜率的散点图。当超先验接近零时，斜率塌陷的后空间导致以蓝色显示的分歧。</span><a class="headerlink" href="#fig-neals-funnel-salad-centered" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 83 </span><span class="caption-text">来自代码 <a class="reference internal" href="#model-hierarchical-salad-sales-centered"><span class="std std-ref">model_hierarchical_salad_sales_centered</span></a> 中定义的 <code class="docutils literal notranslate"><span class="pre">centered_model</span></code> 的超先验和 <span class="math notranslate nohighlight">\(\beta[4]\)</span> 斜率的散点图。当超先验接近零时，斜率塌陷的后验空间导致以蓝色显示的散度。</span><a class="headerlink" href="#fig-neals-funnel-salad-centered" title="Permalink to this image">¶</a></p>
 </div>
-<p>为了缓解这个问题，可以将居中参数化转换为 <a class="reference internal" href="#model-hierarchical-salad-sales-non-centered"><span class="std std-ref">model_hierarchical_salad_sales_non_centered</span></a> 和方程 <a class="reference internal" href="#equation-eq-noncentered-hierarchical-regression">(39)</a> 中的代码中所示的非居中参数化。关键区别在于，它不是直接估计斜率 <span class="math notranslate nohighlight">\(\beta_m\)</span> 的参数，而是建模为所有组之间共享的公共项和每个组的一个项，该项捕获与公共项的偏差。这以允许采样器更容易地探索 <span class="math notranslate nohighlight">\(\beta_{\sigma h}\)</span> 的所有可能值的方式修改后验几何。这种后验几何变化的影响如 <a class="reference internal" href="#fig-neals-funnel-salad-noncentered"><span class="std std-numref">Fig. 84</span></a> 所示，其中 x 轴上有多个样本下降到 0 值。</p>
+<p>为了缓解这个问题，可以将中心参数化转换为代码 <a class="reference internal" href="#model-hierarchical-salad-sales-non-centered"><span class="std std-ref">model_hierarchical_salad_sales_non_centered</span></a> 和公式 <a class="reference internal" href="#equation-eq-noncentered-hierarchical-regression">(39)</a> 中所示的非中心参数化。关键区别在于，它不是直接估计斜率 <span class="math notranslate nohighlight">\(\beta_m\)</span> 的参数，而是建模为所有组之间共享的公共项和每个组的一个项，该项捕获了各组与公共项的偏差。这使采样器能够更容易地探索 <span class="math notranslate nohighlight">\(\beta_{\sigma h}\)</span> 的所有可能值，并修改后验几何形态。这种后验几何形态变化的影响如 <a class="reference internal" href="#fig-neals-funnel-salad-noncentered"><span class="std std-numref">Fig. 84</span></a> 所示，其中 <span class="math notranslate nohighlight">\(x\)</span> 轴上有多个样本下降到了 <span class="math notranslate nohighlight">\(0\)</span> 值。</p>
 <div class="math notranslate nohighlight" id="equation-eq-noncentered-hierarchical-regression">
 <span class="eqno">(39)<a class="headerlink" href="#equation-eq-noncentered-hierarchical-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \beta_{\mu h} \sim&amp; \mathcal{N} \\
@@ -1070,18 +1080,18 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 <a class="reference internal image-reference" href="../_images/Neals_Funnel_Salad_NonCentered.png"><img alt="../_images/Neals_Funnel_Salad_NonCentered.png" src="../_images/Neals_Funnel_Salad_NonCentered.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 84 </span><span class="caption-text">代码 <a class="reference internal" href="#model-hierarchical-salad-sales-non-centered"><span class="std std-ref">model_hierarchical_salad_sales_non_centered</span></a> 中定义的 <code class="docutils literal notranslate"><span class="pre">non_centered_model</span></code> 中位置 4 的超先验和估计斜率 <span class="math notranslate nohighlight">\(\beta[4]\)</span> 的散点图。在非中心参数化中，采样器能够对接近零的参数进行采样。分歧的数量较少，并不集中在一个领域。</span><a class="headerlink" href="#fig-neals-funnel-salad-noncentered" title="Permalink to this image">¶</a></p>
 </div>
-<p>采样的改进对 <a class="reference internal" href="#fig-salad-sales-hierarchical-comparison"><span class="std std-numref">Fig. 85</span></a> 中显示的估计分布有重大影响。</p>
-<p>虽然再次提醒这个事实可能会令人不快，但采样器只是估计后验分布，虽然在许多情况下它们做得很好，但不能保证！如果出现警告，请务必注意诊断并进行更深入的调查。</p>
-<p>值得注意的是，对于居中或非居中参数化 <span id="id23">[<a class="reference internal" href="references.html#id173">46</a>]</span>，没有一种适合所有解决方案的解决方案。它是组级个体似然的信息量（通常对于特定组拥有的数据越多，似然函数的信息量越多）、组级先验的信息量和参数化之间的复杂交互。一般的启发式方法是，如果没有很多观测，则首选非中心参数化。然而，在实践中，你应该尝试使用不同的先前规范的居中和非居中参数化的几种不同组合。你甚至可能会发现在单个模型中需要<em>同时</em>居中和非居中参数化的情况。如果你怀疑模型参数化导致你出现采样问题，我们建议你阅读 Michael Betancourt 的案例研究分层建模 <span id="id24">[<a class="reference internal" href="references.html#id164">47</a>]</span>。</p>
+<p>采样的改进对 <a class="reference internal" href="#fig-salad-sales-hierarchical-comparison"><span class="std std-numref">Fig. 85</span></a> 中显示的分布估计有重大影响。</p>
+<p>虽然再次提醒这个事实可能会令人不快，但采样器只是估计后验分布，虽然在许多情况下它们做得很好，但不能保证永远很好！如果出现警告，请务必注意诊断并进行更深入的检查。</p>
+<p>值得注意的是，对于中心或非中心参数化 <span id="id24">[<a class="reference internal" href="references.html#id173">46</a>]</span>，没有一种适合所有解决方案的通用方法。它是组级个体似然的信息量（通常对于特定组拥有的数据越多，似然函数的信息量越多）、组级先验的信息量和参数化之间的复杂交互。一般的启发式方法是，如果观测不多，则首选非中心参数化。然而实践中，你应该尝试使用不同的先验规范的居中和非居中参数化的几种不同组合。你甚至可能会发现在单个模型中需要<em>同时</em>居中和非居中参数化的情况。如果你怀疑模型参数化导致你出现采样问题，我们建议你阅读 Michael Betancourt 的案例研究分层建模 <span id="id25">[<a class="reference internal" href="references.html#id164">47</a>]</span>。</p>
 <div class="figure align-default" id="fig-salad-sales-hierarchical-comparison">
 <a class="reference internal image-reference" href="../_images/Salad_Sales_Hierarchical_Comparison.png"><img alt="../_images/Salad_Sales_Hierarchical_Comparison.png" src="../_images/Salad_Sales_Hierarchical_Comparison.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 85 </span><span class="caption-text"><span class="math notranslate nohighlight">\(\beta_{\sigma h}\)</span> 在中心和非中心参数化中分布的 KDE。这种变化是由于采样器能够更充分地探索可能的参数空间。</span><a class="headerlink" href="#fig-salad-sales-hierarchical-comparison" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="predictions-at-multiple-levels">
-<span id="id25"></span><h3>4.6.2 分层模型的优势 — 支持多个层次上的预测<a class="headerlink" href="#predictions-at-multiple-levels" title="Permalink to this headline">¶</a></h3>
-<p>分层模型的一个微妙特征是它们能够在多个层次上进行估计。虽然看起来很明显，但它非常有用，因为它让我们可以使用一个模型来回答比单层模型更多的问题。在第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中，我们可以建立一个模型来估计单个物种的质量，或者建立一个单独的模型来估计任何企鹅的质量，而不考虑物种。使用分层模型，我们可以用一个模型同时估计所有企鹅和每个企鹅物种的质量。使用我们的沙拉销售模型，我们既可以对单个位置进行估计，也可以对整个整体进行估计。我们可以使用代码 <a class="reference internal" href="#model-hierarchical-salad-sales-non-centered"><span class="std std-ref">model_hierarchical_salad_sales_non_centered</span></a> 的 <code class="docutils literal notranslate"><span class="pre">non_centered_model</span></code> 模型来做到这一点，然后编写一个 <code class="docutils literal notranslate"><span class="pre">out_of_sample_prediction_model</span></code> 模型，如代码 <a class="reference internal" href="#model-hierarchical-salad-sales-predictions"><span class="std std-ref">model_hierarchical_salad_sales_predictions</span></a> 所示。</p>
-<p>这使用拟合参数同时对两个地点和和整个公司的 <span class="math notranslate nohighlight">\(50\)</span> 个客户进行样本外预测。由于 <code class="docutils literal notranslate"><span class="pre">non_centered_model</span></code> 也是一个 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 分布，我们可以将它嵌套到另一个 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 中，这样做构建了一个更大的贝叶斯图模型，该模型扩展了初始 <code class="docutils literal notranslate"><span class="pre">non_centered_model</span></code> 以包含用于样本   外预测的节点。估计值绘制在 <a class="reference internal" href="#fig-salad-sales-hierarchical-predictions"><span class="std std-numref">Fig. 86</span></a> 中。</p>
+<span id="id26"></span><h3>4.6.3 分层模型的优势 — 支持多个层次上的预测<a class="headerlink" href="#predictions-at-multiple-levels" title="Permalink to this headline">¶</a></h3>
+<p>分层模型的一个微妙特征是它们能够在多个层次上进行估计。虽然看起来很明显，但它非常有用，因为它让我们可以使用一个模型来回答比单层模型更多的问题。在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中，我们可以建立一个模型来估计单个物种的质量，或者建立一个单独的模型来估计任何企鹅的质量，而不考虑物种。使用分层模型，我们可以用一个模型同时估计所有企鹅和每个企鹅物种的质量。使用我们的沙拉销售模型，我们既可以对单个位置进行估计，也可以对整个整体进行估计。我们可以使用代码 <a class="reference internal" href="#model-hierarchical-salad-sales-non-centered"><span class="std std-ref">model_hierarchical_salad_sales_non_centered</span></a> 的 <code class="docutils literal notranslate"><span class="pre">non_centered_model</span></code> 模型来做到这一点，然后编写一个 <code class="docutils literal notranslate"><span class="pre">out_of_sample_prediction_model</span></code> 模型，如代码 <a class="reference internal" href="#model-hierarchical-salad-sales-predictions"><span class="std std-ref">model_hierarchical_salad_sales_predictions</span></a> 所示。</p>
+<p>这使用拟合参数同时对两个地点和和整个公司的 <span class="math notranslate nohighlight">\(50\)</span> 个顾客进行样本外预测。由于 <code class="docutils literal notranslate"><span class="pre">non_centered_model</span></code> 也是一个 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 分布，我们可以将它嵌套到另一个 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 中，这样做构建了一个更大的贝叶斯图模型，该模型扩展了初始 <code class="docutils literal notranslate"><span class="pre">non_centered_model</span></code> 以包含用于样本   外预测的节点。估计值绘制在 <a class="reference internal" href="#fig-salad-sales-hierarchical-predictions"><span class="std std-numref">Fig. 86</span></a> 中。</p>
 <div class="literal-block-wrapper docutils container" id="model-hierarchical-salad-sales-predictions">
 <div class="code-block-caption"><span class="caption-number">Listing 60 </span><span class="caption-text">model_hierarchical_salad_sales_predictions</span><a class="headerlink" href="#model-hierarchical-salad-sales-predictions" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out_of_sample_customers</span> <span class="o">=</span> <span class="mf">50.</span>
@@ -1145,10 +1155,10 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 </div>
 </div>
 <div class="section" id="priors-for-multilevel-models">
-<span id="id26"></span><h3>4.6.3 分层模型的先验选择<a class="headerlink" href="#priors-for-multilevel-models" title="Permalink to this headline">¶</a></h3>
-<p>先验选择对于分层模型来说更为重要，因为先验如何与似然的信息量相互作用，如上面第 <a class="reference internal" href="#model-geometry"><span class="std std-ref">4.6.1 分层模型的新问题 — 后验几何形态带来采样难题</span></a> 部分所示。此外，不仅先验分布的形状很重要，我们还可以选择如何参数化它们。这并不仅限于高斯先验，还适用于位置尺度分布族 <a class="footnote-reference brackets" href="#id36" id="id27">6</a> 中的所有分布。</p>
+<span id="id27"></span><h3>4.6.4 分层模型的先验选择<a class="headerlink" href="#priors-for-multilevel-models" title="Permalink to this headline">¶</a></h3>
+<p>先验选择对于分层模型来说更为重要，因为先验如何与似然的信息量相互作用，如上面第 <a class="reference internal" href="#model-geometry"><span class="std std-ref">4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题</span></a> 部分所示。此外，不仅先验分布的形状很重要，我们还可以选择如何参数化它们。这并不仅限于高斯先验，还适用于位置尺度分布族 <a class="footnote-reference brackets" href="#id37" id="id28">6</a> 中的所有分布。</p>
 <p>在分层模型中，先验分布不仅可以表征组内变化，还可以表征组间变化。从某种意义上说，超先验的选择是在定义“变化的变化”，这可能会使先验信息的表达和推断变得困难。此外，部分池化是超先验的信息量、组数量以及组中的观测数的组合效应。因此，如果你在相似数据集上使用相同的模型但使用较少的组执行推断，则相同的超先验可能不起作用。</p>
-<p>因此，除了经验主义（例如，文章中发表的一般性推荐）或一般性建议 <a class="footnote-reference brackets" href="#id37" id="id28">7</a>，我们还可以进行敏感性研究，以更好地了解我们的先验选择。例如 Lemoine <span id="id29">[<a class="reference internal" href="references.html#id122">48</a>]</span> 表明，当使用如下模型结构对生态数据进行建模时：</p>
+<p>因此，除了经验主义（例如，文章中发表的一般性推荐）或一般性建议 <a class="footnote-reference brackets" href="#id38" id="id29">7</a>，我们还可以进行敏感性研究，以更好地了解我们的先验选择。例如 Lemoine <span id="id30">[<a class="reference internal" href="references.html#id122">48</a>]</span> 表明，当使用如下模型结构对生态数据进行建模时：</p>
 <div class="math notranslate nohighlight" id="equation-eq-ecology-regression">
 <span class="eqno">(40)<a class="headerlink" href="#equation-eq-ecology-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
   \alpha_i \sim&amp; \mathcal{N}(\mu_{\alpha},\sigma^2_{\alpha}) \\
@@ -1159,7 +1169,7 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 </div>
 </div>
 <div class="section" id="exercises4">
-<span id="id30"></span><h2>4.7 练习<a class="headerlink" href="#exercises4" title="Permalink to this headline">¶</a></h2>
+<span id="id31"></span><h2>4.7 练习<a class="headerlink" href="#exercises4" title="Permalink to this headline">¶</a></h2>
 <p><strong>4E1.</strong> What are examples of covariate-response relationships that are nonlinear in everyday life?</p>
 <p><strong>4E2.</strong> Assume you are studying the relationship between a covariate and an outcome and the data can be into 2 groups. You will be using a regression with a slope and intercept as your basic model structure.</p>
 <div class="math notranslate nohighlight">
@@ -1225,25 +1235,25 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 </ol>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id31"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
+<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
 <dd><p>The difference between the observed value and the estimated value   of a quantity of interest is call the residual.</p>
 </dd>
-<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id7">2</a></span></dt>
+<dt class="label" id="id33"><span class="brackets"><a class="fn-backref" href="#id7">2</a></span></dt>
 <dd><p>Remember this is just a toy dataset, so the take-home message   should be about modeling interactions and not about tips.</p>
 </dd>
-<dt class="label" id="id33"><span class="brackets"><a class="fn-backref" href="#id10">3</a></span></dt>
+<dt class="label" id="id34"><span class="brackets"><a class="fn-backref" href="#id10">3</a></span></dt>
 <dd><p>Although the mean is defined only for <span class="math notranslate nohighlight">\(\nu &gt; 1\)</span>, and the value of   <span class="math notranslate nohighlight">\(\sigma\)</span> agrees with the standard deviation only when   <span class="math notranslate nohighlight">\(\nu \to \infty\)</span>.</p>
 </dd>
-<dt class="label" id="id34"><span class="brackets"><a class="fn-backref" href="#id11">4</a></span></dt>
+<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id11">4</a></span></dt>
 <dd><p>A thin dough filled with a salty or sweet preparation and baked or   fried. The filling can include red or white meat, fish, vegetables,   or fruit. Empanadas are common in Southern European, Latin American,   and the Filipino cultures.</p>
 </dd>
-<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id12">5</a></span></dt>
+<dt class="label" id="id36"><span class="brackets"><a class="fn-backref" href="#id12">5</a></span></dt>
 <dd><p>The commemoration of the first Argentine government and the   Argentine independence day respectively.</p>
 </dd>
-<dt class="label" id="id36"><span class="brackets"><a class="fn-backref" href="#id27">6</a></span></dt>
+<dt class="label" id="id37"><span class="brackets"><a class="fn-backref" href="#id28">6</a></span></dt>
 <dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Location%E2%80%93scale_family">https://en.wikipedia.org/wiki/Location–scale_family</a></p>
 </dd>
-<dt class="label" id="id37"><span class="brackets"><a class="fn-backref" href="#id28">7</a></span></dt>
+<dt class="label" id="id38"><span class="brackets"><a class="fn-backref" href="#id29">7</a></span></dt>
 <dd><p><a class="reference external" href="https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations">https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations</a></p>
 </dd>
 </dl>

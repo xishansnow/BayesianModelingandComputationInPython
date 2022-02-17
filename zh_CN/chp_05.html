@@ -219,7 +219,13 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#pymc3">
-   5.5 在 PyMC3 中拟合样条
+   5.5 在
+   <code class="docutils literal notranslate">
+<span class="pre">
+     PyMC3
+    </span>
+</code>
+   中拟合样条
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -294,7 +300,13 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#pymc3">
-   5.5 在 PyMC3 中拟合样条
+   5.5 在
+   <code class="docutils literal notranslate">
+<span class="pre">
+     PyMC3
+    </span>
+</code>
+   中拟合样条
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -332,24 +344,24 @@
 <div class="tex2jax_ignore mathjax_ignore section" id="chap3-5">
 <span id="id1"></span><h1>第五章: 样条<a class="headerlink" href="#chap3-5" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
-<p>在本章中，我们将讨论样条曲线，它是第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中概念的扩展，旨在增加更多灵活性。在第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中介绍的模型中，结果变量和预测变量之间的关系在整个域中是相同的。相比之下，样条曲线可以将一个问题分解为多个局部解决方案，所有这些局部解决方案可以组合起来产生一个有用的全局解决方案。</p>
+<p>在本章中，我们将讨论样条曲线，它是 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中概念的延伸，旨在增加更多的灵活性。在<a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中介绍的模型中，结果变量和预测变量之间的关系在整个定义域中是相同的。相比之下，样条可以将一个问题分解为多个局部的解决方案，所有这些局部解可以组合起来生成一个有用的全局解决方案。</p>
 <div class="section" id="polynomial-regression">
 <span id="id2"></span><h2>5.1 多项式回归<a class="headerlink" href="#polynomial-regression" title="Permalink to this headline">¶</a></h2>
-<p>正如在第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中看到的，我们可以将线性模型写为：</p>
+<p>正如在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中所述，我们可以将线性模型写为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-lin-model">
 <span class="eqno">(41)<a class="headerlink" href="#equation-eq-lin-model" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \beta_0 + \beta_1 X\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(\beta_0\)</span> 是截距，<span class="math notranslate nohighlight">\(\beta_1\)</span> 是斜率，<span class="math notranslate nohighlight">\(\mathbb{E}[Y]\)</span> 是结果（随机）变量 <span class="math notranslate nohighlight">\(Y\)</span> 的期望值或均值。我们可以将公式 <a class="reference internal" href="#equation-eq-lin-model">(41)</a> 改写为以下形式：</p>
+<p>其中 <span class="math notranslate nohighlight">\(\beta_0\)</span> 是截距，<span class="math notranslate nohighlight">\(\beta_1\)</span> 是斜率，<span class="math notranslate nohighlight">\(\mathbb{E}[Y]\)</span> 是结果变量 <span class="math notranslate nohighlight">\(Y\)</span> 的期望（或均值）。我们可以将公式 <a class="reference internal" href="#equation-eq-lin-model">(41)</a> 扩展为以下形式：</p>
 <div class="math notranslate nohighlight" id="equation-eq-polynomial-reg">
 <span class="eqno">(42)<a class="headerlink" href="#equation-eq-polynomial-reg" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \beta_0 + \beta_1 X + \beta_2 X^2 + \cdots + \beta_m X^m\]</div>
 <p>上式被称为多项式回归。</p>
-<p>乍一看，公式 <a class="reference internal" href="#equation-eq-polynomial-reg">(42)</a> 似乎表示预测变量 <span class="math notranslate nohighlight">\(X、X^2 \cdots + X^m\)</span> 的多元线性回归。从某种意义上说这也没有错，但关键是所有预测变量 <span class="math notranslate nohighlight">\(X^m\)</span> 都是从 <span class="math notranslate nohighlight">\(X\)</span> 的 <span class="math notranslate nohighlight">\(1\)</span> 到 <span class="math notranslate nohighlight">\(m\)</span> 整数幂派生而来。因此，就实际问题而言，我们仍然在拟合一元预测变量。</p>
-<p>我们称 <span class="math notranslate nohighlight">\(m\)</span> 为多项式的度。第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章和 <a class="reference internal" href="chp_04.html#chap3"><span class="std std-ref">4</span></a> 章的线性回归模型都是 <span class="math notranslate nohighlight">\(1\)</span> 次多项式。唯一的例外是 <a class="reference internal" href="chp_04.html#transforming-covariates"><span class="std std-ref">4.1 对预测变量进行变换</span></a> 节中的变方差示例，其中使用了 <span class="math notranslate nohighlight">\(m=1/2\)</span>。</p>
-<p><a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a> 显示了 <span class="math notranslate nohighlight">\(3\)</span> 个使用 <span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(10\)</span> 和 <span class="math notranslate nohighlight">\(15\)</span> 次的多项式回归示例。随着我们增加多项式的阶数，我们会得到更灵活的曲线。</p>
+<p>乍一看，公式 <a class="reference internal" href="#equation-eq-polynomial-reg">(42)</a> 似乎表示预测变量 <span class="math notranslate nohighlight">\(X、X^2 \cdots + X^m\)</span> 的多元线性回归。从某种意义上说这也没有错，但关键是所有预测变量 <span class="math notranslate nohighlight">\(X^m\)</span> 都是由 <span class="math notranslate nohighlight">\(X\)</span> 的 <span class="math notranslate nohighlight">\(1\)</span> 到 <span class="math notranslate nohighlight">\(m\)</span> 次整数幂派生而来。因此，就实际问题而言，我们仍然在拟合一元预测变量。</p>
+<p>我们称 <span class="math notranslate nohighlight">\(m\)</span> 为多项式的度。<a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 和 <a class="reference internal" href="chp_04.html#chap3"><span class="std std-ref">第 4 章</span></a> 的线性回归模型都采用 <span class="math notranslate nohighlight">\(1\)</span> 次多项式。唯一的例外是 <a class="reference internal" href="chp_04.html#transforming-covariates"><span class="std std-ref">4.1 转换预测变量</span></a> 中的变方差模型，其中使用了 <span class="math notranslate nohighlight">\(m=1/2\)</span>。</p>
+<p><a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a> 显示了 <span class="math notranslate nohighlight">\(3\)</span> 个分别使用度为 <span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(10\)</span> 和 <span class="math notranslate nohighlight">\(15\)</span> 的多项式回归示例。随着多项式阶数的增加，我们会得到更灵活的曲线。</p>
 <div class="figure align-default" id="fig-polynomial-regression">
 <a class="reference internal image-reference" href="../_images/polynomial_regression.png"><img alt="../_images/polynomial_regression.png" src="../_images/polynomial_regression.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 87 </span><span class="caption-text">度为 <span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(10\)</span> 和 <span class="math notranslate nohighlight">\(15\)</span> 的多项式回归示例。随着度数增加，拟合变得更加摇摆。虚线是删除用蓝色十字表示的观测值后的拟合。当多项式的次数为 <span class="math notranslate nohighlight">\(2\)</span> 或 <span class="math notranslate nohighlight">\(10\)</span> 时，删除数据点的影响较小，但在次数为 <span class="math notranslate nohighlight">\(15\)</span> 时效果比较明显。使用最小二乘法计算拟合。</span><a class="headerlink" href="#fig-polynomial-regression" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 87 </span><span class="caption-text">度为 <span class="math notranslate nohighlight">\(2\)</span>、<span class="math notranslate nohighlight">\(10\)</span> 和 <span class="math notranslate nohighlight">\(15\)</span> 的多项式回归示例。随着度的增加，拟合变得更加扭曲。虚线是删除用蓝色十字表示的观测点后的拟合。当多项式的度为 <span class="math notranslate nohighlight">\(2\)</span> 或 <span class="math notranslate nohighlight">\(10\)</span> 时，删除数据点的影响较小，但在度为 <span class="math notranslate nohighlight">\(15\)</span> 时产生的影响比较明显。使用最小二乘法计算拟合。</span><a class="headerlink" href="#fig-polynomial-regression" title="Permalink to this image">¶</a></p>
 </div>
-<p>多项式的缺陷之一是其全局性，当我们应用一个度为 <span class="math notranslate nohighlight">\(m\)</span> 的多项式时，其实是在说：“预测变量和结果变量之间的关系对于整个数据集的度是 <span class="math notranslate nohighlight">\(m\)</span> ”。当数据的不同区域需要不同级别的灵活性时，这会出现问题，比如在某些区域导致曲线过于灵活 <a class="footnote-reference brackets" href="#id24" id="id3">1</a>。在 <a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a>  的最后一个度为 <span class="math notranslate nohighlight">\(15\)</span> 子图中，可以看到，在 <span class="math notranslate nohighlight">\(X\)</span> 值增大的过程中，拟合曲线呈现出一个深谷，然后是一个高峰，即便不存在具有如此低或高值的真实观测数据点。</p>
+<p>多项式的缺陷之一是其全局性，当我们应用一个度为 <span class="math notranslate nohighlight">\(m\)</span> 的多项式时，其实是在说：“预测变量和结果变量之间的关系对于 <em>整个数据集</em> 而言的度是 <span class="math notranslate nohighlight">\(m\)</span> ”。当数据的不同区域需要不同级别的灵活性时，这会出现问题，比如在某些区域导致曲线过于灵活 <a class="footnote-reference brackets" href="#id24" id="id3">1</a>。在 <a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a>  的最后一个度为 <span class="math notranslate nohighlight">\(15\)</span> 子图中，可以看到，在 <span class="math notranslate nohighlight">\(X\)</span> 值增大的过程中，拟合曲线呈现出一个深谷，然后是一个高峰，即便不存在相应的真实观测点。</p>
 <p>此外，随着度数增加，拟合变得更倾向于那些被删除的点，或者等效于添加了若干未来数据；换句话说，随着度数的增加，模型变得比较容易过拟合。例如，在 <a class="reference internal" href="#fig-polynomial-regression"><span class="std std-numref">Fig. 87</span></a> 中，黑线表示对整个数据集的拟合，虚线表示删除一个数据点（图中用叉号表示）后的拟合。可以看到，尤其是在最后一个子图中，即使删除单个数据点也会改变模型的拟合结果，这种效应甚至延伸至了远离该点的位置。</p>
 </div>
 <div class="section" id="expanding-feature-space">
@@ -362,7 +374,7 @@
 <p>其中 <span class="math notranslate nohighlight">\(B_i\)</span> 是任意函数，我们称之为基函数。基函数的线性组合为我们提供了一个函数 <span class="math notranslate nohighlight">\(f\)</span>，它才是我们实际看到的拟合。从这个意义上说，<span class="math notranslate nohighlight">\(B_i\)</span> 是构建灵活函数 <span class="math notranslate nohighlight">\(f\)</span> 的幕后技巧。</p>
 <div class="math notranslate nohighlight" id="equation-eq-bfr2">
 <span class="eqno">(44)<a class="headerlink" href="#equation-eq-bfr2" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \sum_i^m \beta_i B_{i}(X_{i}) = f(X) \]</div>
-<p>基函数 <span class="math notranslate nohighlight">\(B_i\)</span> 有很多选择，多项式是其中之一，也可以应用任意一组函数，例如 <span class="math notranslate nohighlight">\(2\)</span> 的幂、对数或平方根等。选择这些函数可能是由待解决的问题驱动的，例如，在第 <a class="reference internal" href="chp_04.html#transforming-covariates"><span class="std std-ref">4.1 对预测变量进行变换</span></a> 节中，我们通过计算平方根来模拟婴儿的身高随年龄变化的函数，其动机是人类婴儿在生命早期阶段生长得更快，然后趋于平稳，类似于平方根函数的效果。</p>
+<p>基函数 <span class="math notranslate nohighlight">\(B_i\)</span> 有很多选择，多项式是其中之一，也可以应用任意一组函数，例如 <span class="math notranslate nohighlight">\(2\)</span> 的幂、对数或平方根等。选择这些函数可能是由待解决的问题驱动的，例如，在第 <a class="reference internal" href="chp_04.html#transforming-covariates"><span class="std std-ref">4.1 转换预测变量</span></a> 节中，我们通过计算平方根来模拟婴儿的身高随年龄变化的函数，其动机是人类婴儿在生命早期阶段生长得更快，然后趋于平稳，类似于平方根函数的效果。</p>
 <p>另一种替代方法是使用 <span class="math notranslate nohighlight">\(I(c_i \leq x_k &lt; c_j)\)</span> 之类的指示函数，将原始 <span class="math notranslate nohighlight">\(\boldsymbol{X}\)</span> 预测变量分解为（非重叠的）子集。然后仅在这些子集内拟合局部的多项式。此过程导致拟合出 <strong>分段多项式</strong> <a class="footnote-reference brackets" href="#id25" id="id5">2</a>，如 <a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> 所示。</p>
 <div class="figure align-default" id="fig-piecewise">
 <a class="reference internal image-reference" href="../_images/piecewise.png"><img alt="../_images/piecewise.png" src="../_images/piecewise.png" style="width: 8.00in;"/></a>
@@ -373,7 +385,7 @@
 <p>在第二个子图（分段线性）中，我们执行与第一个子图相同的操作，但我们使用线性函数而不是常数函数，它是一次多项式。请注意，连续线性解决方案在虚线处相遇，这是故意完成的。我们可以证明这种限制是为了使解决方案尽可能平滑<a class="footnote-reference brackets" href="#id27" id="id7">4</a>。</p>
 <p>在第三个子图（分段二次）和第四个子图（分段三次）中，我们使用二次和三次分段多项式。正如我们所看到的，通过增加分段多项式的次数，我们得到了越来越灵活的解决方案，这带来了更好的拟合，但也有更高的过拟合机会。</p>
 <p>因为最终拟合是由局部解（<span class="math notranslate nohighlight">\(B_i\)</span> 基函数）构造的函数 <span class="math notranslate nohighlight">\(f\)</span>，我们可以更轻松地适应模型的灵活性以适应不同区域的数据需求。在这种特殊情况下，我们可以使用更简单的函数（阶数较低的多项式）来拟合不同区域的数据，同时提供适合整个数据域的良好整体模型。</p>
-<p>到目前为止，我们假设我们有一个预测变量 <span class="math notranslate nohighlight">\(X\)</span>，但同样的想法可以扩展到多个预测变量 <span class="math notranslate nohighlight">\(X_0, X_1, \cdots, X_p\)</span> (注意：<span class="math notranslate nohighlight">\(X_i\)</span> 之间相互独立，见公式)。我们甚至可以添加一个反向链接函数 <span class="math notranslate nohighlight">\(\phi\)</span> <a class="footnote-reference brackets" href="#id28" id="id8">5</a> 这种形式的模型被称为广义可加模型 (GAM)：<span id="id9">[<a class="reference internal" href="references.html#id3">18</a>, <a class="reference internal" href="references.html#id4">49</a>]</span>。</p>
+<p>到目前为止，我们假设仅有一个预测变量 <span class="math notranslate nohighlight">\(X\)</span>，但同样的想法可以扩展到多个预测变量 <span class="math notranslate nohighlight">\(X_0, X_1, \cdots, X_p\)</span> ( 注意：<span class="math notranslate nohighlight">\(X_i\)</span> 之间相互独立，见公式 )。在此基础上，我们甚至可以添加一个反向链接函数 <span class="math notranslate nohighlight">\(\phi\)</span> ，而这种形式的模型被称为广义可加模型 (GAM) <a class="footnote-reference brackets" href="#id28" id="id8">5</a> ，参见 <span id="id9">[<a class="reference internal" href="references.html#id3">18</a>, <a class="reference internal" href="references.html#id4">49</a>]</span>。</p>
 <div class="math notranslate nohighlight" id="equation-eq-gam">
 <span class="eqno">(45)<a class="headerlink" href="#equation-eq-gam" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \phi \left(\sum_i^p f(X_i)\right) \]</div>
 <p>概括一下在本节中学到的知识，公式 <a class="reference internal" href="#equation-eq-bfr">(43)</a> 中的 <span class="math notranslate nohighlight">\(B_i\)</span> 函数是一种巧妙的统计工具，它允许我们拟合更灵活的模型。原则上，可以自由选择任意 <span class="math notranslate nohighlight">\(B_i\)</span> 函数，根据领域知识做探索性数据分析，并形成阶段性结果，甚至可以通过反复试验来选择 <span class="math notranslate nohighlight">\(B_i\)</span> 。并非所有转换都具有相同的统计属性，因此最好能够在更广泛的数据集上评估一些具有良好通用属性的默认函数。从下一节开始，本书将讨论限制在被称为 <code class="docutils literal notranslate"><span class="pre">基样条</span></code> 的基函数族 <a class="footnote-reference brackets" href="#id29" id="id10">6</a> 。</p>
@@ -395,10 +407,10 @@
 <a class="reference internal image-reference" href="../_images/splines_weighted.png"><img alt="../_images/splines_weighted.png" src="../_images/splines_weighted.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 90 </span><span class="caption-text">使用 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 软件包定义的基样条。在第一行中可以看到以灰色虚线表示的 1 阶（分段常数）、2 阶（分段线性）和 4 阶（分段三次）样条曲线。为了清楚起见，每个基函数都用不同的颜色表示。在第二行中，将第一行的基样条按一组系数加权，粗黑线表示了这些基函数的加权和。由于系数值是随机选择的，所以可以将第二行中的每个子图视为<em>样条空间</em>上先验分布的随机样本。</span><a class="headerlink" href="#fig-splines-weighted" title="Permalink to this image">¶</a></p>
 </div>
-<p>在这个例子中，我们从半正态分布（代码 <a class="reference internal" href="#splines-patsy-plot"><span class="std std-ref">splines_patsy_plot</span></a> 中的第 17 行）中采样生成 <span class="math notranslate nohighlight">\(\beta_i\)</span> 系数。因此，<a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中的每个子图仅显示样条上概率分布的一种实现。通过删除随机种子，然后运行代码 <a class="reference internal" href="#splines-patsy-plot"><span class="std std-ref">splines_patsy_plot</span></a> 几次就能看出这一点，每次你都会看到不同的样条曲线。此外，你还可以尝试将半正态分布替换为正态分布、指数分布等其他分布。<a class="reference internal" href="#fig-splines-realizations"><span class="std std-numref">Fig. 91</span></a> 显示了三次样条的四种实现。</p>
+<p>在这个例子中，我们从半高斯分布（代码 <a class="reference internal" href="#splines-patsy-plot"><span class="std std-ref">splines_patsy_plot</span></a> 中的第 17 行）中采样生成 <span class="math notranslate nohighlight">\(\beta_i\)</span> 系数。因此，<a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中的每个子图仅显示样条上概率分布的一种实现。通过删除随机种子，然后运行代码 <a class="reference internal" href="#splines-patsy-plot"><span class="std std-ref">splines_patsy_plot</span></a> 几次就能看出这一点，每次你都会看到不同的样条曲线。此外，你还可以尝试将半高斯分布替换为高斯分布、指数分布等其他分布。<a class="reference internal" href="#fig-splines-realizations"><span class="std std-numref">Fig. 91</span></a> 显示了三次样条的四种实现。</p>
 <div class="figure align-default" id="fig-splines-realizations">
 <a class="reference internal image-reference" href="../_images/splines_realizations.png"><img alt="../_images/splines_realizations.png" src="../_images/splines_realizations.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 91 </span><span class="caption-text">从半正态分布中采样得到 <span class="math notranslate nohighlight">\(\beta_i\)</span> 系数的四种三次样条实现。</span><a class="headerlink" href="#fig-splines-realizations" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 91 </span><span class="caption-text">从半高斯分布中采样得到 <span class="math notranslate nohighlight">\(\beta_i\)</span> 系数的四种三次样条实现。</span><a class="headerlink" href="#fig-splines-realizations" title="Permalink to this image">¶</a></p>
 </div>
 <div class="admonition-four-is-a-crowd-for-splines admonition">
 <p class="admonition-title">Four is a crowd for splines </p>
@@ -409,7 +421,7 @@
 </div>
 <div class="section" id="patsy">
 <span id="building-the-design-matrix-using-patsy"></span><h2>5.4 使用 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 软件包构建设计矩阵<a class="headerlink" href="#patsy" title="Permalink to this headline">¶</a></h2>
-<p>在图 <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 和 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中，我们绘制了基样条线，但到目前为止省略了计算它们的方法，主要原因是计算很麻烦，并且在 <code class="docutils literal notranslate"><span class="pre">Scipy</span></code> <a class="footnote-reference brackets" href="#id33" id="id15">10</a> 等软件包中已经有有效的可用算法。因此，与我们不打算从头开始计算基样条，而是依赖 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 软件包，这是一个用于描述统计模型（尤其是线性模型，或具有线性组件的模型）和构建设计矩阵的包。其灵感来自 R 编程语言生态系统的许多包中广泛使用的<em>公式迷你语言</em>。例如，具有两个预测变量的线性模型看起来像<code class="docutils literal notranslate"><span class="pre">"y</span> <span class="pre">~</span> <span class="pre">x1</span> <span class="pre">+</span> <span class="pre">x2"</span></code>，如果想添加交互，可以写成<code class="docutils literal notranslate"><span class="pre">"y</span> <span class="pre">~</span> <span class="pre">x1</span> <span class="pre">+</span> <span class="pre">x2</span> <span class="pre">+</span> <span class="pre">x1:x2"</span></code>。这与第 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> 章中突出显示 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 语法相似。有关详细信息，请查看 <code class="docutils literal notranslate"><span class="pre">patsy</span></code> 文档 <a class="footnote-reference brackets" href="#id34" id="id16">11</a>。</p>
+<p>在图 <a class="reference internal" href="#fig-splines-basis"><span class="std std-numref">Fig. 89</span></a> 和 <a class="reference internal" href="#fig-splines-weighted"><span class="std std-numref">Fig. 90</span></a> 中，我们绘制了基样条线，但到目前为止省略了计算它们的方法，主要原因是计算很麻烦，并且在 <code class="docutils literal notranslate"><span class="pre">Scipy</span></code> <a class="footnote-reference brackets" href="#id33" id="id15">10</a> 等软件包中已经有有效的可用算法。因此，与我们不打算从头开始计算基样条，而是依赖 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 软件包，这是一个用于描述统计模型（尤其是线性模型，或具有线性组件的模型）和构建设计矩阵的包。其灵感来自 R 编程语言生态系统的许多包中广泛使用的<em>公式迷你语言</em>。例如，具有两个预测变量的线性模型看起来像<code class="docutils literal notranslate"><span class="pre">"y</span> <span class="pre">~</span> <span class="pre">x1</span> <span class="pre">+</span> <span class="pre">x2"</span></code>，如果想添加交互，可以写成<code class="docutils literal notranslate"><span class="pre">"y</span> <span class="pre">~</span> <span class="pre">x1</span> <span class="pre">+</span> <span class="pre">x2</span> <span class="pre">+</span> <span class="pre">x1:x2"</span></code>。这与 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中突出显示 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 语法相似。有关详细信息，请查看 <code class="docutils literal notranslate"><span class="pre">patsy</span></code> 文档 <a class="footnote-reference brackets" href="#id34" id="id16">11</a>。</p>
 <p>要在 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 中定义基样条设计矩阵，我们需要将以 <code class="docutils literal notranslate"><span class="pre">bs()</span></code> 开头的字符串<em>粒子</em>传递给 <code class="docutils literal notranslate"><span class="pre">dmatrix</span></code> 函数，该粒子是一个能够被 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 解析为函数的字符串。因此，它可以接受多个参数，包括数据、样条结点数组、样条的度数等。在代码 <a class="reference internal" href="#splines-patsy"><span class="std std-ref">splines_patsy</span></a> 中，我们定义了 <span class="math notranslate nohighlight">\(3\)</span> 个设计矩阵，一个具有 <span class="math notranslate nohighlight">\(0\)</span> 阶（分段常数），另一个具有 <span class="math notranslate nohighlight">\(1\)</span> 阶（分段线性），最后一个具有 <span class="math notranslate nohighlight">\(3\)</span> 阶（三次样条）。</p>
 <div class="literal-block-wrapper docutils container" id="splines-patsy">
 <div class="code-block-caption"><span class="caption-number">Listing 62 </span><span class="caption-text">splines_patsy</span><a class="headerlink" href="#splines-patsy" title="Permalink to this code">¶</a></div>
@@ -463,11 +475,11 @@
 </div>
 </div>
 <p>到目前为止，我们已经探索了几个示例，以直观了解样条线是什么以及如何在 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 的帮助下自动创建它们。</p>
-<p>我们现在可以继续计算权重。让我们看看如何使用 PyMC3 在贝叶斯模型中做到这一点。</p>
+<p>我们现在可以继续计算权重。让我们看看如何使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 在贝叶斯模型中做到这一点。</p>
 </div>
 <div class="section" id="pymc3">
-<span id="fitting-splines-in-pymc3"></span><h2>5.5 在 PyMC3 中拟合样条<a class="headerlink" href="#pymc3" title="Permalink to this headline">¶</a></h2>
-<p>在本节中，我们将使用 PyMC3 通过将一组基样条拟合到数据来获得回归系数 <span class="math notranslate nohighlight">\(\beta\)</span> 的值。</p>
+<span id="fitting-splines-in-pymc3"></span><h2>5.5 在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中拟合样条<a class="headerlink" href="#pymc3" title="Permalink to this headline">¶</a></h2>
+<p>在本节中，我们将使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 通过将一组基样条拟合到数据来获得回归系数 <span class="math notranslate nohighlight">\(\beta\)</span> 的值。</p>
 <p>现代自行车共享系统允许全球许多城市的人们以完全自动化的方式租用和归还自行车，有助于提高公共交通的效率，并可能使社会的一部分更健康、更快乐。我们将使用来自加州大学欧文分校机器学习库 <a class="footnote-reference brackets" href="#id35" id="id17">12</a> 的此类自行车共享系统的数据集。对于我们的示例，我们将估计 24 小时内每小时租用的自行车数量。让我们加载并绘制数据：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/bikes_hour.csv"</span><span class="p">)</span>
 <span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">"hour"</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

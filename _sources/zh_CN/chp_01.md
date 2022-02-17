@@ -282,7 +282,7 @@ for iter in range(n_iters):
     trace["θ"][iter] = θ
 ```
 
-在代码 [metropolis_hastings](metropolis_hastings) 中，第 $9$ 行从标准差为 `can_sd` 的正态分布中采样来生成提议分布。第 $10$ 行在新生成的值 `θ_can` 处估计后验，第 $11$ 行计算接受概率。第 $17$ 行在 `trace` 数组中保存 `θ` 的值。
+在代码 [metropolis_hastings](metropolis_hastings) 中，第 $9$ 行从标准差为 `can_sd` 的高斯分布中采样来生成提议分布。第 $10$ 行在新生成的值 `θ_can` 处估计后验，第 $11$ 行计算接受概率。第 $17$ 行在 `trace` 数组中保存 `θ` 的值。
 
 此值是新值还是重复上一个值，取决于第 $13$ 行的比较结果。
 
@@ -359,7 +359,7 @@ ArviZ 在许多绘图函数中都会使用 KDE，甚至在内部进行一些计�
 
 在过去的几十年中，此类工具的可用性大大提升了贝叶斯方法的普及度和实用性。不幸的是，这些通用推断引擎方法并不是真正通用的，因为它们无法有效地解决所有贝叶斯模型。现代贝叶斯实践者的部分工作是能够理解并且9999解决这些限制。
 
-在本书中，我们将使用 `PyMC3` {cite:p}`Salvatier2016` 和 `TensorFlow Probability` {cite:p}`dillon2017tensorflow`。让我们使用 PyMC3 为公式 {eq}`eq:beta_binomial` 编写模型：
+在本书中，我们将使用 `PyMC3` {cite:p}`Salvatier2016` 和 `TensorFlow Probability` {cite:p}`dillon2017tensorflow`。让我们使用 `PyMC3` 为公式 {eq}`eq:beta_binomial` 编写模型：
 
 ```{code-block} ipython3 
 :name: beta_binom 
@@ -375,9 +375,9 @@ with pm.Model() as model:
 # Sample from the posterior distribution     
 idata = pm.sample(1000, return_inferencedata=True) 
 ``` 
-你可以自己检查一下这段代码的结果是否与之前自制采样器的结果一致，但在概率编程语言支持下，工作量要少得多。如果你不熟悉 PyMC3 语法，现阶段只需关注代码注释中表达的每一行的意图。
+你可以自己检查一下这段代码的结果是否与之前自制采样器的结果一致，但在概率编程语言支持下，工作量要少得多。如果你不熟悉 `PyMC3` 语法，现阶段只需关注代码注释中表达的每一行的意图。
 
-由于我们已经在 PyMC3 语法中定义了模型，因此可以利用 `pm.model_to_graphviz(model)` 在代码 [beta_binom](beta_binom) 中生成模型的概率图表示（参见 {numref}`fig:BetaBinomModelGraphViz`）。
+由于我们已经在 `PyMC3` 语法中定义了模型，因此可以利用 `pm.model_to_graphviz(model)` 在代码 [beta_binom](beta_binom) 中生成模型的概率图表示（参见 {numref}`fig:BetaBinomModelGraphViz`）。
 
 ```{figure} figures/BetaBinomModelGraphViz.png
 :name: fig:BetaBinomModelGraphViz
@@ -387,7 +387,7 @@ idata = pm.sample(1000, return_inferencedata=True)
 
 ```
 
-概率编程语言不仅可以估计随机变量的对数概率以获得后验分布，还可以模拟各种预测分布。例如，代码 [predictive_distributions](predictive_distributions) 展示了如何使用 PyMC3 获得先验预测分布的 $1000$ 个样本，以及后验预测分布的 $1000$ 个样本。请注意，第一个函数有一个 `model` 参数，而第二个函数必须同时传递 `model` 和 `trace` 参数，这反映了先验预测分布仅需要模型，而后验预测分布不仅需要模型还需要后验分布。从先验预测分布和后验预测分布生成的样本分别在 {numref}`fig:quartet` 的顶部和底部子图中表示。
+概率编程语言不仅可以估计随机变量的对数概率以获得后验分布，还可以模拟各种预测分布。例如，代码 [predictive_distributions](predictive_distributions) 展示了如何使用 `PyMC3` 获得先验预测分布的 $1000$ 个样本，以及后验预测分布的 $1000$ 个样本。请注意，第一个函数有一个 `model` 参数，而第二个函数必须同时传递 `model` 和 `trace` 参数，这反映了先验预测分布仅需要模型，而后验预测分布不仅需要模型还需要后验分布。从先验预测分布和后验预测分布生成的样本分别在 {numref}`fig:quartet` 的顶部和底部子图中表示。
 
 
 ```{code-block} ipython3
@@ -697,7 +697,7 @@ for idx in range(ite):
 
 - 绝对值均值，支持 $(-\infty, \infty)$：拉普拉斯（也称为双指数）
 
-- 给定均值和方差，支持 $(-\infty, \infty)$：正态分布
+- 给定均值和方差，支持 $(-\infty, \infty)$：高斯分布
 
 - 给定均值和方差，支持 $[-\pi, \pi]$：Von Mises
 

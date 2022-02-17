@@ -271,7 +271,13 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#tfp-numpyro">
-     10.6.1 示例： TFP 和 Numpyro 中的效果处理
+     10.6.1 示例：
+     <code class="docutils literal notranslate">
+<span class="pre">
+       TFP
+      </span>
+</code>
+     和 Numpyro 中的效果处理
     </a>
 </li>
 </ul>
@@ -401,7 +407,13 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#tfp-numpyro">
-     10.6.1 示例： TFP 和 Numpyro 中的效果处理
+     10.6.1 示例：
+     <code class="docutils literal notranslate">
+<span class="pre">
+       TFP
+      </span>
+</code>
+     和 Numpyro 中的效果处理
     </a>
 </li>
 </ul>
@@ -924,14 +936,14 @@ Diverging: 423
          |TensorConstant{-inf} [id BC]
 </pre></div>
 </div>
-<p>Just like algebraic optimization this graph can then be optimized in ways that benefit the Bayesian user <span id="id32">[<a class="reference internal" href="references.html#id89">121</a>]</span>. Recall the discussion in Section <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.1 分层模型的新问题 — 后验几何形态带来采样难题</span></a>, certain models benefit from non-centered parameterizations, as this helps eliminate challenging geometry such as Neal’s funnel. Without automatic optimization the user must be aware of the geometrical challenge to the sampler and make the adjust themselves. In the future, libraries such as symbolic-pymc <a class="footnote-reference brackets" href="#id78" id="id33">14</a> will be able to make this reparameterization automatic, just as we say the automatic transformation of log probability and bounded distributions above. With this upcoming tool PPL users can further focus on the model and let the PPL “worry” about the computational optimizations.</p>
+<p>Just like algebraic optimization this graph can then be optimized in ways that benefit the Bayesian user <span id="id32">[<a class="reference internal" href="references.html#id89">121</a>]</span>. Recall the discussion in Section <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题</span></a>, certain models benefit from non-centered parameterizations, as this helps eliminate challenging geometry such as Neal’s funnel. Without automatic optimization the user must be aware of the geometrical challenge to the sampler and make the adjust themselves. In the future, libraries such as symbolic-pymc <a class="footnote-reference brackets" href="#id78" id="id33">14</a> will be able to make this reparameterization automatic, just as we say the automatic transformation of log probability and bounded distributions above. With this upcoming tool PPL users can further focus on the model and let the PPL “worry” about the computational optimizations.</p>
 </div>
 <div class="section" id="effect-handling">
 <span id="id34"></span><h2>10.6 效果处理<a class="headerlink" href="#effect-handling" title="Permalink to this headline">¶</a></h2>
 <p>Effect handlers <span id="id35">[<a class="reference internal" href="references.html#id136">122</a>]</span> are an abstraction in programming languages that gives different interpretations, or side effects, to the standard behavior of statements in a program. A common example is exception handling in Python with <code class="docutils literal notranslate"><span class="pre">try</span></code> and <code class="docutils literal notranslate"><span class="pre">except</span></code>. When some specific error is raised in the code block under <code class="docutils literal notranslate"><span class="pre">try</span></code> statement, we can perform different processing in the <code class="docutils literal notranslate"><span class="pre">except</span></code> block and resume computation. For Bayesian models there are two primary effects we want the random variable to have, draw a value (sample) from its distribution, or condition the value to some user input. Other use cases of effect handlers are transforming bounded random variables and automatic reparameterization as we mentioned above.</p>
 <p>Effect handlers are not a required component of PPLs but rather a design choice that strongly influences the API and the “feel” of using the PPL. Harkening back to our car analogy this is similar to a power steering system in a car. It is not required, it is usually hidden from the driver under the hood but it definitely changes the driving experience. As effect handlers are typically “hidden” they are more easily explained through example rather than theory.</p>
 <div class="section" id="tfp-numpyro">
-<span id="example-effect-handling-in-tfp-and-numpyro"></span><h3>10.6.1 示例： TFP 和 Numpyro 中的效果处理<a class="headerlink" href="#tfp-numpyro" title="Permalink to this headline">¶</a></h3>
+<span id="example-effect-handling-in-tfp-and-numpyro"></span><h3>10.6.1 示例： <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 和 Numpyro 中的效果处理<a class="headerlink" href="#tfp-numpyro" title="Permalink to this headline">¶</a></h3>
 <p>In the rest of this section we will see how effect handling works in TensorFlow Probability and NumPyro. Briefly NumPyro is another PPL based on Jax. Specifically, we will compare the high level API between <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code> and model written with NumPyro primitives, which both represent Bayesian model with a Python function in a similar way. Also, we will be using the JAX substrate of TFP, so that both API share the same base language and numerical computation backend. Again consider the model in Equation <a class="reference internal" href="#equation-eq-simple-normal-model">(84)</a>, in Code Block <a class="reference internal" href="#tfp-vs-numpyro"><span class="std std-ref">tfp_vs_numpyro</span></a> we import the libraries and write the model:</p>
 <div class="literal-block-wrapper docutils container" id="tfp-vs-numpyro">
 <div class="code-block-caption"><span class="caption-number">Listing 145 </span><span class="caption-text">tfp_vs_numpyro</span><a class="headerlink" href="#tfp-vs-numpyro" title="Permalink to this code">¶</a></div>
@@ -1360,7 +1372,7 @@ dtype=[float32, float32, float32, float32]
 <p>Verify which distributions are automatically transformed from bounded to unbounded distributions. Plot samples from the priors for both the bounded priors and their paired transforms if one exists. What differences can you note?</p>
 <p><strong>10H9.</strong> BlackJAX is a library of samplers for JAX. Generate a random sample of from <span class="math notranslate nohighlight">\(\mathcal(N)(0,10)\)</span> of size 20. Use the HMC sampler in JAX to recover the parameters of the data generating distribution. The BlackJAX documentation and Section <a class="reference internal" href="chp_11.html#hmc"><span class="std std-ref">汉密尔顿蒙特卡洛采样器（ HMC ）</span></a> will be helpful.</p>
 <p><strong>10H10.</strong> Implement the linear penguins model defined in Code Block <a class="reference internal" href="chp_03.html#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> in NumPyro. After verifying the result are roughly the same as TFP and PyMC3, what differences do you see from the TFP and PyMC3 syntax? What similarities do you see? Be sure not just compare models, but compare the entire workflow.</p>
-<p><strong>10H11.</strong> We have explained reparameterization in previous chapter, for example, center and non-center parameterization for linear model in Section <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.1 分层模型的新问题 — 后验几何形态带来采样难题</span></a>. One of the use case for effect handling is to perform automatic reparameterization  <span id="id63">[<a class="reference internal" href="references.html#id176">129</a>]</span>. Try to write a effect handler in NumPyro to perform automatic non-centering of a random variable in a model. Hint: NumPyro already provides this functionality with <code class="docutils literal notranslate"><span class="pre">numpyro.handlers.reparam</span></code>.</p>
+<p><strong>10H11.</strong> We have explained reparameterization in previous chapter, for example, center and non-center parameterization for linear model in Section <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题</span></a>. One of the use case for effect handling is to perform automatic reparameterization  <span id="id63">[<a class="reference internal" href="references.html#id176">129</a>]</span>. Try to write a effect handler in NumPyro to perform automatic non-centering of a random variable in a model. Hint: NumPyro already provides this functionality with <code class="docutils literal notranslate"><span class="pre">numpyro.handlers.reparam</span></code>.</p>
 <hr class="docutils"/>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">

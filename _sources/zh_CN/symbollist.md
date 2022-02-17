@@ -65,9 +65,9 @@ $f(x)$ ：关于 $x$ 的任意函数
 
 $f(\boldsymbol{X}; \theta, \gamma)$ ：$f$ 是 $\boldsymbol{X}$ 的函数，其参数为 $\theta$ 和 $\gamma$ 。我们使用这个符号来强调 $\boldsymbol{X}$ 是传递给函数（或模型）的数据，而 $\theta$ 和 $\gamma$ 是函数的参数。 
 
-$\mathcal{N}(\mu, \sigma)$ ：均值为 $\mu$ 标准差为 $\sigma$ 的高斯（或正态）分布。
+$\mathcal{N}(\mu, \sigma)$ ：均值为 $\mu$ 标准差为 $\sigma$ 的高斯（或高斯）分布。
 
-$\mathcal{HN}(\sigma)$ ：标准差为 $\sigma$ 的半高斯（或半正态）分布
+$\mathcal{HN}(\sigma)$ ：标准差为 $\sigma$ 的半高斯（或半高斯）分布
 
 $\text{Beta}(\alpha, \beta)$ ：形状参数为 $\alpha$ 和 $\beta$ 的贝塔分布
 
@@ -75,9 +75,9 @@ $\text{Expo}(\lambda)$ ：速率参数为 $\lambda$ 的指数分布
 
 $\mathcal{U}(a, b)$ ：下界为 $a$ 上界为 $b$ 的均匀分布
 
-$\mathcal{T}(\nu, \mu, \sigma)$ ：正态等级为 $\nu$ （ 也称自由度 ）、位置参数为 $\mu$ （ 当 $\nu > 1$ 时指均值 ）、尺度参数为 $\sigma$ （ 当 $\lim_{\nu\to\infty}$ 时指标准差 ）的学生 $t$ 分布
+$\mathcal{T}(\nu, \mu, \sigma)$ ：高斯等级为 $\nu$ （ 也称自由度 ）、位置参数为 $\mu$ （ 当 $\nu > 1$ 时指均值 ）、尺度参数为 $\sigma$ （ 当 $\lim_{\nu\to\infty}$ 时指标准差 ）的学生 $t$ 分布
 
-$\mathcal{HT}( \nu \sigma)$ ：正态等级为 $\nu$ （ 也称自由度 ）、尺度参数为 $\sigma$ 的半学生 $t$ 分布 $\nu$ 
+$\mathcal{HT}( \nu \sigma)$ ：高斯等级为 $\nu$ （ 也称自由度 ）、尺度参数为 $\sigma$ 的半学生 $t$ 分布 $\nu$ 
 
 $\text{Cauchy}(\alpha, \beta)$ ：位置参数为 $\alpha$ 、尺度参数为 $\beta$ 的柯西分布
 
