@@ -7,11 +7,17 @@ This is true when dutch politician Karl Kristian Steincke allegedly said
 this sometime in the 1940s [^1], and it is still true today especially
 if you are working on time series and forecasting problems. There are
 many applications of time series analysis, from making predictions with forecasting, to understanding what were the underlying latent factors in the historical trend. In this chapter we will discuss some Bayesian
-approaches to this problem. We will start by considering time series
+approaches to this problem.
+
+ We will start by considering time series
 modeling as a regression problem, with the design matrices parsed from
-the timestamp information. We will then explore the approaches to model
-temporal correlation using autoregressive components. These models
-extend into a wider (more general) class of State Space Model and
+the timestamp information. 
+
+We will then explore the approaches to model
+
+temporal correlation using autoregressive components. 
+
+These models extend into a wider (more general) class of State Space Model and
 Bayesian Structural Time Series model (BSTS), and we will introduce a
 specialized inference method in the linear Gaussian cases: Kalman
 Filter. The remainder of the chapter will give a brief summary of model

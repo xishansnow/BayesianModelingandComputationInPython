@@ -22,7 +22,7 @@ kernelspec:
 
 (transforming_covariates)= 
 
-## 4.1 对预测变量进行变换 
+## 4.1 转换预测变量 
 
 在 [第 3 章](chap2) 中，通过最简单的线性模型和恒等链接函数，在任意 $X_i$ 的取值处，$x_i$ 的一个单位变化导致结果变量 $Y$ 的 $\beta_i$ 个单位的预期变化。然后，我们学习了如何通过改变似然函数（ 例如从高斯到伯努利 ）来创建广义线性模型，这通常需要改变链接函数。
 
@@ -118,12 +118,11 @@ with pm.Model() as model_baby_sqrt:
 
 ``` 
 
-
 (varying-uncertainty)= 
 
-## 4.2 变化中的不确定性
+## 4.2 可变的方差
 
-到目前为止，我们使用线性模型对 $Y$ 的均值进行建模，同时假设残差 [^1] 的方差在响应范围内是恒定的。然而，这种固定方差假设可能是一种不够充分的建模选择。为了能够解释不断变化的不确定性，我们可以将方程 {eq}`eq:covariate_transformation_regression` 扩展为：
+到目前为止，我们使用线性模型对 $Y$ 的均值进行建模，同时假设残差 [^1] 的方差在响应范围内是恒定的。然而，这种固定方差的假设可能是一种不够充分的建模选择。为了能够解释不断变化的不确定性，我们可以将方程 {eq}`eq:covariate_transformation_regression` 扩展为：
 
 ```{math} 
 :label: eq:varying_variance
@@ -135,7 +134,7 @@ with pm.Model() as model_baby_sqrt:
 \end{split}
 ```
 
-估计 $\sigma$ 的第二行代码与对均值建模的线性项非常相似。我们不仅可以使用线性模型对均值/位置参数建模，还可以对其他参数进行建模。让我们扩展在代码 [babies_transformed](babies_transformed) 中定义的 `model_sqrt`。现在假设当孩子们还小的时候，他们的身高往往会紧密地聚集在一起，但随着年龄的增长，他们的身高往往会变得更加分散。
+估计 $\sigma$ 的第二行代码与对均值建模的线性项非常相似。我们不仅可以使用线性模型对均值参数建模，还可以对其他参数进行建模。让我们扩展在代码 [babies_transformed](babies_transformed) 中定义的 `model_sqrt`。现在假设当孩子们小的时候，他们的身高更集中一些，但随着年龄增长，他们的身高变得越来越分散。
 
 ```{code-block} ipython3
 :name: babies_varying_variance
@@ -159,36 +158,38 @@ with pm.Model() as model_baby_vv:
                                      posterior_predictive=ppc_baby_vv)
 ```
 
-为了模拟随着儿童年龄增长而增加的身高离散度，我们将 $\sigma$ 的定义从固定值更改为随年龄变化的值。换句话说，我们将模型假设从具有恒定方差的 **同质性** 更改为具有变化方差的 **异质性**。模型定义在代码 [babies_varying_variance](babies_varying_variance) 中，我们需要做的就是更改定义模型的 $\sigma$ 的表达式，然后 `PPL` 会自动处理后验估计。该模型的结果绘制在 {numref}`fig:Baby_Length_Sqrt_VV_Fit_Include_Error` 中。
+为了模拟随着儿童年龄增长而增加的身高离散度，我们将 $\sigma$ 的定义从固定值更改为随年龄变化的值。换句话说，我们将模型假设从具有恒定方差的 **同质性** 更改为具有变化方差的 **异质性**。模型定义在代码 [babies_varying_variance](babies_varying_variance) 中，我们需要做的就是更改定义 $\sigma$ 的表达式，然后概率编程语言会自动处理后验估计。该模型的结果绘制在 {numref}`fig:Baby_Length_Sqrt_VV_Fit_Include_Error` 中。
 
 ```{figure} figures/Baby_Length_Sqrt_VV_Fit_Include_Error.png
 :name: fig:Baby_Length_Sqrt_VV_Fit_Include_Error
 :width: 7.00in
 
-显示婴儿月龄与身高的参数拟合的两个图。在上图中，用蓝线表示的预期平均预测与 {numref}`fig:Baby_Length_non_linear` 相同，但是后验的 `HDI` 区间是非恒定的。底部的图表绘制了预期误差估计 $\sigma$ 作为月龄的函数。请注意，随着月数增加，误差的预期估计值在增加。
+显示婴儿月龄与身高之间关系的拟合图。上图为身高均值与月龄之间关系的拟合图，蓝线表示均值预测的期望值，与 {numref}`fig:Baby_Length_non_linear` 中相同，但后验的 `HDI` 区间是非恒定的。下图绘制了误差估计的期望值与月龄之间关系的拟合图。请注意，随着月数增加，误差估计的期望在增加。
 
 ``` 
 
 (interaction-effects)= 
 
-## 4.3 交互效应 
+## 4.3 引入交互效应 
 
-到目前为止，在我们所有的模型中，都假设一个预测变量对响应变量的影响独立于任何其他预测变量。这并非总是如此。考虑一种情况，我们想要为特定城镇的冰淇淋销售建模。我们可能会说，如果有很多冰淇淋店，就会有更多的冰淇淋可供选择，因此我们预计会有大量的冰淇淋购买。但如果这个小镇气候寒冷，日平均气温为-5 摄氏度，我们怀疑冰淇淋的销量会不会很多。然而，在相反的情况下，如果小镇处于平均温度为 30 摄氏度的炎热沙漠中，但没有冰淇淋店，冰淇淋的销量也会很低。只有当天气炎热*和*有很多地方可以购买冰淇淋时，我们才预计销量会增加。对这种联合现象进行建模需要我们引入*交互效应*，其中一个预测变量对输出变量的影响取决于其他预测变量的值。因此，如果我们假设预测变量独立贡献（如在标准线性回归模型中），我们将无法完全解释这些现象。我们可以将交互作用表示为：
+到目前为止的所有模型中，都假设某个预测变量对结果变量的影响独立于任何其他预测变量，但实践中并非总是如此。考虑一种情形，我们想为特定城镇的冰淇淋销售情况建模。通常我们会自然而然想到：如果冰淇淋店比较多，有了更多的冰淇淋可供选择，则预计冰淇淋的销售业绩会更好；但如果这个城镇气候寒冷，日均气温为 $-5$ 摄氏度，那么冰淇淋的销量应该会下降。在相反情况下，如果该城镇处于平均温度为 $30$ 摄氏度的炎热沙漠中，但并没有太多冰淇淋店，则冰淇淋的销量也会很低。只有当天气炎热 *和* 冰淇淋销售点比较多时，才预计销量肯定会增加。对于这种联合现象进行建模，我们需要引入 **交互效应** 的概念，即某个预测变量对结果变量的影响，取决于其他预测变量的值。如果在建模时，我们假设预测变量均为独立的贡献，则无法完全解释这种现象。
+
+我们可以将交互作用表示为：
 
 ```{math} 
 :label: eq:interaction_effect
 
 \begin{split}
-    \mu =& \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2\\
-    Y \sim& \mathcal{N}(\mu, \sigma)
+\mu =& \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2\\
+Y \sim& \mathcal{N}(\mu, \sigma)
 \end{split}
 ```
 
-其中 $\beta_3$ 是交互项 $X_1X_2$ 的系数。
+式中 $\beta_3$ 是交互项 $X_1X_2$ 的系数。其实还存在其他引入交互的方法，但采用原始预测变量乘积的形式应用比较广泛。
 
-还有其他引入交互的方法，但计算原始预测变量的乘积是一个非常广泛使用的选项。现在定义了交互效应是什么，我们可以通过对比将主效应定义为一个预测变量对结果变量的影响，而忽略所有其他预测变量。
+现在定义了交互效应是什么，我们就可以对比性地定义 **主效应** ，即一个预测变量对结果变量的影响，只与自身取值有关，与所有其他预测变量取值无关。
 
-为了说明，我们使用另一个示例，代码 [tips_no_interaction](tips_no_interaction) 中将用餐者留下的小费金额建模为总账单的函数。这听起来很合理，因为小费的金额通常是按总账单的百分比计算的，确切的百分比会因不同因素而异，例如就餐场所类型、服务质量、所在国家等。在此示例中，我们重点关注吸烟者与非吸烟者的小费金额差异。特别是，我们将研究吸烟与总账单金额之间是否存在交互作用 [^2]。就像模型 [penguin_mass_multi](penguin_mass_multi) 一样，我们可以在回归中将吸烟者作为独立的分类变量包括在内。
+为了说明，我们使用一个消费模型的例子，代码 [tips_no_interaction](tips_no_interaction) 对用餐者留下的小费金额进行了建模，将小费建模为总账单的函数。这听起来很合理，因为小费金额通常是按总账单的百分比来计算的。不过确切的百分比会因不同因素而异，例如餐厅类型、服务质量、所在国家等。在此示例中，我们重点关注吸烟者与非吸烟者的小费金额差异，重点研究吸烟与总账单金额之间是否存在交互作用 [^2]。就像模型 [penguin_mass_multi](penguin_mass_multi) 一样，先将吸烟者作为独立的预测变量添加到回归模型中。
 
 ```{code-block} ipython3
 :name: tips_no_interaction
@@ -235,50 +236,51 @@ with pm.Model() as model_interaction:
 :name: fig:Smoker_Tip_Interaction
 :width: 7.00in
 
-两个小费模型的线性估计图。左图显示了来自代码 [tips_no_interaction](tips_no_interaction) 的非交互估计，其中估计的线是平行的。右图中展示了来自代码 [tips_interaction](tips_interaction) 的模型，其中包括吸烟者或非吸烟者与账单金额之间的交互项。在交互模型中，不同组的斜率由于添加的交互项而允许变化。
+两种小费模型的线性估计图。左图显示了代码 [tips_no_interaction](tips_no_interaction) 的无交互估计，其中估计的线是平行的。右图展示了来自代码 [tips_interaction](tips_interaction) 的有交互模型，其中包括吸烟者（或非吸烟者）与账单总金额之间的交互项。该图中不同组的斜率由于添加的交互项而允许变化。
 
 ``` 
 
-差异在 {numref}`fig:Smoker_Tip_Interaction` 中可见。比较左侧的非交互模型和右侧的交互模型，平均拟合线不再平行，吸烟者和非吸烟者的斜率不同！
+两种模型的差异在 {numref}`fig:Smoker_Tip_Interaction` 中可以看到。比较左侧的无交互模型和右侧的交互模型，在交互模型中，平均拟合线不再平行，吸烟者和非吸烟者的斜率不同！
 
-通过引入交互，我们正在构建一个模型，该模型可以有效地将数据拆分，在本例中分为两类，吸烟者和非吸烟者。你可能认为最好手动拆分数据并拟合两个单独的模型，一个用于吸烟者，一个用于非吸烟者。嗯，没那么快。使用交互的好处之一是我们使用所有可用数据来拟合单个模型，从而提高估计参数的准确性。例如，请注意，通过使用单个模型，我们假设 $\sigma$ 不受变量 `smoker` 的影响，因此 $\sigma$ 是从吸烟者和非吸烟者中估计的，这有助于我们获得更好的估计这个参数的。
+通过引入交互项，我们可以构建一个能拆分数据的模型。在本例中拆分为两类：吸烟者和非吸烟者。你可能会认为手动拆分数据并拟合两个单独的模型也是可以的。这没错，但使用交互的好处之一是：我们能够使用所有可用数据来拟合单个模型，从而提高参数估计的准确性。例如，如果我们假设方差 $\sigma$ 不受变量 `smoker` 影响，则单个模型可以利用所有吸烟者和非吸烟者的数据来估计 $\sigma$ ，进而获得更好的参数估计。
 
-另一个好处是我们可以估计交互的大小效应。如果我们只是拆分数据，其隐含地假设了交互作用正好为 $0$，而通过对交互作用建模，我们可以估计交互作用的强度。最后，为相同的数据构建一个有和没有交互的模型，以便更容易使用 `LOO` 比较模型。如果我们拆分了数据，则最终会得到在不同数据上评估的不同模型，而不是在相同数据上评估不同模型，而后者是 `LOO` 的必要条件。总而言之，虽然交互效应模型的主要区别在于对每组不同斜率进行建模的灵活性，但将所有数据建模在一起会产生许多额外的好处。
+另一个好处是我们可以估计交互的效应强度。如果只是为了拆分数据，则其隐含假设交互作用的强度正好为 $0$ 或 $1$。但通过对交互作用建模，我们其实还能够估计交互作用的强度。
+
+最后，为同一数据构建分别一个有交互模型和一个无交互模型，可以更容易的使用 `LOO` 比较模型。如果数据被拆分了，我们最终做比较的是在不同数据上的不同模型，而不是在同一数据上评估的不同模型，而后者是 `LOO` 的必要条件。
+
+总而言之，虽然交互效应模型的主要区别在于对每组不同斜率进行建模的灵活性，但将所有数据建模在一起会产生许多额外的好处。
 
 (robust_regression)= 
 
-## 4.4 稳健的回归 
+## 4.4 更稳健的回归 
 
-顾名思义，异常值是位于“合理预期”范围之外的观测值。异常值是不可取的，因为这些数据点中的一个或几个可能会显着改变模型的参数估计。有多种建议的形式化方法 {cite:p}`grubbs_1969` 处理异常值，但实际上如何处理异常值是统计学家必须做出的选择（因为即使是形式化方法的选择也是主观的）。
+异常值指位于 “合理预期” 范围之外的观测值。异常值通常不可取，因为其中的某个或几个异常值可能会显著改变模型的参数估计结果。存在多种异常值的处理方法 {cite:p}`grubbs_1969` ，但无论如何，如何处理异常值都是统计学家必须做出的主观选择。
 
-一般来说，至少有两种方法可以解决异常值问题。一种是使用一些预定义标准删除异常值，例如 $3$ 个标准差或四分位间距的 $1.5$ 倍。另一种策略是选择一个可以处理异常值并仍然提供有用结果的模型。在回归问题中，后者通常被称为稳健回归模型，特别要注意此类模型对远离大量数据的观测不太敏感。
+一般来说，至少有两种方法可以解决异常值问题。一种是使用一些预定义规则删除异常值，例如 $3$ 个标准差或四分位间距的 $1.5$ 倍。另一种策略是选择一个可以处理异常值并仍然提供有用结果的模型。在回归问题中，后者通常被称为稳健（或鲁棒）回归模型，特别要注意：此类模型对远离大量数据的观测点不太敏感。
 
-从技术上讲，稳健回归旨在减少基础数据生成过程违反假设的影响。在贝叶斯回归中，一个例子是将似然从高斯分布更改为学生 $t$ 分布。
+从技术上讲，稳健回归模型旨在减少基础数据生成过程那些有违假设的影响。在贝叶斯回归中，一个常见的例子，是将似然函数从高斯分布更改为学生 $t$ 分布。高斯分布由位置参数 $\mu$ 和尺度参数 $\sigma$ 两个参数定义，这些参数控制着高斯分布的均值和标准差（离散度）。
 
-回想一下，高斯分布由通常称为位置 $\mu$ 和尺度 $\sigma$ 的两个参数定义。这些参数控制高斯分布的均值和标准差。
-
-学生 $t$ 分布也分别有一个位置和尺度参数 [^3]。但是，还有一个附加参数，通常称为自由度 $\nu$。该参数控制学生 $t$ 分布尾部的权重，如 {numref}`fig:StudentT_Normal_Comparison` 所示。比较 $3$ 个学生 $t$ 分布和正态分布，主要区别在于尾部的密度在总概率质量中的比例。当$\nu$ 较小时，尾部分布的质量更多，随着$\nu$ 值的增加，向主体集中的密度比例也增加，学生 $t$ 分布越来越接近高斯分布。实际上，这意味着当 $\nu$ 较小时，更可能出现远离均值的值。当用学生 $t$ 分布替换高斯似然性时，这为异常值提供了鲁棒性。
+学生 $t$ 分布也有位置参数和尺度参数 [^3]。但还有一个附加的参数，被称为自由度 $\nu$。自由度参数控制学生 $t$ 分布尾部的权重，如 {numref}`fig:StudentT_Normal_Comparison` 所示。图中比较了 $3$ 个学生 $t$ 分布和一个高斯分布，其间的主要区别在于尾部密度在总概率质量中所占的比例。当$\nu$ 较小时，分布主体处的质量比例减少，尾部分布的质量更多；随着$\nu$ 值的增加，分布主体处的质量比例也增加，尾部分布的质量相应地减少，此时学生 $t$ 分布越来越接近于一个高斯分布。这也意味着：当 $\nu$ 较小时，更可能出现远离均值的值。因此，当用学生 $t$ 分布替换高斯分布作为似然时，将会为异常值提供稳健性。
 
 ```{figure} figures/StudentT_Normal_Comparison.png
 :name: fig:StudentT_Normal_Comparison
 :width: 7.00in
 
-正态分布（蓝色），与 $3$ 个具有不同 $\nu$ 参数的学生 $t$ 分布比较。位置和比例参数都是相同的，这可以分理出 $\nu$ 对尾部的影响。 $\nu$ 的值越小，分布尾部的密度越大。
+高斯分布（蓝色），与 $3$ 个具有不同 $\nu$ 参数的学生 $t$ 分布比较。位置和比例参数都是相同的，这可以分理出 $\nu$ 对尾部的影响。 $\nu$ 的值越小，分布尾部的密度越大。
 
 ``` 
 
-这可以在一个示例中显示。假设你在阿根廷拥有一家餐厅并出售肉馅卷饼 [^4]。随着时间推移，你收集了有关每天顾客数量和餐厅赚取的总金额的数据，如 {numref}`fig:Empanada_Scatter_Plot` 所示。
-大多数数据点沿着一条线排列，除了在几天内，每位客户售出的肉馅卷饼数量远高于周围的数据点。这些可能是大型庆祝活动的日子   [^5]，人们比平时吃更多的肉馅卷饼。
+稳健回归可以在下面的例子中体现。假设你在阿根廷拥有一家餐厅并出售肉馅馅饼 [^4]。随着时间推移，你收集了每天顾客数量和餐厅收入总金额的数据，如 {numref}`fig:Empanada_Scatter_Plot` 所示。其中，大多数数据点沿着一条线排列，只是偶尔有几天，售出的单客馅饼数量远高于邻近数据点。这可能是因为在某些大型庆祝活动日  [^5]，人们比平时吃的馅饼更多。
 
 ```{figure} figures/Empanada_Scatter_Plot.png
 :name: fig:Empanada_Scatter_Plot
 :width: 7.00in
 
-根据客户数量和收入绘制的模拟数据。图表顶部的 $5$ 个点被视为异常值。
+根据顾客数量和收入绘制的模拟数据。图表顶部的 $5$ 个点被视为异常值。
 
 ``` 
 
-无论异常值如何，我们都希望能够估计客户与收入之间的关系。在绘制数据时，线性回归似乎是合适的，例如在代码 [non_robust_regression](non_robust_regression) 中编写的使用高斯似然的线性回归。在估计参数后，我们在 {numref}`fig:Empanada_Scatter_Non_Robust` 中以两个不同的尺度绘制平均回归。在图中，请注意拟合回归线几乎位于所有可见数据点之上。在 {numref}`tab:non_robust_regression` 中，我们还可以看到各参数的估计值，特别注意到 $\sigma$ 与数据图相比，均值似乎过高。对于正态似然，后验分布必须在观测值和 $5$ 个异常值上“伸缩”自身，这会影响估计。此外，请注意与 {numref}`fig:Empanada_Scatter_Non_Robust` 中的绘图数据相比，$\sigma$ 的估计值是多么宽泛。
+无论异常值如何，我们都希望能够估计顾客与餐厅收入之间的关系。通过图形绘制，我们发现线性回归似乎是合适的，例如在代码 [non_robust_regression](non_robust_regression) 中编写的使用高斯似然的线性回归。在完成参数估计后，我们在 {numref}`fig:Empanada_Scatter_Non_Robust` 中以两个不同的尺度绘制了回归的均值。注意图中拟合回归线几乎位于所有可见数据点之上。在 {numref}`tab:non_robust_regression` 中，还可以看到各参数的估计值，注意 $\sigma$ 的均值为 $2951.1$ ，显著大于图中给人的感觉。对于高斯似然，后验分布必须在主体观测和 $5$ 个异常值之间做“伸缩”，从而导致了上述估计结果。还要注意到，与 {numref}`fig:Empanada_Scatter_Non_Robust` 中的主体数据相比，$\sigma$ 的估计值过于宽泛。
 
 ```{code-block} ipython3
 :name: non_robust_regression
@@ -299,7 +301,7 @@ with pm.Model() as model_non_robust:
 :name: fig:Empanada_Scatter_Non_Robust
 :width: 7.00in
 
-来自代码 [non_robust_regression](non_robust_regression) 的数据、拟合回归线和 $94\%$ HDI 区间，顶部为异常值，底部集中在回归本身。系统偏差在底部图中较为明显，因为估计平均回归线大部分高于数据点。
+来自代码 [non_robust_regression](non_robust_regression) 的数据、拟合回归线和 $94\%$ HDI 区间。在上部子图中，顶部的点为异常值，底部的点为主体数据，蓝色线为回归线；在下部尺度被放大的子图中，可以明显看出拟合线存在系统偏差，估计的均值回归线高于大部分数据点。
 
 ``` 
 
@@ -322,9 +324,7 @@ with pm.Model() as model_non_robust:
   - 2997.7
 ```
 
-我们再次运行相同的回归，但这次使用学生 $t$ 分布作为似然，如代码 [code_robust_regression](code_robust_regression) 所示。请注意，数据集没有更改，仍然包含异常值。当检查 {numref}`fig:Empanada_Scatter_Robust` 中的拟合回归线时，我们可以看到拟合落在观测数据点之间，更接近预期位置。检查 {numref}`tab:robust_regression` 中的参数估计值（ 注意添加了额外的参数 $\nu$ ），可以看到 $\sigma$ 的估计值已从非稳健回归中的约 $2951$ 比索大幅下降到稳健回归中的 约 $152$ 比索，表明新模型相对于数据而言，似乎更为合理。似然分布的变化表明，尽管存在异常值，但学生 $t$ 分布有足够灵活性来合理地对数据进行建模。
-
-> 注意： 请思考学生 $t$ 分布适用的变量类型，是不是只限于名义型随机变量。
+我们使用学生 $t$ 分布作为似然，对同一数据建模，如代码 [code_robust_regression](code_robust_regression) 所示。请注意，数据集没有更改，仍然包含异常值。当检查 {numref}`fig:Empanada_Scatter_Robust` 中的拟合回归线时，可以看到拟合落在主体观测数据点之间，更接近预期的位置。查看 {numref}`tab:robust_regression` 中的参数估计值（ 注意增加了参数 $\nu$ ），可以看到 $\sigma$ 的估计值已从非稳健回归中的约 $2951$ ，大幅下降到了稳健回归中的 约 $152$ ，表明新模型对于数据而言似乎更合理。似然分布的变化表明，尽管数据中存在异常值，但学生 $t$ 分布有足够灵活性来合理地对其进行建模。
 
 ```{code-block} ipython3
 :name: code_robust_regression
@@ -343,7 +343,7 @@ with pm.Model() as model_robust:
     inf_data_robust = pm.sample()
 ```
 
-```{list-table} Estimate of parameters for model robust_regression.
+```{list-table} model robust_regression 模型的参数估计
 :name: tab:robust_regression
 * -
   - **mean**
@@ -371,51 +371,51 @@ with pm.Model() as model_robust:
 :name: fig:Empanada_Scatter_Robust
 :width: 7.00in
 
-来自代码 [code_robust_regression](code_robust_regression) 的模型 `model_robust`对应的拟合回归线和的 $94\%$ HDI。异常值未绘制，但存在于数据中。与 {numref}`fig:Empanada_Scatter_Non_Robust` 相比，新模型的拟合线基本落在了数据点范围内。
+模型 `model_robust` 对应的拟合回归线和 $94\%$ HDI。图中未绘制异常值，但其仍然存在于数据中。与 {numref}`fig:Empanada_Scatter_Non_Robust` 相比，新模型的拟合回归线基本落在了数据点范围内。
 
 ``` 
 
-在这个例子中，“异常值”并不是测量误差、数据输入错误等，而是在某些条件下实际发生的观测结果，我们想要将其作为建模问题的一部分。因此，如果我们的目的是模拟“常规时间”肉馅卷饼的平均数量，就可以将它们视为真的异常值，但如果使用这个均值来制定下一个重大节日的卷饼数量，那它会错的离谱。在此示例中，稳健的线性回归模型避免了显式地单独建模高销售日（ 所谓显式指将“常规时间”和“节假日”区分开建模 ）。此外，使用混合模型或分层模型也可能会实现更好地建模。
+在本例中，异常值并不是测量误差、数据输入错误等，而是在某些条件下实际发生的真实观测结果，我们希望能够将其作为建模问题的组成部分。如果我们的目的仅仅是模拟常规时间的馅饼平均销售数量，那么确实可以将其视为真的异常值，但如果用其拟合的模型来确定下一个重大节日的馅饼数量，结果一定会很离谱。在此示例中，稳健线性回归模型避免了显式地为高销售日单独建模（ 所谓显式指将“常规时间”和“节假日”区分开建模 ）。除了进行稳健回归建模外，使用其他形式的模型（如本书后面将介绍到的混合模型或分层模型）也能实现对异常值的建模。
 
-::: {admonition} 面向数据的模型调整 
+::: {admonition} 适应数据的模型调整 
 
-改变似然以实现稳健性，仅仅是通过修改模型以更好适应观测数据的一种方式，还有很多其他的方法。例如，在检测放射性粒子发射时，由于传感器故障{cite:p}`betancourt_2020_worfklow`（或其他一些测量问题），或者实际上没有要记录的事件，可能会出现零计数。这种未知的变化来源具有 *夸大零计数* 的效果。针对此类问题开发有一种**零膨胀模型**。该模型估计组合的数据生成过程。例如，将泊松似然（通常是建模计数的起点）扩展为零膨胀泊松似然。有了这样的似然，我们可以更好地将正常的泊松过程计数与 *超零生成过程的计数* 区分开来。
+改变似然以实现稳健性，仅仅是通过修改模型以适应观测数据的一种方式，还有许多其他方法。例如，在检测放射性粒子发射时，由于传感器故障 {cite:p}`betancourt_2020_worfklow`（或其他一些测量问题），或者实际上没有要记录的事件，因此可能会出现零计数。而这种情况会产生 *夸大零计数* 的效果。针对此类问题，部分学者开发了一种 **零膨胀模型** 用于估计一种组合的数据生成过程。例如，将泊松似然（通常用于建模时间发生的起点计数）扩展为零膨胀泊松似然。有了这种似然，我们可以更好地将正常的泊松过程计数与 *异常零生成过程计数* 区分开来。
 
-零膨胀模型是处理混合数据的示例，其中观测来自两个或多个组，而且不知道哪个观测属于哪个组。实际上，我们可以使用混合似然来表达另一种类型的稳健回归，它为每个数据点分配一个潜在标签（异常值或非异常值）。
+零膨胀模型仅是处理混合数据的一种方法，其中观测来自两个或多个组，而且不知道哪个观测属于哪个组。实际上，我们完全可以使用此类**混合似然**来实现另一种稳健回归，它将为每个数据点分配一个隐标签（异常值或非异常值）。
 
-在所有这些情况以及更多情况下，贝叶斯模型的定制特性使建模者能够灵活地创建适合形势的模型，而不必强制将形势与预定义的模型做匹配。
+贝叶斯模型的可定制性使建模者能够灵活地创建适合数据情况的模型，而不必强制将数据情况与预定义的模型做匹配。
 
 ::: 
  
 (multilevel_models)= 
 
-## 4.5 池化、多层模型和混合效应
+## 4.5 池化、多级模型和混合效应
 
-我们的数据集有时候会在预测变量中包含一些嵌套结构，这提供了一些对数据分组的层次性方法。我们也可以将这种分组视为不同的数据生成过程。下面用一个例子来说明。
+在实际问题中，有时候预测变量之间会包含一些嵌套结构，使得我们能够采用一些层次性方法对数据进行分组。我们可以考虑将这种分组视为不同的数据生成过程。下面用一个例子来说明。
 
-假设你在一家销售沙拉的餐馆工作。这家公司在一些区域市场拥有悠久的业务，并且刚刚在一个新市场开设了办事处以响应客户需求。出于财务规划目的，你需要预测这个新市场中的餐厅每天将赚取多少美元。你有两个数据集，$3$ 天的沙拉销售数据，以及同一市场中大约一年的比萨和三明治的销售数据。数据（模拟的）显示在 {numref}`fig:Restaurant_Order_Scatter` 中。
+假设你在一家销售沙拉的公司工作。这家公司在一些区域市场拥有悠久的业务，并且在一个新市场开设了办事处以响应顾客需求。出于财务规划目的，你需要预测这个新市场中的门店每天将赚取多少美元。你有两个数据集，$3$ 天的沙拉销售数据，以及同一市场中一年的披萨和三明治的销售数据。数据（合成的）显示在 {numref}`fig:Restaurant_Order_Scatter` 中。
 
 ```{figure} figures/Restaurant_Order_Scatter.png
 :name: fig:Restaurant_Order_Scatter
 :width: 7.00in
 
-面向真实世界场景的模拟数据集。在此案例中，一个企业仅有 $3$ 个有关沙拉的日常销售数据点，但有大量关于披萨和三明治的销售数据。
+面向真实世界场景的模拟数据集。在此案例中，一个企业仅有 $3$ 条有关沙拉的日常销售数据，但有大量关于披萨和三明治的销售数据。
 
 ``` 
 
-从专业知识和数据来看，一致认为这 $3$ 种食品的销售额存在相似之处。它们都吸引相同类型的顾客，都是典型的*快销食品*类别，但它们又不完全相同。在接下来的部分中，我们将讨论如何对这种*相似但又不完全相似*进行建模。让我们从“所有组彼此无关”的最简单情况开始。
+从专业知识和数据来看，一致认为这 $3$ 种食品的销售额存在相似之处。因为它们都吸引相同类型的顾客，都是典型的 *快销食品* 类别，但它们又不完全相同。在接下来的部分中，我们将讨论如何对这种 *相似但又不完全相似* 的情况进行建模。让我们先从“所有组彼此无关”的最简单情况开始。
 
 (unpooled-parameters)= 
 
 ### 4.5.1 非池化的参数 
 
-我们可以创建一个回归模型，将每个组（在本例中为食物类别）与其他组完全分开。这与为每个类别运行单独的回归相同，这就是我们称其为非池化回归的原因。运行分离回归的唯一区别是我们正在编写一个模型并同时估计所有系数。参数和组之间的关系在 {numref}`fig:unpooled_model` 和公式 {eq}`eq:unpooled_regression` 中以数学符号直观表示，其中 $j$ 是标识每个分离组的索引。
+我们可以创建一个能够将每个组与其他组完全分离的回归模型。这种模型等价于为每个类别运行单独的回归，这也是称其为非池化回归的原因。分离回归模型的唯一不同是同时估计所有组的系数。参数和组之间的关系在 {numref}`fig:unpooled_model` 和公式 {eq}`eq:unpooled_regression` 中以数学符号直观表示，其中 $j$ 为每个分组的索引。
 
 ```{figure} figures/unpooled_model.png
 :name: fig:unpooled_model
 :width: 5.00in
 
-一个非池化模型，其中每组观测值 $y_1, y_2, ..., y_j$ 都有独立于其他组的自身参数。
+一个非池化模型，其中每个组的观测 $y_1, y_2, ..., y_j$ 都有独立于其他组的参数。
 
 ``` 
 
@@ -430,11 +430,11 @@ Y \sim& \mathcal{N}(\mu_{j}, \sigma_{j})
 
 ```
 
-这些参数被标记为 *group-specific* 参数，表示每个组都有一个专用参数。非池化的 PyMC3 模型和一些数据清理体现在代码 [model_sales_unpooled](model_sales_unpooled) 中，图显示见 {numref}`fig:Salad_Sales_Basic_Regression_Model_Unpooled` 此处不包括截距参数，原因很简单，如果餐厅的顾客为零，总销售额也将为零，因此对该参数既没有兴趣也没有必要。
+这些参数被标记为 *group-specific* 参数，表示每个组都有一个专用参数。非池化的 `PyMC3` 模型体现在代码 [model_sales_unpooled](model_sales_unpooled) 中，拟合结果见 {numref}`fig:Salad_Sales_Basic_Regression_Model_Unpooled` 。此处所有组都没有截距参数，原因很简单，如果门店顾客为零，总销售额也将为零，因此没有必要为其建模。
 
 ```{code-block} ipython3
 :name: model_sales_unpooled
-:caption: model_sales_unpooled
+:caption: 非池化的销售模型
 
 customers = sales_df.loc[:, "customers"].values
 sales_observed = sales_df.loc[:, "sales"].values
@@ -460,11 +460,11 @@ with pm.Model() as model_sales_unpooled:
 :name: fig:Salad_Sales_Basic_Regression_Model_Unpooled
 :width: 3.00in
 
-`model_sales_unpooled` 的示意图。注意参数 $\beta$ 和 $\sigma$ 周围的框在右下角是有一个 $3$ 的，表明模型为 $\beta$ 和 $\sigma$ 分别估计了 $3$ 个参数。
+`model_sales_unpooled` 模型的示意图。注意参数 $\beta$ 和 $\sigma$ 周围的框在右下角都有一个 $3$ ，表明模型为 $\beta$ 和 $\sigma$ 分别估计了 $3$ 个参数。
 
 ``` 
 
-从 `model_sales_unpooled` 采样后，可以创建参数估计的森林图，如图 {numref}`fig:Salad_Sales_Basic_Regression_ForestPlot_beta` 和 {numref}`fig:Salad_Sales_Basic_Regression_ForestPlot_sigma` 所示。请注意，与三明治和比萨组相比，沙拉食品类别的 $\sigma$ 后验估计值相当广泛。当观测数据中某些类别拥有少量数据而其他类别拥有大量数据时，这正是非池化模型应当有的预期结果。
+从 `model_sales_unpooled` 采样后，可以创建参数估计的森林图，如 {numref}`fig:Salad_Sales_Basic_Regression_ForestPlot_beta` 和 {numref}`fig:Salad_Sales_Basic_Regression_ForestPlot_sigma` 所示。请注意，与三明治组和披萨组相比，沙拉组的 $\sigma$ 后验估计相当广泛。当观测数据中某些组的样本少而其他组样本多时，非池化模型应当有此预期结果。
 
 ```{figure} figures/Salad_Sales_Basic_Regression_ForestPlot_beta.png
 :name: fig:Salad_Sales_Basic_Regression_ForestPlot_beta
@@ -478,19 +478,19 @@ with pm.Model() as model_sales_unpooled:
 :name: fig:Salad_Sales_Basic_Regression_ForestPlot_sigma
 :width: 7.00in
 
-`model_sales_unpooled` 模型的 $\sigma$ 参数估计对应的森林图。与 {numref}`fig:Salad_Sales_Basic_Regression_ForestPlot_beta` 类似，沙拉组的销售额变化 $\sigma$ 的估计值最大，因为相对于比萨和三明治组的数据点不多。
+`model_sales_unpooled` 模型的 $\sigma$ 参数估计对应的森林图。与 {numref}`fig:Salad_Sales_Basic_Regression_ForestPlot_beta` 类似，沙拉组的销售额变化 $\sigma$ 的估计值最大，因为相对于披萨组和三明治组而言，其数据点过少。
 
 ``` 
 
-非池化模型与使用数据子集创建三个分离的模型没有什么不同，就像 {ref}`comparing_distributions` 中所做的那样，其中每个组的参数都单独估计，因此我们可以考虑将非池化模型用于对各组进行独立的线性回归建模。
+非池化模型与使用数据子集创建三个分离的模型本质上没有什么不同，就像 {ref}`comparing_distributions` 中所做的那样，其中各组的参数都单独估计，因此可以考虑将非池化模型应用于对各组独立建模的线性回归模型。
 
-现在我们可以使用非池化模型及其估计的参数作为基线来比较下面的其他模型，特别是可以了解额外的复杂性是否具备合理性。
+现在可以将非池化模型及其参数估计作为基线，来比较本节后续的其他模型，特别是可以了解额外的复杂性是否具备合理性。
 
 (pooled-parameters)= 
 
 ### 4.5.2 池化的参数 
 
-既然有非池化的参数，你可能会猜到也应该有池化的参数。没错！顾名思义，池化的参数是忽略了组间区别的参数。从概念上讲，此类型模型显示在 {numref}`fig:pooled_model` 中，每个组共享相同的参数，因此我们也将它们称为公共参数。
+既然有非池化的参数，你可能会猜到也应该有池化的参数。没错！顾名思义，池化的参数是忽略了组间区别的参数。此类模型显示在 {numref}`fig:pooled_model` 中，从概念上讲，各组共享相同的参数，因此我们也将池化的参数称为公共参数。
 
 ```{figure} figures/pooled_model.png
 :name: fig:pooled_model
@@ -500,7 +500,7 @@ with pm.Model() as model_sales_unpooled:
 
 ``` 
 
-对于餐厅的示例，模型用公式 {eq}`eq:pooled_regression` 和代码 [model_sales_pooled](model_sales_pooled) 编写。 GraphViz 表示也显示在 {numref}`fig:Salad_Sales_Basic_Regression_Model_Pooled` 中。
+对于餐厅示例，池化的模型见公式 {eq}`eq:pooled_regression` 和代码 [model_sales_pooled](model_sales_pooled) 。 该模型的 GraphViz 图表示见 {numref}`fig:Salad_Sales_Basic_Regression_Model_Pooled` 。
 
 ```{math} 
 :label: eq:pooled_regression
@@ -541,25 +541,25 @@ with pm.Model() as model_sales_pooled:
 :name: fig:Salad_Sales_Basic_Regression_ForestPlot_Sigma_Comparison
 :width: 7.00in
 
-`model_pooled_sales` 模型和 `model_unpooled_sales` 模型的 $\sigma$ 参数估计值比较。请注意，与非池化模型相比，池化模型获得一个高得多的 $\sigma$ 估计值，因为其估计的单个线性拟合必须捕获所有池化数据中的方差。
+`model_pooled_sales` 模型和 `model_unpooled_sales` 模型的 $\sigma$ 参数估计值比较。请注意，与非池化模型相比，池化模型的 $\sigma$ 估计值高很多，因为统一的线性拟合必须捕获所有池化数据中的方差。
 
 ``` 
 
-池化方法的好处是更多的数据将用于估计每个参数。然而，这意味着我们不能单独了解每个组，而只能了解所有食物类别。查看 {numref}`fig:Salad_Sales_Basic_Regression_Scatter_Pooled`，我们的估计 $\beta$ 和 $\sigma$ 并不表示任何特定的食物组，因为模型将具有非常不同尺度的数据分组在一起。将 $\sigma$ 的值与 {numref}`fig:Salad_Sales_Basic_Regression_ForestPlot_Sigma_Comparison` 中非池化模型的值进行比较。当在 {numref}`fig:Salad_Sales_Basic_Regression_Scatter_Pooled` 中绘制回归时，我们可以看到，一条线尽管比任何单个组都包含更多的数据，但无法很好地拟合任何一个组。该结果意味着组中的差异太大而无法忽略，因此池化数据对于我们的预期目的并不是特别有用。
+池化方法的好处是有更多数据用于估计每个参数，但这同时意味着我们无法单独地了解每个组，而只能了解更高层次的整个食物类别。查看 {numref}`fig:Salad_Sales_Basic_Regression_Scatter_Pooled`， $\beta$ 和 $\sigma$ 的估计并不表示任何特定的食物组，因为模型将具有不同尺度的多组数据合并在了一个组里。将 $\sigma$ 的值与 {numref}`fig:Salad_Sales_Basic_Regression_ForestPlot_Sigma_Comparison` 中非池化模型的值进行比较。当在 {numref}`fig:Salad_Sales_Basic_Regression_Scatter_Pooled` 中绘制回归时，可以看到一条比任何单组都包含更多数据的回归线，但却无法很好地拟合任何一个组。该结果意味着组间差异太大而无法忽略，因此池化数据对于我们的预期目的，可能并不是特别有用。
 
 ```{figure} figures/Salad_Sales_Basic_Regression_Scatter_Pooled.png
 :name: fig:Salad_Sales_Basic_Regression_Scatter_Pooled
 :width: 7.00in
 
-线性回归m模型  `model_sales_pooled`，所有数据都汇集在一起​​。每个参数都是使用所有数据估计的，但我们最终对每个组的行为估计都很差，因为两个参数的模型不能很好地泛化并捕获每个组的细微差别。
+池化的线性回归模型  `model_sales_pooled`，所有数据都汇集在一起​​。每一个参数都是使用所有数据估计的，但最终对各组的估计都非常差，因为一个仅有 $2$ 个参数的模型，无法很好地泛化并捕获各组之间的细微差别。
 
 ``` 
 
 (mixing-group-and-common-parameters)= 
 
-### 4.5.3 混合组和常用参数
+### 4.5.3 组混合与多级模型
 
-在非池化方法中，我们具有保留组间差异的优势，能够获得每个组的参数估计结果。在池化方法中，我们利用所有数据来估计一组参数，以得到更通用的估计。幸运的是，我们并不是只能选择其中一个。我们可以将两个概念混合在一个模型中，如公式 {eq}`eq:multilevel_regression` 所示。在这个公式中，我们保持 各组的 $\beta$ 估计是非池化的，而 $\sigma$ 是池化的。在当前示例中，依然没有截距，但应当清楚，在包含截距项的回归中，我们有类似的选择。
+在非池化方法中，我们具有保留组间差异的优势，能够获得每个组的参数估计结果。在池化方法中，我们利用了所有数据来估计同一组参数，以得到更通用的估计。幸运的是，我们还可以将两种方法混合在一个模型中，如公式 {eq}`eq:multilevel_regression` 所示。在该公式中，我们保持各组的 $\beta$ 估计是非池化的，但 $\sigma$ 估计是池化的。示例中依然没有考虑截距，但应当清楚有截距项的回归模型也是类似的。
 
 ```{math} 
 :label: eq:multilevel_regression
@@ -573,15 +573,17 @@ Y \sim& \mathcal{N}(\mu_{j}, \sigma)
 
 ```
 
-::: {admonition} 随机和固定效应以及为什么你应该忘记这些术语 
+::: {admonition} 随机效应和固定效应以及为什么你应该忘记这些术语 
 
-特定于每个级别的参数和跨级别通用的参数有不同的名称，分别包括随机（或变化）效应，和固定（或恒定）效应。更令人困惑的是，不同的人可能会对这些术语赋予不同的含义，尤其是在谈论固定和随机效应时 {cite:p}`gelman2005`。如果我们必须标记这些术语，我们建议 *common* 和 *group-specific* {cite:p}`gabry_goodrich_2020, capretto2020`。但是，由于所有这些不同的术语都被广泛使用，我们建议你始终验证模型的细节，以避免混淆和误解。
+特定于每个级别的参数和跨级别的通用参数有着不同的名称，前者被称为随机效应或变化效应，而后者被成为固定效应或恒定效应。经常令人困惑的是，不同的人可能会对这些术语赋予不同含义，尤其是在谈论固定效应和随机效应时 {cite:p}`gelman2005`。
+
+如果必须有区别地标记这些术语，我们建议采用 *组间通用参数* 和 *组内专用参数* {cite:p}`gabry_goodrich_2020, capretto2020`。但是，由于所有这些术语都被广泛使用，我们建议你始终验证模型的细节，以避免混淆和误解。
 
 ::: 
 
-重新审视一下食品销售模型，我们对于池化数据来估计 $\sigma$ 会非常感兴趣，因为比萨、三明治和沙拉的销售额可能存在相同的方差，但我们对 $\beta$ 的估计没有池化，因为我们知道各组之间存在差异。有了这些想法之后，我们可以编写 `PyMC3` 模型，如代码 [model_sales_mixed_effect](model_sales_mixed_effect) 所示，并生成 {numref}`fig:Salad_Sales_Basic_Regression_Model_Multilevel` 所示模型结构的概率图。从模型中，我们可以得到 {numref}`fig:Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled` ，其中显示了叠加在数据上的拟合估计值，还能够得到{numref}`fig:Salad_Sales_ForestPlot_Sigma_Unpooled_Multilevel_Comparison` ，其中比较和展示了池化和非池化（分层）方法估计出来的 $\sigma$ 参数。
+重新审视食品销售模型，我们对采用池化数据来估计 $\sigma$ 非常感兴趣，因为披萨组、三明治组和沙拉组的销售额可能存在相同的方差，但我们对各组的 $\beta$ 参数并没池化，因为我们知道各组之间存在差异。有了这些想法，我们就可以编写 `PyMC3` 模型，如代码 [model_sales_mixed_effect](model_sales_mixed_effect) 所示，并生成 {numref}`fig:Salad_Sales_Basic_Regression_Model_Multilevel` 所示的模型结构图。从模型中可以得到 {numref}`fig:Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled` ，图中显示了叠加在数据上的拟合结果。此外还能够得到 {numref}`fig:Salad_Sales_ForestPlot_Sigma_Unpooled_Multilevel_Comparison` ，其中比较和展示了池化和非池化方法估计出来的 $\sigma$ 参数。
 
-这些结果令人鼓舞，对于所有三个类别来说，拟合看起来都是合理的，特别是对于沙拉组来说，这种模型似乎能够对这个新市场的沙拉销售产生合理的推论。
+这些结果令人鼓舞，对于所有三个组别来说，拟合结果看起来都是合理的，特别是对于沙拉组来说，该模型似乎能够对此新市场的沙拉销售产生合理的推论。
 
 ```{code-block} ipython3
 :name: model_sales_mixed_effect
@@ -609,7 +611,7 @@ with pm.Model() as model_pooled_sigma_sales:
 :name: fig:Salad_Sales_Basic_Regression_Model_Multilevel
 :width: 3.00in
 
-`model_pooled_sigma_sales` 模型，其中 $\beta$ 是非池化的，如右上角的含 $3$ 的框所示，$\sigma$ 是池化的，因为不含数字框表示所有组具有相同的参数估计。
+`model_pooled_sigma_sales` 模型，其中 $\beta$ 是非池化的，如右上角含 $3$ 的框所示，$\sigma$ 是池化的，不含数字框表示所有组具有相同的参数。
 
 ```
 
@@ -617,7 +619,7 @@ with pm.Model() as model_pooled_sigma_sales:
 :name: fig:Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled
 :width: 7.00in
 
-`model_pooled_sigma_sales` 模型，叠加显示 $50\%$ HDI 。这个模型对于估计沙拉预计销售额的目的更有用，因为每个组的斜率独立，并且所有数据都用来估计相同的 $\sigma$ 参数。
+`model_pooled_sigma_sales` 模型的拟合结果，叠加显示 $50\%$ HDI 。此模型对于估计沙拉预计销售额的目的更有用，因为每个组的斜率独立，并且所有数据都用来估计相同的 $\sigma$ 参数。
 
 ```
 
@@ -625,7 +627,7 @@ with pm.Model() as model_pooled_sigma_sales:
 :name: fig:Salad_Sales_ForestPlot_Sigma_Unpooled_Multilevel_Comparison
 :width: 7.00in
 
-比较来自 `model_pooled_sigma_sales` 和 `model_pooled_sales` 的 $\sigma$。请注意，分层模型中的 $\sigma$ 估计值在池化模型的 $\sigma$ 估计值范围之内。
+比较来自 `model_pooled_sigma_sales` 模型和 `model_pooled_sales` 模型的 $\sigma$。请注意，多级模型 `model_pooled_sigma_sales`  中的 $\sigma$ 估计值在全池化模型 `model_pooled_sales` 的估计值范围之内。
 
 ```
 
@@ -633,17 +635,21 @@ with pm.Model() as model_pooled_sigma_sales:
 
 ## 4.6 分层模型 
 
-到目前为止，在我们的数据处理中，我们有两个组选项，在组之间没有区别的情况下池化，在组之间完全区别的情况下不池化。回想一下，在我们的激励餐厅示例中，我们认为 3 种食物类别的参数 $\sigma$ 相似，但并不完全相同。在贝叶斯建模中，我们可以用*分层模型*来表达这个想法。在分层模型中，参数是*部分池化的*。部分是指不共享一个固定参数但共享一个描述先验本身参数分布的组的想法。从概念上讲，这个想法显示在 {numref}`fig:partial_pooled_model` 中。每个组都有自己的参数，这些参数来自一个共同的超先验分布。
+根据上一节内容，我们建模时，对参数有两种可能的组选项：一是在参数在组之间没有区别时做池化，二是在组之间有区别的情况下不做池化。回想一下，在餐厅示例中，我们相信 $3$ 种食物类别的 $\sigma$ 参数相似，但有可能并不完全相同。此时该如何处理呢？
+
+### 4.6.1 什么是分层模型
+
+在贝叶斯建模中，有一种 *分层模型（ Hierarchical Models ）* 可以来表达这种情形。在分层模型中，参数是 *部分池化的* 。部分是指各组之间并不共享某个固定的参数，而是共享一个用来生成该参数值的概率分布。这个想法的概念图见 {numref}`fig:partial_pooled_model` 。图中各组都有自己的参数，但这些参数都来自同一个超先验分布。也就是说，先验分布的建模对象是模型的参数，而超先验的建模对象是模型参数所服从概率分布的参数，因此被成为分层模型。
 
 ```{figure} figures/partial_pooled_model.png
 :name: fig:partial_pooled_model
 :width: 5.00in
 
-一个部分池化的模型架构，其中每组观测值 $y_1, y_2, ..., y_k$ 都有自己的一组参数，但各组的参数之间不是独立的，而是来自于一个公共分布。
+一个部分池化的模型架构，其中每个组的观测 $y_1, y_2, ..., y_k$ 都有自己的参数，但不同组的参数并非完全独立，而是来自于同一个概率分布。
 
 ``` 
 
-使用统计符号，我们可以将分层模型写为公式 {eq}`eq:hierarchical_regression` ，代码 [model_hierarchical_sales](model_hierarchical_sales) 中编写了其对应的计算模型，在 {numref}`fig:Salad_Sales_Hierarchial_Regression_Model 中绘制了其图形表示。
+使用统计符号，可以将分层模型写为公式 {eq}`eq:hierarchical_regression` ，代码 [model_hierarchical_sales](model_hierarchical_sales) 中展示了相应源码，在 {numref}`fig:Salad_Sales_Hierarchial_Regression_Model 中绘制了其图形化表示。
 
 ```{math} 
 :label: eq:hierarchical_regression
@@ -657,9 +663,9 @@ Y \sim& \mathcal{N}(\mu_{j},\sigma_{j})
 \end{split}
 ```
 
-注意：与 {numref}`fig:Salad_Sales_Basic_Regression_Model_Multilevel` 中的分层模型相比，添加了 $\sigma_{h}$。这是新的超先验分布，它定义了各组中参数的可能值。我们也可以在代码 [model_hierarchical_sales](model_hierarchical_sales) 中添加超先验。
+注意：与 {numref}`fig:Salad_Sales_Basic_Regression_Model_Multilevel` 中的多级模型相比，添加了新的参数 $\sigma_{h}$。这是新的超先验分布，用于定义各组中参数的可能值。我们可以在代码 [model_hierarchical_sales](model_hierarchical_sales) 中添加超先验。
 
-你可能会问 “我们是否也可以为 $\beta$ 项添加一个超先验？”，答案很简单：可以。只是针对当前问题，我们假设只有方差相关，而斜率完全独立。
+你可能会问 “我们是否也可以为 $\beta$ 项添加一个超先验？”，答案很简单：可以。只是针对当前问题，我们假设只有方差存在一定的相关性，而斜率则完全独立。
 
 ```{code-block} ipython3
 :name: model_hierarchical_sales
@@ -687,7 +693,7 @@ with pm.Model() as model_hierarchical_sales:
 :name: fig:Salad_Sales_Hierarchial_Regression_Model
 :width: 3.00in
 
-`model_hierarchical_sales` 模型。其中超先验 $\sigma_{hyperprior}$ 是用于三个分组 $\sigma$ 参数分布的同一个高层级分布。
+`model_hierarchical_sales` 分层模型。其中超先验 $\sigma_{hyperprior}$ 是一个用于获取三个分组 $\sigma$ 参数的概率分布参数的上层分布（有点拗口）。
 
 ``` 
 
@@ -695,16 +701,16 @@ with pm.Model() as model_hierarchical_sales:
 :name: fig:Salad_Sales_ForestPlot_Sigma_Hierarchical
 :width: 7.00in
 
-`model_hierarchical_sales` 模型的 $\sigma$ 参数估计的森林图。请注意超先验倾向于表示落在三组先验的范围内。
+`model_hierarchical_sales` 模型的 $\sigma$ 参数估计的森林图。请注意其中超先验的 $\sigma_hyperprorior$ 倾向于落在三个分组的 $\sigma$ 范围中间。
 
 ``` 
 
-完成分层模型的拟合后，我们可以检查 {numref}`fig:Salad_Sales_ForestPlot_Sigma_Hierarchical` 中的 $\sigma$ 参数估计值。注意添加了 $\sigma_{hyperprior}$ ，这是一个估计三种食物类别中每个类别参数分布的分布。如果比较 {numref}`tab:unpooled_sales` 中非池化模型和分层模型的汇总表，我们可以看到分层模型的效果。在非池化的估计中，沙拉的 $\sigma$ 估计的均值是 $21.3$ ，而在分层模型的估计中，相同参数估计的均值现在是 $25.5$，并且被比萨和三明治类别的均值“拉升”。与此同时，在分层类别中，比萨和沙拉类别的估计值虽然略微向均值回归，但与非池化的估计值基本相同。
+完成分层模型的拟合后，可以检查 {numref}`fig:Salad_Sales_ForestPlot_Sigma_Hierarchical` 中的 $\sigma$ 参数估计值。注意模型添加了超先验参数 $\sigma_{hyperprior}$ ，这是一个估计三个食物类别中 $\sigma$ 参数分布的分布。如果比较 {numref}`tab:unpooled_sales` 中非池化模型和分层模型的汇总表，我们可以看到分层模型的效果。在非池化估计中，沙拉的 $\sigma$ 估计的均值是 $21.3$ ，而在分层模型的估计中，相同参数估计的均值现在是 $25.5$，并且被披萨组和三明治组的均值“拉升”。与此同时，在分层类别中，披萨组和沙拉组的估计值虽然略微向均值回归，但与非池化的估计值基本相同。
 
-请注意各组的 $\sigma$ 估计值明显不同。鉴于观测数据和模型在组之间不共享信息，这与预期基本一致。
+请注意各组的 $\sigma$ 估计值明显不同。鉴于观测数据和模型在组之间并不共享参数，这也符合预期。
  
 
-```{list-table} 来自非池化模型的各类别 σ 估计
+```{list-table} 非池化模型中各组别 σ 参数的估计
 :name: tab:unpooled_sales
 * -
   - **mean**
@@ -728,7 +734,7 @@ with pm.Model() as model_hierarchical_sales:
   - 40.8
 ```
 
-```{list-table} Estimates of σ for each category from the hierarchical sales model
+```{list-table} 分层模型中各组别 σ 参数的估计
 :name: tab:Hierarchical_sales
 * -
   - **mean**
@@ -757,41 +763,35 @@ with pm.Model() as model_hierarchical_sales:
   - 46.9
 ```
 
-::: {admonition} 我听说你喜欢超先验，所以我在你的超先验上设置了一个超先验 
+::: {admonition} 听说你喜欢超先验，所以我在超先验之上又为你设置了一个超先验 
 
-在代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 中，我们在组级别参数 $\sigma_j$ 上放置了超先验。同样，我们也可以通过向参数 $\beta_{mj}$ 添加超先验来扩展模型。请注意，由于 $\beta_{mj}$ 具有高斯先验，我们实际上可以选择两个超先验 --- 每个超参数一个。
+在代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 中，各组的 $\sigma_j$ 参数上放置了超先验。同样，我们也可以为参数 $\beta_{mj}$ 添加超先验，来进一步扩展模型。不过由于 $\beta_{mj}$ 是高斯先验，所以实际上可以设置两个超先验，其中每个超参数对应一个。
 
-你可能会问：我们能否更进一步，将超超先验添加到参数超先验的参数中？超超超先验呢？
+你可能会问：我们是否可以更进一步，将超-超先验添加到参数的超先验分布的参数中呢？是能更进一步，设置超-超-超先验，甚至超-超-超-超先验呢？
 
-虽然写下这样的模型并从中采样是可能的，但值得退一步想想超先验在做什么。直观地说，超先验是模型从数据的子组（或子集群）中 “借用” 信息的一种方式，以便为观测较少的其他子组提供估计所需的信息。具有更多观测值的组将信息传递给超参数的后验，然后超参数的后验反过来调节具有较少观测值的子组参数。
-
-从这个视角看，将超先验放在非 *group specific* 参数上毫无意义 （ 理解： 是否意指超先验生成的参数首先必须是组相关的，而不是池化的组间通用参数？）。
+虽然设计这种很多层次的模型并从中采样是可行的，但必须要退一步思考超先验在做什么。直观地说，超先验是模型从数据的子组中 “借用” 信息的一种方式，以便为观测较少的其他子组提供估计所需的信息。具有更多观测的组将信息传递给超参数的后验，然后超参数的后验反过来调节具有较少观测值的子组参数。从这个视角看，将超先验放在 *组间通用参数* 上毫无意义。
 
 ::: 
 
-分层估计不仅限于两个级别。例如，餐厅销售模型可以扩展为三层模型，顶层代表公司级别，中间层代表区域市场（纽约、芝加哥、洛杉矶），最低层代表具体门店。
-
-通过这样做，我们可以拥有一个描述整个公司运作方式的超先验，一个指示某区域如何运作的超先验，以及描述每个门店运作方式的先验。这样就可以轻松比较均值和变异，并基于同一个模型以多种不同方式扩展应用。
+分层模型不仅限于两个级别。例如，餐厅销售模型可以扩展为三层模型，顶层代表公司级别，中间层代表区域市场（纽约、芝加哥、洛杉矶），最低层代表具体门店。此时，我们可以拥有一个描述整个公司运行方式的超先验，一个指示某区域运行方式的超先验，以及描述各门店运行方式的先验。这样就可以轻松地比较均值和变化，并基于同一个模型以多种不同方式扩展应用。
 
 (model_geometry)= 
 
-### 4.6.1 分层模型的新问题 --- 后验几何形态带来采样难题
+### 4.6.2 分层模型的问题 --- 后验几何形态的复杂性带来的采样难题
 
-到目前为止，我们主要关注模型背后的结构和数学，并假设采样器能够提供后验的“准确”估计。对于相对简单的模型，这在很大程度上是正确的，最新版本的通用推断引擎大多能够“正常工作”，但最要命的是它们并不总是能够工作。某些后验几何形态对采样器具有较大挑战性，一个常见例子是在 {numref}`fig:Neals_Funnel` 中显示的 `Neal 漏斗` {cite:p}`neal_2003`。正如名字暗示的那样，该图一端的形状很宽，然后变窄成一个小瓶颈。回顾 {ref}`sampling_methods_intro` 节，采样器的功能是从一组参数值到另一组参数值，其中一个关键设置是在探索后验时要采取多大步骤。在复杂的几何形态中，例如 `Neal 漏斗`，步长在一个区域运行良好，在另一个区域却会惨遭失败。
+到目前为止，我们主要关注模型背后的结构和数学，并假设采样器能够提供后验的“准确”估计。对于相对简单的模型而言，这在很大程度上是正确的，最新版本的通用推断引擎大多能够“正常工作”，但最要命的是它们并不总是能够工作。某些后验的几何形态对采样器而言具有较大挑战，一个常见例子是在 {numref}`fig:Neals_Funnel` 中显示的 `Neal 漏斗` {cite:p}`neal_2003`。正如名字暗示的那样，此类分布的几何形态中，有一端形状很宽，然后在另一端变窄形成瓶颈。回顾 {ref}`sampling_methods_intro` 节，采样器的功能是从一组参数值转移到另一组参数值，其中一个关键设置是在探索后验时要采取多大步长。在复杂的几何形态中，例如 `Neal 漏斗`，某步长在一个区域运行良好，但在另一个区域却会惨遭失败。
 
 ```{figure} figures/Neals_Funnel.png
 :name: fig:Neals_Funnel
 :width: 7.00in
 
-被称为 Neal 漏斗的特定形状相关样本。当在 $Y$ 值为 $6$ 到 $8$ 左右的漏斗顶部采样时，采样器可以采取比如 $1$ 个单位的大步长，并且保持在后验的密集区域内。但是，如果在 $Y$ 值约为 $-6$ 到 $-84 的漏斗底部附近进行采样，则几乎任何方向上的 $1$ 个单位步长都可能导致走入低密度区域（图中蓝色点区域表示后验的高密度区域，白色区域表示低密度区域）。后验的几何形态造成的这种巨大差异，是后验估计性能变差的一个主要原因，特别是在基于采样的估计方法中。对于 HMC 采样器，散度的出现有助于诊断此类采样问题。
+被称为 `Neal 漏斗` 的特定形状概率分布的样本。当在 $Y$ 值为 $6$ 到 $8$ 左右的漏斗顶部采样时，采样器可以采取比如 $1$ 个单位的大步长，并能够保持在后验的密集区域内。但是，如果在 $Y$ 值约为 $-6$ 到 $-8$ 的漏斗底部附近进行采样，则几乎在任何方向上的 $1$ 个单位步长，都可能走入低密度区域（图中蓝色点区域表示高密度区域，白色区域表示低密度区域）。后验几何形态造成的这种差异，会造成采样器后验估计性能变差，尤其是在基于采样的近似方法中。对于 HMC 采样器，散度的出现有助于诊断此类采样问题。
 
 ``` 
 
-在分层模型中，后验的几何形态主要由超先验与其他参数的相关性定义，这可能导致难以采样的漏斗几何。不幸的是，这并非是一个理论上可能的问题，而是一个切实存在的问题。幸运的是，有一个被称为“非中心参数化”的模型技巧，有助于缓解此问题。
+在分层模型中，后验的几何形态主要由超先验和其他参数之间的相关性定义，这种相关性可能导致上述难以采样的漏斗形态。这并非一种理论上的可能，而是切实存在的问题。幸运的是，有一种被称为“非中心参数化”的建模技巧，有助于缓解此问题。
 
-继续沙拉示例，假设我们开了 $6$ 家沙拉餐厅，并且像以前一样希望将销售额预测为客户数量的函数。合成数据集已经由 Python 代码生成，并显示在 {numref}`fig:Multiple_Salad_Sales_Scatter` 中。由于餐厅销售完全相同的产品，因此分层模型适用于跨组共享信息。我们在公式 {eq}`eq:centered_hierarchical_regression` 和代码 [model_hierarchical_salad_sales](model_hierarchical_salad_sales) 中以数学方式编写了居中的模型。
-
-我们将在本章其余部分使用 `TFP` 和 `tfd.JointDistributionCoroutine`，这更容易突出参数化的变化。该模型遵循标准的分层格式，其中一个超先验参数部分池化了斜率 $\beta_m$ 。
+继续沙拉示例，假设我们开了 $6$ 家沙拉餐厅，并且像以前一样，希望将销售额预测为顾客数量的某个函数。合成数据集已经由 Python 代码生成，并显示在 {numref}`fig:Multiple_Salad_Sales_Scatter` 中。由于餐厅销售完全相同的产品，因此分层模型适用于跨组共享信息。我们在公式 {eq}`eq:centered_hierarchical_regression` 和代码 [model_hierarchical_salad_sales](model_hierarchical_salad_sales) 中以数学方式编写了中心化后的模型。我们将在本章剩余部分使用 `TFP` 和 `tfd.JointDistributionCoroutine`，这更容易突出参数化的改变。该模型遵循标准的分层格式，其中一个超先验参数被用于部分池化斜率参数 $\beta_m$ 。
 
 ```{math} 
 :label: eq:centered_hierarchical_regression
@@ -843,7 +843,7 @@ def gen_hierarchical_salad_sales(input_df, beta_prior_fn, dtype=tf.float32):
     return model_hierarchical_salad_sales, sales
 ```
 
-与在第 [3](chap2) 章中使用的 `TFP` 模型类似，该模型被包装在一个函数中，因此可以更轻松地对任意输入进行条件化。除了输入数据，`gen_hierarchical_salad_sales` 还接受一个可调用的 `beta_prior_fn`，它定义了斜率 $\beta_m$ 的先验。在 `Coroutine` 模型中，我们使用 `yield from` 语句来调用 `beta_prior_fn`。这个描述在文字上可能过于抽象，但在代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 中更容易看到操作：
+与在 [第 3 章](chap2) 中使用的 `TFP` 模型类似，该模型被包装在一个函数中，因此可以更轻松地对任意输入进行条件化。除了输入数据，`gen_hierarchical_salad_sales` 还接受一个可调用的参数 `beta_prior_fn`，它用于定义斜率参数 $\beta_m$ 的先验。在 `Coroutine` 模型中，我们使用 `yield from` 语句来调用 `beta_prior_fn`。这个描述在文字上过于抽象，在代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 中可能更容易看到行为动作：
 
 ```{code-block} ipython3
 :name: model_hierarchical_salad_sales_centered
@@ -858,13 +858,11 @@ centered_model, observed = gen_hierarchical_salad_sales(
     hierarchical_salad_df, centered_beta_prior_fn)
 ```
 
-如上所示，代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 定义了斜率 $\beta_m$ 的居中参数化，它遵循具有 `hyper_mu` 和 `hyper_sigma` 的正态分布。
+如上所示，代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 定义了中心化的斜率参数 $\beta_m$ ，它服从具有超参数 `hyper_mu` 和 `hyper_sigma` 的高斯分布。
 
 `centered_beta_prior_fn` 是一个产生 `tfp.distribution` 的函数，类似于我们编写 `tfd.JointDistributionCoroutine` 模型的方式。
 
-现在我们有了模型，我们可以在代码 [model_hierarchical_salad_sales_centered_inference](model_hierarchical_salad_sales_centered_inference) 中运行推断并检查结果。
-
- 
+现在我们有了模型，可以在代码 [model_hierarchical_salad_sales_centered_inference](model_hierarchical_salad_sales_centered_inference) 中运行推断并检查结果。
 
 ```{code-block} ipython3
 :name: model_hierarchical_salad_sales_centered_inference
@@ -882,7 +880,7 @@ print(f"""There were {divergent_per_chain} divergences after tuning per chain.""
 There were [37 31 17 37] divergences after tuning per chain.
 ```
 
-我们重用之前在代码 [tfp_posterior_inference](tfp_posterior_inference) 中显示的推断代码来运行我们的模型。运行我们的模型后，问题的第一个迹象是分歧，我们在第 {ref}`divergences`中介绍了其细节。样本空间图是下一个诊断，显示在 {numref}`fig:Neals_Funnel_Salad_Centered` 中。
+我们重用之前在代码 [tfp_posterior_inference](tfp_posterior_inference) 中显示的推断代码来运行模型。结果中的第一个问题迹象是散度，我们在第 {ref}`divergences` 中介绍过它。样本空间中的图是下一个诊断工具，展示在 {numref}`fig:Neals_Funnel_Salad_Centered` 中。
 
 注意随着超先验 $\beta_{\sigma h}$ 接近零，$\beta_m$ 参数的后验估计的宽度趋于缩小。特别注意零附近没有样本。换句话说，当 $\beta_{\sigma h}$ 接近零时，对参数 $\beta_m$ 进行采样的区域会崩溃，并且采样器无法有效地表征这个后验空间。
 
@@ -890,11 +888,11 @@ There were [37 31 17 37] divergences after tuning per chain.
 :name: fig:Neals_Funnel_Salad_Centered
 :width: 7.00in
 
-来自代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 中定义的 `centered_model` 的超先验和 $\beta[4]$ 斜率的散点图。当超先验接近零时，斜率塌陷的后空间导致以蓝色显示的分歧。
+来自代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 中定义的 `centered_model` 的超先验和 $\beta[4]$ 斜率的散点图。当超先验接近零时，斜率塌陷的后验空间导致以蓝色显示的散度。
 
 ``` 
 
-为了缓解这个问题，可以将居中参数化转换为 [model_hierarchical_salad_sales_non_centered](model_hierarchical_salad_sales_non_centered) 和方程 {eq}`eq:noncentered_hierarchical_regression` 中的代码中所示的非居中参数化。关键区别在于，它不是直接估计斜率 $\beta_m$ 的参数，而是建模为所有组之间共享的公共项和每个组的一个项，该项捕获与公共项的偏差。这以允许采样器更容易地探索 $\beta_{\sigma h}$ 的所有可能值的方式修改后验几何。这种后验几何变化的影响如 {numref}`fig:Neals_Funnel_Salad_NonCentered` 所示，其中 x 轴上有多个样本下降到 0 值。
+为了缓解这个问题，可以将中心参数化转换为代码 [model_hierarchical_salad_sales_non_centered](model_hierarchical_salad_sales_non_centered) 和公式 {eq}`eq:noncentered_hierarchical_regression` 中所示的非中心参数化。关键区别在于，它不是直接估计斜率 $\beta_m$ 的参数，而是建模为所有组之间共享的公共项和每个组的一个项，该项捕获了各组与公共项的偏差。这使采样器能够更容易地探索 $\beta_{\sigma h}$ 的所有可能值，并修改后验几何形态。这种后验几何形态变化的影响如 {numref}`fig:Neals_Funnel_Salad_NonCentered` 所示，其中 $x$ 轴上有多个样本下降到了 $0$ 值。
 
 ```{math} 
 :label: eq:noncentered_hierarchical_regression
@@ -942,11 +940,11 @@ There were [1 0 2 0] divergences after tuning per chain.
 
 ``` 
 
-采样的改进对 {numref}`fig:Salad_Sales_Hierarchical_Comparison` 中显示的估计分布有重大影响。
+采样的改进对 {numref}`fig:Salad_Sales_Hierarchical_Comparison` 中显示的分布估计有重大影响。
 
-虽然再次提醒这个事实可能会令人不快，但采样器只是估计后验分布，虽然在许多情况下它们做得很好，但不能保证！如果出现警告，请务必注意诊断并进行更深入的调查。
+虽然再次提醒这个事实可能会令人不快，但采样器只是估计后验分布，虽然在许多情况下它们做得很好，但不能保证永远很好！如果出现警告，请务必注意诊断并进行更深入的检查。
 
-值得注意的是，对于居中或非居中参数化 {cite:p}`Papaspiliopoulos2007`，没有一种适合所有解决方案的解决方案。它是组级个体似然的信息量（通常对于特定组拥有的数据越多，似然函数的信息量越多）、组级先验的信息量和参数化之间的复杂交互。一般的启发式方法是，如果没有很多观测，则首选非中心参数化。然而，在实践中，你应该尝试使用不同的先前规范的居中和非居中参数化的几种不同组合。你甚至可能会发现在单个模型中需要*同时*居中和非居中参数化的情况。如果你怀疑模型参数化导致你出现采样问题，我们建议你阅读 Michael Betancourt 的案例研究分层建模 {cite:p}`betancourt_2020_hierarchical`。
+值得注意的是，对于中心或非中心参数化 {cite:p}`Papaspiliopoulos2007`，没有一种适合所有解决方案的通用方法。它是组级个体似然的信息量（通常对于特定组拥有的数据越多，似然函数的信息量越多）、组级先验的信息量和参数化之间的复杂交互。一般的启发式方法是，如果观测不多，则首选非中心参数化。然而实践中，你应该尝试使用不同的先验规范的居中和非居中参数化的几种不同组合。你甚至可能会发现在单个模型中需要*同时*居中和非居中参数化的情况。如果你怀疑模型参数化导致你出现采样问题，我们建议你阅读 Michael Betancourt 的案例研究分层建模 {cite:p}`betancourt_2020_hierarchical`。
 
 ```{figure} figures/Salad_Sales_Hierarchical_Comparison.png
 :name: fig:Salad_Sales_Hierarchical_Comparison
@@ -958,11 +956,11 @@ $\beta_{\sigma h}$ 在中心和非中心参数化中分布的 KDE。这种变化
 
 (predictions-at-multiple-levels)= 
 
-### 4.6.2 分层模型的优势 --- 支持多个层次上的预测
+### 4.6.3 分层模型的优势 --- 支持多个层次上的预测
 
-分层模型的一个微妙特征是它们能够在多个层次上进行估计。虽然看起来很明显，但它非常有用，因为它让我们可以使用一个模型来回答比单层模型更多的问题。在第 [3](chap2) 章中，我们可以建立一个模型来估计单个物种的质量，或者建立一个单独的模型来估计任何企鹅的质量，而不考虑物种。使用分层模型，我们可以用一个模型同时估计所有企鹅和每个企鹅物种的质量。使用我们的沙拉销售模型，我们既可以对单个位置进行估计，也可以对整个整体进行估计。我们可以使用代码 [model_hierarchical_salad_sales_non_centered](model_hierarchical_salad_sales_non_centered) 的 `non_centered_model` 模型来做到这一点，然后编写一个 `out_of_sample_prediction_model` 模型，如代码 [model_hierarchical_salad_sales_predictions](model_hierarchical_salad_sales_predictions) 所示。
+分层模型的一个微妙特征是它们能够在多个层次上进行估计。虽然看起来很明显，但它非常有用，因为它让我们可以使用一个模型来回答比单层模型更多的问题。在 [ 第 3 章 ](chap2) 中，我们可以建立一个模型来估计单个物种的质量，或者建立一个单独的模型来估计任何企鹅的质量，而不考虑物种。使用分层模型，我们可以用一个模型同时估计所有企鹅和每个企鹅物种的质量。使用我们的沙拉销售模型，我们既可以对单个位置进行估计，也可以对整个整体进行估计。我们可以使用代码 [model_hierarchical_salad_sales_non_centered](model_hierarchical_salad_sales_non_centered) 的 `non_centered_model` 模型来做到这一点，然后编写一个 `out_of_sample_prediction_model` 模型，如代码 [model_hierarchical_salad_sales_predictions](model_hierarchical_salad_sales_predictions) 所示。
 
-这使用拟合参数同时对两个地点和和整个公司的 $50$ 个客户进行样本外预测。由于 `non_centered_model` 也是一个 `TFP` 分布，我们可以将它嵌套到另一个 `tfd.JointDistribution` 中，这样做构建了一个更大的贝叶斯图模型，该模型扩展了初始 `non_centered_model` 以包含用于样本   外预测的节点。估计值绘制在 {numref}`fig:Salad_Sales_Hierarchical_Predictions` 中。
+这使用拟合参数同时对两个地点和和整个公司的 $50$ 个顾客进行样本外预测。由于 `non_centered_model` 也是一个 `TFP` 分布，我们可以将它嵌套到另一个 `tfd.JointDistribution` 中，这样做构建了一个更大的贝叶斯图模型，该模型扩展了初始 `non_centered_model` 以包含用于样本   外预测的节点。估计值绘制在 {numref}`fig:Salad_Sales_Hierarchical_Predictions` 中。
 
 ```{code-block} ipython3
 :name: model_hierarchical_salad_sales_predictions
@@ -1039,7 +1037,7 @@ ppc = out_of_sample_prediction_model2.sample(var0=amended_posterior)
 
 (priors-for-multilevel-models)= 
 
-### 4.6.3 分层模型的先验选择 
+### 4.6.4 分层模型的先验选择 
 
 先验选择对于分层模型来说更为重要，因为先验如何与似然的信息量相互作用，如上面第 {ref}`model_geometry` 部分所示。此外，不仅先验分布的形状很重要，我们还可以选择如何参数化它们。这并不仅限于高斯先验，还适用于位置尺度分布族 [^6] 中的所有分布。
 

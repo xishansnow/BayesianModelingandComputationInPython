@@ -95,7 +95,7 @@ A sequence of random variables is homoscedastic if all its random variables have
 Independent and identically distributed. A collection of random variables is independent and identically distributed if each random variable has the same probability distribution as the others and all are mutually independent. If a collection of random variables is iid it is also exchangeable, but the converse is not necessarily true.
 
 **个体条件期望（ Individual Conditional Expectation, ICE ）** 
-ICE 显示响应变量和感兴趣的协变量之间的依赖关系。这是对每个样本分别进行的，每个样本一行。这与 PDP 的对比,其中表示协变量的平均效应。
+ICE 显示结果变量和感兴趣的协变量之间的依赖关系。这是对每个样本分别进行的，每个样本一行。这与 PDP 的对比,其中表示协变量的平均效应。
 
 An ICE shows the dependence between the response variable and a covariate of interest. This is done for each sample separately with one line per sample. This contrast to PDPs 
 where the average effect of the covariate is represented.
@@ -108,7 +108,7 @@ Colloquially, inference is reaching a conclusion based on evidence and reasoning
 
 Replacing missing data values through a method of choice. Common methods may include most common occurrence or interpolation based on other (present) observed data.
 
-**核密度估计（ Kernel Density Estimation, KDE ）**： 核密度估计。一种从有限样本集中估计随机变量概率密度函数的非参数方法。我们经常使用术语 KDE 来谈论估计密度而不是方法。
+**核密度估计（ Kernel Density Estimation, KDE ）**：核密度估计。一种从有限样本集中估计随机变量概率密度函数的非参数方法。我们经常使用术语 KDE 来谈论估计密度而不是方法。
 
 A non-parametric method to estimate the probability density function of a random variable from a finite set of samples. We often use the term KDE to talk about the estimated density and not the method.
 
@@ -128,7 +128,7 @@ A measure of the likelihood of a particular outcome. They are calculated as the 
 
 A model overfits when produces predictions too closely to the dataset used for fitting the model failing to fit new datasets.In terms of the number of parameters an overfitted model contains more parameters than can be justified by the data. An arbitrary over-complex model will fit not only the data but also the noise, leading to poor predictions.
 
-**部分依赖图（ Partial Dependence Plots, PDP ）** ： PDP 显示响应变量和一组感兴趣的协变量之间的依赖关系，这是通过边缘化所有其他协变量的值来完成的。直观地说，我们可以将部分相关性解释为响应变量的期望值作为感兴趣的协变量的函数。
+**部分依赖图（ Partial Dependence Plots, PDP ）** ： PDP 显示结果变量和一组感兴趣的协变量之间的依赖关系，这是通过边缘化所有其他协变量的值来完成的。直观地说，我们可以将部分相关性解释为结果变量的期望值作为感兴趣的协变量的函数。
 
 A PDP shows the dependence between the response variable and a set of covariates of interest, this is done by marginalizing over the values of all other covariates. Intuitively, we can interpret the partial dependence as the expected value of the response variable as function of the covariates of interest.
 
@@ -160,7 +160,7 @@ This is the distribution of (future) data according to the posterior, which in t
 
 The difference between an observed value and the estimated value of the quantity of interest. If a model assumes that the variance is finite and the same for all residuals, we say we have homoscedasticity. If instead the variance can change, we say we have heteroscedasticity.
 
-**充分统计量（ Sufficient statistics ）**： 如果没有从同一样本计算的其他统计量提供有关该样本的任何附加信息，则对于模型参数的统计量就足够了。换句话说，该统计数据*足以*汇总您的样本而不会丢失信息。例如，给定来自具有期望值 $\mu$ 和已知有限方差的正态分布的独立值样本，样本均值对于 $\mu$ 来说是足够的统计量。请注意，均值没有说明色散，因此仅就参数 $\mu$ 而言就足够了。众所周知，对于 iid 数据，具有足够统计量且维度等于 $\theta$ 维度的唯一分布是指数族的分布。
+**充分统计量（ Sufficient statistics ）**： 如果没有从同一样本计算的其他统计量提供有关该样本的任何附加信息，则对于模型参数的统计量就足够了。换句话说，该统计数据*足以*汇总您的样本而不会丢失信息。例如，给定来自具有期望值 $\mu$ 和已知有限方差的高斯分布的独立值样本，样本均值对于 $\mu$ 来说是足够的统计量。请注意，均值没有说明色散，因此仅就参数 $\mu$ 而言就足够了。众所周知，对于 iid 数据，具有足够统计量且维度等于 $\theta$ 维度的唯一分布是指数族的分布。
 对于其他分布，充分统计量的维度随着样本量的增加而增加。
 
 A statistic is sufficient with respect to a model parameter if no other statistic computed from the same sample provides any additional information about that sample. In other words, that statistic is *sufficient* to summarize your samples without losing information. For example, given a sample of independent values from a normal distribution with expected value $\mu$ and known finite variance the sample mean is sufficient statistics for $\mu$. Notice that the mean says nothing about the dispersion, thus it is only sufficient with respect to the parameter $\mu$. It is known that for iid data the only distributions with a sufficient statistic with dimension equal to the dimension of $\theta$ are the distributions from the exponential family.

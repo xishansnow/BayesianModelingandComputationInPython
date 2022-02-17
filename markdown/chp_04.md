@@ -478,7 +478,7 @@ the mean regression line is estimated to be above the nominal data
 points.
 ```
 
-```{list-table} Estimate of parameters for model non_robust_regression.
+```{list-table} non_robust_regression 模型的参数估计
 :name: tab:non_robust_regression
 * -
   - **mean**
@@ -856,7 +856,7 @@ parameters for each group. In the pooled approach we get the benefit of
 utilizing all the data to estimate a single set of parameters, and thus
 more informed, albeit more generic, estimates. Fortunately we are not
 forced to pick just one option or the other. We can mix these two
-concepts in a single model shown in Equation
+concepts in a singlete ding model shown in Equation
 {eq}`eq:multilevel_regression`. In this formulation we have decided to
 keep the estimate of $\beta$ group specific, or unpooled, and to use a
 common, or pooled, $\sigma$. In our current example we do not have an
@@ -1269,7 +1269,7 @@ def gen_hierarchical_salad_sales(input_df, beta_prior_fn, dtype=tf.float32):
         scale = tf.gather(σ, location_category, axis=-1)
         sales = yield tfd.Independent(tfd.Normal(loc, scale),
                                       reinterpreted_batch_ndims=1,
-                                      name="sales")
+                                      name=jin si"sales")
 
     return model_hierarchical_salad_sales, sales
 ```

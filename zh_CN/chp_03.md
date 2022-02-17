@@ -20,9 +20,9 @@ kernelspec:
 
 随着概率编程语言的出现，现代贝叶斯建模只需要编码一个模型和 "按一个按钮 "那样简单。然而，有效模型的建立和分析通常需要更多的工作。
 
-随着本书的推进，我们将建立许多不同类型的模型，但在本章中将从最简单的线性模型开始。线性模型是一类广泛应用的模型，其中一个指定观测值（ 响应变量 ）的**期望值**是相关预测因子（ 预测变量 ）的**线性组合**。
+随着本书的推进，我们将建立许多不同类型的模型，但在本章中将从最简单的线性模型开始。线性模型是一类广泛应用的模型，其中一个指定观测值（ 结果变量 ）的**期望值**是相关预测因子（ 预测变量 ）的**线性组合**。
 
-深刻理解拟合和解释线性模型的方法，是后续很多模型的坚实基础；并将有助于我们巩固『贝叶斯推断（第 [1](chap1) 章）』和『贝叶斯模型的探索性分析（第 [2](chap1bis) 章）』的基本知识。
+深刻理解拟合和解释线性模型的方法，是后续很多模型的坚实基础；并将有助于我们巩固『贝叶斯推断（ [ 第 1 章 ](chap1) ）』和『贝叶斯模型的探索性分析（第 [2](chap1bis) 章）』的基本知识。
 
 本章将介绍两种概率编程语言：`PyMC3` 和 `TensorFlow Probability (TFP)`。当我们使用这两种概率编程语言构建模型时，应当重点关注同一基础统计思想是如何在两种概率编程语言中实现的。
 
@@ -38,7 +38,7 @@ kernelspec:
 
 `Kristen Gorman` 很喜欢研究企鹅，她访问了 $3$ 个南极岛屿并收集了有关 `Adelie`、`Gentoo` 和 `Chinstrap` 三个物种的数据，这些数据被编撰进了 `Palmer Penguins 数据集` 中 {cite:p}`PalmerPenguins`。观测数据包括企鹅的体重、鳍状肢长度、性别特征、所居住岛屿等。
 
-我们首先通过代码 [penguin_load](penguin_load) 加载数据，并过滤掉存在缺失数据的行。这种方式被称为**完整案例分析（ complete case analysis ）**，顾名思义，我们只使用所有观测值都存在的行。尽管有一些处理缺失数据的成熟方法，但此处我们将采用最简单的剔除法。
+我们首先通过代码 [penguin_load](penguin_load) 加载数据，并过滤掉存在缺失数据的行。这种方式被称为**完整案例分析（ complete case analysis ）**，顾名思义，我们只使用所有观测值都存在的行。尽管有一些处理缺失数据的成熟方法，但此处将采用最简单的剔除法。
 
 ```{code-block} ipython3 
 :name: penguin_load
@@ -84,7 +84,7 @@ summary_stats = (penguins.loc[:, ["species", "body_mass_g"]]
   - 119
 ``` 
 
-现在我们有了均值和离散度（用标准差来描述）的点估计，但并不知道这些统计数据的不确定性。获得不确定性估计的方法之一就是贝叶斯方法。为此，需要推测观测与参数之间的关系，例如：
+现在有了均值和离散度（用标准差来描述）的点估计，但无法掌握这些统计数据的不确定性。获得不确定性估计的方法之一就是贝叶斯方法。为此，需要推测观测数据与参数之间的关系，例如：
 
 ```{math} 
 :label: eq:gaussian_bayes 
@@ -125,7 +125,7 @@ with pm.Model() as model_adelie_penguin_mass:
 在代码 [penguin_mass](penguin_mass) 中生成的先验样本。可以看出，企鹅体重的均值和标准差的分布估计涵盖了广泛的可能性。
 ``` 
 
-从模型中做后验采样后，我们可以创建 {numref}`fig:single_penguins_rank_kde_plot`，其中包括 $4$ 个子图，右边的两个是秩图，左边是参数的 `KDE`，每条线为一个链。我们还可以参考 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的数值诊断来了解采样链的收敛情况。根据第 [2](chap1bis) 章建立的直觉，我们大致能够判断该拟合可以接受，可以继续进行分析。
+从模型中做后验采样后，我们可以创建 {numref}`fig:single_penguins_rank_kde_plot`，其中包括 $4$ 个子图，右边的两个是秩图，左边是参数的核密度估计，每条线为一个链。我们还可以参考 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的数值诊断来了解采样链的收敛情况。根据第 [2](chap1bis) 章建立的直觉，我们大致能够判断该拟合可以接受，可以继续进行分析。
 
 
 ```{list-table} 企鹅体重的均值 (μ) 和标准差 (σ) 的贝叶斯估计，以及采样诊断。
@@ -181,7 +181,7 @@ with pm.Model() as model_adelie_penguin_mass:
 
 通过贝叶斯估计，我们得到了合理的参数分布。使用 {numref}`tab:penguin_mass_parameters_bayesian_estimates` 中的汇总信息，以及来自 {numref}`fig:single_penguins_rank_kde_plot` 中的后验分布，该企鹅物种的体重均值从 $3632$ 到 $3772$ 克相当合理；此外边缘后验分布的标准差也比较大。
 
-切记，后验分布是高斯分布参数（均值和标准差）的分布，而非高斯分布本身（即企鹅体重的分布），千万不要混淆。因此如果想要企鹅体重的分布估计，我们需要基于均值和标准差参数的后验样本生成后验预测分布。也就是说，根据当前模型设定，企业体重的分布应该是以 $\mu$ 和 $\sigma$ 的后验分布为条件的高斯分布。
+切记，后验分布是高斯分布参数（均值和标准差）的分布，而非高斯分布本身（即企鹅体重的分布），千万不要混淆。因此如果想要企鹅体重的分布估计，我们需要基于均值和标准差参数的后验样本生成后验预测分布。也就是说，根据当前模型设定，企鹅体重的分布应该是以 $\mu$ 和 $\sigma$ 的后验分布为条件的高斯分布。
 
 现在已经描述了 `Adelie 种企鹅`的体重，我们可以继续对其他物种做同样的工作。在编程上，我们可以编写三个独立的模型来实现，但也可以只编写一个模型，其中包含 $3$ 个独立的组，每个物种对应一个组。
 
@@ -263,7 +263,7 @@ az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"])
 
 类似地，TFP 为用户提供了在  `tfp.distributions` 中指定分布和模型、运行 MCMC 推断( `tfp.mcmc` ) 等原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 `tfd.JointDistribution` 的 API 原语 {cite:p}`piponi2020joint`。在本书的其余部分中，我们会主要使用 `tfd.JointDistributionCoroutine`，但读者应当知道还有 `tfd.JointDistribution` 的一些变体可能更适合你的应用 [^1]。由于导入数据和计算汇总统计量的代码和 [penguin_load](penguin_load) 和 [penguin_mass_empirical](penguin_mass_empirical) 一致，因此这里我们专注于模型构建和推断。
 
-`model_penguin_mass_all_species` 以 TFP 表示为代码 [penguin_mass_tfp](penguin_mass_tfp) ：
+`model_penguin_mass_all_species` 以 `TFP` 表示为代码 [penguin_mass_tfp](penguin_mass_tfp) ：
 
 ```{code-block} ipython3
 :name: penguin_mass_tfp
@@ -295,7 +295,7 @@ def jd_penguin_mass_all_species():
         name="mass")
 ```
 
-这是我们第一次遇到用 TFP 编写的贝叶斯模型，所以花点时间来详细介绍一下。 `tfp.distributions` 是原语中的分布类，我们通常为其赋予一个较短的别名 `tfd = tfp.distributions` 。 `tfd` 中包含了常用的分布，例如正态分布 `tfd.Normal(.)` 。代码中还使用了 `tfd.Sample`，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 `PyMC3` 语法糖 `shape=(.)` 的功能 ）。 `tfd.Independent` 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 `reinterpreted_batch_ndims` 函参指定。通常用 `tfd.Independent` 封装与观测相关的分布 [^2] 。你可以在 {ref}`shape_PPL` 部分阅读更多关于 TFP 和概率编程语言中的形状处理的信息。
+这是我们第一次遇到用 `TFP` 编写的贝叶斯模型，所以花点时间来详细介绍一下。 `tfp.distributions` 是原语中的分布类，我们通常为其赋予一个较短的别名 `tfd = tfp.distributions` 。 `tfd` 中包含了常用的分布，例如高斯分布 `tfd.Normal(.)` 。代码中还使用了 `tfd.Sample`，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 `PyMC3` 语法糖 `shape=(.)` 的功能 ）。 `tfd.Independent` 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 `reinterpreted_batch_ndims` 函参指定。通常用 `tfd.Independent` 封装与观测相关的分布 [^2] 。你可以在 {ref}`shape_PPL` 部分阅读更多关于 `TFP` 和概率编程语言中的形状处理的信息。
 
 代码中的模型签名 `@tfd.JointDistributionCoroutine` 很有意思，顾名思义，就是在 Python 中使用协程（ Coroutine ），不过我们在此不过多地介绍生成器和协程的概念。 
 
@@ -305,7 +305,7 @@ def jd_penguin_mass_all_species():
 
 该模型被编写为没有输入参数和返回值的 Python 函数，将 `@tfd.JointDistributionCoroutine` 放在 Python 函数之上作为装饰器，以方便直接获取模型（即 `tfd.JointDistribution`）。
 
-结果的 `jd_penguin_mass_all_species` 是代码 [nocovariate_mass](nocovariate_mass) 中的截距回归模型在 TFP 中的重写。它具有与其他 `tfd.Distribution` 类似的、可以在贝叶斯工作流中使用的方法。例如，抽取先验和先验预测样本可以调用 `.sample(.)` 方法，该方法返回一个类似于 `namedtuple` 的自定义嵌套 Python 结构体。在代码 [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive) 中，我们抽取了 $10004 个先验和先验预测样本。
+结果的 `jd_penguin_mass_all_species` 是代码 [nocovariate_mass](nocovariate_mass) 中的截距回归模型在 `TFP` 中的重写。它具有与其他 `tfd.Distribution` 类似的、可以在贝叶斯工作流中使用的方法。例如，抽取先验和先验预测样本可以调用 `.sample(.)` 方法，该方法返回一个类似于 `namedtuple` 的自定义嵌套 Python 结构体。在代码 [penguin_mass_tfp_prior_predictive](penguin_mass_tfp_prior_predictive) 中，我们抽取了 $10004 个先验和先验预测样本。
 
 ```{code-block} ipython3
 :name: penguin_mass_tfp_prior_predictive
@@ -390,7 +390,7 @@ inf_data_model_penguin_mass_all_species2.add_groups(
 )
 ```
 
-我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是*以贝叶斯为中心*，哪些概念是*以概率编程语言为中心*。在本章的剩余部分和下一章中，我们将在 `PyMC3` 和 TFP 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。
+我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是*以贝叶斯为中心*，哪些概念是*以概率编程语言为中心*。在本章的剩余部分和下一章中，我们将在 `PyMC3` 和 `TFP` 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。
 
 (linear-regression)= 
 
@@ -452,7 +452,7 @@ Y = \mathbf{X}\boldsymbol{\beta} + \epsilon,\; \epsilon \sim \mathcal{N}(0, \sig
 
 (linear_regression_intro)= 
 
-### 3.2.1 线性的企鹅模型
+### 3.2.1 线性企鹅模型
 
 如果回顾企鹅示例，我们对使用额外数据来估计企鹅的平均体重更感兴趣。我们在代码 [non_centered_regression](non_centered_regression) 中编写了一个线性回归模型，其中包括两个新参数 $\beta_0$ 和 $\beta_1$，通常称为截距和斜率。对于这个例子，我们设置了 $\mathcal{N}(0, 4000)$ 的宽泛先验，这也与我们没有领域知识的假设一致。随后运行采样器，它现在估计了三个参数 $\sigma$ 、$\beta_1$ 和 $\beta_0$。
 
@@ -682,7 +682,7 @@ trace = model.fit()
 
 ::: 
 
-由于我们将 “雄性” 编码为 $0$，因此来自 `model_penguin_mass_categorical` 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。最后一部分非常重要，通过添加第二个预测变量，我们现在有了一个多元线性回归，而同时在解释系数时必须更加小心。在这种情况下，系数通常提供了：**如果**所有其他预测变量保持不变的情况下，某个预测变量与响应变量之间的关系 [^5]。
+由于我们将 “雄性” 编码为 $0$，因此来自 `model_penguin_mass_categorical` 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。最后一部分非常重要，通过添加第二个预测变量，我们现在有了一个多元线性回归，而同时在解释系数时必须更加小心。在这种情况下，系数通常提供了：**如果**所有其他预测变量保持不变的情况下，某个预测变量与结果变量之间的关系 [^5]。
 
 ```{figure} figures/Single_Species_Categorical_Regression.png 
 :name: fig:Single_Species_Categorical_Regression  
@@ -794,7 +794,7 @@ estimated_mass = ppc_samples[-1].numpy().reshape(-1, 21)
 
 ::: {admonition} 相关性（ Correlation ）与因果性（ Causality ）
 
-在解释线性回归时，很容易将其描述为 “$X$ 的增加**导致** $Y$ 的增加”，但情况并不一定如此。事实上因果陈述不能仅从回归中得出。在数学上，回归模型将两个（或更多变量）联系在一起，但这种联系不需要是因果关系。例如，增加为植物提供的水量当然可以（并且因果地）增加植物的生长（至少在一定范围内），但没有什么能阻止我们在模型中颠倒这种关系并使用植物的生长来估计降雨量，即使植物生长不会导致降雨 [^7]。因果推断的统计子领域涉及在随机实验或观测研究背景下做出因果陈述所必需的工具和程序（ 参见第 [7](chap6) 章进行的简要讨论 ）
+在解释线性回归时，很容易将其描述为 “$X$ 的增加**导致** $Y$ 的增加”，但情况并不一定如此。事实上因果陈述不能仅从回归中得出。在数学上，回归模型将两个（或更多变量）联系在一起，但这种联系不需要是因果关系。例如，增加为植物提供的水量当然可以（并且因果地）增加植物的生长（至少在一定范围内），但没有什么能阻止我们在模型中颠倒这种关系并使用植物的生长来估计降雨量，即使植物生长不会导致降雨 [^7]。因果推断的统计子领域涉及在随机实验或观测研究背景下做出因果陈述所必需的工具和程序（ 参见 [ 第 7 章 ](chap6) 进行的简要讨论 ）
 
 ::: 
 
@@ -835,7 +835,7 @@ p = \frac{1}{1+e^{-\mathbf{X}\beta}}
 :name: fig:Logistic 
 :width: 7.00in 
 
-一个逻辑斯谛函数示例图。请注意，响应变量已被“压缩”到区间 (0,1) 中。
+一个逻辑斯谛函数示例图。请注意，结果变量已被“压缩”到区间 (0,1) 中。
 
 ``` 
 
