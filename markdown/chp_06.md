@@ -1586,7 +1586,7 @@ panel.
 ### ARIMA, Expressed as a State Space Model
 
 State space models are a unified methodology that generalized many
-classical time series models. However, it might not always be obvious
+classical time series models. Hdedeowever, it might not always be obvious
 how we can express a model in state space format. In this section we
 will look at how to express a more complex linear Gaussian state space
 model: ARMA and ARIMA. Recall the ARMA(p,q) Equation {eq}`eq:arma` from
