@@ -347,10 +347,10 @@
 <p>在本章中，我们将讨论样条曲线，它是 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中概念的延伸，旨在增加更多的灵活性。在<a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中介绍的模型中，结果变量和预测变量之间的关系在整个定义域中是相同的。相比之下，样条可以将一个问题分解为多个局部的解决方案，所有这些局部解可以组合起来生成一个有用的全局解决方案。</p>
 <div class="section" id="polynomial-regression">
 <span id="id2"></span><h2>5.1 多项式回归<a class="headerlink" href="#polynomial-regression" title="Permalink to this headline">¶</a></h2>
-<p>正如在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中所述，我们可以将线性模型写为：</p>
+<p>正如在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中所述，可以将线性模型写为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-lin-model">
 <span class="eqno">(41)<a class="headerlink" href="#equation-eq-lin-model" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \beta_0 + \beta_1 X\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(\beta_0\)</span> 是截距，<span class="math notranslate nohighlight">\(\beta_1\)</span> 是斜率，<span class="math notranslate nohighlight">\(\mathbb{E}[Y]\)</span> 是结果变量 <span class="math notranslate nohighlight">\(Y\)</span> 的期望（或均值）。我们可以将公式 <a class="reference internal" href="#equation-eq-lin-model">(41)</a> 扩展为以下形式：</p>
+<p>其中 <span class="math notranslate nohighlight">\(\beta_0\)</span> 是截距，<span class="math notranslate nohighlight">\(\beta_1\)</span> 是斜率，<span class="math notranslate nohighlight">\(\mathbb{E}[Y]\)</span> 是结果变量 <span class="math notranslate nohighlight">\(Y\)</span> 的期望（或均值）。可以将公式 <a class="reference internal" href="#equation-eq-lin-model">(41)</a> 扩展为如下形式：</p>
 <div class="math notranslate nohighlight" id="equation-eq-polynomial-reg">
 <span class="eqno">(42)<a class="headerlink" href="#equation-eq-polynomial-reg" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \beta_0 + \beta_1 X + \beta_2 X^2 + \cdots + \beta_m X^m\]</div>
 <p>上式被称为多项式回归。</p>
@@ -366,15 +366,14 @@
 </div>
 <div class="section" id="expanding-feature-space">
 <span id="id4"></span><h2>5.2 扩展特征空间<a class="headerlink" href="#expanding-feature-space" title="Permalink to this headline">¶</a></h2>
-<p>在概念层面上，我们可以将多项式回归视为创建新预测变量的药方，或者表述为更正式的术语：<strong>对特征空间进行扩展</strong>。通过执行特征扩展，我们在扩展空间中拟合的一条直线，可能代表原始数据空间中的一条曲线，非常简洁！然而，特征扩展并不是随意使用的，我们不能总是期望通过对数据使用随机的变换，就能得到好的结果。</p>
-<p>事实上，正如我们刚刚看到的那样，应用多项式并非没有问题。</p>
-<p>为了概括特征扩展的概念，除了多项式模型，我们可以将公式 <a class="reference internal" href="#equation-eq-lin-model">(41)</a> 扩展为以下形式：</p>
+<p>在概念层面上，我们可以将多项式回归视为一种创建新预测变量的方法，或者表述为更正式的术语：<strong>对特征空间进行了扩展</strong>。通过执行特征扩展，我们在扩展空间中拟合的一条直线，可能代表原始数据空间中的一条曲线，非常简洁！但特征扩展并不能随意使用，我们不能总是期望通过随意地对数据使用变换，就能得到我们享有的好结果。</p>
+<p>为了概括特征扩展的概念，可以将公式 <a class="reference internal" href="#equation-eq-lin-model">(41)</a> 进一步扩展为以下形式：</p>
 <div class="math notranslate nohighlight" id="equation-eq-bfr">
 <span class="eqno">(43)<a class="headerlink" href="#equation-eq-bfr" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \beta_0 + \beta_1 B_{1}(X_{1}) + \beta_2 B_{2}(X_{2}) + \cdots + \beta_m B_{m}(X_{m})\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(B_i\)</span> 是任意函数，我们称之为基函数。基函数的线性组合为我们提供了一个函数 <span class="math notranslate nohighlight">\(f\)</span>，它才是我们实际看到的拟合。从这个意义上说，<span class="math notranslate nohighlight">\(B_i\)</span> 是构建灵活函数 <span class="math notranslate nohighlight">\(f\)</span> 的幕后技巧。</p>
+<p>其中 <span class="math notranslate nohighlight">\(B_i\)</span> 是任意函数，我们称之为基函数。基函数的线性组合构造出一个函数 <span class="math notranslate nohighlight">\(f\)</span>，它才是真正拟合的模型。从这个意义上说，<span class="math notranslate nohighlight">\(B_i\)</span> 是构建灵活函数 <span class="math notranslate nohighlight">\(f\)</span> 的幕后君子。</p>
 <div class="math notranslate nohighlight" id="equation-eq-bfr2">
 <span class="eqno">(44)<a class="headerlink" href="#equation-eq-bfr2" title="Permalink to this equation">¶</a></span>\[\mathbb{E}[Y]= \sum_i^m \beta_i B_{i}(X_{i}) = f(X) \]</div>
-<p>基函数 <span class="math notranslate nohighlight">\(B_i\)</span> 有很多选择，多项式是其中之一，也可以应用任意一组函数，例如 <span class="math notranslate nohighlight">\(2\)</span> 的幂、对数或平方根等。选择这些函数可能是由待解决的问题驱动的，例如，在第 <a class="reference internal" href="chp_04.html#transforming-covariates"><span class="std std-ref">4.1 转换预测变量</span></a> 节中，我们通过计算平方根来模拟婴儿的身高随年龄变化的函数，其动机是人类婴儿在生命早期阶段生长得更快，然后趋于平稳，类似于平方根函数的效果。</p>
+<p>基函数 <span class="math notranslate nohighlight">\(B_i\)</span> 有很多选择，多项式是其中之一，也可以应用任意一组函数，例如 <span class="math notranslate nohighlight">\(2\)</span> 的幂、对数、平方根等。选择哪个函数通常是由待解决的问题驱动的，例如，在第 <a class="reference internal" href="chp_04.html#transforming-covariates"><span class="std std-ref">4.1 转换预测变量</span></a> 节中，我们通过平方根来模拟婴儿的身高随年龄变化的函数，其动机是人类婴儿在生命早期阶段生长得更快，然后趋于平稳，和平方根函数的效果很接近。</p>
 <p>另一种替代方法是使用 <span class="math notranslate nohighlight">\(I(c_i \leq x_k &lt; c_j)\)</span> 之类的指示函数，将原始 <span class="math notranslate nohighlight">\(\boldsymbol{X}\)</span> 预测变量分解为（非重叠的）子集。然后仅在这些子集内拟合局部的多项式。此过程导致拟合出 <strong>分段多项式</strong> <a class="footnote-reference brackets" href="#id25" id="id5">2</a>，如 <a class="reference internal" href="#fig-piecewise"><span class="std std-numref">Fig. 88</span></a> 所示。</p>
 <div class="figure align-default" id="fig-piecewise">
 <a class="reference internal image-reference" href="../_images/piecewise.png"><img alt="../_images/piecewise.png" src="../_images/piecewise.png" style="width: 8.00in;"/></a>
