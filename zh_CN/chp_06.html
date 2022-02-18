@@ -235,7 +235,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#s-ar-i-ma-x">
-     6.3.3 自回归移动平均 (S)AR(I)MA(X)
+     6.3.3 移动平均自回归 (S)AR(I)MA(X)
     </a>
 </li>
 </ul>
@@ -251,13 +251,13 @@
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
-<a class="reference internal nav-link" href="#arim">
-     6.4.2 表示为状态空间模型的 ARIM
+<a class="reference internal nav-link" href="#arima">
+     6.4.2 ARIMA 模型的状态空间表示
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#bayesian-structural-time-series">
-     6.4.3 贝叶斯结构时间序列
+     6.4.3 贝叶斯结构化的时间序列
     </a>
 </li>
 </ul>
@@ -269,12 +269,17 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#model-criticism-and-choosing-priors">
-   6.6 模型评判和先验选择
+   6.6 时间序列模型的评判和先验选择
   </a>
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id47">
+     6.6.1 时间序列模型的评估
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#priors-for-time-series-models">
-     6.6.1 时间序列模型的先验
+     6.6.2 时间序列模型的先验
     </a>
 </li>
 </ul>
@@ -346,7 +351,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#s-ar-i-ma-x">
-     6.3.3 自回归移动平均 (S)AR(I)MA(X)
+     6.3.3 移动平均自回归 (S)AR(I)MA(X)
     </a>
 </li>
 </ul>
@@ -362,13 +367,13 @@
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
-<a class="reference internal nav-link" href="#arim">
-     6.4.2 表示为状态空间模型的 ARIM
+<a class="reference internal nav-link" href="#arima">
+     6.4.2 ARIMA 模型的状态空间表示
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#bayesian-structural-time-series">
-     6.4.3 贝叶斯结构时间序列
+     6.4.3 贝叶斯结构化的时间序列
     </a>
 </li>
 </ul>
@@ -380,12 +385,17 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#model-criticism-and-choosing-priors">
-   6.6 模型评判和先验选择
+   6.6 时间序列模型的评判和先验选择
   </a>
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id47">
+     6.6.1 时间序列模型的评估
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#priors-for-time-series-models">
-     6.6.1 时间序列模型的先验
+     6.6.2 时间序列模型的先验
     </a>
 </li>
 </ul>
@@ -405,7 +415,7 @@
 <span id="id1"></span><h1>第六章: 时间序列<a class="headerlink" href="#chap4" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
 <p>“很难做出预测，尤其是关于未来的预测”。</p>
-<p>据称，荷兰政治家 <code class="docutils literal notranslate"><span class="pre">Karl</span> <span class="pre">Kristian</span> <span class="pre">Steincke</span></code> 在 <span class="math notranslate nohighlight">\(1940\)</span> 年代的某个时候说过的这句话 <a class="footnote-reference brackets" href="#id57" id="id2">1</a> 。确实如此，即便今天仍然成立，特别是你在研究时间序列问题和预报问题的时候。</p>
+<p>据称，荷兰政治家 <code class="docutils literal notranslate"><span class="pre">Karl</span> <span class="pre">Kristian</span> <span class="pre">Steincke</span></code> 在 <span class="math notranslate nohighlight">\(1940\)</span> 年代的某个时候说过的这句话 <a class="footnote-reference brackets" href="#id58" id="id2">1</a> 。确实如此，即便今天仍然成立，特别是你在研究时间序列问题和预报问题的时候。</p>
 <p>时间序列分析有很多应用，从面向未来的预报、到了解历史趋势中的潜在因子等。在本章中，我们将讨论涉及此问题域的一些贝叶斯方法。</p>
 <ul class="simple">
 <li><p>首先，我们会将时间序列建模视为一个回归问题，从时间戳信息中解析得到设计矩阵。</p></li>
@@ -418,7 +428,7 @@
 <p>在大量现实生活的应用中，人们会按时间顺序观测数据，每次观测时都会生成时间戳。除了观测本身之外，时间戳信息在以下情况中可以提供相当丰富的信息：</p>
 <ul class="simple">
 <li><p>存在一个<strong>时间趋势</strong>，例如地区人口、全球 GDP 、美国的年二氧化碳排放量等。通常这是一种整体模式，可以直观地将其标记为“增长”或“下降”。</p></li>
-<li><p>有一些与时间相关的循环模式，称为<strong>季节性（ seasonality ）</strong> <a class="footnote-reference brackets" href="#id58" id="id4">2</a>。例如，</p>
+<li><p>有一些与时间相关的循环模式，称为<strong>季节性（ seasonality ）</strong> <a class="footnote-reference brackets" href="#id59" id="id4">2</a>。例如，</p>
 <ul>
 <li><p><em>每月</em> 温度的变化（夏季较高，冬季较低）；</p></li>
 <li><p><em>每月</em> 降雨量（在世界大多数地区，冬季较低，夏季较高）；</p></li>
@@ -426,7 +436,7 @@
 <li><p><em>每小时</em> 的自行车租赁数量（白天比晚上多）。</p></li>
 </ul>
 </li>
-<li><p>当前数据点以某种方式提供了有关下一个数据点的信息。换句话说，**噪声( Noise )<strong>或</strong>残差( Residuals )**是相关的 <a class="footnote-reference brackets" href="#id59" id="id5">3</a>。例如，</p>
+<li><p>当前数据点以某种方式提供了有关下一个数据点的信息。换句话说，**噪声( Noise )<strong>或</strong>残差( Residuals )**是相关的 <a class="footnote-reference brackets" href="#id60" id="id5">3</a>。例如，</p>
 <ul>
 <li><p>服务台的每日结案数量；</p></li>
 <li><p>股票的每日价格；</p></li>
@@ -605,15 +615,15 @@
 </div>
 <p>查看 <a class="reference internal" href="#fig-fig5-posterior-predictive1"><span class="std std-numref">Fig. 106</span></a> 中的样本外预测，我们注意到：</p>
 <ol class="simple">
-<li><p>当对未来预测时，线性趋势表现不佳，给出的预测始终低于实际观测值。具体来说，大气中的二氧化碳不会以恒定的斜率线性增加 <a class="footnote-reference brackets" href="#id60" id="id9">4</a></p></li>
+<li><p>当对未来预测时，线性趋势表现不佳，给出的预测始终低于实际观测值。具体来说，大气中的二氧化碳不会以恒定的斜率线性增加 <a class="footnote-reference brackets" href="#id61" id="id9">4</a></p></li>
 <li><p>不确定性的范围几乎是恒定的，但直觉上判断，当预测更远的未来时，似乎不确定性应当增加才对（有时也称为预测锥）。</p></li>
 </ol>
 </div>
 <div class="section" id="design-matrices-for-time-series">
 <span id="id10"></span><h3>6.2.2 时间序列的设计矩阵<a class="headerlink" href="#design-matrices-for-time-series" title="Permalink to this headline">¶</a></h3>
 <p>在上面的回归模型中，使用了一个相当简单的设计矩阵。通过向设计矩阵添加额外信息，可以获得更好的模型来捕获我们对时间序列的理解。</p>
-<p>更好的趋势性分量模型通常是提高预测性能最重要的方面，因为相对而言，季节性分量 <em>通常</em> 是平稳的，具有易于估计的参数 <a class="footnote-reference brackets" href="#id61" id="id11">5</a>。因此，大多数时间序列建模都包含一个能够捕获趋势中非平稳性的隐过程（Latent Process ）。</p>
-<p>一种非常成功的方法是对趋势性分量使用 <em>局部线性过程</em> 。基本上，它是一个在某个范围内呈线性的平滑趋势，模型中的截距和系数在可观测的时间跨度内缓慢变化或漂移。这种应用的一个典型例子是 Facebook Prophet <a class="footnote-reference brackets" href="#id62" id="id12">6</a>，其中使用了 <em>半平滑阶跃线性函数（ Semi-smooth Step Linear Function ）</em> 对趋势进行建模 <span id="id13">[<a class="reference internal" href="references.html#id125">53</a>]</span> 。该模型允许斜率在某些特定断点处发生变化，进而允许我们生成比直线更好的捕获长期趋势的拟合结果。这类似于在 <a class="reference internal" href="chp_05.html#expanding-feature-space"><span class="std std-ref">5.2 扩展特征空间</span></a> 中讨论的指示函数的想法。在时间序列场景中，我们在公式 <a class="reference internal" href="#equation-eq-step-linear-function">(48)</a> 中以数学方式表达了此想法。</p>
+<p>更好的趋势性分量模型通常是提高预测性能最重要的方面，因为相对而言，季节性分量 <em>通常</em> 是平稳的，具有易于估计的参数 <a class="footnote-reference brackets" href="#id62" id="id11">5</a>。因此，大多数时间序列建模都包含一个能够捕获趋势中非平稳性的隐过程（Latent Process ）。</p>
+<p>一种非常成功的方法是对趋势性分量使用 <em>局部线性过程</em> 。基本上，它是一个在某个范围内呈线性的平滑趋势，模型中的截距和系数在可观测的时间跨度内缓慢变化或漂移。这种应用的一个典型例子是 Facebook Prophet <a class="footnote-reference brackets" href="#id63" id="id12">6</a>，其中使用了 <em>半平滑阶跃线性函数（ Semi-smooth Step Linear Function ）</em> 对趋势进行建模 <span id="id13">[<a class="reference internal" href="references.html#id125">53</a>]</span> 。该模型允许斜率在某些特定断点处发生变化，进而允许我们生成比直线更好的捕获长期趋势的拟合结果。这类似于在 <a class="reference internal" href="chp_05.html#expanding-feature-space"><span class="std std-ref">5.2 扩展特征空间</span></a> 中讨论的指示函数的想法。在时间序列场景中，我们在公式 <a class="reference internal" href="#equation-eq-step-linear-function">(48)</a> 中以数学方式表达了此想法。</p>
 <div class="math notranslate nohighlight" id="equation-eq-step-linear-function">
 <span class="eqno">(48)<a class="headerlink" href="#equation-eq-step-linear-function" title="Permalink to this equation">¶</a></span>\[g(t) = (k + \mathbf{A}\delta) t + (m + \mathbf{A} \gamma)\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(k\)</span> 是（全局）增长率，<span class="math notranslate nohighlight">\(\delta\)</span> 是每个变化点的调整率向量，<span class="math notranslate nohighlight">\(m\)</span> 是（全局）截距。<span class="math notranslate nohighlight">\(\mathbf{A}\)</span> 是一个 <code class="docutils literal notranslate"><span class="pre">shape=(n_t,</span> <span class="pre">n_s)</span></code> 的矩阵，其中 <span class="math notranslate nohighlight">\(n_s\)</span> 是变化点的数量。在时间 <span class="math notranslate nohighlight">\(t\)</span>，<span class="math notranslate nohighlight">\(\mathbf{A}\)</span> 累积斜率的漂移效应 <span class="math notranslate nohighlight">\(\delta\)</span>。 <span class="math notranslate nohighlight">\(\gamma\)</span> 设置为 <span class="math notranslate nohighlight">\(-s_j \times \delta_j\)</span>（其中 <span class="math notranslate nohighlight">\(s_j\)</span> 是 <span class="math notranslate nohighlight">\(n_s\)</span> 个变化点的时间位置）以使趋势线连续。</p>
@@ -665,7 +675,7 @@
 <p class="caption"><span class="caption-number">Fig. 108 </span><span class="caption-text"><span class="math notranslate nohighlight">\(n=3\)</span> 的傅立叶基函数。总共有 <span class="math notranslate nohighlight">\(6\)</span> 个预测变量，我们通过将其余的设置为半透明来突出显示第一个。</span><a class="headerlink" href="#fig-fig7-fourier-basis" title="Permalink to this image">¶</a></p>
 </div>
 <p>使用上述傅里叶基函数生成的设计矩阵拟合季节性需要估计 <span class="math notranslate nohighlight">\(2N\)</span> 个参数 <span class="math notranslate nohighlight">\(\beta = [a_1, b_1, \dots , a_N , b_N]\)</span>。</p>
-<p>像 Facebook Prophet 这样的回归模型也被称为广义可加模型 (GAM)，因为其结果变量 <span class="math notranslate nohighlight">\(Y_t\)</span> 线性依赖于未知的平滑基函数 <a class="footnote-reference brackets" href="#id63" id="id18">7</a>。我们之前在第 <a class="reference internal" href="chp_05.html#chap3-5"><span class="std std-ref">5</span></a> 章中也讨论了其他 GAM。</p>
+<p>像 Facebook Prophet 这样的回归模型也被称为广义可加模型 (GAM)，因为其结果变量 <span class="math notranslate nohighlight">\(Y_t\)</span> 线性依赖于未知的平滑基函数 <a class="footnote-reference brackets" href="#id64" id="id18">7</a>。我们之前在第 <a class="reference internal" href="chp_05.html#chap3-5"><span class="std std-ref">5</span></a> 章中也讨论了其他 GAM。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">设计矩阵的数学性质</p>
 <p>设计矩阵的数学性质在线性最小二乘问题设置中得到了相当广泛的研究，我们想要求解 <span class="math notranslate nohighlight">\(min \mid Y - \mathbf{X} \beta \mid ^{2}\)</span> 的 <span class="math notranslate nohighlight">\(\beta\)</span>。通过检查矩阵 <span class="math notranslate nohighlight">\(\mathbf{X}^T \mathbf{X}\)</span> 的性质，我们通常可以了解 <span class="math notranslate nohighlight">\(\beta\)</span> 解的稳定程度，甚至可能得到一个解。其中一个性质是条件数，它是 <span class="math notranslate nohighlight">\(\beta\)</span> 的解是否容易出现较大数值误差的指示器。例如，如果设计矩阵包含高相关（多重共线性）的列，则条件数会很大，并且矩阵 <span class="math notranslate nohighlight">\(\mathbf{X}^T \mathbf{X}\)</span> 是病态的。类似原理也适用于贝叶斯建模。</p>
@@ -870,7 +880,7 @@
 </div>
 </div>
 <p><strong>（3）通过修改设计矩阵实现自回归</strong></p>
-<p>另外一种实现 <span class="math notranslate nohighlight">\(AR(1)\)</span> 模型方法，是将线性回归概念扩展为在设计矩阵中包含一个观测相关列，并将该列的元素 <span class="math notranslate nohighlight">\(x_i\)</span> 设置为 <span class="math notranslate nohighlight">\(y_{i-1}\)</span>。然后，自回归系数 <span class="math notranslate nohighlight">\(\rho\)</span> 与任何其他回归系数没有什么不同，这只是告诉我们，先前观测对当前观测的期望的线性贡献是什么 <a class="footnote-reference brackets" href="#id64" id="id22">8</a>。在这个模型中，检查 <span class="math notranslate nohighlight">\(\rho\)</span> 的后验分布后，我们发现这种影响几乎可以忽略不计（ 参见 <a class="reference internal" href="#fig-fig11-ar1-likelihood-rho"><span class="std std-numref">Fig. 112</span></a> ）：</p>
+<p>另外一种实现 <span class="math notranslate nohighlight">\(AR(1)\)</span> 模型方法，是将线性回归概念扩展为在设计矩阵中包含一个观测相关列，并将该列的元素 <span class="math notranslate nohighlight">\(x_i\)</span> 设置为 <span class="math notranslate nohighlight">\(y_{i-1}\)</span>。然后，自回归系数 <span class="math notranslate nohighlight">\(\rho\)</span> 与任何其他回归系数没有什么不同，这只是告诉我们，先前观测对当前观测的期望的线性贡献是什么 <a class="footnote-reference brackets" href="#id65" id="id22">8</a>。在这个模型中，检查 <span class="math notranslate nohighlight">\(\rho\)</span> 的后验分布后，我们发现这种影响几乎可以忽略不计（ 参见 <a class="reference internal" href="#fig-fig11-ar1-likelihood-rho"><span class="std std-numref">Fig. 112</span></a> ）：</p>
 <div class="figure align-default" id="fig-fig11-ar1-likelihood-rho">
 <a class="reference internal image-reference" href="../_images/fig11_ar1_likelihood_rho.png"><img alt="../_images/fig11_ar1_likelihood_rho.png" src="../_images/fig11_ar1_likelihood_rho.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 112 </span><span class="caption-text">在代码 <a class="reference internal" href="#gam-with-ar-likelihood"><span class="std std-ref">gam_with_ar_likelihood</span></a> 中定义的 <em>类 Facebook Prophet</em> 似然函数参数的后验分布。最左边的子图是具有高斯似然的模型中的 <span class="math notranslate nohighlight">\(\sigma\)</span>，中间和最右边的子图是具有 <span class="math notranslate nohighlight">\(AR(1)\)</span> 似然的模型中的 <span class="math notranslate nohighlight">\(\sigma\)</span> 和 <span class="math notranslate nohighlight">\(\rho\)</span>。两个模型都返回了相似的 <span class="math notranslate nohighlight">\(\sigma\)</span> 估计值，<span class="math notranslate nohighlight">\(\rho\)</span> 估计值以 <span class="math notranslate nohighlight">\(0\)</span> 为中心。</span><a class="headerlink" href="#fig-fig11-ar1-likelihood-rho" title="Permalink to this image">¶</a></p>
@@ -964,37 +974,37 @@ y_i &amp; \sim \mathcal{N}(z_i,   \alpha \sigma^2)
 <a class="reference internal image-reference" href="../_images/fig14_smoothing_with_gw.png"><img alt="../_images/fig14_smoothing_with_gw.png" src="../_images/fig14_smoothing_with_gw.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 115 </span><span class="caption-text">来自 <span class="math notranslate nohighlight">\(y \sim \text{Normal}(f(x), 1)\)</span> 的模拟观测结果 <span class="math notranslate nohighlight">\(f(x) = e^{1 + x^{0.5} - e^{\frac{x}{15} }}\)</span>，以及推断的隐高斯随机游走。灰色半透明区域是隐高斯随机游走 <span class="math notranslate nohighlight">\(z\)</span> 的后验 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间，后验均值图为蓝色虚线。</span><a class="headerlink" href="#fig-fig14-smoothing-with-gw" title="Permalink to this image">¶</a></p>
 </div>
-<p>自回归过程还有一些其他有趣的性质，与高斯过程 <span id="id24">[<a class="reference internal" href="references.html#id91">52</a>]</span> 有关。例如，你可能会发现单单靠自回归模型无法捕获长期的趋势。尽管模型对观测数据拟合得很好，但预测结果会快速回归到最后几个时间步的均值，与均值函数为常数的高斯过程表现相似 <a class="footnote-reference brackets" href="#id65" id="id25">9</a> 。</p>
+<p>自回归过程还有一些其他有趣的性质，与高斯过程 <span id="id24">[<a class="reference internal" href="references.html#id91">52</a>]</span> 有关。例如，你可能会发现单单靠自回归模型无法捕获长期的趋势。尽管模型对观测数据拟合得很好，但预测结果会快速回归到最后几个时间步的均值，与均值函数为常数的高斯过程表现相似 <a class="footnote-reference brackets" href="#id66" id="id25">9</a> 。</p>
 <p>自回归分量作为一个加性的趋势性分量，可能会给模型推断带来一些挑战。例如，难以适应大规模数据，因为我们需要添加一个与时间观测序列大小相同的随机变量。当趋势性分量和自回归过程都灵活时，我们可能会得到一个无法辨识的模型，因为自回归过程本身已经有能力近似观测数据的潜在趋势（平滑函数）了。</p>
 </div>
 <div class="section" id="s-ar-i-ma-x">
-<span id="sarimax"></span><h3>6.3.3 自回归移动平均 (S)AR(I)MA(X)<a class="headerlink" href="#s-ar-i-ma-x" title="Permalink to this headline">¶</a></h3>
+<span id="sarimax"></span><h3>6.3.3 移动平均自回归 (S)AR(I)MA(X)<a class="headerlink" href="#s-ar-i-ma-x" title="Permalink to this headline">¶</a></h3>
 <p>许多经典的时间序列模型，共享一个相似的类自回归模式，其中在时间 <span class="math notranslate nohighlight">\(t\)</span> 处存在一些依赖于当前观测值（和/或 <span class="math notranslate nohighlight">\(t-k\)</span> 处的另外一个参数值）的隐参数。其中两个典型的例子是：</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">自回归条件异方差</span> <span class="pre">(</span> <span class="pre">ARCH</span> <span class="pre">)</span> <span class="pre">模型</span></code> ，该模型中残差的尺度会随时间变化；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">移动平均</span> <span class="pre">(</span> <span class="pre">MA</span> <span class="pre">)</span> <span class="pre">模型</span></code>，该模型在时间序列的均值上，加入历史时间步残差的某种线性组合值作为当前点处的残差。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">移动平均</span> <span class="pre">(</span> <span class="pre">MA</span> <span class="pre">)</span> <span class="pre">模型</span></code>，该模型在时间序列的均值上，加入历史时间步残差的某种线性组合值作为当前时间步的残差。</p></li>
 </ul>
-<p>这些经典的时间序列模型，可以组合形成更复杂的模型。其中一种扩展是 <code class="docutils literal notranslate"><span class="pre">具有外生回归量的季节性自回归移动平均模型（</span> <span class="pre">Seasonal</span> <span class="pre">AutoRegressive</span> <span class="pre">Integrated</span> <span class="pre">Moving</span> <span class="pre">Average</span> <span class="pre">with</span> <span class="pre">eXogenous</span> <span class="pre">regressors</span> <span class="pre">model,</span> <span class="pre">SARIMAX）</span></code>。虽然命名看起来吓人，但基本上就是自回归和移动平均模型的直接组合。用移动平均来扩展自回归模型，可以得到具有一般性的 <code class="docutils literal notranslate"><span class="pre">自回归移动平均（</span> <span class="pre">ARMA</span> <span class="pre">）</span> <span class="pre">模型</span></code>：</p>
+<p>这些经典的时间序列模型，可以组合形成更复杂的模型。其中一种扩展是 <code class="docutils literal notranslate"><span class="pre">具有外生回归量的整合移动平均季节性自回归模型（</span> <span class="pre">Seasonal</span> <span class="pre">AutoRegressive</span> <span class="pre">Integrated</span> <span class="pre">Moving</span> <span class="pre">Average</span> <span class="pre">with</span> <span class="pre">eXogenous</span> <span class="pre">regressors</span> <span class="pre">model,</span> <span class="pre">SARIMAX）</span></code>。虽然命名看起来吓人，但基本上就是自回归和移动平均模型的直接组合。用移动平均来扩展自回归模型，可以得到具有一般性的 <code class="docutils literal notranslate"><span class="pre">自回归移动平均（</span> <span class="pre">ARMA</span> <span class="pre">）</span> <span class="pre">模型</span></code>：</p>
 <div class="math notranslate nohighlight" id="equation-eq-arma">
 <span class="eqno">(53)<a class="headerlink" href="#equation-eq-arma" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 y_t &amp; = \alpha + \sum_{i=1}^{p}\phi_i y_{t-i} + \sum_{j=1}^{q}\theta_j \epsilon_{t-j} + \epsilon_t \\
 \epsilon_t &amp; \sim \mathcal{N}(0, \sigma^2)
 \end{split}\end{split}\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(p\)</span> 是自回归模型的阶数，<span class="math notranslate nohighlight">\(q\)</span> 是移动平均模型的阶数。通常会将此模型记为 <span class="math notranslate nohighlight">\(ARMA(p, q)\)</span> 。进一步的，对于季节性自回归移动平均模型（ SARMA ），我们有：</p>
+<p>其中 <span class="math notranslate nohighlight">\(p\)</span> 是自回归模型的阶数，<span class="math notranslate nohighlight">\(q\)</span> 是移动平均模型的阶数。通常会将此模型记为 <span class="math notranslate nohighlight">\(ARMA(p, q)\)</span> 。进一步的，对于移动平均季节性自回归模型（ SARMA ），我们有：</p>
 <div class="math notranslate nohighlight" id="equation-eq-sarma">
 <span class="eqno">(54)<a class="headerlink" href="#equation-eq-sarma" title="Permalink to this equation">¶</a></span>\[\begin{split}
 y_t = \alpha + \sum_{i=1}^{p}\phi_i y_{t-period-i} + \sum_{j=1}^{q}\theta_j \epsilon_{t-period-j} + \epsilon_t
 \end{split}\]</div>
-<p>而在 <code class="docutils literal notranslate"><span class="pre">自回归积分移动平均（AutoRegressive</span> <span class="pre">Integrated</span> <span class="pre">Moving</span> <span class="pre">Average,</span> <span class="pre">ARIMA）</span> <span class="pre">模型</span></code> 中，积分部分是指时间序列的一个被称为 <strong>积分阶数（ Order of Integration ）</strong> 的统计量，表示为 <span class="math notranslate nohighlight">\(I(d)\)</span> 。如果一个时间序列重复做 <span class="math notranslate nohighlight">\(d\)</span> 次差分后仍然能够产生平稳序列，就称其被积分到了 <span class="math notranslate nohighlight">\(d\)</span> 阶。遵从 <span id="id26">Box <em>et al.</em> [<a class="reference internal" href="references.html#id130">57</a>]</span> 的定义 ，我们将反复获取时间观测序列的差作为预处理步骤，来解释 <span class="math notranslate nohighlight">\(ARIMA(p,d,q)\)</span> 模型的 <span class="math notranslate nohighlight">\(I(d)\)</span> 部分，并对差分序列结果建模为一个带 <span class="math notranslate nohighlight">\(ARMA(p,q)\)</span> 的平稳过程。该运算本身在 Python 中相当普遍，可以使用 <code class="docutils literal notranslate"><span class="pre">numpy.diff</span></code> 实现，其中计算的第一个差分是沿给定轴的 <code class="docutils literal notranslate"><span class="pre">delta_y[i]</span> <span class="pre">=</span> <span class="pre">y[i]</span> <span class="pre">-</span> <span class="pre">y[i-1]</span></code>，通过在给定轴上递归重复相同运算来计算更高阶的差分结果数组。</p>
-<p>如果我们有一个额外的回归量 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>，在上面模型中 <span class="math notranslate nohighlight">\(\alpha\)</span> 被线性预测 <span class="math notranslate nohighlight">\(\mathbf{X} \beta\)</span> 替换。如果 <span class="math notranslate nohighlight">\(d &gt; 0\)</span>，我们将对 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 应用相同的差分运算。</p>
-<p>此外请注意，我们可以有季节性（ <code class="docutils literal notranslate"><span class="pre">SARIMA</span></code> ）或外生回归（ <code class="docutils literal notranslate"><span class="pre">ARIMAX</span></code> ），但不能同时有。</p>
+<p>而在 <code class="docutils literal notranslate"><span class="pre">整合移动平均自回归模型（AutoRegressive</span> <span class="pre">Integrated</span> <span class="pre">Moving</span> <span class="pre">Average,</span> <span class="pre">ARIMA）</span></code> 中，”整合“是指对原始观测值进行差分处理，以使生成一个平稳的时间序列（即用当前时间步与之前时间步的数据值之差来代替当前数据值）。原始观测值被差分的次数被称为 <strong>整合阶数（ Order of Integration ）</strong> ，表示为 <span class="math notranslate nohighlight">\(I(d)\)</span> 。如果一个时间序列重复做 <span class="math notranslate nohighlight">\(d\)</span> 次差分后仍然能够生成平稳序列，就称其被整合到了 <span class="math notranslate nohighlight">\(d\)</span> 阶。遵从 <span id="id26">Box <em>et al.</em> [<a class="reference internal" href="references.html#id130">57</a>]</span> 的定义 ，我们将时间观测序列的差分作为预处理步骤，来解释 <span class="math notranslate nohighlight">\(ARIMA(p,d,q)\)</span> 模型的 <span class="math notranslate nohighlight">\(I(d)\)</span> 部分，并将差分结果序列建模为一个带 <span class="math notranslate nohighlight">\(ARMA(p,q)\)</span> 的平稳过程。该运算本身在 Python 中相当普遍，可以使用 <code class="docutils literal notranslate"><span class="pre">numpy.diff</span></code> 实现，其中计算的第一个差分是沿给定轴的 <code class="docutils literal notranslate"><span class="pre">delta_y[i]</span> <span class="pre">=</span> <span class="pre">y[i]</span> <span class="pre">-</span> <span class="pre">y[i-1]</span></code>，通过在给定轴上递归重复相同运算来计算更高阶的差分结果数组。</p>
+<p>如果我们有一个额外的回归量 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>，并将上述模型中的 <span class="math notranslate nohighlight">\(\alpha\)</span> 替换为线性预测 <span class="math notranslate nohighlight">\(\mathbf{X} \beta\)</span> 。如果模型设置 <span class="math notranslate nohighlight">\(d &gt; 0\)</span>，则我们也会对 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 做相应的差分处理。</p>
+<p>此外请注意，我们可以有季节性回归（ <code class="docutils literal notranslate"><span class="pre">SARIMA</span></code> ）或外生回归（ <code class="docutils literal notranslate"><span class="pre">ARIMAX</span></code> ），但不能同时有。</p>
 <div class="admonition-s-ar-i-ma-x admonition">
 <p class="admonition-title">(S)AR(I)MA(X) 的概念</p>
-<p>通常，ARIMA 模型表示为 <span class="math notranslate nohighlight">\(ARIMA(p,d,q)\)</span>，也就是说，我们有一个包含 <span class="math notranslate nohighlight">\(p\)</span> 阶自回归、<span class="math notranslate nohighlight">\(d\)</span> 度积分 、 <span class="math notranslate nohighlight">\(q\)</span> 阶移动平均的模型。例如，<span class="math notranslate nohighlight">\(ARIMA(1,0,0)\)</span> 只是一个 AR(1)。</p>
-<p>我们将季节性 ARIMA 模型表示为 <span class="math notranslate nohighlight">\(\text{SARIMA}(p,d,q)(P,D,Q)_{s}\)</span>，其中 <span class="math notranslate nohighlight">\(s\)</span> 表示每个季节的周期数，大写的 <span class="math notranslate nohighlight">\(P\)</span>、<span class="math notranslate nohighlight">\(D\)</span>、<span class="math notranslate nohighlight">\(Q\)</span> 是 ARIMA 模型 <span class="math notranslate nohighlight">\(p\)</span>、<span class="math notranslate nohighlight">\(d\)</span>、<span class="math notranslate nohighlight">\(q\)</span> 的季节性计数器部分。有时季节性 ARIMA 也表示为 <span class="math notranslate nohighlight">\(\text{SARIMA}(p,d,q)(P,D,Q,s)\)</span>。</p>
-<p>如果有外生回归量，我们记为 <span class="math notranslate nohighlight">\(\text{ARIMAX}(p,d,q)\mathbf{X}[k]\)</span> ，其中 <span class="math notranslate nohighlight">\(\mathbf{X}[k]\)</span> 表示包含 <span class="math notranslate nohighlight">\(k\)</span> 列的设计矩阵 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>。</p>
+<p>整合移动平均自回归（ ARIMA ）模型通常表示为 <span class="math notranslate nohighlight">\(ARIMA(p,d,q)\)</span>，也就是说，我们有一个自回归阶数为 <span class="math notranslate nohighlight">\(p\)</span> 、整合度数为 <span class="math notranslate nohighlight">\(d\)</span> 、移动平均阶数为 <span class="math notranslate nohighlight">\(q\)</span> 的自回归模型。因此，<span class="math notranslate nohighlight">\(ARIMA(1,0,0)\)</span> 等价于 <span class="math notranslate nohighlight">\(AR(1)\)</span>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">季节性</span> <span class="pre">ARIMA</span> <span class="pre">模型</span></code>通常被表示为 <span class="math notranslate nohighlight">\(\text{SARIMA}(p,d,q)(P,D,Q)_{s}\)</span>，其中 <span class="math notranslate nohighlight">\(s\)</span> 表示每个季节的周期数，而大写的 <span class="math notranslate nohighlight">\(P\)</span>、<span class="math notranslate nohighlight">\(D\)</span>、<span class="math notranslate nohighlight">\(Q\)</span> 则分别是模型 <span class="math notranslate nohighlight">\(p\)</span>、<span class="math notranslate nohighlight">\(d\)</span>、<span class="math notranslate nohighlight">\(q\)</span> 的季节性计数部分。有时<code class="docutils literal notranslate"><span class="pre">季节性</span> <span class="pre">ARIMA</span></code> 也表示为 <span class="math notranslate nohighlight">\(\text{SARIMA}(p,d,q)(P,D,Q,s)\)</span>。</p>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">ARIMA</span> <span class="pre">模型</span></code> 存在外生的回归量，则通常记为 <span class="math notranslate nohighlight">\(\text{ARIMAX}(p,d,q)\mathbf{X}[k]\)</span> ，其中 <span class="math notranslate nohighlight">\(\mathbf{X}[k]\)</span> 表示我们的设计矩阵 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> 包含 <span class="math notranslate nohighlight">\(k\)</span> 列。</p>
 </div>
-<p>作为本章的第二个例子，我们将使用不同的 ARIMA 对美国从 <span class="math notranslate nohighlight">\(1948\)</span> 年到 <span class="math notranslate nohighlight">\(1979\)</span> 年的月活产率时间序列进行建模<span id="id27">[<a class="reference internal" href="references.html#id132">58</a>]</span>。数据显示在 <a class="reference internal" href="#fig-fig15-birth-by-month"><span class="std std-numref">Fig. 116</span></a> 中。</p>
+<p>作为本章的第二个例子，我们将使用不同的 <code class="docutils literal notranslate"><span class="pre">ARIMA</span> <span class="pre">模型</span></code> 对美国从 <span class="math notranslate nohighlight">\(1948\)</span> 年到 <span class="math notranslate nohighlight">\(1979\)</span> 年的月活产率时间序列进行建模<span id="id27">[<a class="reference internal" href="references.html#id132">58</a>]</span>。数据显示在 <a class="reference internal" href="#fig-fig15-birth-by-month"><span class="std std-numref">Fig. 116</span></a> 中。</p>
 <div class="figure align-default" id="fig-fig15-birth-by-month">
 <a class="reference internal image-reference" href="../_images/fig15_birth_by_month.png"><img alt="../_images/fig15_birth_by_month.png" src="../_images/fig15_birth_by_month.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 116 </span><span class="caption-text">美国的月活产婴儿（1948-1979 年）。 <span class="math notranslate nohighlight">\(Y\)</span> 轴显示出生人数（以千计）。</span><a class="headerlink" href="#fig-fig15-birth-by-month" title="Permalink to this image">¶</a></p>
@@ -1019,7 +1029,8 @@ y_t = \alpha + \sum_{i=1}^{p}\phi_i y_{t-period-i} + \sum_{j=1}^{q}\theta_j \eps
 </pre></div>
 </div>
 </div>
-<p>在撰写本文时，TFP 没有 ARMA 分布的专门实现。为了运行 SARIMA 模型的推断，TFP 需要一个 Python 的 <code class="docutils literal notranslate"><span class="pre">callable</span></code> 来表示对数后验密度函数（直到某个常数 <span id="id28">[<a class="reference internal" href="references.html#id133">30</a>]</span>）。在这种情况下，我们可以通过实现似然函数 <span class="math notranslate nohighlight">\(\text{SARMA}(1, 1)(1, 1)_{12}\)</span> 来得到它（ 因为 <span class="math notranslate nohighlight">\(\text{I}\)</span> 部分已经通过差分处理实现 ）。我们在代码 <a class="reference internal" href="#sarima-likelihood"><span class="std std-ref">sarima_likelihood</span></a> 使用 <code class="docutils literal notranslate"><span class="pre">tf.while_loop</span></code> 构造残差时间序列 <span class="math notranslate nohighlight">\(\epsilon_t\)</span> 并在 <span class="math notranslate nohighlight">\(\text{Normal}\)</span> 分布 <a class="footnote-reference brackets" href="#id66" id="id29">10</a> 上进行估值。从编程角度来看，这里的最大挑战是确保当我们对时间序列进行索引时，张量形状是正确的。为了避免额外的控制流来检查索引是否有效（ 例如，当 <span class="math notranslate nohighlight">\(t=0\)</span> 时，我们不能索引到 <span class="math notranslate nohighlight">\(t-1\)</span> 和 <span class="math notranslate nohighlight">\(t-period-1\)</span> )，我们用零来填充时间序列。</p>
+<p>在撰写本文时，<code class="docutils literal notranslate"><span class="pre">TFP</span></code> 没有专门的 <code class="docutils literal notranslate"><span class="pre">ARMA</span> <span class="pre">分布</span></code> 。为了运行 <code class="docutils literal notranslate"><span class="pre">SARIMA</span> <span class="pre">模型</span></code>的推断，<code class="docutils literal notranslate"><span class="pre">TFP</span></code> 需要一个 Python 的 <code class="docutils literal notranslate"><span class="pre">callable</span></code> 可调用对象来表示对数后验密度函数（ 最大值为某个常数 ） <span id="id28">[<a class="reference internal" href="references.html#id133">30</a>]</span> 。在此情况下，可以将其实现为似然函数 <span class="math notranslate nohighlight">\(\text{SARMA}(1, 1)(1, 1)_{12}\)</span>（ 注： 整合部分 <span class="math notranslate nohighlight">\(\text{I}\)</span> 通过差分预处理实现 ）。</p>
+<p>我们在代码 <a class="reference internal" href="#sarima-likelihood"><span class="std std-ref">sarima_likelihood</span></a> 使用 <code class="docutils literal notranslate"><span class="pre">tf.while_loop</span></code> 构造残差时间序列 <span class="math notranslate nohighlight">\(\epsilon_t\)</span> ，并在高斯分布上进行估计 <a class="footnote-reference brackets" href="#id67" id="id29">10</a> 。从编程角度来看，这里最大的挑战是当我们对时间序列进行索引时，确保张量形状是正确的。为了避免额外的控制流来检查索引是否有效（ 例如，当 <span class="math notranslate nohighlight">\(t=0\)</span> 时，我们是不能索引 <span class="math notranslate nohighlight">\(t-1\)</span> 和 <span class="math notranslate nohighlight">\(t-period-1\)</span> 的 ），采用零对时间序列进行了填充。</p>
 <div class="literal-block-wrapper docutils container" id="sarima-likelihood">
 <div class="code-block-caption"><span class="caption-number">Listing 89 </span><span class="caption-text">sarima_likelihood</span><a class="headerlink" href="#sarima-likelihood" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">likelihood</span><span class="p">(</span><span class="n">mu0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">sphi</span><span class="p">,</span> <span class="n">stheta</span><span class="p">):</span>
@@ -1064,7 +1075,7 @@ y_t = \alpha + \sum_{i=1}^{p}\phi_i y_{t-period-i} + \sum_{j=1}^{q}\theta_j \eps
 </pre></div>
 </div>
 </div>
-<p>添加未知参数的先验（ 当前情况下为 <code class="docutils literal notranslate"><span class="pre">mu0</span></code>、<code class="docutils literal notranslate"><span class="pre">sigma</span></code>、<code class="docutils literal notranslate"><span class="pre">phi</span></code>、<code class="docutils literal notranslate"><span class="pre">theta</span></code>、<code class="docutils literal notranslate"><span class="pre">sphi</span></code> 和 <code class="docutils literal notranslate"><span class="pre">stheta</span></code> ），我们可以生成用于推断的后验密度函数。这显示在代码 <a class="reference internal" href="#sarima-posterior"><span class="std std-ref">sarima_posterior</span></a> 中，我们从代码 <a class="reference internal" href="#sarima-posterior"><span class="std std-ref">sarima_posterior</span></a> <a class="footnote-reference brackets" href="#id67" id="id30">11</a> 中采样得到 <code class="docutils literal notranslate"><span class="pre">target_log_prob_fn</span></code>。</p>
+<p>在代码 <a class="reference internal" href="#sarima-posterior"><span class="std std-ref">sarima_posterior</span></a> 中，我们为未知参数（ <code class="docutils literal notranslate"><span class="pre">mu0</span></code>、<code class="docutils literal notranslate"><span class="pre">sigma</span></code>、<code class="docutils literal notranslate"><span class="pre">phi</span></code>、<code class="docutils literal notranslate"><span class="pre">theta</span></code>、<code class="docutils literal notranslate"><span class="pre">sphi</span></code> 和 <code class="docutils literal notranslate"><span class="pre">stheta</span></code> ）添加了先验，并创建了用于推断的后验密度函数 <code class="docutils literal notranslate"><span class="pre">target_log_prob_fn</span></code> <a class="footnote-reference brackets" href="#id68" id="id30">11</a> 。</p>
 <div class="literal-block-wrapper docutils container" id="sarima-posterior">
 <div class="code-block-caption"><span class="caption-number">Listing 90 </span><span class="caption-text">sarima_posterior</span><a class="headerlink" href="#sarima-posterior" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@tfd</span><span class="o">.</span><span class="n">JointDistributionCoroutine</span>
@@ -1081,7 +1092,7 @@ y_t = \alpha + \sum_{i=1}^{p}\phi_i y_{t-period-i} + \sum_{j=1}^{q}\theta_j \eps
 </pre></div>
 </div>
 </div>
-<p>时间序列的预处理以解释代码 <a class="reference internal" href="#sarima-preprocess"><span class="std std-ref">sarima_preprocess</span></a> 中的 <em>积分</em> 部分，代码 <a class="reference internal" href="#sarima-likelihood"><span class="std std-ref">sarima_likelihood</span></a> 中实现的似然函数可以重构为一个可灵活生成不同SARIMA 似然函数的 Python 语言 helper 类。例如，<a class="reference internal" href="#tab-loo-sarima"><span class="std std-numref">Table 13</span></a> 显示了代码 <a class="reference internal" href="#sarima-posterior"><span class="std std-ref">sarima_posterior</span></a> 中的 $<span class="math notranslate nohighlight">\(\text{SARIMA}(1,1,1)(1,1,1)_{12}\)</span> 模型与相似的 <span class="math notranslate nohighlight">\(\text{SARIMA}(0,1,2)(1,1,1)_{12}\)</span> 模型之间的比较。</p>
+<p>代码 <a class="reference internal" href="#sarima-preprocess"><span class="std std-ref">sarima_preprocess</span></a> 中时间序列的预处理可以解释 <em>整合</em> 部分，代码 <a class="reference internal" href="#sarima-likelihood"><span class="std std-ref">sarima_likelihood</span></a> 中实现的似然函数可以重构为一个可灵活生成不同 <code class="docutils literal notranslate"><span class="pre">SARIMA</span> <span class="pre">似然函数</span></code> 的 Python 语言 helper 类。例如，<a class="reference internal" href="#tab-loo-sarima"><span class="std std-numref">Table 13</span></a> 显示了代码 <a class="reference internal" href="#sarima-posterior"><span class="std std-ref">sarima_posterior</span></a> 中的 $<span class="math notranslate nohighlight">\(\text{SARIMA}(1,1,1)(1,1,1)_{12}\)</span> 模型与相似的 <span class="math notranslate nohighlight">\(\text{SARIMA}(0,1,2)(1,1,1)_{12}\)</span> 模型之间的比较。</p>
 <table class="table" id="tab-loo-sarima">
 <caption><span class="caption-number">Table 13 </span><span class="caption-text">使用 LOO（对数标度）对不同 SARIMA 模型进行模型比较的汇总数据。</span><a class="headerlink" href="#tab-loo-sarima" title="Permalink to this table">¶</a></caption>
 <colgroup>
@@ -1128,7 +1139,8 @@ y_t = \alpha + \sum_{i=1}^{p}\phi_i y_{t-period-i} + \sum_{j=1}^{q}\theta_j \eps
 </div>
 <div class="section" id="state-space-models">
 <span id="id31"></span><h2>6.4 状态空间模型<a class="headerlink" href="#state-space-models" title="Permalink to this headline">¶</a></h2>
-<p>在代码 <a class="reference internal" href="#sarima-likelihood"><span class="std std-ref">sarima_likelihood</span></a>的 ARMA 对数似然函数中，我们对时间步进行迭代以便以观测为条件构建一些隐变量。实际上，除非模型非常具体和简单（例如，每两个连续时间步长之间的马尔可夫依赖关系可以将生成过程简化为向量化操作，而非迭代），否则这种递归模式是表达时间序列模型的一种非常自然的方式。这种模式的一个强大而通用的形式是<strong>状态空间模型（ Status Space Model ）</strong>，该模型是一个离散时间过程，其中假设在每个时间步，一些隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 由前一步 <span class="math notranslate nohighlight">\(X_{t-1}\)</span> 演变而来（ 马尔可夫序列 ），而观测值 <span class="math notranslate nohighlight">\(Y_t\)</span> 则是从 <span class="math notranslate nohighlight">\(X_t\)</span> 所在的隐状态空间到观测空间的某种投影 <a class="footnote-reference brackets" href="#id68" id="id32">12</a> ：</p>
+<p>在代码 <a class="reference internal" href="#sarima-likelihood"><span class="std std-ref">sarima_likelihood</span></a> 所指定模型的对数似然函数中，我们对时间步进行迭代，以便以观测为条件创建一些隐变量。实际上，除非模型非常具体和简单以至于能够使用向量化操作（例如，每两个连续时间步长之间的马尔可夫依赖关系可以将生成过程简化为向量化操作，而非迭代），否则迭代模式是表达时间序列模型的一种非常自然的方式。</p>
+<p><strong>状态空间模型（ Status Space Model ）</strong> 是这种迭代模式的一种通用形式，该模型对一个离散时间过程进行建模，假设在每个时间步，存在一些由前一步 <span class="math notranslate nohighlight">\(X_{t-1}\)</span> 演变而来隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> （ 马尔可夫序列 ），而观测值 <span class="math notranslate nohighlight">\(Y_t\)</span> 则是从 <span class="math notranslate nohighlight">\(X_t\)</span> 所在的隐状态空间到观测空间的某种投影 <a class="footnote-reference brackets" href="#id69" id="id32">12</a> ：</p>
 <div class="math notranslate nohighlight" id="equation-eq-state-space-model">
 <span class="eqno">(55)<a class="headerlink" href="#equation-eq-state-space-model" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 X_0 &amp; \sim p(X_0) \\
@@ -1136,46 +1148,37 @@ X_0 &amp; \sim p(X_0) \\
  Y_t &amp; \sim p^{\psi}(Y_t \mid X_t) \\
  X_{t+1} &amp; \sim p^{\theta}(X_{t+1} \mid X_{t})
 \end{split}\end{split}\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(p(X_0)\)</span> 是时间步 <span class="math notranslate nohighlight">\(0\)</span> 处隐状态的先验分布，<span class="math notranslate nohighlight">\(p^{\theta}(X_{t+1} \mid X_t)\)</span> 是由参数向量 <span class="math notranslate nohighlight">\(\theta\)</span> 参数化的转移概率， 其中 <span class="math notranslate nohighlight">\(\theta\)</span> 描述了系统动力学。<span class="math notranslate nohighlight">\(p^{\psi}(Y_t \mid X_t)\)</span> 是由参数向量 <span class="math notranslate nohighlight">\(\psi\)</span> 参数化的观测概率，描述了时间 <span class="math notranslate nohighlight">\(t\)</span> 时隐状态条件下的测量值。</p>
+<p>其中 <span class="math notranslate nohighlight">\(p(X_0)\)</span> 是时间步 <span class="math notranslate nohighlight">\(0\)</span> 处隐状态的先验分布，<span class="math notranslate nohighlight">\(p^{\theta}(X_{t+1} \mid X_t)\)</span> 是由参数向量 <span class="math notranslate nohighlight">\(\theta\)</span> 参数化的转移概率， 其中 <span class="math notranslate nohighlight">\(\theta\)</span> 描述了某种系统动力学。<span class="math notranslate nohighlight">\(p^{\psi}(Y_t \mid X_t)\)</span> 是由向量 <span class="math notranslate nohighlight">\(\psi\)</span> 参数化的观测概率，描述了时间 <span class="math notranslate nohighlight">\(t\)</span> 时隐状态条件下的测量值。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">实现高效计算的状态空间模型</p>
-<p>使用 <code class="docutils literal notranslate"><span class="pre">tf.while_loop</span></code> 或 <code class="docutils literal notranslate"><span class="pre">tf.scan</span></code>  等 API 实现的状态空间模型和数学公式之间存在某种调谐。与使用 Python 的 <code class="docutils literal notranslate"><span class="pre">for</span></code> 循环或 <code class="docutils literal notranslate"><span class="pre">while</span></code> 循环不同，在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中，需要将循环体编译成一个函数，该函数采用相同的张量结构作为输入和输出。这种函数风格的实现方式有助于显式表示 “在每个时间步隐状态是如何转换的？” 以及 “隐状态如果转换到为观测结果的？”。值得注意的是，实现状态空间模型及其相关推断算法（ 如卡尔曼滤波器 ）也涉及在何处放置初始计算的设计决策。在上式中，我们在初始隐条件上放置了一个先验，并且第一个观测值直接来自初始状态的测量值。不过，在第 <span class="math notranslate nohighlight">\(0\)</span> 步中，对隐状态进行转换同样有效，然后通过修改先验分布进行第一次观测，这两种方法是等效的。</p>
-<p>然而，在为时间序列问题实现滤波器时，在形状处理上有一些微妙的技巧。主要挑战是时间维度的放置位置。一个明显选择是将其放置在轴 <span class="math notranslate nohighlight">\(0\)</span> 上，因为使用 <code class="docutils literal notranslate"><span class="pre">t</span></code> 作为时间索引来执行 <code class="docutils literal notranslate"><span class="pre">time_series[t]</span></code> 是很自然的事情。使用 <code class="docutils literal notranslate"><span class="pre">tf.scan</span></code> 或 <code class="docutils literal notranslate"><span class="pre">theano.scan</span></code> 等循环结构在时间序列上实现循环时，会自动将时间维度放在轴 <span class="math notranslate nohighlight">\(0\)</span> 上。但是，这与通常作为引导轴的批处理维有冲突。例如，如果我们想对 <span class="math notranslate nohighlight">\(N\)</span> 批 <span class="math notranslate nohighlight">\(k\)</span> 维时间序列进行向量化，每个时间序列总共有 <span class="math notranslate nohighlight">\(T\)</span> 个时间戳，则数组的形状为 <code class="docutils literal notranslate"><span class="pre">[N,</span> <span class="pre">T,</span> <span class="pre">...]</span></code>，但 <code class="docutils literal notranslate"><span class="pre">tf.scan</span> </code> 的输出形状为 <code class="docutils literal notranslate"><span class="pre">[T,</span> <span class="pre">N,</span> <span class="pre">...]</span></code> 。目前，建模人员似乎不可避免地需要对 <code class="docutils literal notranslate"><span class="pre">scan</span></code> 的输出执行转置，以使其与输入张量的批处理维和时间维语义相匹配。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">tf.while_loop</span></code> 或 <code class="docutils literal notranslate"><span class="pre">tf.scan</span></code>  等 API 实现的状态空间模型和数学公式之间存在某种调谐。与使用 Python 的 <code class="docutils literal notranslate"><span class="pre">for</span></code> 循环或 <code class="docutils literal notranslate"><span class="pre">while</span></code> 循环不同，在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中，需要将循环体编译成一个函数，该函数采用相同的张量结构作为输入和输出。这种函数风格的实现方式有助于显式地表示 “在每个时间步隐状态是如何转换的？” 以及 “隐状态如果转换到为观测结果的？”。值得注意的是，实现状态空间模型及其相关推断算法（ 如卡尔曼滤波器 ）也涉及在何处放置初始计算的设计决策。在上式中，我们在初始隐条件上放置了一个先验，并且第一个观测值直接来自初始状态的测量值。不过，在第 <span class="math notranslate nohighlight">\(0\)</span> 步中，对隐状态进行转换同样有效，然后通过修改先验分布进行第一次观测，这两种方法是等效的。</p>
+<p>然而，在为时间序列问题实现滤波时，在张量的形状处理上有一些微妙的技巧。主要挑战是时间维的放置位置。一个明显选择是将其放置在轴 <span class="math notranslate nohighlight">\(0\)</span> 上，因为使用 <code class="docutils literal notranslate"><span class="pre">t</span></code> 作为时间索引来执行 <code class="docutils literal notranslate"><span class="pre">time_series[t]</span></code> 是很自然的事情。使用 <code class="docutils literal notranslate"><span class="pre">tf.scan</span></code> 或 <code class="docutils literal notranslate"><span class="pre">theano.scan</span></code> 等循环结构在时间序列上实现循环时，会自动将时间维度放在轴 <span class="math notranslate nohighlight">\(0\)</span> 上。但这与通常作为引导轴的批处理维有冲突。例如，如果我们想对 <span class="math notranslate nohighlight">\(N\)</span> 批的 <span class="math notranslate nohighlight">\(k\)</span> 维时间序列向量化，每个时间序列总共有 <span class="math notranslate nohighlight">\(T\)</span> 个时间戳，则数组的形状为 <code class="docutils literal notranslate"><span class="pre">[N,</span> <span class="pre">T,</span> <span class="pre">...]</span></code>，但 <code class="docutils literal notranslate"><span class="pre">tf.scan</span> </code> 的输出形状为 <code class="docutils literal notranslate"><span class="pre">[T,</span> <span class="pre">N,</span> <span class="pre">...]</span></code> 。目前，建模人员似乎不可避免地需要对 <code class="docutils literal notranslate"><span class="pre">scan</span></code> 的输出执行转置，以使其与输入张量的批处理维和时间维语义相匹配。</p>
 </div>
-<p>一旦有了时间序列问题的状态空间表示，我们就处在了一个序列分析框架中。该框架通常包括滤波和平滑等任务：</p>
+<p>有了时间序列问题的状态空间表示，我们就处在了一个序列分析的框架中。该框架通常包括滤波、平滑等任务：</p>
 <ul class="simple">
-<li><p>滤波：</p>
-<ul>
-<li><p>以 <span class="math notranslate nohighlight">\(k\)</span> 时间步之前（含 <span class="math notranslate nohighlight">\(k\)</span> ）的观测作为条件，计算隐状态 <span class="math notranslate nohighlight">\(X_k\)</span> 的边缘分布：<span class="math notranslate nohighlight">\(p(X_k \mid y_{0:k}), k = 0,...,T \)</span> ；</p></li>
-<li><p><span class="math notranslate nohighlight">\(\circ\)</span> 预测：隐状态的预测分布，将滤波分布扩展到未来 <span class="math notranslate nohighlight">\(n\)</span> 步：<span class="math notranslate nohighlight">\(p(X_k+n \mid y_{0:k}), k = 0,... ,T, n=1, 2,...\)</span></p></li>
+<li><p><strong>滤波</strong>：以时间步 <span class="math notranslate nohighlight">\(k\)</span> 之前的观测作为条件，计算隐状态 <span class="math notranslate nohighlight">\(X_k\)</span> 的边缘分布 <span class="math notranslate nohighlight">\(p(X_k \mid y_{0:k}), k = 0,...,T\)</span> ； 然后将上述滤波扩展到未来 <span class="math notranslate nohighlight">\(n\)</span> 步，即做出预测 <span class="math notranslate nohighlight">\(p(X_k+n \mid y_{0:k}), k = 0,... ,T, n=1, 2,...\)</span></p></li>
+<li><p><strong>平滑</strong>：类似于滤波，但会尝试以所有观测为条件计算隐状态 <span class="math notranslate nohighlight">\(X_k\)</span> 的边缘分布：<span class="math notranslate nohighlight">\(p(X_k \mid y_{0:T}), k = 0 ,...,T\)</span> 。</p></li>
 </ul>
-</li>
-<li><p>平滑：</p>
-<ul>
-<li><p>类似于滤波，但我们尝试以所有观测为条件，计算隐状态 <span class="math notranslate nohighlight">\(X_k\)</span> 的边缘分布：<span class="math notranslate nohighlight">\(p(X_k \mid y_{0:T}), k = 0 ,...,T\)</span> 。</p></li>
-</ul>
-</li>
-</ul>
-<p>注意 <span class="math notranslate nohighlight">\(y_{0:\dots}\)</span> 的下标在滤波和平滑方面有所不同：滤波以 <span class="math notranslate nohighlight">\(y_{0:k}\)</span> 为条件，而平滑以 <span class="math notranslate nohighlight">\(y_{0:T}\)</span> 为条件。</p>
-<p>事实上，从滤波和平滑的角度考虑时间序列建模有着悠久的传统。例如，我们计算上述 ARMA 过程的对数似然的方式，可以看作是一个滤波问题，其中观测数据被解构为一些隐含的不可观测状态。</p>
+<p>注意：滤波和平滑中的下标 <span class="math notranslate nohighlight">\(y_{0:\dots}\)</span> 有所不同，滤波以 <span class="math notranslate nohighlight">\(y_{0:k}\)</span> 为条件，而平滑以 <span class="math notranslate nohighlight">\(y_{0:T}\)</span> 为条件。</p>
+<p>事实上，从滤波和平滑的视角来建模时间序列有着悠久的历史。例如，我们计算 ARMA 模型的对数似然时，采取的方式就可以看作是一个滤波问题，其中观测数据被解构为一些隐含的不可观测状态。</p>
 <div class="section" id="lgssm-time-series">
 <span id="id33"></span><h3>6.4.1 线性高斯状态空间模型与卡尔曼滤波<a class="headerlink" href="#lgssm-time-series" title="Permalink to this headline">¶</a></h3>
-<p>线性高斯状态空间模型也许是最著名的状态空间模型。在该模型中，有隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> ，并且假设观测 <span class="math notranslate nohighlight">\(Y_t\)</span> 呈（多元）高斯分布，其中状态转移和测量都是线性函数：</p>
+<p>线性高斯状态空间模型也许是最著名的状态空间模型。在该模型中，假设存在隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> ，观测 <span class="math notranslate nohighlight">\(Y_t\)</span> 呈（多元）高斯分布，并且状态转移函数和观测函数都是线性的：</p>
 <div class="math notranslate nohighlight" id="equation-eq-lgssm">
 <span class="eqno">(56)<a class="headerlink" href="#equation-eq-lgssm" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 Y_t &amp; = \mathbf{H}_t X_t + \epsilon_t \\
 X_t &amp; = \mathbf{F}_t X_{t-1} + \eta_t
 \end{split}\end{split}\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(\epsilon_t \sim \mathcal{N}(0, \mathbf{R}_t)\)</span> 和 <span class="math notranslate nohighlight">\(\eta_t \sim \mathcal{N}(0, \mathbf{Q}_t)\)</span> 是噪声分量。</p>
-<p>变量 (<span class="math notranslate nohighlight">\(\mathbf{H}_t\)</span>, <span class="math notranslate nohighlight">\(\mathbf{F}_t\)</span>) 是描述线性变换的矩阵，通常 <span class="math notranslate nohighlight">\(\mathbf{F}_t\)</span> 是方阵，<span class="math notranslate nohighlight">\(\mathbf{H} _t\)</span> 的秩低于 <span class="math notranslate nohighlight">\(\mathbf{F}_t\)</span>，它将状态从隐空间 “推进” 到测量空间。 <span class="math notranslate nohighlight">\(\mathbf{R}_t\)</span>, <span class="math notranslate nohighlight">\(\mathbf{Q}_t\)</span> 是协方差矩阵（正半定矩阵）。你还可以在章节 <a class="reference internal" href="chp_11.html#markov-chains"><span class="std std-ref">马尔可夫链</span></a> 中找到一些比较直观的转移矩阵示例。</p>
-<p>由于 <span class="math notranslate nohighlight">\(\epsilon_t\)</span> 和 <span class="math notranslate nohighlight">\(\eta_t\)</span> 都是服从高斯分布的随机变量，因此上述线性函数实际上是对高斯随机变量做了仿射变换，导致 <span class="math notranslate nohighlight">\(X_t\)</span> 和 <span class="math notranslate nohighlight">\(Y_t\)</span> 也服从高斯分布。也就是说，先验（ <span class="math notranslate nohighlight">\(t-1\)</span> 时的状态 ）和后验（ <span class="math notranslate nohighlight">\(t\)</span> 时的状态 ）之间存在共轭性质，这使得获得贝叶斯滤波公式的解析解成为可能，即<strong>卡尔曼滤波器</strong>（Kalman，1960）。作为共轭贝叶斯模型最重要的应用之一，卡尔曼滤波器帮助人类登陆月球，并且至今在许多领域仍然被广泛使用。</p>
+<p>变量 (<span class="math notranslate nohighlight">\(\mathbf{H}_t\)</span>, <span class="math notranslate nohighlight">\(\mathbf{F}_t\)</span>) 是描述线性变换的矩阵。通常 <span class="math notranslate nohighlight">\(\mathbf{F}_t\)</span> 是方阵，代表相邻时间步之间的线性状态转移函数；<span class="math notranslate nohighlight">\(\mathbf{H} _t\)</span> 的秩低于 <span class="math notranslate nohighlight">\(\mathbf{F}_t\)</span>，表示隐状态到观测之间的线性观测函数； <span class="math notranslate nohighlight">\(\mathbf{R}_t\)</span>, <span class="math notranslate nohighlight">\(\mathbf{Q}_t\)</span> 是协方差矩阵（正半定矩阵）。你还可以在 <a class="reference internal" href="chp_11.html#markov-chains"><span class="std std-ref">马尔可夫链</span></a> 中找到一些比较直观的示例。</p>
+<p>由于 <span class="math notranslate nohighlight">\(\epsilon_t\)</span> 和 <span class="math notranslate nohighlight">\(\eta_t\)</span> 都是服从高斯分布的随机变量，而上述线性函数只是对高斯随机变量做了仿射变换，因此导致 <span class="math notranslate nohighlight">\(X_t\)</span> 和 <span class="math notranslate nohighlight">\(Y_t\)</span> 也服从高斯分布。也就是说，先验（ <span class="math notranslate nohighlight">\(t-1\)</span> 时的状态 ）和后验（ <span class="math notranslate nohighlight">\(t\)</span> 时的状态 ）之间存在共轭性质，这使获得贝叶斯滤波公式的解析解成为可能，即<strong>卡尔曼滤波器</strong>（Kalman，1960）。作为共轭贝叶斯模型最重要的应用之一，卡尔曼滤波器帮助人类登陆月球，并且至今在许多领域仍然被广泛使用。</p>
 <p>为了直观地理解卡尔曼滤波器，首先看一下线性高斯状态空间模型从时间 <span class="math notranslate nohighlight">\(t-1\)</span> 到 <span class="math notranslate nohighlight">\(t\)</span> 的生成过程：</p>
 <div class="math notranslate nohighlight" id="equation-eq-lgssm-generative">
 <span class="eqno">(57)<a class="headerlink" href="#equation-eq-lgssm-generative" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 X_t \sim p(X_t \mid X_{t-1}) &amp; \equiv \mathcal{N}(\mathbf{F}_{t} X_{t-1}, \mathbf{Q}_{t}) \\
 Y_t \sim p(Y_t \mid X_t) &amp; \equiv \mathcal{N}(\mathbf{H}_t X_t, \mathbf{R}_t)
 \end{split}\end{split}\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(X_t\)</span> 和 <span class="math notranslate nohighlight">\(Y_t\)</span> 的条件概率分布表示为 <span class="math notranslate nohighlight">\(p(.)\)</span>（ 此处使用 <span class="math notranslate nohighlight">\(\equiv\)</span> 表示该条件分布为多元高斯分布 ）。请注意，<span class="math notranslate nohighlight">\(X_t\)</span> 仅取决于上一个时间步的状态 <span class="math notranslate nohighlight">\(X_{t-1}\)</span> ，而不取决于历史观测。这意味着，生成过程可以首先生成一个隐时间序列 <span class="math notranslate nohighlight">\(X_t,\ t = 0...T\)</span> ， 然后再将整个隐时间序列投射到观测空间中。在贝叶斯滤波上下文中，<span class="math notranslate nohighlight">\(Y_t\)</span> 是可观测的，因此被用于更新状态 <span class="math notranslate nohighlight">\(X_t\)</span>，类似于在静态模型中用（观测数据的）似然去更新先验：</p>
+<p>其中 <span class="math notranslate nohighlight">\(X_t\)</span> 和 <span class="math notranslate nohighlight">\(Y_t\)</span> 的条件概率分布表示为 <span class="math notranslate nohighlight">\(p(.)\)</span>（ 此处使用 <span class="math notranslate nohighlight">\(\equiv\)</span> 表示该条件分布为多元高斯分布 ）。请注意，<span class="math notranslate nohighlight">\(X_t\)</span> 仅取决于上一个时间步的状态 <span class="math notranslate nohighlight">\(X_{t-1}\)</span> ，而不取决于之前的历史观测。这意味着，生成过程可以首先生成一个隐时间序列 <span class="math notranslate nohighlight">\(X_t,\ t = 0...T\)</span> ， 然后再将整个隐时间序列投射到观测空间中。在贝叶斯滤波场景中，<span class="math notranslate nohighlight">\(Y_t\)</span> 是可观测的，因此被用于对隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 进行更新，类似于在静态模型中用（观测数据的）似然去更新先验：</p>
 <div class="math notranslate nohighlight" id="equation-eq-kalman-fitler">
 <span class="eqno">(58)<a class="headerlink" href="#equation-eq-kalman-fitler" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 X_0 \sim p(X_0 \mid m_0, \mathbf{P}_0) &amp; \equiv \mathcal{N}(m_0, \mathbf{P}_0) \\
@@ -1183,8 +1186,8 @@ X_{t \mid t-1} \sim p(X_{t \mid t-1} \mid Y_{0:t-1}) &amp; \equiv \mathcal{N}(m_
 X_{t \mid t} \sim p(X_{t \mid t} \mid Y_{0:t}) &amp; \equiv \mathcal{N}(m_{t \mid t}, \mathbf{P}_{t \mid t}) \\
 Y_t \sim p(Y_t \mid Y_{0:t-1}) &amp; \equiv \mathcal{N}(\mathbf{H}_t m_{t \mid t-1}, \mathbf{S}_t)
 \end{split}\end{split}\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(m_t\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{P}_t\)</span> 表示隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的均值和协方差矩阵。 <span class="math notranslate nohighlight">\(X_{t \mid t-1}\)</span> 是参数 <span class="math notranslate nohighlight">\(m_{t \mid t-1}\)</span> （预测均值）和 <span class="math notranslate nohighlight">\(\mathbf{P}_{t \mid t-1}\)</span> （预测协方差）下预测隐状态，而 <span class="math notranslate nohighlight">\(X_{t \mid t}\)</span> 是参数 <span class="math notranslate nohighlight">\(m_{t \mid t}\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{P}_{t \mid t}\)</span>下的滤波后隐状态。</p>
-<p>公式 <a class="reference internal" href="#equation-eq-kalman-fitler">(58)</a> 中的下标容易让人感到困惑，因此需要有一个如下的高层视图：从上一个时间步开始，我们有一个滤波状态 <span class="math notranslate nohighlight">\(X_{t-1 \mid t-1} \)</span>，在应用转移矩阵 <span class="math notranslate nohighlight">\(\mathbf{F}_{t}\)</span> 后，我们得到一个预测状态 <span class="math notranslate nohighlight">\(X_{t \mid t-1}\)</span>，结合当前时间步的观测，我们得到滤波后的新状态 <span class="math notranslate nohighlight">\(X_{t \mid t}\)</span> 。</p>
+<p>其中 <span class="math notranslate nohighlight">\(m_t\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{P}_t\)</span> 表示隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的均值和协方差矩阵。 <span class="math notranslate nohighlight">\(X_{t \mid t-1}\)</span> 是参数 <span class="math notranslate nohighlight">\(m_{t \mid t-1}\)</span> （预测均值）和 <span class="math notranslate nohighlight">\(\mathbf{P}_{t \mid t-1}\)</span> （预测协方差）下隐状态的预测值，而 <span class="math notranslate nohighlight">\(X_{t \mid t}\)</span> 是参数 <span class="math notranslate nohighlight">\(m_{t \mid t}\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{P}_{t \mid t}\)</span>下隐状态的滤波后结果。</p>
+<p>公式 <a class="reference internal" href="#equation-eq-kalman-fitler">(58)</a> 中的下标容易让人感到困惑，因此需要有一个高层视图来理解它：从上一个时间步开始，我们有一个滤波后状态 <span class="math notranslate nohighlight">\(X_{t-1 \mid t-1} \)</span> ；在应用转移矩阵 <span class="math notranslate nohighlight">\(\mathbf{F}_{t}\)</span> 后，得到一个预测的隐状态 <span class="math notranslate nohighlight">\(X_{t \mid t-1}\)</span> ；结合当前时间步的观测值，我们得到一个当前时间步的滤波后新状态 <span class="math notranslate nohighlight">\(X_{t \mid t}\)</span> 。</p>
 <p>公式 <a class="reference internal" href="#equation-eq-kalman-fitler">(58)</a> 中，上述分布的参数是利用卡尔曼滤波的预测和更新步骤计算的：</p>
 <ul>
 <li><p>预测步骤：</p>
@@ -1205,8 +1208,8 @@ m_{t \mid t} &amp; = m_{t \mid t-1} + \mathbf{K}_t z_t \\
 \end{split}\end{split}\]</div>
 </li>
 </ul>
-<p>卡尔曼滤波方程的推导主要使用了多元高斯联合分布。在实践中，还有一些技巧来确保计算在数值上是稳定的。例如，避免逆矩阵 <span class="math notranslate nohighlight">\(\mathbf{S}_t\)</span> ，在计算 <span class="math notranslate nohighlight">\(\mathbf{P}_{t\mid t}\)</span> 时使用 Jordan 范数更新，以确保结果是正定矩阵 <span id="id34">[<a class="reference internal" href="references.html#id134">59</a>]</span>。在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中，线性高斯状态空间模型和卡尔曼滤波器可以通过分布<code class="docutils literal notranslate"><span class="pre">tfd.LinearGaussianStateSpaceModel</span></code> 方便地实现。</p>
-<p>线性高斯状态空间模型的实际挑战之一是将未知参数表示为高斯隐状态。我们将用一个简单的线性增长时间序列作为第一个示例进行演示（ 参见《贝叶斯滤波和平滑》 <span id="id35">[<a class="reference internal" href="references.html#id129">60</a>]</span> 的第 3 章 ）：</p>
+<p>卡尔曼滤波方程的推导主要使用了多元高斯联合分布。在实践中，还有一些技巧来确保计算在数值上是稳定的。例如，为了避免求矩阵 <span class="math notranslate nohighlight">\(\mathbf{S}_t\)</span> 的逆，在计算 <span class="math notranslate nohighlight">\(\mathbf{P}_{t\mid t}\)</span> 时使用 <code class="docutils literal notranslate"><span class="pre">Jordan</span> <span class="pre">范数</span></code> 做更新，以确保结果为正定矩阵 <span id="id34">[<a class="reference internal" href="references.html#id134">59</a>]</span>。在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中，线性高斯状态空间模型和卡尔曼滤波器可以通过分布<code class="docutils literal notranslate"><span class="pre">tfd.LinearGaussianStateSpaceModel</span></code> 很方便地实现。</p>
+<p>在使用线性高斯状态空间模型做时间序列建模时，实践性的挑战之一是如何将未知参数表示为高斯隐状态。我们用一个简单的线性增长时间序列作为第一个示例进行演示（ 参见《贝叶斯滤波和平滑》 <span id="id35">[<a class="reference internal" href="references.html#id129">60</a>]</span> 的第 <span class="math notranslate nohighlight">\(3\)</span> 章 ）：</p>
 <div class="literal-block-wrapper docutils container" id="linear-growth-model">
 <div class="code-block-caption"><span class="caption-number">Listing 91 </span><span class="caption-text">linear_growth_model</span><a class="headerlink" href="#linear-growth-model" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">theta0</span><span class="p">,</span> <span class="n">theta1</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">2.6</span>
@@ -1219,14 +1222,14 @@ m_{t \mid t} &amp; = m_{t \mid t-1} + \mathbf{K}_t z_t \\
 </pre></div>
 </div>
 </div>
-<p>你可能会将代码 <a class="reference internal" href="#linear-growth-model"><span class="std std-ref">linear_growth_model</span></a> 识别为简单的线性回归。要将其作为使用卡尔曼滤波器的滤波问题来处理，需要假设测量噪声 <span class="math notranslate nohighlight">\(\sigma\)</span> 已知，未知参数 <span class="math notranslate nohighlight">\(\theta_0\)</span> 和 <span class="math notranslate nohighlight">\(\theta_1\)</span> 服从高斯先验分布。</p>
+<p>你可能会将代码 <a class="reference internal" href="#linear-growth-model"><span class="std std-ref">linear_growth_model</span></a> 识别为简单线性回归。要将其作为使用卡尔曼滤波器的滤波问题来处理，需要假设观测噪声 <span class="math notranslate nohighlight">\(\sigma\)</span> 已知，未知参数 <span class="math notranslate nohighlight">\(\theta_0\)</span> 和 <span class="math notranslate nohighlight">\(\theta_1\)</span> 服从高斯先验分布。</p>
 <p>在状态空间形式中，有隐状态：</p>
 <div class="math notranslate nohighlight" id="equation-eq-linear-growth-state">
 <span class="eqno">(61)<a class="headerlink" href="#equation-eq-linear-growth-state" title="Permalink to this equation">¶</a></span>\[\begin{split}X_t = \left[\begin{array}{ccc}
   \theta_0 \\
   \theta_1 \\
 \end{array}\right]\end{split}\]</div>
-<p>由于隐状态不随时间变化，转移矩阵 <span class="math notranslate nohighlight">\(F_t\)</span> 是一个没有转移噪声的单位矩阵。观测矩阵描述了从隐空间到测量空间的“推进”，它是线性函数的矩阵形式 <a class="footnote-reference brackets" href="#id69" id="id36">13</a> ：</p>
+<p>由于隐状态不随时间变化，转移矩阵 <span class="math notranslate nohighlight">\(F_t\)</span> 是一个没有转移噪声的单位矩阵。观测矩阵描述了从隐空间到观测空间的转换，它是线性函数的矩阵形式 <a class="footnote-reference brackets" href="#id70" id="id36">13</a> ：</p>
 <div class="math notranslate nohighlight" id="equation-eq-linear-growth-observed-state">
 <span class="eqno">(62)<a class="headerlink" href="#equation-eq-linear-growth-observed-state" title="Permalink to this equation">¶</a></span>\[\begin{split}y_t = \theta_0 + \theta_1 * t = \left[\begin{array}{ccc}
   1, t \\
@@ -1234,7 +1237,7 @@ m_{t \mid t} &amp; = m_{t \mid t-1} + \mathbf{K}_t z_t \\
   \theta_0 \\
   \theta_1 \\
 \end{array}\right]\end{split}\]</div>
-<p>用 <code class="docutils literal notranslate"><span class="pre">tfd.LinearGaussianStateSpaceModel</span></code> API 表示，我们有：</p>
+<p>用 <code class="docutils literal notranslate"><span class="pre">tfd.LinearGaussianStateSpaceModel</span></code> API 表示时，有：</p>
 <div class="literal-block-wrapper docutils container" id="tfd-lgssm-linear-growth">
 <div class="code-block-caption"><span class="caption-number">Listing 92 </span><span class="caption-text">tfd_lgssm_linear_growth</span><a class="headerlink" href="#tfd-lgssm-linear-growth" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># X_0</span>
@@ -1276,20 +1279,20 @@ m_{t \mid t} &amp; = m_{t \mid t-1} + \mathbf{K}_t z_t \\
 </pre></div>
 </div>
 </div>
-<p>我们可以在 <a class="reference internal" href="#fig-fig16-linear-growth-lgssm"><span class="std std-numref">Fig. 117</span></a> 中将卡尔曼滤波器的结果（即迭代地观测每个时间步长）与分析结果（即观测的完整时间序列）进行比较。</p>
+<p>可以在 <a class="reference internal" href="#fig-fig16-linear-growth-lgssm"><span class="std std-numref">Fig. 117</span></a> 中将卡尔曼滤波器的结果（即迭代地观测每个时间步）与解析结果（即观测完整的时间序列）进行比较。</p>
 <div class="figure align-default" id="fig-fig16-linear-growth-lgssm">
 <a class="reference internal image-reference" href="../_images/fig16_linear_growth_lgssm.png"><img alt="../_images/fig16_linear_growth_lgssm.png" src="../_images/fig16_linear_growth_lgssm.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 117 </span><span class="caption-text">线性增长时间序列模型，使用卡尔曼滤波器进行推断。在第一个子图中，展示了观测数据（用虚线连接的灰点）和来自卡尔曼滤波器的单步预测（ 黑色实线中的 <span class="math notranslate nohighlight">\(H_t m_{t \mid t-1}\)</span> ）。在观测每个时间步之后，将隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的后验分布与使用中间和最右侧子图中的所有数据的解析解（黑色实线）进行比较。</span><a class="headerlink" href="#fig-fig16-linear-growth-lgssm" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 117 </span><span class="caption-text">线性增长时间序列模型，使用卡尔曼滤波器进行推断。在第一个子图中，展示了观测数据（用虚线连接的灰点）和来自卡尔曼滤波器的单步预测（ 黑色实线中的 <span class="math notranslate nohighlight">\(H_t m_{t \mid t-1}\)</span> ）。将观测每个时间步之后获得的隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的后验分布，与中间子图和右侧子图中使用所有数据获得的解析解（黑色实线）进行比较。</span><a class="headerlink" href="#fig-fig16-linear-growth-lgssm" title="Permalink to this image">¶</a></p>
 </div>
 </div>
-<div class="section" id="arim">
-<span id="arima-expressed-as-a-state-space-model"></span><h3>6.4.2 表示为状态空间模型的 ARIM<a class="headerlink" href="#arim" title="Permalink to this headline">¶</a></h3>
-<p>状态空间模型是一种概括了许多经典时间序列模型的统一方法。但如何以状态空间形式表达传统模型可能并不总是很明显。在本节中，我们将了解如何表达更复杂的线性高斯状态空间模型：ARMA 和 ARIMA。</p>
-<p>回想上面的 <span class="math notranslate nohighlight">\(ARMA(p,q)\)</span> 公式 <a class="reference internal" href="#equation-eq-arma">(53)</a>，我们有自回归系数参数 <span class="math notranslate nohighlight">\(\phi_i\)</span>、移动平均系数 <span class="math notranslate nohighlight">\(\theta_j\)</span> 和噪声参数 <span class="math notranslate nohighlight">\(\sigma\)</span> 。使用 <span class="math notranslate nohighlight">\(\sigma\)</span> 来参数化观测噪声的分布 <span class="math notranslate nohighlight">\(R_t\)</span> 很具有吸引力。</p>
-<p>然而，在 <span class="math notranslate nohighlight">\(ARMA(p,q)\)</span> 公式 <a class="reference internal" href="#equation-eq-arma">(53)</a> 中，利用先前步骤的噪声所做的移动平均，要求我们 “记录” 当前噪声。唯一的解决办法是将其形式化为转移噪声，使其成为隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的一部分。我们将 <span class="math notranslate nohighlight">\(ARMA(p,q)\)</span> 公式 <a class="reference internal" href="#equation-eq-arma">(53)</a> 重新表述为：</p>
+<div class="section" id="arima">
+<span id="arima-expressed-as-a-state-space-model"></span><h3>6.4.2 ARIMA 模型的状态空间表示<a class="headerlink" href="#arima" title="Permalink to this headline">¶</a></h3>
+<p>状态空间模型是一种概括了许多经典时间序列模型的统一方法。但如何以状态空间形式表达传统模型可能并不总是很明显。在本节中，我们将了解如何表达更复杂的线性高斯状态空间模型：<code class="docutils literal notranslate"><span class="pre">ARMA</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ARIMA</span></code>。</p>
+<p>回想前面的 <span class="math notranslate nohighlight">\(ARMA(p,q)\)</span> 模型的公式 <a class="reference internal" href="#equation-eq-arma">(53)</a>，我们有自回归系数 <span class="math notranslate nohighlight">\(\phi_i\)</span>、移动平均系数 <span class="math notranslate nohighlight">\(\theta_j\)</span> 和噪声参数 <span class="math notranslate nohighlight">\(\sigma\)</span> 。使用 <span class="math notranslate nohighlight">\(\sigma\)</span> 来对观测噪声的分布 <span class="math notranslate nohighlight">\(R_t\)</span> 进行参数化，很具有吸引力。然而，在公式 <a class="reference internal" href="#equation-eq-arma">(53)</a> 中，利用先前时间步的噪声所做的移动平均，需要我们存储当前噪声。唯一的解决办法是将其形式化为转移噪声，使其成为隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的一部分。</p>
+<p>可以将公式 <a class="reference internal" href="#equation-eq-arma">(53)</a> 重新表述为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-arma-pre-lgssm">
 <span class="eqno">(63)<a class="headerlink" href="#equation-eq-arma-pre-lgssm" title="Permalink to this equation">¶</a></span>\[y_t = \sum_{i=1}^{r}\phi_i y_{t-i} + \sum_{i=1}^{r-1}\theta_i \epsilon_{t-i} + \epsilon_t\]</div>
-<p>其中公式 <a class="reference internal" href="#equation-eq-arma">(53)</a> 中的常数项 <span class="math notranslate nohighlight">\(\alpha\)</span> 被省略，<span class="math notranslate nohighlight">\(r = \max(p, q+1)\)</span>。我们在需要时用零来填充（ pad ）参数 <span class="math notranslate nohighlight">\(\phi\)</span> 和 <span class="math notranslate nohighlight">\(\theta\)</span> ，以便其具有相同的大小 <span class="math notranslate nohighlight">\(r\)</span>。因此状态方程中的 <span class="math notranslate nohighlight">\(X_t\)</span> 分量为：</p>
+<p>公式 <a class="reference internal" href="#equation-eq-arma">(53)</a> 中的常数项 <span class="math notranslate nohighlight">\(\alpha\)</span> 被略去，并且常数项 <span class="math notranslate nohighlight">\(r = \max(p, q+1)\)</span> 。我们在需要时用零来填充参数 <span class="math notranslate nohighlight">\(\phi\)</span> 和 <span class="math notranslate nohighlight">\(\theta\)</span> ，以便其长度均为 <span class="math notranslate nohighlight">\(r\)</span> 。因此状态方程中的 <span class="math notranslate nohighlight">\(X_t\)</span> 分量为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-arma-lgssm-state-fn">
 <span class="eqno">(64)<a class="headerlink" href="#equation-eq-arma-lgssm-state-fn" title="Permalink to this equation">¶</a></span>\[\begin{split}\mathbf{F}_t = \mathbf{F} = \left[\begin{array}{cccc}
 \phi_1 &amp; 1 &amp; \cdots &amp; 0 \\
@@ -1313,8 +1316,8 @@ y_t \\
 \vdots \\
 \phi_r y_{t-1} + \theta_{r-1} \eta'_t
 \end{array}\right]\end{split}\]</div>
-<p>观测矩阵只是一个索引矩阵 <span class="math notranslate nohighlight">\(\mathbf{H}_t = [1, 0, 0, \dots, 0]\)</span>，观测公式为 <span class="math notranslate nohighlight">\(y_t = \mathbf{H}_t X_t\)</span> <a class="footnote-reference brackets" href="#id70" id="id37">14</a> 。</p>
-<p>例如，状态空间表示中的 <span class="math notranslate nohighlight">\(ARMA(2,1)\)</span> 模型是：</p>
+<p>观测矩阵只是一个索引矩阵 <span class="math notranslate nohighlight">\(\mathbf{H}_t = [1, 0, 0, \dots, 0]\)</span>，观测方程为 <span class="math notranslate nohighlight">\(y_t = \mathbf{H}_t X_t\)</span> <a class="footnote-reference brackets" href="#id71" id="id37">14</a> 。</p>
+<p>例如，<span class="math notranslate nohighlight">\(ARMA(2,1)\)</span> 模型的状态空间表示为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-arma-lgssm-state-full">
 <span class="eqno">(66)<a class="headerlink" href="#equation-eq-arma-lgssm-state-full" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \left[\begin{array}{ccc}
@@ -1334,7 +1337,7 @@ y_t\\
 \end{array}\right] \eta'_{t+1}\\
 \eta'_{t+1} &amp; \sim \mathcal{N}(0, \sigma^2)
 \end{split}\end{split}\]</div>
-<p>你可能注意到状态转移与上面定义的略有不同，因为转换噪声不是从多元高斯分布中抽取的。 <span class="math notranslate nohighlight">\(\eta\)</span> 的协方差矩阵是 <span class="math notranslate nohighlight">\(\mathbf{Q}_t = \mathbf{A} \sigma^2 \mathbf{A}^T\)</span> ，在这种情况下会产生奇异的随机变量 <span class="math notranslate nohighlight">\(\eta\)</span> 。但无论如何，我们可以在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中定义模型了。例如，在代码 <a class="reference internal" href="#tfd-lgssm-arma-simulate"><span class="std std-ref">tfd_lgssm_arma_simulate</span></a> 中，我们定义了一个 <span class="math notranslate nohighlight">\(ARMA(2,1)\)</span> 模型，其中 <span class="math notranslate nohighlight">\(\phi = [-0.1, 0.5]\)</span> 、 <span class="math notranslate nohighlight">\(\theta = -0.25\)</span> 、 <span class="math notranslate nohighlight">\(\sigma = 1.25\)</span> ，并抽取了一个随机时间序列。</p>
+<p>你可能注意到状态转移函数与前面的定义略有不同，因为转换噪声不是从多元高斯分布中抽取的。 <span class="math notranslate nohighlight">\(\eta\)</span> 的协方差矩阵是 <span class="math notranslate nohighlight">\(\mathbf{Q}_t = \mathbf{A} \sigma^2 \mathbf{A}^T\)</span> ，在当前情况下，会产生奇异的随机变量 <span class="math notranslate nohighlight">\(\eta\)</span> 。但无论如何，我们现在可以在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中定义模型了。例如，在代码 <a class="reference internal" href="#tfd-lgssm-arma-simulate"><span class="std std-ref">tfd_lgssm_arma_simulate</span></a> 中，我们定义了一个 <span class="math notranslate nohighlight">\(ARMA(2,1)\)</span> 模型，其中 <span class="math notranslate nohighlight">\(\phi = [-0.1, 0.5]\)</span> 、 <span class="math notranslate nohighlight">\(\theta = -0.25\)</span> 、 <span class="math notranslate nohighlight">\(\sigma = 1.25\)</span> ，并抽取了一个随机时间序列。</p>
 <div class="literal-block-wrapper docutils container" id="tfd-lgssm-arma-simulate">
 <div class="code-block-caption"><span class="caption-number">Listing 94 </span><span class="caption-text">tfd_lgssm_arma_simulate</span><a class="headerlink" href="#tfd-lgssm-arma-simulate" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_timesteps</span> <span class="o">=</span> <span class="mi">300</span>
@@ -1374,8 +1377,8 @@ y_t\\
 </pre></div>
 </div>
 </div>
-<p>添加适当先验并做一些重写可以更好地处理形状，我们在代码 <a class="reference internal" href="#tfd-lgssm-arma-with-prior"><span class="std std-ref">tfd_lgssm_arma_with_prior</span></a> 中得到一个完整的生成式 <span class="math notranslate nohighlight">\(ARMA(2,1)\)</span> 模型。</p>
-<p>由于使用了 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code> 模型，因此对（模拟的）数据 <code class="docutils literal notranslate"><span class="pre">sim_ts</span></code> 和推断进行调整非常简单。请注意，未知参数并非隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的一部分，因此不能像卡尔曼滤波一样做贝叶斯滤波推导，而是使用标准的 MCMC 方法进行推断。我们在 <a class="reference internal" href="#fig-fig17-arma-lgssm-inference-result"><span class="std std-numref">Fig. 118</span></a> 中展示了后验样本的轨迹图。</p>
+<p>添加适当先验并做一些重写可以更好地处理张量的形状，我们在代码 <a class="reference internal" href="#tfd-lgssm-arma-with-prior"><span class="std std-ref">tfd_lgssm_arma_with_prior</span></a> 中得到了一个完整的生成式 <span class="math notranslate nohighlight">\(ARMA(2,1)\)</span> 模型。</p>
+<p>由于使用了 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code> 模型，因此对（模拟的）数据 <code class="docutils literal notranslate"><span class="pre">sim_ts</span></code> 和推断进行调整比较简单。请注意，未知参数并非隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的一部分，因此不能像卡尔曼滤波那样做贝叶斯滤波推导，而是使用标准的 MCMC 方法进行推断。 <a class="reference internal" href="#fig-fig17-arma-lgssm-inference-result"><span class="std std-numref">Fig. 118</span></a> 中展示了其后验样本的轨迹图。</p>
 <div class="literal-block-wrapper docutils container" id="tfd-lgssm-arma-with-prior">
 <div class="code-block-caption"><span class="caption-number">Listing 95 </span><span class="caption-text">tfd_lgssm_arma_with_prior</span><a class="headerlink" href="#tfd-lgssm-arma-with-prior" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@tfd</span><span class="o">.</span><span class="n">JointDistributionCoroutine</span>
@@ -1423,7 +1426,7 @@ y_t\\
 <a class="reference internal image-reference" href="../_images/fig17_arma_lgssm_inference_result.png"><img alt="../_images/fig17_arma_lgssm_inference_result.png" src="../_images/fig17_arma_lgssm_inference_result.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 118 </span><span class="caption-text">代码 <a class="reference internal" href="#tfd-lgssm-arma-with-prior"><span class="std std-ref">tfd_lgssm_arma_with_prior</span></a> 中的 <span class="math notranslate nohighlight">\(ARMA(2,1)\)</span> 模型 <code class="docutils literal notranslate"><span class="pre">arma_lgssm</span></code> 的 MCMC 采样结果，以代码 <a class="reference internal" href="#tfd-lgssm-arma-simulate"><span class="std std-ref">tfd_lgssm_arma_simulate</span></a> 中生成的模拟数据 <code class="docutils literal notranslate"><span class="pre">sim_ts</span></code> 为条件。参数的真实值在后验密度图中绘制为垂线，在轨迹图中绘制为水平线。</span><a class="headerlink" href="#fig-fig17-arma-lgssm-inference-result" title="Permalink to this image">¶</a></p>
 </div>
-<p>结合通过预处理观测时间序列以解释积分部分的方法，我们现在已经可以将该形式用于 <span class="math notranslate nohighlight">\(d&gt;0\)</span> 的 ARIMA 建模了。状态空间模型的表达形式为我们提供了一个很重要的优势：我们可以更直接更直观地写下生成过程，而无需在数据预处理步骤中的重复 <span class="math notranslate nohighlight">\(d\)</span> 次差分。</p>
+<p>结合在预处理阶段对观测时间序列的差分处理，我们可以进一步将该形式用于 <span class="math notranslate nohighlight">\(d&gt;0\)</span> 的 <code class="docutils literal notranslate"><span class="pre">ARIMA</span></code> 建模。状态空间模型的表达形式提供了一个很重要的优势：我们可以更直接、更直观地写下生成过程，而无需在数据预处理步骤中的重复 <span class="math notranslate nohighlight">\(d\)</span> 次差分。</p>
 <p>例如，考虑用 <span class="math notranslate nohighlight">\(d=1\)</span> 扩展上面的 <span class="math notranslate nohighlight">\(ARMA(2,1)\)</span> 模型，有 <span class="math notranslate nohighlight">\(\Delta y_t = y_t - y_{t-1}\)</span>，这意味着 <span class="math notranslate nohighlight">\(y_t = y_{t-1} + \Delta y_t\)</span>，我们可以将观测矩阵定义为 <span class="math notranslate nohighlight">\(\mathbf{H}_t = [1, 1, 0]\)</span> ，其中隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 和状态转移矩阵为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-arima-lgssm-state-transition">
 <span class="eqno">(67)<a class="headerlink" href="#equation-eq-arima-lgssm-state-transition" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
@@ -1447,13 +1450,12 @@ y_{t-1}\\
 \theta_1\\
 \end{array}\right] \eta'_{t+1}
 \end{split}\end{split}\]</div>
-<p>如你所见，虽然参数化导致更大的隐状态向量 <span class="math notranslate nohighlight">\(X_t\)</span>，但参数的数量保持不变。此外，该模型是在 <span class="math notranslate nohighlight">\(y_t\)</span> 而不是 <span class="math notranslate nohighlight">\(\Delta y_t\)</span> 中生成的。</p>
-<p>上述方法在指定初始状态 <span class="math notranslate nohighlight">\(X_0\)</span> 的分布时可能存在挑战，因为第一个元素 ( <span class="math notranslate nohighlight">\(y_0\)</span> ) 现在是非平稳的。在实践中，我们可以在中心化处理（减去均值）之后，围绕时间序列的初始值分配一个信息先验。你可以在 <span id="id38">Durbin and Koopman [<a class="reference internal" href="references.html#id131">61</a>]</span> 中找到有关此主题的更多讨论，以及对状态空间模型的深入介绍。</p>
+<p>如你所见，虽然参数化导致了更大的隐状态向量 <span class="math notranslate nohighlight">\(X_t\)</span>，但参数数量保持不变。此外，该模型在 <span class="math notranslate nohighlight">\(y_t\)</span> 而不是 <span class="math notranslate nohighlight">\(\Delta y_t\)</span> 中是生成式的。上述方法在指定初始状态 <span class="math notranslate nohighlight">\(X_0\)</span> 的分布时可能存在挑战，因为第一个元素 ( <span class="math notranslate nohighlight">\(y_0\)</span> ) 现在是非平稳的。在实践中，可以在中心化处理之后，围绕时间序列的初始值分配一个信息性先验。你可以在 <span id="id38">Durbin and Koopman [<a class="reference internal" href="references.html#id131">61</a>]</span> 中找到有关此主题的更多讨论，以及对状态空间模型的深入介绍。</p>
 </div>
 <div class="section" id="bayesian-structural-time-series">
-<span id="id39"></span><h3>6.4.3 贝叶斯结构时间序列<a class="headerlink" href="#bayesian-structural-time-series" title="Permalink to this headline">¶</a></h3>
-<p>时间序列模型的线性高斯状态空间表达形式具有另一个优点，即它很容易与其他线性高斯状态空间模型一起扩展。为了将两个模型组合在一起，我们可以对隐空间中的两个高斯随机变量做连接。我们使用两个协方差矩阵生成一个块对角矩阵，连接事件轴上的均值。在测量空间中，该操作相当于对两个高斯随机变量求和。</p>
-<p>更具体地说，我们有：</p>
+<span id="id39"></span><h3>6.4.3 贝叶斯结构化的时间序列<a class="headerlink" href="#bayesian-structural-time-series" title="Permalink to this headline">¶</a></h3>
+<p>时间序列模型的线性高斯状态空间表达形式具有另一个优点，即它很容易与其他线性高斯状态空间模型一起扩展。为了将两个模型组合在一起，可以对隐空间中的两个高斯随机变量做连接。我们使用两个协方差矩阵生成一个块对角矩阵，连接事件轴上的均值。在观测空间中，该操作相当于对两个高斯随机变量求和。</p>
+<p>更具体地说，有：</p>
 <div class="math notranslate nohighlight" id="equation-eq-combining-lgssm">
 <span class="eqno">(68)<a class="headerlink" href="#equation-eq-combining-lgssm" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \mathbf{F}_t &amp; = \left[\begin{array}{ccc}
@@ -1473,10 +1475,10 @@ X_{2,t}\\
 \end{array}\right],
 \mathbf{R}_t = \mathbf{R}_{\mathbf{1}, t} + \mathbf{R}_{\mathbf{2}, t}\\
 \end{split}\end{split}\]</div>
-<p>如果我们有一个不是线性高斯的时间序列模型 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>。我们还可以将其合并到状态空间模型中。为此，我们将每个时间步的来自 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> 的预测 <span class="math notranslate nohighlight">\(\hat{\psi}_t\)</span> 视为静态“已知”值，并添加到观测噪声分布 <span class="math notranslate nohighlight">\(\epsilon_t \sim N( \hat{\mu}_t + \hat{\psi}_t, R_t)\)</span>。</p>
-<p>从概念上讲，我们可以将其理解为从 <span class="math notranslate nohighlight">\(Y_t\)</span> 中减去 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> 的预测并对结果进行建模，因此卡尔曼滤波器和其他线性高斯状态空间模型属性仍然成立。</p>
-<p>这种<em>可组合性</em>功能可以轻松构建由多个较小的线性高斯状态空间模型分量构建的时间序列模型。我们可以为趋势、季节性和误差项提供单独的状态空间表示，并将它们组合成通常称为<em>结构时间序列</em>模型或动态线性模型的模型。 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 提供了一种非常方便的方法来构建贝叶斯结构化时间序列，它使用 <code class="docutils literal notranslate"><span class="pre">tfp.sts</span></code> 模块，以及用于解构分量、进行预测、推断和其他诊断的辅助函数。</p>
-<p>例如，我们可以使用具有局部线性趋势性分量和季节性分量的结构化时间序列对每月出生数据进行建模，以解释代码 <a class="reference internal" href="#tfp-sts-example2"><span class="std std-ref">tfp_sts_example2</span></a> 中的每月模式。</p>
+<p>如果有一个不是线性高斯的时间序列模型 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> ，我们也可以将其合并到状态空间模型中。</p>
+<p>为此，可以将每个时间步中来自模型 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> 的预测 <span class="math notranslate nohighlight">\(\hat{\psi}_t\)</span> 视为静态的已知值，并将其添加到观测噪声分布 <span class="math notranslate nohighlight">\(\epsilon_t \sim N( \hat{\mu}_t + \hat{\psi}_t, R_t)\)</span> 中。从概念上讲，我们可以将其理解为从 <span class="math notranslate nohighlight">\(Y_t\)</span> 中减去模型 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> 的预测，然后对结果进行建模，因此卡尔曼滤波器和其他线性高斯状态空间模型属性仍然成立。</p>
+<p>这种 <em>可组合性</em> 的能力，使我们能够轻松地由多个小型线性高斯状态空间模型分量来构建更复杂的时间序列模型。我们可以分别为趋势性分量、季节性分量和误差项分别提供状态空间表示，并将其组合成通常所说的<strong>结构化时间序列模型</strong>或<strong>动态线性模型</strong>。 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 的 <code class="docutils literal notranslate"><span class="pre">tfp.sts</span></code> 模块提供了一种非常方便的方法来构建贝叶斯结构化时间序列，同时它还提供了用于解构分量、预测、推断和各种诊断的辅助函数。</p>
+<p>例如，可以使用具有局部线性趋势性分量和季节性分量的结构化时间序列对每月出生数据进行建模，以解释代码 <a class="reference internal" href="#tfp-sts-example2"><span class="std std-ref">tfp_sts_example2</span></a> 中的月模式。</p>
 <div class="literal-block-wrapper docutils container" id="tfp-sts-example2">
 <div class="code-block-caption"><span class="caption-number">Listing 96 </span><span class="caption-text">tfp_sts_example2</span><a class="headerlink" href="#tfp-sts-example2" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_bsts_model</span><span class="p">(</span><span class="n">observed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1510,7 +1512,7 @@ X_{2,t}\\
  &lt;tensorflow_probability.python.sts.seasonal.Seasonal at ...&gt;]
 </pre></div>
 </div>
-<p>每个分量都由一些超参数参数化，这些超参数是我们想要进行推断的未知参数。它们不是隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的一部分，但可能参数化生成 <span class="math notranslate nohighlight">\(X_t\)</span> 的先验。例如，我们可以检查季节性分量的参数：</p>
+<p>每个分量都由一些超参数参数化，这些超参数是我们想要进行推断的未知参数。它们不是隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的组成部分，但有可能参数化生成 <span class="math notranslate nohighlight">\(X_t\)</span> 的先验。例如，我们可以检查季节性分量的参数：</p>
 <div class="literal-block-wrapper docutils container" id="tfp-sts-model-component">
 <div class="code-block-caption"><span class="caption-number">Listing 98 </span><span class="caption-text">tfp_sts_model_component</span><a class="headerlink" href="#tfp-sts-model-component" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">birth_model</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">parameters</span>
@@ -1522,14 +1524,13 @@ X_{2,t}\\
 bijector=&lt;tensorflow_probability.python.bijectors.chain.Chain object at ...&gt;)]
 </pre></div>
 </div>
-<p>这里 STS 模型的季节性分量包含 12 个隐状态（每个月一个），但该分量仅包含 1 个参数（参数化隐状态的超参数）。你可能已经从上一节中的示例中注意到未知参数的处理方式是如何不同的。在线性增长模型中，未知参数是隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的一部分，在 ARIMA 模型中，未知参数参数化 <span class="math notranslate nohighlight">\(\mathbf{F}_t\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{Q}_t\)</span>。对于后一种情况，我们不能使用卡尔曼滤波器来推断这些参数。</p>
-<p>相反，隐状态被有效地边缘化了，但我们仍然可以通过运行以后验分布为条件的卡尔曼滤波器（表示为蒙特卡洛样本）在推断后恢复它们。参数化的概念描述可以在 <a class="reference internal" href="#fig-fig18-bsts-lgssm"><span class="std std-numref">Fig. 119</span></a> 中找到：</p>
+<p>这里 STS 模型的季节性分量包含 <span class="math notranslate nohighlight">\(12\)</span> 个隐状态（每个月一个），但该分量仅包含 <span class="math notranslate nohighlight">\(1\)</span> 个参数（参数化隐状态的超参数）。你可能已经从上一节中的示例中注意到了未知参数的处理方式有所不同。在线性增长模型中，未知参数是隐状态 <span class="math notranslate nohighlight">\(X_t\)</span> 的组成部分，但在 <code class="docutils literal notranslate"><span class="pre">ARIMA</span> <span class="pre">模型</span></code>中，未知参数参数化了 <span class="math notranslate nohighlight">\(\mathbf{F}_t\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{Q}_t\)</span>。对于后者，不能使用卡尔曼滤波器来推断这些参数。取而代之，隐状态被高效地边缘化了，不过我们仍然能够在推断完成后，通过运行以后验分布为条件的卡尔曼滤波器（表示为蒙特卡洛样本）来恢复它们。参数化的概念描述可以参见 <a class="reference internal" href="#fig-fig18-bsts-lgssm"><span class="std std-numref">Fig. 119</span></a> 。</p>
 <div class="figure align-default" id="fig-fig18-bsts-lgssm">
 <a class="reference internal image-reference" href="../_images/fig18_bsts_lgssm.png"><img alt="../_images/fig18_bsts_lgssm.png" src="../_images/fig18_bsts_lgssm.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 119 </span><span class="caption-text">贝叶斯结构时间序列（蓝色框）与线性高斯状态空间模型（红色框）之间的关系。此处显示的线性高斯状态空间模型是一个包含局部线性趋势性分量、季节性分量和自回归分量的示例。</span><a class="headerlink" href="#fig-fig18-bsts-lgssm" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 119 </span><span class="caption-text">贝叶斯结构化时间序列（蓝色框）与线性高斯状态空间模型（红色框）之间的关系。此处显示的线性高斯状态空间模型是一个包含局部线性趋势性分量、季节性分量和自回归分量的例子。</span><a class="headerlink" href="#fig-fig18-bsts-lgssm" title="Permalink to this image">¶</a></p>
 </div>
-<p>因此，对结构时间序列模型进行推断在概念上可以理解为从要推断的参数生成线性高斯状态空间模型，运行卡尔曼滤波器以获得数据似然性，并结合以当前为条件的先验对数似然参数的值。不幸的是，遍历每个数据点的操作在计算上是相当昂贵的（尽管卡尔曼滤波器已经是一种非常有效的算法），因此在运行长时间序列时，拟合结构时间序列可能无法很好地扩展。</p>
-<p>在对结构化时间序列模型进行推断之后，我们可以使用来自 <code class="docutils literal notranslate"><span class="pre">tfp.sts</span></code> 的一些有用的实用函数来预测和检查每个带有代码 <a class="reference internal" href="#tfp-sts-example2-result"><span class="std std-ref">tfp_sts_example2_result</span></a> 的推断分量。结果显示在 <a class="reference internal" href="#fig-fig19-bsts-lgssm-result"><span class="std std-numref">Fig. 120</span></a> 中。</p>
+<p>对结构化时间序列模型进行推断，在概念上可以理解为：从要推断的参数生成线性高斯状态空间模型、运行卡尔曼滤波器以获得数据似然、结合以参数当前值为条件的先验对数似然。不幸的是，遍历每个数据点的操作在计算上相当昂贵（尽管卡尔曼滤波器已经是一种非常有效的算法），因此在运行长时间序列时，拟合结构化时间序列可能无法很好地做相应大规模扩展。</p>
+<p>在对结构化时间序列模型进行推断之后，我们可以使用来自 <code class="docutils literal notranslate"><span class="pre">tfp.sts</span></code> 的一些实用函数来预测和检查每个被推断的分量，见代码 <a class="reference internal" href="#tfp-sts-example2-result"><span class="std std-ref">tfp_sts_example2_result</span></a> ，其结果显示在 <a class="reference internal" href="#fig-fig19-bsts-lgssm-result"><span class="std std-numref">Fig. 120</span></a> 中。</p>
 <div class="literal-block-wrapper docutils container" id="tfp-sts-example2-result">
 <div class="code-block-caption"><span class="caption-number">Listing 99 </span><span class="caption-text">tfp_sts_example2_result</span><a class="headerlink" href="#tfp-sts-example2-result" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Using a subset of posterior samples.</span>
@@ -1583,16 +1584,26 @@ bijector=&lt;tensorflow_probability.python.bijectors.chain.Chain object at ...&g
 </div>
 <div class="figure align-default" id="fig-fig19-bsts-lgssm-result">
 <a class="reference internal image-reference" href="../_images/fig19_bsts_lgssm_result.png"><img alt="../_images/fig19_bsts_lgssm_result.png" src="../_images/fig19_bsts_lgssm_result.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 120 </span><span class="caption-text">使用带有代码 <a class="reference internal" href="#tfp-sts-example2-result"><span class="std std-ref">tfp_sts_example2_result</span></a> 的 <code class="docutils literal notranslate"><span class="pre">tfp.sts</span></code> API 推断美国（1948-1979 年）每月活产的结果和预测。上子图：36 个月预测；底部 2 个子图：结构时间序列的分解。</span><a class="headerlink" href="#fig-fig19-bsts-lgssm-result" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 120 </span><span class="caption-text">使用带有代码 <a class="reference internal" href="#tfp-sts-example2-result"><span class="std std-ref">tfp_sts_example2_result</span></a> 的 <code class="docutils literal notranslate"><span class="pre">tfp.sts</span></code> API 来推断美国（1948-1979 年）每月活产的结果和预测。顶图：<span class="math notranslate nohighlight">\(36\)</span> 个月的预测；下部的两个图：时间序列的结构化分解。</span><a class="headerlink" href="#fig-fig19-bsts-lgssm-result" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 </div>
 <div class="section" id="other-time-series-models">
 <span id="id40"></span><h2>6.5 其他时间序列模型<a class="headerlink" href="#other-time-series-models" title="Permalink to this headline">¶</a></h2>
-<p>虽然结构时间序列和线性高斯状态空间模型是时间序列模型的强大且富有表现力的类别，但它们当然不能满足我们的所有需求。例如，一些有趣的扩展包括非线性高斯状态空间模型，其中转移函数和测量函数是可微分的非线性函数。扩展卡尔曼滤波器可用于推断这些模型 <span id="id41">[<a class="reference internal" href="references.html#id161">62</a>]</span> 的 <span class="math notranslate nohighlight">\(X_t\)</span> 。有用于推断非高斯非线性模型 <span id="id42">[<a class="reference internal" href="references.html#id161">62</a>]</span> 的 Unscented Kalman 滤波器，以及作为状态空间模型 <span id="id43">[<a class="reference internal" href="references.html#id38">63</a>]</span> 的一般滤波方法的粒子滤波器。</p>
-<p>另一类广泛使用的时间序列模型是隐马尔可夫模型，它是具有离散状态空间的状态空间模型。还有一些专门的算法可以对这些模型进行推断，例如，用于计算边缘后验似然的前向后向算法，以及用于计算后验模式的 Viterbi 算法。</p>
-<p>此外，还有作为连续时间模型的常微分公式 (ODE) 和随机微分公式 (SDE)。</p>
-<p>在 <a class="reference internal" href="#table-ts-model-type"><span class="std std-numref">Table 14</span></a> 中，我们通过对随机性和时间的处理来划分模型的空间。虽然我们不会详细介绍这些模型，但它们是经过深入研究的主题，在 Python 计算生态系统中具有易于使用的实现。</p>
+<p>虽然 <strong>结构化时间序列模型</strong> 和 <strong>线性高斯状态空间模型</strong> 强大且富有表现力，但它们无法满足我们的所有需求。因此有很多在其基础上的扩展，例如：</p>
+<ul class="simple">
+<li><p><strong>扩展卡尔曼滤波</strong> ：可用于 <strong>非线性高斯状态空间模型</strong> 中 <span class="math notranslate nohighlight">\(X_t\)</span> 的推断。注：非线性指状态空间模型中的转移函数和观测函数是可微分的非线性函数。</p></li>
+<li><p><strong>无损卡尔曼滤波</strong>：可用于推断非高斯非线性模型 <span id="id41">[<a class="reference internal" href="references.html#id161">62</a>]</span> 。</p></li>
+<li><p><strong>粒子滤波</strong>：可以作为状态空间模型的一般性滤波方法 <span id="id42">[<a class="reference internal" href="references.html#id38">63</a>]</span> 。</p></li>
+<li><p><strong>隐马尔可夫模型</strong>：一种具有离散状态空间的状态空间模型。</p></li>
+</ul>
+<p>另外，还存在一些模型推断的专用算法，例如：</p>
+<ul class="simple">
+<li><p><strong>前向后向算法</strong>：用于计算边缘后验似然。</p></li>
+<li><p><strong>Viterbi 算法</strong>：用于计算后验的众数。</p></li>
+</ul>
+<p>此外，还有作为连续时间模型的<strong>常微分方程 (ODE)</strong> 和<strong>随机微分方程 (SDE)</strong>。</p>
+<p>在 <a class="reference internal" href="#table-ts-model-type"><span class="std std-numref">Table 14</span></a> 中，我们按照随机性和时间处理方式对模型进行了大致划分。它们都是经过深入研究的主题，在 Python 计算生态系统中具有易于使用的实现。</p>
 <table class="table" id="table-ts-model-type">
 <caption><span class="caption-number">Table 14 </span><span class="caption-text">按随机性和时间处理分类的各种时间序列模型</span><a class="headerlink" href="#table-ts-model-type" title="Permalink to this table">¶</a></caption>
 <colgroup>
@@ -1618,41 +1629,46 @@ bijector=&lt;tensorflow_probability.python.bijectors.chain.Chain object at ...&g
 <p>`</p>
 </div>
 <div class="section" id="model-criticism-and-choosing-priors">
-<span id="id44"></span><h2>6.6 模型评判和先验选择<a class="headerlink" href="#model-criticism-and-choosing-priors" title="Permalink to this headline">¶</a></h2>
-<p>在 <span id="id45">Box <em>et al.</em> [<a class="reference internal" href="references.html#id130">57</a>]</span> <a class="footnote-reference brackets" href="#id71" id="id46">15</a> 的开创性时间序列书中，他们概述了时间序列建模的五个重要实际问题：</p>
+<span id="id43"></span><h2>6.6 时间序列模型的评判和先验选择<a class="headerlink" href="#model-criticism-and-choosing-priors" title="Permalink to this headline">¶</a></h2>
+<p>在 <span id="id44">Box <em>et al.</em> [<a class="reference internal" href="references.html#id130">57</a>]</span> 的开创性时间序列书中 <a class="footnote-reference brackets" href="#id72" id="id45">15</a> ，概述了时间序列建模的五个重要实际问题：</p>
 <ul class="simple">
 <li><p>预测</p></li>
-<li><p>传递函数的估计</p></li>
+<li><p>转移函数的估计</p></li>
 <li><p>异常干预事件对系统的影响分析</p></li>
 <li><p>多元时间序列分析</p></li>
 <li><p>离散控制系统</p></li>
 </ul>
-<p>在实践中，大多数时间序列问题旨在执行某种预测（或即时预测，你试图在瞬时时间 <span class="math notranslate nohighlight">\(t\)</span> 推断一些由于获取测量延迟而尚不可用的观测量），这建立了一个自然的时间序列分析问题中的模型批评标准。虽然我们在本章中没有围绕贝叶斯决策理论进行具体处理，但值得引用 <span id="id47">West and Harrison [<a class="reference internal" href="references.html#id134">59</a>]</span> 的内容：</p>
+<p>大多数时间序列问题旨在执行某种预测（或即时预测，你试图在瞬时时间 <span class="math notranslate nohighlight">\(t\)</span> 推断一些由于获取测量滞后而尚不可用的观测量），这自然地建立了一个时间序列分析问题的模型评估标准。虽然我们在本章中没有围绕贝叶斯决策理论进行特定处理，但值得引用 <span id="id46">West and Harrison [<a class="reference internal" href="references.html#id134">59</a>]</span> 的内容：</p>
 <blockquote>
-<div><p>良好的建模需要认真思考，而良好的预测需要对预测在决策系统中的作用有一个综合的认识。</p>
+<div><p>良好的建模需要认真思考，而良好的预测需要对预测在决策系统中的作用有一个综合认识。</p>
 </div></blockquote>
-<p>在实践中，对时间序列模型推断的批评和对预测的评估应与决策过程紧密结合，尤其是如何将不确定性纳入决策。尽管如此，预测绩效可以单独评估。</p>
-<p>通常这是通过收集新数据或保留一些保留数据集来完成的，就像我们在本章中对 <span class="math notranslate nohighlight">\(\text{CO}_2\)</span> 示例所做的那样，并使用标准指标将观测结果与预测结果进行比较。一种流行的选择是平均绝对百分比误差 (MAPE)，它简单地计算：</p>
+<div class="section" id="id47">
+<h3>6.6.1 时间序列模型的评估<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
+<p><strong>（1） 绝对值百分比均值误差（MAPE）</strong></p>
+<p>在实践中，对 <em>时间序列模型推断的评判</em> 和 <em>对预测的评估</em> 应当与决策过程紧密结合，尤其是如何将不确定性纳入决策。虽然如此，我们还是能够单独对预测性能进行评估的。通常这种评估是通过收集新数据或留出一些测试数据来实现的，就像在本章对 <span class="math notranslate nohighlight">\(\text{CO}_2\)</span> 示例所做的那样，使用标准指标将观测结果与预测结果进行比较。其中有一种流行的选择是计算<strong>绝对值百分比均值误差 (MAPE)</strong>：</p>
 <div class="math notranslate nohighlight" id="equation-eq-mape">
 <span class="eqno">(69)<a class="headerlink" href="#equation-eq-mape" title="Permalink to this equation">¶</a></span>\[MAPE = \frac{1}{n} \sum_{i=1}^{n} \frac{|\text{forecast}_i - \text{observed}_i|}{\text{observed}_i}\]</div>
-<p>然而，MAPE 存在一些已知的偏差，例如，在低值观测期间的大误差会显着影响 MAPE。</p>
-<p>此外，当观测范围差异很大时，很难跨多个时间序列比较 MAPE。</p>
-<p>基于交叉验证的模型评估方法仍然适用并推荐用于时间序列模型。但是，如果目标是估计未来时间点的预测性能，则将 LOO 用于单个时间序列将是有问题的。一次简单地忽略一个观测结果并不尊重数据（或模型）的时间结构。例如，如果你删除一个点 <span class="math notranslate nohighlight">\(t\)</span> 并将其余点用于预测，你将使用点 <span class="math notranslate nohighlight">\(t_{-1}, t_{-2}, ...\)</span> 这可能与之前的观测结果一样好（在某种程度上）通知未来的，但你也将使用点 <span class="math notranslate nohighlight">\(t_{+1}, t_{+2}, ...\)</span>，也就是说你将使用未来来预测过去。因此，我们可以计算 LOO，但对得到的数字的解释将是荒谬的，因此会产生误导。我们不需要留下一个（或一些）时间点，而是需要某种形式的保留未来交叉验证（LFO-CV，参见例如 <span id="id48">Bürkner <em>et al.</em> [<a class="reference internal" href="references.html#id123">64</a>]</span>。作为粗略的草图，在初始模型推断之后，为了近似提前 1 步预测，我们将迭代保留时间序列或未来观测结果并评估对数预测密度，并重新拟合模型，包括 Pareto <span class="math notranslate nohighlight">\(k\)</span> 估计超过某个阈值时的特定时间点 [^ 16]. 因此，LFO-CV 不是指一个特定的预测任务，而是指各种可能的交叉验证方法，这些方法都涉及对未来时间点的某种形式的预测。</p>
+<p>显然 <code class="docutils literal notranslate"><span class="pre">MAPE</span></code> 存在一些偏差，例如，在取值较低的观测中，一旦出现较大误差就会显著影响 <code class="docutils literal notranslate"><span class="pre">MAPE</span></code> 值。此外，当观测值范围差异较大时，难以跨多个时间序列进行 <code class="docutils literal notranslate"><span class="pre">MAPE</span></code> 比较。</p>
+<p>基于交叉验证的模型评估方法仍然适用并推荐用于时间序列模型。但如果目标是评估对未来时间点的预测性能，则将 LOO 用于单个时间序列是有问题的。每次简单地留出一个观测值的方法没有考虑到数据（或模型）的时间结构。例如，如果你删除一个点 <span class="math notranslate nohighlight">\(t\)</span> 并将其余点用于预测而不考虑时间结构，那么你可以使用过去的点 <span class="math notranslate nohighlight">\(t_{-1}, t_{-2}, ...\)</span> 预测未来，但理论上你也可以使用未来的点 <span class="math notranslate nohighlight">\(t_{+1}, t_{+2}, ...\)</span> 来预测过去。因此，我们可以计算 LOO，但对其结果的解释将是荒谬的，会产生误导。</p>
+<p>在时间序列模型的评估中，我们不需要留出一个（或一些）时间点，而是需要某种将未来数据留出的交叉验证形式（ Leave-Future-Out Cross-Validation, LFO-CV ），参见 <span id="id48">Bürkner <em>et al.</em> [<a class="reference internal" href="references.html#id123">64</a>]</span>。其大概意思是，在初始模型推断之后，为了提前一步做出近似预测，可以在留出的时间序列上或未来观测数据上进行迭代，并基于对数预测密度做出量化评估；当某个时间点的帕雷托 <span class="math notranslate nohighlight">\(k\)</span> 估计值超出指定阈值时，将其纳入训练集重新拟合模型 <a class="footnote-reference brackets" href="#id73" id="id49">16</a>。 因此，LFO-CV 不是针对某个单一预测任务的交叉验证方法，而是面向未来时间点的各种可能预测任务的交叉验证方法。</p>
+</div>
 <div class="section" id="priors-for-time-series-models">
-<span id="id49"></span><h3>6.6.1 时间序列模型的先验<a class="headerlink" href="#priors-for-time-series-models" title="Permalink to this headline">¶</a></h3>
-<p>在 <a class="reference internal" href="#chp4-gam"><span class="std std-ref">6.2.3 基函数和广义可加模型</span></a> 部分中，我们使用了正则化先验，拉普拉斯先验，用于阶跃线性函数的斜率。正如我们所提到的，这是为了表达我们的先验知识，即斜率的变化通常很小且接近于零，因此产生的潜在趋势更平滑。
-正则化先验或稀疏先验的另一个常见用途是模拟假期或特殊日子效果。通常每个假期都有自己的系数，我们想表达一个先验，表明某些假期可能会对时间序列产生巨大影响，但大多数假期就像任何其他普通日子一样。我们可以用马蹄形先验 <span id="id50">[<a class="reference internal" href="references.html#id166">65</a>, <a class="reference internal" href="references.html#id168">66</a>]</span> 将这种直觉形式化，如公式 <a class="reference internal" href="#equation-eq-horse-shoe">(70)</a> 所示：</p>
+<span id="id50"></span><h3>6.6.2 时间序列模型的先验<a class="headerlink" href="#priors-for-time-series-models" title="Permalink to this headline">¶</a></h3>
+<p>在 <a class="reference internal" href="#chp4-gam"><span class="std std-ref">6.2.3 基函数和广义可加模型</span></a> 部分中，我们将正则化先验（拉普拉斯先验）用于阶跃线性函数的斜率，以表达我们的先验知识，即斜率变化通常很小且接近于零，因此产生的潜在趋势更为平滑。</p>
+<p><strong>（1）对假日事件的先验建模</strong></p>
+<p>正则化先验（或稀疏先验）还常用于对假日（或其他特殊日子）事件建模。通常每个假日都有自己的系数，如果我们想表达一个先验，即表明某些假日可能会对时间序列产生巨大影响，而其他大多数假日有普通日子一样，那么可以使用马蹄形先验 <span id="id51">[<a class="reference internal" href="references.html#id166">65</a>, <a class="reference internal" href="references.html#id168">66</a>]</span> 将这种直觉形式化，如公式 <a class="reference internal" href="#equation-eq-horse-shoe">(70)</a> 所示：</p>
 <div class="math notranslate nohighlight" id="equation-eq-horse-shoe">
 <span class="eqno">(70)<a class="headerlink" href="#equation-eq-horse-shoe" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \lambda_t^2 \sim&amp; \mathcal{H}\text{C}(1.) \\
 \beta_t \sim&amp; \mathcal{N}(0, \lambda_t^2 \tau^2)
 \end{split}\end{split}\]</div>
-<p>马蹄形先验中的全局参数 <span class="math notranslate nohighlight">\(\tau\)</span> 将假日效应的系数全局拉向零。同时，局部尺度 <span class="math notranslate nohighlight">\(\lambda_t\)</span> 的重尾让收缩产生了一些影响。我们可以通过改变 <span class="math notranslate nohighlight">\(\tau\)</span> 的值来适应不同程度的稀疏性：<span class="math notranslate nohighlight">\(\tau\)</span> 越接近于零，假期效应 <span class="math notranslate nohighlight">\(\beta_t\)</span> 的收缩越多，趋向于零，而较大的 <span class="math notranslate nohighlight">\(\tau\)</span>我们有一个更分散的先验 <span id="id51">[<a class="reference internal" href="references.html#id167">67</a>]</span> <a class="footnote-reference brackets" href="#id72" id="id52">17</a>。例如，在 <span id="id53">Riutort-Mayol <em>et al.</em> [<a class="reference internal" href="references.html#id169">68</a>]</span> 的案例研究 2 中，他们为一年中的每一天（包括闰日为 366 天）添加了一个特殊的日效应，并在对其进行正则化之前使用马蹄形。</p>
+<p>马蹄形先验中的全局参数 <span class="math notranslate nohighlight">\(\tau\)</span> 将假日效应的系数全都拉向零。同时，局部尺度参数 <span class="math notranslate nohighlight">\(\lambda_t\)</span> 的重尾，使得在这种收缩中产生了一些暴发效应。我们可以调整 <span class="math notranslate nohighlight">\(\tau\)</span> 值来适应不同程度的稀疏性：<span class="math notranslate nohighlight">\(\tau\)</span> 越接近于零，假日效应 <span class="math notranslate nohighlight">\(\beta_t\)</span> 的收缩越趋向于零，而较大的 <span class="math notranslate nohighlight">\(\tau\)</span> 则对应一个更为分散的先验 <span id="id52">[<a class="reference internal" href="references.html#id167">67</a>]</span> <a class="footnote-reference brackets" href="#id74" id="id53">17</a>。例如，在 <span id="id54">Riutort-Mayol <em>et al.</em> [<a class="reference internal" href="references.html#id169">68</a>]</span> 的案例研究 <span class="math notranslate nohighlight">\(2\)</span> 中，他们为一年中的每一天（包括闰日为 366 天）添加了一个特殊的日效应，并在对其进行正则化之前使用了马蹄形分布。</p>
+<p><strong>（2）对观测噪声的先验建模</strong></p>
 <p>时间序列模型先验的另一个重要考虑因素是观测噪声的先验。大多数时间序列数据本质上是非重复测量。我们根本无法及时返回并在确切条件下进行另一次观测（即，我们无法量化<strong>偶然</strong>不确定性）。这意味着我们的模型需要先验信息才能“确定”噪声是来自测量还是来自隐过程（即 <strong>epistemic</strong> 不确定性）。例如，在具有隐自回归分量或局部线性趋势模型的时间序列模型中，我们可以将更多信息先验放在观测噪声上，以将其调节为更小的值。这将“推动”趋势或自回归分量以过度拟合潜在的漂移模式，并且我们可能对趋势有更好的预测（短期内预测准确性更高）。风险在于我们对潜在趋势过于自信，从长远来看，这可能会导致预测不佳。在时间序列很可能是非平稳的实际应用程序中，我们应该准备好相应地调整先验。</p>
 </div>
 </div>
 <div class="section" id="exercises6">
-<span id="id54"></span><h2>6.7 练习<a class="headerlink" href="#exercises6" title="Permalink to this headline">¶</a></h2>
+<span id="id55"></span><h2>6.7 练习<a class="headerlink" href="#exercises6" title="Permalink to this headline">¶</a></h2>
 <p><strong>6E1.</strong> As we explained in Box <em>Parsing timestamp to design matrix</em> above, date information could be formatted into a design matrix for regression model to account for the periodic pattern in a time series. Try generating the following design matrix for the year 2021.</p>
 <p>Hint: use Code Block <a class="reference internal" href="#timerange-2021"><span class="std std-ref">timerange_2021</span></a> to generate all time stamps for 2021:</p>
 <div class="literal-block-wrapper docutils container" id="timerange-2021">
@@ -1665,7 +1681,7 @@ bijector=&lt;tensorflow_probability.python.bijectors.chain.Chain object at ...&g
 <li><p>A design matrix for day of the month effect.</p></li>
 <li><p>A design matrix for weekday vs weekend effect.</p></li>
 <li><p>Company G pay their employee on the 25th of every month, and if the  25th falls on a weekend, the payday is moved up to the Friday  before. Try to create a design matrix to encode the pay day of 2021.</p></li>
-<li><p>A design matrix for the US Federal holiday effect <a class="footnote-reference brackets" href="#id73" id="id55">18</a> in 2021.</p></li>
+<li><p>A design matrix for the US Federal holiday effect <a class="footnote-reference brackets" href="#id75" id="id56">18</a> in 2021.</p></li>
 </ul>
 <p>Create the design matrix so that each holiday has their individual  coefficient.</p>
 <p><strong>6E2.</strong> In the previous exercise , the design matrix for holiday effect treat each holiday separately. What if we consider all holiday effects to be the same? What is the shape of the design matrix if we do so? Reason about how does it affects the fit of the regression time series model.</p>
@@ -1732,7 +1748,7 @@ bijector=&lt;tensorflow_probability.python.bijectors.chain.Chain object at ...&g
 <p><strong>6M14.</strong> Make forecast for 50 time steps using the AR2 models from Exercise <strong>6M11</strong>. Does the forecast also look like a sinusoidal signal?</p>
 <p><strong>6H15.</strong> Implement the generative process for the <span class="math notranslate nohighlight">\(\text{SARIMA}(1, 1, 1)(1, 1, 1)_{12}\)</span> model, and make forecast.</p>
 <p><strong>6M16.</strong> Implement and inference a <span class="math notranslate nohighlight">\(ARIMAX(1,1,1)X[4]\)</span> model for the monthly birth dataset in this chapter, with the design matrix generated from a Fourier basis functions with <span class="math notranslate nohighlight">\(N=2\)</span>.</p>
-<p><strong>6H17.</strong> Derive the Kalman filter equations. Hint: first work out the joint distribution of <span class="math notranslate nohighlight">\(X_t\)</span> and <span class="math notranslate nohighlight">\(X_{t-1}\)</span>, and then follow with the joint distribution of <span class="math notranslate nohighlight">\(Y_t\)</span> and <span class="math notranslate nohighlight">\(X_t\)</span>. If you are still stuck take at look at Chapter 4 in Särkkä’s book <span id="id56">[<a class="reference internal" href="references.html#id129">60</a>]</span>.</p>
+<p><strong>6H17.</strong> Derive the Kalman filter equations. Hint: first work out the joint distribution of <span class="math notranslate nohighlight">\(X_t\)</span> and <span class="math notranslate nohighlight">\(X_{t-1}\)</span>, and then follow with the joint distribution of <span class="math notranslate nohighlight">\(Y_t\)</span> and <span class="math notranslate nohighlight">\(X_t\)</span>. If you are still stuck take at look at Chapter 4 in Särkkä’s book <span id="id57">[<a class="reference internal" href="references.html#id129">60</a>]</span>.</p>
 <p><strong>6M18.</strong> Inspect the output of <code class="docutils literal notranslate"><span class="pre">linear_growth_model.forward_filter</span></code> by indexing to a given time step:</p>
 <ul class="simple">
 <li><p>Identify the input and output of one Kalman filter step;</p></li>
@@ -1753,55 +1769,58 @@ bijector=&lt;tensorflow_probability.python.bijectors.chain.Chain object at ...&g
 <p><a class="reference external" href="https://github.com/asael697/bayesforecast">https://github.com/asael697/bayesforecast</a>.</p>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
 <dd><p><a class="reference external" href="https://quoteinvestigator.com/2013/10/20/no-predict/">https://quoteinvestigator.com/2013/10/20/no-predict/</a></p>
 </dd>
-<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
 <dd><p>There is also a subtlety that not all periodic patterns in the  time series should be considered seasonal. A useful distinction to  make is between cyclic and seasonal behavior. You can find a nice  summary in <a class="reference external" href="https://robjhyndman.com/hyndsight/cyclicts/">https://robjhyndman.com/hyndsight/cyclicts/</a>.</p>
 </dd>
-<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
 <dd><p>This makes the observation not iid and not exchangeable. You can  also see in Chapter <a class="reference internal" href="chp_04.html#chap3"><span class="std std-ref">4</span></a> where we define residuals</p>
 </dd>
-<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id9">4</a></span></dt>
+<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id9">4</a></span></dt>
 <dd><p>Which, it is unfortunate for our model and for our planet.</p>
 </dd>
-<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id11">5</a></span></dt>
+<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id11">5</a></span></dt>
 <dd><p>A series is stationary if its characteristic properties such as  means and covariances remain invariant across time.</p>
 </dd>
-<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id12">6</a></span></dt>
+<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id12">6</a></span></dt>
 <dd><p><a class="reference external" href="https://facebook.github.io/prophet/">https://facebook.github.io/prophet/</a>.</p>
 </dd>
-<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id18">7</a></span></dt>
+<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id18">7</a></span></dt>
 <dd><p>A demo of the design matrix used in Facebook Prophet could be  found in <a class="reference external" href="http://prophet.mbrouns.com">http://prophet.mbrouns.com</a> from a PyMCon 2020  presentation.</p>
 </dd>
-<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id22">8</a></span></dt>
+<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id22">8</a></span></dt>
 <dd><p>That is why is called autoregressive, it applies a linear  regression to itself. Hence the similar naming to the  autocorrelation diagnostic introduced in Section <a class="reference internal" href="chp_02.html#autocorr-plot"><span class="std std-ref">2.4.5 自相关图</span></a>.</p>
 </dd>
-<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id25">9</a></span></dt>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id25">9</a></span></dt>
 <dd><p>Actually, the AR example in this section <em>is</em> a Gaussian Process.</p>
 </dd>
-<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id29">10</a></span></dt>
+<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id29">10</a></span></dt>
 <dd><p>The Stan implementation of SARIMA can be found in e.g.</p>
 </dd>
-<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id30">11</a></span></dt>
+<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id30">11</a></span></dt>
 <dd><p>For brevity, we omitted the MCMC sampling code here. You can find  the details in the accompanying Jupyter Notebook.</p>
 </dd>
-<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id32">12</a></span></dt>
+<dt class="label" id="id69"><span class="brackets"><a class="fn-backref" href="#id32">12</a></span></dt>
 <dd><p>It might be useful to first consider “space” here being some  multi-dimensional Euclidean spaces, so <span class="math notranslate nohighlight">\(X_t\)</span> and <span class="math notranslate nohighlight">\(Y_t\)</span> is some  multi-dimensional array/tensor when we do computations in Python.</p>
 </dd>
-<dt class="label" id="id69"><span class="brackets"><a class="fn-backref" href="#id36">13</a></span></dt>
+<dt class="label" id="id70"><span class="brackets"><a class="fn-backref" href="#id36">13</a></span></dt>
 <dd><p>This also gives a nice example of a non-stationary observation  matrix <span class="math notranslate nohighlight">\(\mathbf{H}\)</span>.</p>
 </dd>
-<dt class="label" id="id70"><span class="brackets"><a class="fn-backref" href="#id37">14</a></span></dt>
+<dt class="label" id="id71"><span class="brackets"><a class="fn-backref" href="#id37">14</a></span></dt>
 <dd><p>Note that this is not the only way to express ARMA model in a  state-space form, for more detail see lecture note  <a class="reference external" href="http://www-stat.wharton.upenn.edu/~stine/stat910/lectures/14_state_space.pdf">http://www-stat.wharton.upenn.edu/~stine/stat910/lectures/14_state_space.pdf</a>.</p>
 </dd>
-<dt class="label" id="id71"><span class="brackets"><a class="fn-backref" href="#id46">15</a></span></dt>
+<dt class="label" id="id72"><span class="brackets"><a class="fn-backref" href="#id45">15</a></span></dt>
 <dd><p>Nothing more puts George E. P. Box’s famous quote: “All models  are wrong, but some are useful” into perspective, than reading  through his seminal book and working on forecasting problems.</p>
 </dd>
-<dt class="label" id="id72"><span class="brackets"><a class="fn-backref" href="#id52">17</a></span></dt>
+<dt class="label" id="id73"><span class="brackets"><a class="fn-backref" href="#id49">16</a></span></dt>
+<dd><p>For a demonstration see  <a class="reference external" href="https://mc-stan.org/loo/articles/loo2-lfo.html">https://mc-stan.org/loo/articles/loo2-lfo.html</a>.</p>
+</dd>
+<dt class="label" id="id74"><span class="brackets"><a class="fn-backref" href="#id53">17</a></span></dt>
 <dd><p>Note that in practice we usually parameterize Equation  <a class="reference internal" href="#equation-eq-horse-shoe">(70)</a> a little bit differently.</p>
 </dd>
-<dt class="label" id="id73"><span class="brackets"><a class="fn-backref" href="#id55">18</a></span></dt>
+<dt class="label" id="id75"><span class="brackets"><a class="fn-backref" href="#id56">18</a></span></dt>
 <dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Federal_holidays_in_the_United_States#List_of_federal_holidays">https://en.wikipedia.org/wiki/Federal_holidays_in_the_United_States#List_of_federal_holidays</a></p>
 </dd>
 </dl>
