@@ -14,8 +14,7 @@ than other chapters.
 
 ## Probability Background
 
-The Spanish word azahar (the flower of certain critics) and azar
-(randomness) are not similar out of pure luck. They both come from the
+The Spanish word `azahar` and `azar` are not similar out of pure luck. They both come from the
 Arabic language [^1]. From ancient times, and even today, certain games
 of chance use a bone that it has two flat sides. This bone is similar to
 a coin or a two-side die. To make it easier to identify one side from
@@ -112,8 +111,9 @@ perspective. Nevertheless, from a practical point of view we can justify
 them as *naturally* arising from performing experiments, collecting
 observational data and even when doing computational simulations. For
 simplicity we will talk about experiments, knowing we are using this
-term in a very broad sense. To think about probabilities we can think in
-terms of mathematical sets. The **sample space** $\mathcal{X}$ is the
+term in a very broad sense. 
+
+To think about probabilities we can think in terms of mathematical sets. The **sample space** $\mathcal{X}$ is the
 set of all possible events from an **experiment**. An **event** $A$ is a
 subset of $\mathcal{X}$. We say $A$ happens when we perform an
 experiment and we get $A$ as the outcome. For a typical 6 face die we
