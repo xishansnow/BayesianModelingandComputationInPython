@@ -19,26 +19,16 @@ kernelspec:
 
 ```{epigraph}
 
-致 `Romina` 和 `Abril`，以及他们的爱心。
-
-致所有帮助我到达这里的人。
-
-To Romina and Abril, and their caring love. To everyone who helped me get here.
+致 `Romina` 和 `Abril`，以及他们的爱心。致所有帮助我到达这里的人。
 
 -- Osvaldo Martin
 ```
 
 ```{epigraph}
 
-感谢正式和非正式的教育工作者，他们无条件地分享知识和智慧，使我成为今天的我。 
+感谢正式和非正式的教育工作者，他们无条件地分享知识和智慧，使我成为今天的我。 致依次出现在我的生命历程中的 `Tim Pegg` 、`Michael Collins` 先生、`Sara LaFramboise Saadeh` 夫人、`Mehrdad Haghi` 、`Winny Dong` 、`Dixon Davis` 、`Jason Errington` 、`Chris Lopez` 、`John Norman` 、`Ananth Krishnamurthy` 和 `Kurt Campbell` 教授。
 
-致 `Tim Pegg` 、`Michael Collins` 先生、`Sara LaFramboise Saadeh` 夫人、`Mehrdad Haghi` 、`Winny Dong` 、`Dixon Davis` 、`Jason Errington` 、`Chris Lopez` 、`John Norman` 、`Ananth Krishnamurthy` 和 `Kurt Campbell` 教授，他们依次出现在我的生命历程中。
-
-谢谢！
-
-To the educators, both formal and informal, who unconditionally shared their knowledge and wisdom making me who I am today. In order of appearance in my life, Tim Pegg, Mr. Michael Collins, Mrs. Sara LaFramboise Saadeh, Professor Mehrdad Haghi, Professor Winny Dong, Professor Dixon Davis, Jason Errington, Chris Lopez, John Norman, Professor Ananth Krishnamurthy, and Kurt Campbell.
-
-Thank you
+谢谢你们！
 
 -- Ravin Kumar
 ```
@@ -46,8 +36,6 @@ Thank you
 ```{epigraph}
 
 致 `Yuli` 。
-
-To Yuli.
 
 -- Junpeng Lao
 ```
