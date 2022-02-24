@@ -251,16 +251,17 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#ess">
-     2.4.1 有效样本数量
+     2.4.1 有效样本数量 （ ESS ）
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#hat-r">
-     2.4.2 潜在的尺度缩减因子
+     2.4.2 潜在尺度缩减因子（
      <span class="math notranslate nohighlight">
       \(\hat R\)
      </span>
-</a>
+     ）
+    </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#monte-carlo-standard-error">
@@ -431,16 +432,17 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#ess">
-     2.4.1 有效样本数量
+     2.4.1 有效样本数量 （ ESS ）
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#hat-r">
-     2.4.2 潜在的尺度缩减因子
+     2.4.2 潜在尺度缩减因子（
      <span class="math notranslate nohighlight">
       \(\hat R\)
      </span>
-</a>
+     ）
+    </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#monte-carlo-standard-error">
@@ -542,11 +544,11 @@
 <div class="tex2jax_ignore mathjax_ignore section" id="chap1bis">
 <span id="id1"></span><h1>第二章: 贝叶斯模型的探索性分析<a class="headerlink" href="#chap1bis" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
-<p>正如 <a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref">第 1 章</span></a> 所述，<strong>贝叶斯推断</strong>使用观测数据对模型（即先验和似然）进行条件化并获得后验分布。我们可以使用纸笔、计算机或其他设备来实现推断 <a class="footnote-reference brackets" href="#id61" id="id2">1</a> 。此外，推断过程通常还包括一些其他量的计算，例如先验预测分布和后验预测分布。但<strong>贝叶斯建模</strong>相对于贝叶斯推断而言内容更为广泛。我们通常希望贝叶斯建模能够靠简单指定模型和计算后验就能实现，但通常情况下并非如此。现实情况是，成功的贝叶斯数据分析需要完成许多其他同等重要的任务。</p>
+<p>正如 <a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref">第 1 章</span></a> 所述，<strong>贝叶斯推断</strong>使用观测数据对模型（即先验和似然）进行条件化并获得后验分布。我们可以使用纸笔、计算机或其他设备来实现推断 <a class="footnote-reference brackets" href="#id62" id="id2">1</a> 。此外，推断过程通常还包括一些其他量的计算，例如先验预测分布和后验预测分布。但<strong>贝叶斯建模</strong>相对于贝叶斯推断而言内容更为广泛。我们通常希望贝叶斯建模能够靠简单指定模型和计算后验就能实现，但通常情况下并非如此。现实情况是，成功的贝叶斯数据分析需要完成许多其他同等重要的任务。</p>
 <p>在本章中，我们将讨论其中一些任务，包括：<strong>模型假设的检查</strong>、<strong>模型推断结果的诊断</strong> 和 <strong>模型的比较</strong>。</p>
 <div class="section" id="there-is-life-after-inference-and-before-too">
 <span id="id3"></span><h2>2.1 “贝叶斯建模”大于“贝叶斯推断”<a class="headerlink" href="#there-is-life-after-inference-and-before-too" title="Permalink to this headline">¶</a></h2>
-<p>成功的贝叶斯建模方法除了贝叶斯推断之外，还需要执行其他额外的任务 <a class="footnote-reference brackets" href="#id62" id="id4">2</a>。</p>
+<p>成功的贝叶斯建模方法除了贝叶斯推断之外，还需要执行其他额外的任务 <a class="footnote-reference brackets" href="#id63" id="id4">2</a>。</p>
 <p>典型如：</p>
 <ul class="simple">
 <li><p>模型诊断，对使用数值方法获得的推断结果进行诊断，评估其质量。</p></li>
@@ -559,7 +561,7 @@
 <div><p>探索性数据分析 (探索性数据分析) 旨在揭示数据中的结构或简单描述。人们查看数字或图表并尝试找到其中蕴含的模式（ Patterns ），寻求由背景信息、想象力、感知到的模式和其他数据分析经验提供的前瞻性线索。</p>
 </div></blockquote>
 <p>探索性数据分析 通常在推断之前执行，有时甚至可以代替推断。我们以及之前许多研究者 <span id="id7">[<a class="reference internal" href="references.html#id20">16</a>, <a class="reference internal" href="references.html#id78">17</a>]</span> 认为，探索性数据分析 中的许多想法都可以被使用、重新解释，并扩展为强大的贝叶斯建模方法。</p>
-<p>在本书中将主要使用 <code class="docutils literal notranslate"><span class="pre">Python</span></code> 的 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 库 <a class="footnote-reference brackets" href="#id63" id="id8">3</a> 来对贝叶斯模型进行探索性分析。</p>
+<p>在本书中将主要使用 <code class="docutils literal notranslate"><span class="pre">Python</span></code> 的 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 库 <a class="footnote-reference brackets" href="#id64" id="id8">3</a> 来对贝叶斯模型进行探索性分析。</p>
 <p>在现实生活中，贝叶斯推断步骤和模型的探索性分析步骤经常交织在一个迭代的工作流中，其中可能还包括编码错误、计算问题、对模型充分性的怀疑、对我们当前对数据的理解的怀疑、非线性模型构建、模型检查等很多方面。试图在一本书中描述这种复杂的工作流非常具有挑战性，而且也不是本书的重点。因此，我们可能会省略部分甚至全部探索性分析步骤，或者将其留作练习。这并非因为探索性分析没有必要或不重要；相反，它非常地重要，在编写本书过程中，我们实际上在 “幕后” 进行了大量地迭代工作。但也确实在某些地方省略了它们，以便将重点放在其他注意力方面，例如模型细节、计算特征或基础数学。</p>
 </div>
 <div class="section" id="prior-predictive-checks">
@@ -569,7 +571,7 @@
 <p>在实际工作中，当做出先验假设（可能是不合适的）后，无需以观测数据为条件，就可以通过从模型中采样来获得<strong>先验预测分布（ Prior Predictive Distribution ）</strong>。 这些先验预测分布的样本，将我们在参数空间中所做的选择，转换成了观测数据空间中的预测结果，从而让我们有机会更直接得理解假设。这种利用先验和模型生成样本，并用样本来评估先验的过程，被称为先验预测检查。</p>
 <div class="section" id="id10">
 <h3>2.2.1 有助于发现先验设置产生的问题<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
-<p>假设我们希望建立一个足球模型。具体来说，我们对踢点球的进球概率感兴趣。经过思考，我们决定使用几何模型来建模 <a class="footnote-reference brackets" href="#id64" id="id11">4</a>。根据 <a class="reference internal" href="#fig-football-sketch"><span class="std std-numref">Fig. 12</span></a> 中的草图和三角函数知识，可以得出以下计算进球概率的公式：</p>
+<p>假设我们希望建立一个足球模型。具体来说，我们对踢点球的进球概率感兴趣。经过思考，我们决定使用几何模型来建模 <a class="footnote-reference brackets" href="#id65" id="id11">4</a>。根据 <a class="reference internal" href="#fig-football-sketch"><span class="std std-numref">Fig. 12</span></a> 中的草图和三角函数知识，可以得出以下计算进球概率的公式：</p>
 <div class="math notranslate nohighlight" id="equation-eq-geometric-football">
 <span class="eqno">(16)<a class="headerlink" href="#equation-eq-geometric-football" title="Permalink to this equation">¶</a></span>\[p\left(|\alpha| &lt; \tan^{-1}\left(\frac{L}{x}\right)\right) = 2\Phi\left(\frac{\tan^{-1}\left(\frac{L}{x}\right)}{\sigma}\right) - 1\]</div>
 <p>公式 <a class="reference internal" href="#equation-eq-geometric-football">(16)</a> 的直觉印象是：（1）假设进球结果由 <span class="math notranslate nohighlight">\(|\alpha|\)</span> 是否小于某个角度阈值 <span class="math notranslate nohighlight">\(\tan^{-1}\left(\frac{L}{x}\right)\)</span> 决定；(2) 假设球员努力将球踢直（即射门角度为 <span class="math notranslate nohighlight">\(0\)</span> ），但存在某些因素导致足球的轨迹出现了大小为 <span class="math notranslate nohighlight">\(\sigma\)</span> 的偏差。</p>
@@ -594,7 +596,7 @@ Y &amp;= \text{Bin}(n=1, p=\text{p_goal})
 </div>
 <div class="section" id="id12">
 <h3>2.2.2 有助于发现模型设置产生的问题<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="#fig-prior-predictive-check-01"><span class="std std-numref">Fig. 14</span></a> 显示了另一个我们可能觉得意外的例子 <a class="footnote-reference brackets" href="#id65" id="id13">5</a> 。该示例显示了一个具有两个预测变量的逻辑斯蒂回归 <a class="footnote-reference brackets" href="#id67" id="id14">6</a> ，其回归系数上的先验为 <span class="math notranslate nohighlight">\(\mathcal{N}(0, 1)\)</span> 。</p>
+<p><a class="reference internal" href="#fig-prior-predictive-check-01"><span class="std std-numref">Fig. 14</span></a> 显示了另一个我们可能觉得意外的例子 <a class="footnote-reference brackets" href="#id66" id="id13">5</a> 。该示例显示了一个具有两个预测变量的逻辑斯蒂回归 <a class="footnote-reference brackets" href="#id68" id="id14">6</a> ，其回归系数上的先验为 <span class="math notranslate nohighlight">\(\mathcal{N}(0, 1)\)</span> 。</p>
 <p>当我们增加预测变量的数量时，先验预测分布的均值参数从聚集在 <span class="math notranslate nohighlight">\(0.5\)</span> 左右（左侧子图）变为均匀分布（中间子图），更进一步变得支持极值 <span class="math notranslate nohighlight">\(0\)</span> 或 <span class="math notranslate nohighlight">\(1\)</span>（右侧子图）。</p>
 <p>这个例子提示我们：随着预测变量数量的增加，先验预测分布会将更多质量放在极值上。因此，我们可能需要一个更强的正则化先验，以使模型远离那些不太可能发生的极值。</p>
 <div class="figure align-default" id="fig-prior-predictive-check-01">
@@ -648,7 +650,7 @@ Y &amp;= \text{Bin}(n=1, p=\text{p_goal})
 </div>
 <div class="section" id="id19">
 <h3>2.3.3 图表的分析与理解<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
-<p>在继续阅读之前，你应该花点时间仔细检查 <a class="reference internal" href="#fig-posterior-predictive-many-examples"><span class="std std-numref">Fig. 18</span></a> ，并自己尝试着理解这些图为什么会有如此表现。在此图中，有一系列简单例子来帮助我们获得用于解释后验预测检查图的直观感觉<a class="footnote-reference brackets" href="#id68" id="id20">7</a>。在所有这些示例中，观测数据（蓝色）都遵循高斯分布。</p>
+<p>在继续阅读之前，你应该花点时间仔细检查 <a class="reference internal" href="#fig-posterior-predictive-many-examples"><span class="std std-numref">Fig. 18</span></a> ，并自己尝试着理解这些图为什么会有如此表现。在此图中，有一系列简单例子来帮助我们获得用于解释后验预测检查图的直观感觉<a class="footnote-reference brackets" href="#id69" id="id20">7</a>。在所有这些示例中，观测数据（蓝色）都遵循高斯分布。</p>
 <ol class="simple">
 <li><p>在第一行，模型预测相对于观测数据系统地转移到更高值的观测值。</p></li>
 <li><p>在第二行，模型做出的预测比观测数据更广泛。</p></li>
@@ -663,7 +665,7 @@ Y &amp;= \text{Bin}(n=1, p=\text{p_goal})
 <li><p>模型在尾部的预测较少。</p></li>
 <li><p>该模型正在或多或少地做出经过良好校准的预测，但我是一个持怀疑态度的人，所以我应该运行另一个后验预测检查来确认。</p></li>
 </ol>
-<p>如果这种阅读图表的方式仍然让你感到困惑，可以从完全等效的不同角度尝试，但它可能更直观，只要你记住你可以更改模型，而不是观测结果 <a class="footnote-reference brackets" href="#id69" id="id21">8</a>。从上到下，你可以将它们阅读为：</p>
+<p>如果这种阅读图表的方式仍然让你感到困惑，可以从完全等效的不同角度尝试，但它可能更直观，只要你记住你可以更改模型，而不是观测结果 <a class="footnote-reference brackets" href="#id70" id="id21">8</a>。从上到下，你可以将它们阅读为：</p>
 <ol class="simple">
 <li><p>左侧观测较多</p></li>
 <li><p>中间观测较多</p></li>
@@ -700,9 +702,9 @@ Y &amp;= \text{Bin}(n=1, p=\text{p_goal})
 </div>
 <p>请注意，<span class="math notranslate nohighlight">\(3\)</span> 个合成后验都是标量（单参数或一元随机变量）的后验分布样本，不过这对于当前讨论来说已经足够了，因为后面的诊断都是逐模型参数计算的。</p>
 <div class="section" id="ess">
-<span id="id23"></span><h3>2.4.1 有效样本数量<a class="headerlink" href="#ess" title="Permalink to this headline">¶</a></h3>
-<p>使用 MCMC 采样方法时，有理由怀疑样本是否足够大，是否能够可靠地支撑计算感兴趣的量，如均值或 HDI。这个问题无法仅通过查看样本数量直接回答，因为来自 MCMC 方法的样本具有一定程度的<strong>自相关</strong>，因此其中包含的实际 <em>信息量</em> 会比从相同大小的独立同分布样本要少。一系列数值的自相关是指，我们可以观测到这些值之间的相似性是其时间滞后的函数。例如，如果今天的日出时间是早上 6:03，那么你知道明天的日出时间大约是同一时间。事实上，在知道今天的值后，你离赤道越近预测未来日落时间的时间滞后就越长。也就是说，赤道处的自相关比靠近两极的地方大 <a class="footnote-reference brackets" href="#id70" id="id24">9</a>。</p>
-<p>从上述分析出发，我们可以将有效样本数 (Effective Sample Size, ESS) 视为一个考虑了自相关的估计量，能够提供当样本为独立同分布时应该具备的抽样次数。此解释很吸引人，但小心不要过度解读，我们将在后面看到这一点。</p>
+<span id="id23"></span><h3>2.4.1 有效样本数量 （ ESS ）<a class="headerlink" href="#ess" title="Permalink to this headline">¶</a></h3>
+<p>使用 MCMC 采样方法时，有理由怀疑样本是否足够大，是否能够可靠地支撑计算感兴趣的量，如均值或 HDI。这个问题无法仅通过查看样本数量直接回答，因为来自 MCMC 方法的样本具有一定程度的<strong>自相关</strong>，因此其中包含的实际 <em>信息量</em> 会比从相同大小的独立同分布样本要少。一系列数值的自相关是指，我们可以观测到这些值之间的相似性是其时间滞后的函数。例如，如果今天的日出时间是早上 6:03，那么你知道明天的日出时间大约是同一时间。事实上，在知道今天的值后，你离赤道越近预测未来日落时间的时间滞后就越长。也就是说，赤道处的自相关比靠近两极的地方大 <a class="footnote-reference brackets" href="#id71" id="id24">9</a>。</p>
+<p>从上述分析出发，我们可以将有效样本数 ( Effective Sample Size, ESS ) 视为一个考虑了自相关的估计量，能够提供当样本为独立同分布时应该具备的抽样次数。此解释很吸引人，但小心不要过度解读，我们将在后面看到这一点。</p>
 <p>我们可以使用 ArviZ 的 <code class="docutils literal notranslate"><span class="pre">az.ess()</span></code> 函数计算均值参数的有效样本大小：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.ess.html#arviz.ess" title="arviz.ess"><span class="n">az</span><span class="o">.</span><span class="n">ess</span></a><span class="p">(</span><span class="n">chains</span><span class="p">)</span>
 </pre></div>
@@ -731,18 +733,17 @@ Data variables:
 <a class="reference internal image-reference" href="../_images/plot_ess.png"><img alt="../_images/plot_ess.png" src="../_images/plot_ess.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 19 </span><span class="caption-text">上图：小区间概率估计的局部有效样本数。底部：分位数有效样本数估计。虚线为人为设定的有效样本数最小建议值 <span class="math notranslate nohighlight">\(400\)</span>。理想情况下，我们希望局部和分位数有效样本数在参数空间的所有区域都很高。</span><a class="headerlink" href="#fig-plot-ess" title="Permalink to this image">¶</a></p>
 </div>
-<p>作为一般经验，我们建议有效样本数大于 <span class="math notranslate nohighlight">\(400\)</span>，否则，对有效样本数自身的估计和对其他量（ 如下面将看到的 <span class="math notranslate nohighlight">\(\hat R\)</span> ）的估计，基本上不可靠 {cite: p}<code class="docutils literal notranslate"><span class="pre">vehtari_rank_2019</span></code>。最后再次强调，我们讨论的有效样本数是指当样本为独立同分布采样时的样本数量，但我们必须非常小心地做出这种解释，因为参数空间不同区域的实际有效样本数不会相同。</p>
+<p>作为一般经验，我们建议有效样本数大于 <span class="math notranslate nohighlight">\(400\)</span>，否则，对有效样本数自身的估计和对其他量（ 如下面将看到的 <span class="math notranslate nohighlight">\(\hat R\)</span> ）的估计，基本上不可靠  <span id="id26">[<a class="reference internal" href="references.html#id13">19</a>]</span> 。最后再次强调，我们讨论的有效样本数是指当样本为独立同分布时的样本数量，但必须非常小心地做出这种解释，因为参数空间不同区域的实际有效样本数可能并不相同。</p>
 </div>
 <div class="section" id="hat-r">
-<span id="potential-scale-reduction-factor-hat-r"></span><h3>2.4.2 潜在的尺度缩减因子 <span class="math notranslate nohighlight">\(\hat R\)</span><a class="headerlink" href="#hat-r" title="Permalink to this headline">¶</a></h3>
+<span id="potential-scale-reduction-factor-hat-r"></span><h3>2.4.2 潜在尺度缩减因子（ <span class="math notranslate nohighlight">\(\hat R\)</span> ）<a class="headerlink" href="#hat-r" title="Permalink to this headline">¶</a></h3>
 <p>在一般条件下，MCMC 方法有理论上的保证，无论该链的起点在哪儿，最终都会得到正确答案，但这仅对无限样本有效。在实践中，需要一些估计有限样本收敛性的方法。其中一个普遍做法是运行多个链，各自从不同的点开始，然后检查这些生成的链是否<em>彼此看起来足够相似</em>。</p>
-<p>这个直观的概念可以被形式化为数字诊断指标 <span class="math notranslate nohighlight">\(\hat R\)</span> 。这个指标的计算有很多版本，因为多年来它一直在改进 <span id="id26">[<a class="reference internal" href="references.html#id13">19</a>]</span>。最初，<span class="math notranslate nohighlight">\(\hat R\)</span> 被解释为由于 MCMC 的有限样本而被高估了的方差，这意味着如果继续进行无限地采样，你应该得到一个根据因子 <span class="math notranslate nohighlight">\(\hat R\)</span> 逐步缩减的估计方差。也就是说，当<code class="docutils literal notranslate"><span class="pre">潜在尺度缩减因子</span></code>达到的目标值 <span class="math notranslate nohighlight">\(1\)</span> 时，继续增加样本将无法进一步减少估计方差。</p>
-<p>在实践中，最好将 <span class="math notranslate nohighlight">\(\hat R\)</span> 视为一种诊断工具，而不是过度解读它。</p>
-<p><span class="math notranslate nohighlight">\(\theta\)</span> 参数的 <span class="math notranslate nohighlight">\(\hat R\)</span> 计算为其所有样本（含所有链）的标准差除以各独立链内标准差的均方根。</p>
+<p>这个直观的概念可以被形式化为指标潜在尺度缩减因子（ Potential Scale Reduction Factor, PSRF），记为  <span class="math notranslate nohighlight">\(\hat R\)</span> 。该指标的计算公式有很多版本，因为多年来它一直在改进 <span id="id27">[<a class="reference internal" href="references.html#id13">19</a>]</span>。最初，<span class="math notranslate nohighlight">\(\hat R\)</span> 被解释为对样本方差的一种估计方法。理论上如果进行无限地采样，样本的估计方差应当逐步缩小，而  <span class="math notranslate nohighlight">\(\hat R\)</span> 正是对此缩小程度的量化，通常计算为 <code class="docutils literal notranslate"><span class="pre">所有样本的方差</span></code>  和 <code class="docutils literal notranslate"><span class="pre">链内样本的均方差</span></code> 之比。 <span class="math notranslate nohighlight">\(\hat R\)</span> 的目标值为 <span class="math notranslate nohighlight">\(1\)</span> ，也就是说，当  <span class="math notranslate nohighlight">\(\hat R\)</span>  达到 <span class="math notranslate nohighlight">\(1\)</span> 时，采样就进入了理想状态，继续增加样本已经无助于减少估计方差了。</p>
+<p>在实践中，通常将 <span class="math notranslate nohighlight">\(\hat R\)</span> 视为一种诊断工具，用于判断 MCMC 链是否已经达到了可接受的收敛状态。例如，一种常见的 <span class="math notranslate nohighlight">\(\hat R\)</span> 计算公式为：</p>
 <div class="math notranslate nohighlight">
-\[\hat R = \frac{\text{sd}_{All-Samples}}{\sqrt{\sum_{i=1}^N \text{sd}_{samples-of-Chain_i}}}\]</div>
-<p>实际计算时涉及的内容会更多一点，但总体思路仍然不变 <span id="id27">[<a class="reference internal" href="references.html#id13">19</a>]</span>。理想情况下，我们应该得到值 <span class="math notranslate nohighlight">\(1\)</span>，因为链间方差应该与链内方差一致。但从实用角度来看，<span class="math notranslate nohighlight">\(\hat R \lessapprox 1.01\)</span> 被认为是安全的。</p>
-<p>使用 ArviZ，我们可以使用 <code class="docutils literal notranslate"><span class="pre">az.rhat()</span></code> 函数计算 <span class="math notranslate nohighlight">\(\hat R\)</span> ：</p>
+\[\hat R = \frac{\text{sd}_{All-Samples}}{\sqrt{\frac{1}{N}\sum_{i=1}^N \text{sd}^2_{samples-of-Chain_i}}}\]</div>
+<p>实际计算时涉及的内容会更多一点，但总体思路仍然不变 <span id="id28">[<a class="reference internal" href="references.html#id13">19</a>]</span>。当链达到收敛的理想情况下，我们应该得到值 <span class="math notranslate nohighlight">\(1\)</span>，即链间方差应该与链内方差一致。但从实用角度来看，<span class="math notranslate nohighlight">\(\hat R \lessapprox 1.01\)</span> 通常也被认为是安全的。</p>
+<p>使用 ArviZ，可以调用 <code class="docutils literal notranslate"><span class="pre">az.rhat()</span></code> 函数来计算 <span class="math notranslate nohighlight">\(\hat R\)</span> ：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.rhat.html#arviz.rhat" title="arviz.rhat"><span class="n">az</span><span class="o">.</span><span class="n">rhat</span></a><span class="p">(</span><span class="n">chains</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -757,9 +758,9 @@ Data variables:
 <p>从此结果可以看出 <span class="math notranslate nohighlight">\(\hat R\)</span> 准确地将 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 识别为好样本，将 <code class="docutils literal notranslate"><span class="pre">bad_chains0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">bad_chains1</span></code> 正确识别为具有不同程度问题的样本。虽然 <code class="docutils literal notranslate"><span class="pre">bad_chains0</span></code> 完全是一场灾难，但 <code class="docutils literal notranslate"><span class="pre">bad_chains1</span></code> 似乎更接近于达到良好链的状态，但其值 <span class="math notranslate nohighlight">\(\hat R = 1.033 &gt; 1.01\)</span> 依然有点大。</p>
 </div>
 <div class="section" id="monte-carlo-standard-error">
-<span id="id28"></span><h3>2.4.3 蒙特卡洛标准误差<a class="headerlink" href="#monte-carlo-standard-error" title="Permalink to this headline">¶</a></h3>
-<p>当使用 MCMC 方法时，我们用有限数量的样本来近似后验分布，从而引入了额外的不确定性。这种不确定性可以使用基于 <em>马尔可夫链中心极限定理</em> 的<strong>蒙特卡洛标准误差 (MCSE)</strong> 来量化估计（参见 <a class="reference internal" href="chp_11.html#markov-chains"><span class="std std-ref">11.1.11 马尔可夫链</span></a> ）。 考虑到样本并非真正相互独立，蒙特卡洛标准误差实际上是从有效样本数（ ESS ） 计算得出的 <span id="id29">[<a class="reference internal" href="references.html#id13">19</a>]</span> 。有效样本数和 <span class="math notranslate nohighlight">\(\hat R\)</span> 的取值独立于参数的规模，因此解释 MCSE 是否足够小，需要领域专业知识。如果想要将估计的参数值取到小数点后两位，我们就需要确保 MCSE 低于小数点后两位，否则将错误地取得比实际精度更高的精度。只有当我们确定 ESS 足够大并且 <span class="math notranslate nohighlight">\(\hat R\)</span> 足够小时，才应该检查 MCSE；否则，MCSE 是无效的。</p>
-<p>使用 ArviZ，我们可以使用函数 <code class="docutils literal notranslate"><span class="pre">az.mcse()</span></code> 计算 MCSE</p>
+<span id="id29"></span><h3>2.4.3 蒙特卡洛标准误差<a class="headerlink" href="#monte-carlo-standard-error" title="Permalink to this headline">¶</a></h3>
+<p>MCMC 方法用有限数量的样本来近似整个后验分布，进而引入了额外的不确定性。这种不确定性可以使用基于 <em>马尔可夫链中心极限定理</em> 的 <strong>蒙特卡洛标准误差 (MCSE)</strong> 来量化（参见 <a class="reference internal" href="chp_11.html#markov-chains"><span class="std std-ref">11.1.11 马尔可夫链</span></a> ）。 考虑到样本并非真正相互独立，蒙特卡洛标准误差实际上是从有效样本数（ ESS ） 计算得出的 <span id="id30">[<a class="reference internal" href="references.html#id13">19</a>]</span> 。有效样本数 ESS 和缩减因子 <span class="math notranslate nohighlight">\(\hat R\)</span> 的取值独立于参数自身的尺度，因此对 MCSE 大小的解释需要在参数的尺度空间中进行，无法给出一个类似 <span class="math notranslate nohighlight">\(\hat R &lt; 1.01\)</span> 的指示阈值，往往需要分析人员具有领域专业知识。如果想要将估计的参数值取到小数点后两位，就需要确保 MCSE 低于小数点后两位，否则将错误地取得比实际精度更高的精度。此外，只有当我们确定有效样本数 ESS 足够大并且缩减因子 <span class="math notranslate nohighlight">\(\hat R\)</span> 足够小时，检查 MCSE 才有意义；否则，计算 MCSE 是没有用的。</p>
+<p>使用 ArviZ，可以调用函数 <code class="docutils literal notranslate"><span class="pre">az.mcse()</span></code> 计算 MCSE ：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.mcse.html#arviz.mcse" title="arviz.mcse"><span class="n">az</span><span class="o">.</span><span class="n">mcse</span></a><span class="p">(</span><span class="n">chains</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -771,15 +772,15 @@ Data variables:
     bad_chains1  float64 0.01781
 </pre></div>
 </div>
-<p>与有效样本数一样，MCSE 在参数空间中也是存在变化的，因此我们可能还想进一步评估不同区域的 MCSE，例如特定分位数。此外，我们可能还希望像 <a class="reference internal" href="#fig-plot-mcse"><span class="std std-numref">Fig. 20</span></a> 一样，一次可视化多个值。</p>
+<p>与有效样本数 ESS 一样，MCSE 在参数空间中也存在变化，因此有时可能想进一步评估不同区域的 MCSE，例如特定分位数附近。此外，有时会需要像 <a class="reference internal" href="#fig-plot-mcse"><span class="std std-numref">Fig. 20</span></a> 一样，同时可视化多个值。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.plot_mcse.html#arviz.plot_mcse" title="arviz.plot_mcse"><span class="n">az</span><span class="o">.</span><span class="n">plot_mcse</span></a><span class="p">(</span><span class="n">chains</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="fig-plot-mcse">
 <a class="reference internal image-reference" href="../_images/plot_mcse.png"><img alt="../_images/plot_mcse.png" src="../_images/plot_mcse.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 20 </span><span class="caption-text">分位数的局部 MCSE。子图的 <span class="math notranslate nohighlight">\(y\)</span> 轴共享相同的刻度以方便对比。理想情况下，我们希望 MCSE 在参数空间的所有区域中都很小。请注意，与两条不良链的 MCSE 相比，<code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 的 MCSE 值在所有值处都相对较低。</span><a class="headerlink" href="#fig-plot-mcse" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 20 </span><span class="caption-text">分位数的局部 MCSE。图中 <span class="math notranslate nohighlight">\(y\)</span> 轴共享相同的尺度以方便对比。理想情况下，我们希望 MCSE 在参数空间的所有区域中都很小。请注意，与两条不良链的 MCSE 相比，<code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 的 MCSE 值在参数空间的所有值处都相对较低。</span><a class="headerlink" href="#fig-plot-mcse" title="Permalink to this image">¶</a></p>
 </div>
-<p>最后，ESS、<span class="math notranslate nohighlight">\(\hat R\)</span> 和 MCSE 可以通过一次调用 <code class="docutils literal notranslate"><span class="pre">az.summary(.)</span></code> 函数来计算。</p>
+<p>最后，ESS、<span class="math notranslate nohighlight">\(\hat R\)</span> 和 MCSE 可以通过一次性调用 <code class="docutils literal notranslate"><span class="pre">az.summary(.)</span></code> 函数一起计算。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.summary.html#arviz.summary" title="arviz.summary"><span class="n">az</span><span class="o">.</span><span class="n">summary</span></a><span class="p">(</span><span class="n">chains</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"diagnostics"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -823,26 +824,26 @@ Data variables:
 </tr>
 </tbody>
 </table>
-<p>第一列是均值参数的蒙特卡洛标准误差，第二列是标准差参数的蒙特卡洛标准误差 <a class="footnote-reference brackets" href="#id71" id="id30">10</a> 。然后依次是主体和尾部的有效样本数，最后是 <span class="math notranslate nohighlight">\(\hat R\)</span> 收敛性诊断。</p>
+<p>表中第一列是均值参数的 MCSE ，第二列是标准差参数的 MCSE <a class="footnote-reference brackets" href="#id72" id="id31">10</a> 。然后依次是参数空间的主体区域和尾部区域的有效样本数，最后是 <span class="math notranslate nohighlight">\(\hat R\)</span> 的收敛性诊断。</p>
 </div>
 <div class="section" id="trace-plots">
-<span id="id31"></span><h3>2.4.4 轨迹图<a class="headerlink" href="#trace-plots" title="Permalink to this headline">¶</a></h3>
-<p>轨迹图可能是贝叶斯领域中最流行的图。</p>
-<p>它们通常是我们在推断完成后制作的第一张图，以直观地检查<em>我们得到了什么</em>。轨迹图利用在每个迭代步骤中抽取得到的采样值来绘制。在轨迹图中，我们能够看到不同的链是否收敛到了同一分布、可以得到自相关程度的<em>直观感觉</em>、… 。在 ArviZ 中，只需调用函数 <code class="docutils literal notranslate"><span class="pre">az.plot_trace(.)</span></code> 即可得到右侧的轨迹图，以及左侧的样本值概率分布图，其中连续型变量采用核密度估计曲线表示，离散变量采用直方图表示。</p>
+<span id="id32"></span><h3>2.4.4 轨迹图<a class="headerlink" href="#trace-plots" title="Permalink to this headline">¶</a></h3>
+<p>轨迹图可能是贝叶斯领域中最流行的图。它通常是贝叶斯推断完成后制作的第一张图，可以非常直观地检查 <em>我们得到了什么</em>。</p>
+<p>轨迹图利用在每个迭代步骤中抽取得到的样本值来绘制。在轨迹图中，能够看到不同的链是否收敛到了同一分布、可以得到自相关程度的 <em>直觉</em>  …… 。使用 ArviZ ，只需调用函数 <code class="docutils literal notranslate"><span class="pre">az.plot_trace(.)</span></code> 即可方便地获得模型参数的轨迹图（右）和样本值的概率分布图（左），对于概率分布图，连续型随机变量采用核密度估计曲线来绘制，而离散型随机变量采用直方图来表示。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.plot_trace.html#arviz.plot_trace" title="arviz.plot_trace"><span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span></a><span class="p">(</span><span class="n">chains</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="fig-trace-plots">
 <a class="reference internal image-reference" href="../_images/trace_plots.png"><img alt="../_images/trace_plots.png" src="../_images/trace_plots.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 21 </span><span class="caption-text">在左侧图中，可以看到每条链的一个核密度估计的分布图。在右侧图中，可以看到每条链每一步的采样值情况。请注意各示例链之间分布图和轨迹图的差异，特别是 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 中毛毛虫似的外观，以及其他两条链中的不规整性。</span><a class="headerlink" href="#fig-trace-plots" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 21 </span><span class="caption-text">在左侧中，可以看到每条链的样本概率分布图（经过核密度估计）。在右图中，可以看到每条链每一步的采样值情况。注意三条链之间样本概率分布图和轨迹图的差异，特别是 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 中具有毛毛虫似的外观，而其他两条链中则多多少少存在不规整性。</span><a class="headerlink" href="#fig-trace-plots" title="Permalink to this image">¶</a></p>
 </div>
 <p><a class="reference internal" href="#fig-trace-plots"><span class="std std-numref">Fig. 21</span></a> 显示了三种情况下的双链轨迹图（即将两条独立链的轨迹绘制在一张图上）。从中可以看到：</p>
-<p>在 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 中，两条独立链的抽取几乎来自于同一分布，因为它们的分布图之间（随机）差异很小。当我们按照迭代顺序查看抽取的样本时，可以发现两条链都相当<em>杂乱</em> 且不存在明显趋势或模式，而且将两条链区分开来。</p>
-<p><code class="docutils literal notranslate"><span class="pre">bad_chains0</span></code> 的情况与之形成了鲜明对比，可以通过分布图和轨迹图清楚地看到两个不同的分布，其间只有少量重叠区，表明这些链正在探索参数空间的两个不同区域且无法收敛。</p>
-<p><code class="docutils literal notranslate"><span class="pre">bad_chains1</span></code> 的情况有点微妙。其分布图似乎与 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 中的分布相似，但两条独立链之间的差异更加明显。另外，我们真的有 <span class="math notranslate nohighlight">\(2\)</span> 个或 <span class="math notranslate nohighlight">\(3\)</span> 个峰吗？分布似乎也不一致，也许我们的真实分布只有一个峰，而另外一个是伪影！多峰通常看起来比较可疑，除非有确切理由让我们相信确实存在多峰分布，例如，数据来自多个群组。其轨迹图似乎也与 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 中的轨迹有些相似，但仔细检查会发现其中存在部分长单调性区域（图中平行于 <span class="math notranslate nohighlight">\(x\)</span> 轴的线）。这清楚地表明采样器卡在了参数空间的某些区域中，这或许因为后验存在多峰，且在峰之间存在低概率障碍区，也或许是因为参数空间中存在一些区域的曲率与其他区域明显不同。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 中，两条独立链的抽取几乎来自于同一分布，因为它们的分布图之间（随机）差异很小。当我们按照迭代顺序查看抽取的样本时，可以发现两条链都相当 <em>杂乱</em> 且不存在明显趋势或模式，而且通过肉眼很难将两条链区分开来。</p>
+<p><code class="docutils literal notranslate"><span class="pre">bad_chains0</span></code> 的情况与之形成了鲜明对比，可以通过样本概率分布图和轨迹图清楚地看到两个不同的分布，其间只有少量重叠区，这表明两条链正在探索参数空间的不同区域且无法收敛。</p>
+<p><code class="docutils literal notranslate"><span class="pre">bad_chains1</span></code> 的情况有点微妙。其样本概率分布图似乎与 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 中的分布相似，但两条独立链之间存在更加明显的差异。我们真的有 <span class="math notranslate nohighlight">\(2\)</span> 个或 <span class="math notranslate nohighlight">\(3\)</span> 个峰吗？分布似乎也不一致，也许真实分布只有一个峰，而另外一个是伪影！多峰形态通常看起来是比较可疑的，除非有确切理由让我们确信存在多峰分布，例如，数据来自多个群组。其轨迹图似乎也与 <code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 中的轨迹有些相似，但仔细检查会发现其中存在部分单调性区域（图中平行于 <span class="math notranslate nohighlight">\(x\)</span> 轴的线）。这清楚地表明采样器卡在了参数空间的某些区域中，这或许因为后验存在多峰，且在峰之间存在低概率的障碍区，又或许是因为参数空间中存在一些区域的曲率与其他区域存在明显不同。</p>
 </div>
 <div class="section" id="autocorr-plot">
-<span id="id32"></span><h3>2.4.5 自相关图<a class="headerlink" href="#autocorr-plot" title="Permalink to this headline">¶</a></h3>
+<span id="id33"></span><h3>2.4.5 自相关图<a class="headerlink" href="#autocorr-plot" title="Permalink to this headline">¶</a></h3>
 <p>正如在讨论有效样本数时所述，自相关减少了样本中包含的实际信息量，因此希望尽量将其控制在最低限度，此时我们可以使用 <code class="docutils literal notranslate"><span class="pre">az.plot_autocorr</span></code> 函数直接可视化地检查自相关性。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.plot_autocorr.html#arviz.plot_autocorr" title="arviz.plot_autocorr"><span class="n">az</span><span class="o">.</span><span class="n">plot_autocorr</span></a><span class="p">(</span><span class="n">chains</span><span class="p">,</span> <span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -854,8 +855,8 @@ Data variables:
 <p><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig:autocorrelation_plot</span></code> 中的内容在看到的 <code class="docutils literal notranslate"><span class="pre">az.ess</span></code> 结果后，至少是可定性预见的。<code class="docutils literal notranslate"><span class="pre">good_chains</span></code> 显示出基本上为零的自相关；<code class="docutils literal notranslate"><span class="pre">bad_chains0</span></code> 高度相关；而 <code class="docutils literal notranslate"><span class="pre">bad_chains1</span></code> 并没有那么糟糕，但自相关仍然很明显并且不会迅速下降。</p>
 </div>
 <div class="section" id="rank-plots">
-<span id="id33"></span><h3>2.4.6 秩图<a class="headerlink" href="#rank-plots" title="Permalink to this headline">¶</a></h3>
-<p>秩图是另一种可视化诊断工具，我们可以用它来比较链内和链间的采样行为。秩图是秩后的样本的直方图，它先组合所有链后统一计算秩，然后分别为每条链绘制结果。如果所有链都针对同一分布，则我们希望秩服从均匀分布。此外，如果所有链的秩图看起来相似，表明链的混合良好 <span id="id34">[<a class="reference internal" href="references.html#id13">19</a>]</span>。</p>
+<span id="id34"></span><h3>2.4.6 秩图<a class="headerlink" href="#rank-plots" title="Permalink to this headline">¶</a></h3>
+<p>秩图是另一种可视化诊断工具，我们可以用它来比较链内和链间的采样行为。秩图是秩后的样本的直方图，它先组合所有链后统一计算秩，然后分别为每条链绘制结果。如果所有链都针对同一分布，则我们希望秩服从均匀分布。此外，如果所有链的秩图看起来相似，表明链的混合良好 <span id="id35">[<a class="reference internal" href="references.html#id13">19</a>]</span>。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.plot_rank.html#arviz.plot_rank" title="arviz.plot_rank"><span class="n">az</span><span class="o">.</span><span class="n">plot_rank</span></a><span class="p">(</span><span class="n">chains</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"bars"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -875,8 +876,8 @@ Data variables:
 <p>秩图可能比轨迹图更敏感，因此我们推荐使用秩图。你可以使用 <code class="docutils literal notranslate"><span class="pre">az.plot_trace(.,</span> <span class="pre">kind="rank_bars")</span></code> 或 <code class="docutils literal notranslate"><span class="pre">az.plot_trace(.,</span> <span class="pre">kind="rank_vlines")</span></code> 绘制上面的两种秩图。这些函数不仅绘制秩，还绘制后验的边缘分布。这有助于快速了解后验<em>看起来像什么</em>，这可以帮助我们发现采样或模型定义中存在的问题。尤其是在建模早期阶段时，我们很可能不太确定真正想做的事情，因此需要探索许多不同的选择。随着进展，模型开始变得更有意义，然后我们再检查 ESS 、<span class="math notranslate nohighlight">\(\hat R\)</span> 和 MCSE 是否正常，如果不正常我们也可以知道模型下一步需要改进的方向。</p>
 </div>
 <div class="section" id="divergences">
-<span id="id35"></span><h3>2.4.7 发散性<a class="headerlink" href="#divergences" title="Permalink to this headline">¶</a></h3>
-<p>到目前为止，我们一直在研究 MCMC 方法生成的样本，以诊断采样器的工作状况。本节将介绍另外一种通过监视采样器内部工作行为做诊断的方法。此类诊断方法的一个突出例子是 <strong>Hamiltonian Monte Carlo ( HMC )</strong> 采样器中涉及的**散度（ Divergences ）**概念 <a class="footnote-reference brackets" href="#id72" id="id36">11</a>。散度（源于物理统计学中的概念）是一种强大而灵敏的样本诊断方法，可作为前几节中诊断方法的补充。</p>
+<span id="id36"></span><h3>2.4.7 发散性<a class="headerlink" href="#divergences" title="Permalink to this headline">¶</a></h3>
+<p>到目前为止，我们一直在研究 MCMC 方法生成的样本，以诊断采样器的工作状况。本节将介绍另外一种通过监视采样器内部工作行为做诊断的方法。此类诊断方法的一个突出例子是 <strong>Hamiltonian Monte Carlo ( HMC )</strong> 采样器中涉及的**散度（ Divergences ）**概念 <a class="footnote-reference brackets" href="#id73" id="id37">11</a>。散度（源于物理统计学中的概念）是一种强大而灵敏的样本诊断方法，可作为前几节中诊断方法的补充。</p>
 <p>让我们在一个简单模型背景下讨论散度，本书后面还能找到更现实的例子。模型由一个参数 <span class="math notranslate nohighlight">\(\theta2\)</span> 组成，该参数服从区间 <span class="math notranslate nohighlight">\([-\theta1, \theta1]\)</span> 内的均匀分布，并且 <span class="math notranslate nohighlight">\(\theta1\)</span> 采样自高斯分布。当<span class="math notranslate nohighlight">\(\theta1\)</span> 很大时，<span class="math notranslate nohighlight">\(\theta2\)</span> 将服从一个跨越很大范围的均匀分布，当<span class="math notranslate nohighlight">\(\theta1\)</span> 接近于零时，<span class="math notranslate nohighlight">\(\theta2\)</span> 的分布宽度也将接近于零。使用 PyMC3，可以将此模型编写为：</p>
 <div class="literal-block-wrapper docutils container" id="divm0">
 <div class="code-block-caption"><span class="caption-number">Listing 9 </span><span class="caption-text">divm0</span><a class="headerlink" href="#divm0" title="Permalink to this code">¶</a></div>
@@ -890,11 +891,11 @@ Data variables:
 <div class="admonition-arviz-inferencedata-format admonition">
 <p class="admonition-title">ArviZ 支持的推断数据格式 – InferenceData Format </p>
 <p><code class="docutils literal notranslate"><span class="pre">az.InferenceData</span></code> 是一种专门为 MCMC 的贝叶斯用户设计的数据格式。</p>
-<p>它以一个 <span class="math notranslate nohighlight">\(N\)</span> 维数组的软件包 <code class="docutils literal notranslate"><span class="pre">xarray</span></code> <span id="id37">[<a class="reference internal" href="references.html#id171">20</a>]</span> 为基础。 InferenceData 对象的主要目的是提供一种方便的方法来存储和操作贝叶斯工作流程中生成的信息，包括来自分布的样本，如后验、先验、后验预测、先验预测以及采样期间生成的其他信息和诊断数据。 InferenceData 对象使用组的概念来组织这些信息。</p>
+<p>它以一个 <span class="math notranslate nohighlight">\(N\)</span> 维数组的软件包 <code class="docutils literal notranslate"><span class="pre">xarray</span></code> <span id="id38">[<a class="reference internal" href="references.html#id171">20</a>]</span> 为基础。 InferenceData 对象的主要目的是提供一种方便的方法来存储和操作贝叶斯工作流程中生成的信息，包括来自分布的样本，如后验、先验、后验预测、先验预测以及采样期间生成的其他信息和诊断数据。 InferenceData 对象使用组的概念来组织这些信息。</p>
 <p>在本书中，我们会大量使用<code class="docutils literal notranslate"><span class="pre">az.InferenceData</span></code>。用它来存储贝叶斯推断结果、计算诊断、生成绘图以及从磁盘读取和写入。有关完整的技术说明和 API，请参阅 ArviZ 文档。</p>
 </div>
 <p>请注意代码 <a class="reference internal" href="#divm0"><span class="std std-ref">divm0</span></a> 中的模型不以任何观测为条件，这意味着 <code class="docutils literal notranslate"><span class="pre">model_0</span></code> 指定了由两个未知数（“θ1”和“θ2”）参数化的后验分布。</p>
-<p>你可能注意到代码中包含了参数 <code class="docutils literal notranslate"><span class="pre">testval=0.1</span></code>。这样做是为了指示 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 从特定值（本例中为 <span class="math notranslate nohighlight">\(0.1\)</span>）开始采样，而不是从其默认值 <span class="math notranslate nohighlight">\(\theta1 = 0\)</span> 开始采样。因为对于  <span class="math notranslate nohighlight">\(\theta1 = 0\)</span> ，<span class="math notranslate nohighlight">\(\theta2\)</span> 的概率密度函数将对应狄拉克函数 <a class="footnote-reference brackets" href="#id73" id="id38">12</a>，这会产生错误。使用 <code class="docutils literal notranslate"><span class="pre">testval=0.1</span></code> 只会影响采样的初始化方式。</p>
+<p>你可能注意到代码中包含了参数 <code class="docutils literal notranslate"><span class="pre">testval=0.1</span></code>。这样做是为了指示 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 从特定值（本例中为 <span class="math notranslate nohighlight">\(0.1\)</span>）开始采样，而不是从其默认值 <span class="math notranslate nohighlight">\(\theta1 = 0\)</span> 开始采样。因为对于  <span class="math notranslate nohighlight">\(\theta1 = 0\)</span> ，<span class="math notranslate nohighlight">\(\theta2\)</span> 的概率密度函数将对应狄拉克函数 <a class="footnote-reference brackets" href="#id74" id="id39">12</a>，这会产生错误。使用 <code class="docutils literal notranslate"><span class="pre">testval=0.1</span></code> 只会影响采样的初始化方式。</p>
 <p>在 <a class="reference internal" href="#fig-divergences-trace"><span class="std std-numref">Fig. 25</span></a> 中，可以在 <code class="docutils literal notranslate"><span class="pre">model0</span></code> 的核密度估计曲线底部看到很多竖线。每条竖线都代表一个散度，表明在采样过程中出现了问题。我们可以其他图看到类似的东西，例如 {numref} <code class="docutils literal notranslate"><span class="pre">fig:divergences_pair</span></code> 中所示的 <code class="docutils literal notranslate"><span class="pre">az.plot_pair(.,divergences=True)</span></code>，这里的散度是无处不在的蓝点！</p>
 <div class="figure align-default" id="fig-divergences-trace">
 <a class="reference internal image-reference" href="../_images/divergences_trace.png"><img alt="../_images/divergences_trace.png" src="../_images/divergences_trace.png" style="width: 8.00in;"/></a>
@@ -933,29 +934,29 @@ Data variables:
 </div>
 </div>
 <div class="section" id="sampler-parameters-and-other-diagnostics">
-<span id="id39"></span><h3>2.4.8 采样器的参数和其他诊断方法<a class="headerlink" href="#sampler-parameters-and-other-diagnostics" title="Permalink to this headline">¶</a></h3>
+<span id="id40"></span><h3>2.4.8 采样器的参数和其他诊断方法<a class="headerlink" href="#sampler-parameters-and-other-diagnostics" title="Permalink to this headline">¶</a></h3>
 <p>大多数采样器方法都有影响自身性能的超参数。虽然大多数概率编程语言尝试使用合理的默认值，但实践中并不适用于所有的数据和模型。</p>
 <p>有时可以通过增加参数<code class="docutils literal notranslate"><span class="pre">target_accept</span></code> 来消除部分散度，例如，当散度源于数值不精确的时候。</p>
-<p>另外还有其他参数能够帮助解决采样问题，例如，我们可能希望增加 MCMC 采样器的迭代次数。在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中，有默认的采样参数 <code class="docutils literal notranslate"><span class="pre">pm.sample(.,tune=1000)</span></code>。在调整阶段，采样器参数会自动调整。而有些模型更复杂，需要更多交互才能让采样器学习到更好的参数。因此增加调整步数有助于增加 ESS 或降低 <span class="math notranslate nohighlight">\(\hat R\)</span>。增加抽样次数也有助于收敛，但总的来说其他途径更有效。如果一个模型在数千次抽取后都未能收敛，那么通常它在 <span class="math notranslate nohighlight">\(10\)</span> 倍以上的抽取中仍然会失败，或者稍有改进但其额外计算成本并不合理。此时，重参数化、改进模型结构、提供信息更多的先验，甚至更改模型通常会更有效 <a class="footnote-reference brackets" href="#id74" id="id40">13</a>。</p>
+<p>另外还有其他参数能够帮助解决采样问题，例如，我们可能希望增加 MCMC 采样器的迭代次数。在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中，有默认的采样参数 <code class="docutils literal notranslate"><span class="pre">pm.sample(.,tune=1000)</span></code>。在调整阶段，采样器参数会自动调整。而有些模型更复杂，需要更多交互才能让采样器学习到更好的参数。因此增加调整步数有助于增加 ESS 或降低 <span class="math notranslate nohighlight">\(\hat R\)</span>。增加抽样次数也有助于收敛，但总的来说其他途径更有效。如果一个模型在数千次抽取后都未能收敛，那么通常它在 <span class="math notranslate nohighlight">\(10\)</span> 倍以上的抽取中仍然会失败，或者稍有改进但其额外计算成本并不合理。此时，重参数化、改进模型结构、提供信息更多的先验，甚至更改模型通常会更有效 <a class="footnote-reference brackets" href="#id75" id="id41">13</a>。</p>
 <p>需要注意的是，在建模早期，我们可以使用较少的抽取次数来测试模型是否能够运行、是否已经编写了期望的模型、是否大致得到了合理结果等。这种初始检查大约只需要 <span class="math notranslate nohighlight">\(200\)</span> 或 <span class="math notranslate nohighlight">\(300\)</span> 次抽样就足够达到目的了。然后，当我们对模型更有信心时，可以将抽取次数增加到几千次，大约可以设置为 <span class="math notranslate nohighlight">\(2000\)</span> 或 <span class="math notranslate nohighlight">\(4000\)</span> 次。</p>
 <p>除了本章中介绍的诊断之外，还存在其他诊断方法，例如平行图和分离图。所有这些诊断方法都是有自己的用途。但是为了简洁性，本节中没有介绍它们。建议你访问包含更多示例的 ArviZ 文档和绘图库。</p>
 </div>
 </div>
 <div class="section" id="model-cmp">
-<span id="id41"></span><h2>2.5 模型比较<a class="headerlink" href="#model-cmp" title="Permalink to this headline">¶</a></h2>
+<span id="id42"></span><h2>2.5 模型比较<a class="headerlink" href="#model-cmp" title="Permalink to this headline">¶</a></h2>
 <p>通常，我们希望模型既不太简单以至于错过了数据中有价值的信息，也不会太复杂从而过拟合了数据中的噪声。找到这个 <em>甜蜜点</em> 是一项复杂的任务，一方面没有单一的标准来定义最佳解决方案，二是可能压根儿不存在最佳解决方案，三是在实践中需要对同一数据集支撑下的有限个模型进行选择。</p>
 <div class="section" id="elpd">
 <h3>2.5.1 评分法与对数评分规则（ ELPD ）<a class="headerlink" href="#elpd" title="Permalink to this headline">¶</a></h3>
 <p>尽管没有最佳解决方案，我们仍然可以尝试寻找一些好的通用策略。一种解决方案是计算模型的泛化误差，也被称为样本外预测精度，这是对新数据进行预测时，模型表现情况的一种估计。理想情况下，任何预测准确性的度量都应该考虑到问题本身，包括与模型预测有关的收益和成本。也就是说，应该应用一些决策论方法。不过我们也可以依赖一些适用于广泛模型和问题的通用手段，这种手段有时被称为评分规则，因为它们有助于对模型进行评分和排序。</p>
-<p>在众多评分规则中，对数评分规则具有非常好的理论性质 <span id="id42">[<a class="reference internal" href="references.html#id18">21</a>]</span>，因此被广泛使用。对数评分规则的计算公式为：</p>
+<p>在众多评分规则中，对数评分规则具有非常好的理论性质 <span id="id43">[<a class="reference internal" href="references.html#id18">21</a>]</span>，因此被广泛使用。对数评分规则的计算公式为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-elpd">
 <span class="eqno">(19)<a class="headerlink" href="#equation-eq-elpd" title="Permalink to this equation">¶</a></span>\[\text{ELPD} = \sum_{i=1}^离差{n} \int p_t(\tilde y_i) \; \log p(\tilde y_i \mid y_i) \; d\tilde y_i \]</div>
 <p>其中 <span class="math notranslate nohighlight">\(p_t(\tilde y_i)\)</span> 为生成数据 <span class="math notranslate nohighlight">\(\tilde y_i\)</span> 的真实分布（即理想中的数据生成分布），而 <span class="math notranslate nohighlight">\(p(\tilde y_i \mid y_i)\)</span> 为模型对应的后验预测分布。</p>
-<p>公式 <a class="reference internal" href="#equation-eq-elpd">(19)</a> 中定义的量被称为 <strong>逐点对数预测密度的期望（Expected Log Pointwise Predict Density, ELPD）</strong>。之所以称为”期望“，是因为我们是在真实数据生成过程上做<strong>积分运算</strong>，即在可能由该过程生成的所有数据上做积分；之所以称为“逐点”，是因为我们是在 <span class="math notranslate nohighlight">\(n\)</span> 个观测点上执行<strong>逐点计算</strong>；术语“密度”，则是为了简化表述而同时被用于表示连续和离散模型 <a class="footnote-reference brackets" href="#id75" id="id43">14</a>。</p>
+<p>公式 <a class="reference internal" href="#equation-eq-elpd">(19)</a> 中定义的量被称为 <strong>逐点对数预测密度的期望（Expected Log Pointwise Predict Density, ELPD）</strong>。之所以称为”期望“，是因为我们是在真实数据生成过程上做<strong>积分运算</strong>，即在可能由该过程生成的所有数据上做积分；之所以称为“逐点”，是因为我们是在 <span class="math notranslate nohighlight">\(n\)</span> 个观测点上执行<strong>逐点计算</strong>；术语“密度”，则是为了简化表述而同时被用于表示连续和离散模型 <a class="footnote-reference brackets" href="#id76" id="id44">14</a>。</p>
 <p>在实践中，我们并不知道真实的数据分布 <span class="math notranslate nohighlight">\(p_t(\tilde y_i)\)</span> ，因此公式 <a class="reference internal" href="#equation-eq-elpd">(19)</a> 中定义的 ELPD 没法直接计算，实践中只能用观测数据集做经验主义的近似，即用下式计算：</p>
 <div class="math notranslate nohighlight" id="equation-eq-elpd-practice">
 <span class="eqno">(20)<a class="headerlink" href="#equation-eq-elpd-practice" title="Permalink to this equation">¶</a></span>\[\sum_{i=1}^{n} \log \int \ p(y_i \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta} \mid y) d\boldsymbol{\theta} \]</div>
-<p>公式 <a class="reference internal" href="#equation-eq-elpd-practice">(20)</a> 定义的量（或乘以某个常数的量）通常称为离差，它在贝叶斯和非贝叶斯场景中都有使用 <a class="footnote-reference brackets" href="#id76" id="id44">15</a>。当似然为高斯时，公式 <a class="reference internal" href="#equation-eq-elpd-practice">(20)</a> 与均方误差成正比。</p>
+<p>公式 <a class="reference internal" href="#equation-eq-elpd-practice">(20)</a> 定义的量（或乘以某个常数的量）通常称为离差，它在贝叶斯和非贝叶斯场景中都有使用 <a class="footnote-reference brackets" href="#id77" id="id45">15</a>。当似然为高斯时，公式 <a class="reference internal" href="#equation-eq-elpd-practice">(20)</a> 与均方误差成正比。</p>
 <div class="admonition-deviance admonition">
 <p class="admonition-title">离差（ Deviance ）及相关容易混淆的概念 </p>
 <p>离差（又称“偏差”）是关于某个统计模型拟合优劣的统计量。</p>
@@ -974,7 +975,7 @@ Data variables:
 <p>为了计算公式 <a class="reference internal" href="#equation-eq-elpd-practice">(20)</a>，我们使用了用于拟合模型的相同数据，因此平均而言，会高估 ELPD（ 公式 <a class="reference internal" href="#equation-eq-elpd">(19)</a> ），并导致最终选择的模型容易过拟合。幸运的是，还有几种方法可以更好地估计 ELPD 。其中之一是下面将看到的交叉验证法（ Cross Validation, CV ）。</p>
 </div>
 <div class="section" id="cv-and-loo">
-<span id="id45"></span><h3>2.5.2 交叉验证和留一法<a class="headerlink" href="#cv-and-loo" title="Permalink to this headline">¶</a></h3>
+<span id="id46"></span><h3>2.5.2 交叉验证和留一法<a class="headerlink" href="#cv-and-loo" title="Permalink to this headline">¶</a></h3>
 <p><strong>（1）交叉验证的原理</strong></p>
 <p>交叉验证 (CV) 是一种估计样本外预测准确性的方法。该方法需要在留出部分数据的情况下重复多次拟合模型（每次留出不同的数据），每次拟合后都使用被留出的数据来测量一次模型的准确性。此过程重复多次后，将所有精度测量结果的均值视为模型的预测精度。此后用完整数据集再拟合一次模型，此模型才是用于进一步分析和/或预测的最终模型。我们可以将 CV 视为一种在使用所有样本点的情况下（或者说无需投入新观测点的情况下），仍然能够模拟（或近似）样本外统计量的方法。</p>
 <p><strong>（2）留一法交叉验证</strong></p>
@@ -1028,7 +1029,7 @@ Data variables:
 </pre></div>
 </div>
 </div>
-<p>计算 LOO 只需要抽自后验的样本 <a class="footnote-reference brackets" href="#id77" id="id46">16</a> ，然后调用 <code class="docutils literal notranslate"><span class="pre">az.loo(.)</span></code> 函数计算模型的 LOO 。</p>
+<p>计算 LOO 只需要抽自后验的样本 <a class="footnote-reference brackets" href="#id78" id="id47">16</a> ，然后调用 <code class="docutils literal notranslate"><span class="pre">az.loo(.)</span></code> 函数计算模型的 LOO 。</p>
 <p>在实践中，常常需要为多个模型计算 LOO ，Arviz 提供了 <code class="docutils literal notranslate"><span class="pre">az.compare(.)</span></code> 函数来进行多个模型之间 LOO 的比较。 <a class="reference internal" href="#table-compare-00"><span class="std std-numref">Table 2</span></a> 就是通过 <code class="docutils literal notranslate"><span class="pre">az.compare(idatas_cmp)</span></code> 生成的。</p>
 <table class="table" id="table-compare-00">
 <caption><span class="caption-number">Table 2 </span><span class="caption-text">模型比较的汇总数据。模型按照 loo 列的 ELPD 值自低至高排序.</span><a class="headerlink" href="#table-compare-00" title="Permalink to this table">¶</a></caption>
@@ -1113,7 +1114,7 @@ Data variables:
 </div>
 </div>
 <div class="section" id="elpd-plots">
-<span id="id47"></span><h3>2.5.3 对数预测密度的期望<a class="headerlink" href="#elpd-plots" title="Permalink to this headline">¶</a></h3>
+<span id="id48"></span><h3>2.5.3 对数预测密度的期望<a class="headerlink" href="#elpd-plots" title="Permalink to this headline">¶</a></h3>
 <p>在上一节中，我们计算了每个模型的 ELPD 值。这是一个有关模型 <em>全局</em> 的比较，它会将模型和数据简化为一个数字。但是从公式 <a class="reference internal" href="#equation-eq-elpd-practice">(20)</a> 和 <a class="reference internal" href="#equation-eq-elpd-loo-cv">(21)</a> 可以看到， LOO 是对逐点值求和得到的，每个观测值对应一个。因此，我们还可以执行 <em>局部的</em> 比较，可以将 ELPD 的每个值视为一个<em>模型在预测特定观测值时的</em> 难度指示器。</p>
 <p>为了利用逐观测点的 ELPD 值来比较模型，ArviZ 提供了 <code class="docutils literal notranslate"><span class="pre">az.plot_elpd(.)</span></code> 函数。 <a class="reference internal" href="#fig-elpd-dummy"><span class="std std-numref">Fig. 28</span></a> 以成对方式显示了模型 <code class="docutils literal notranslate"><span class="pre">mA</span></code>、<code class="docutils literal notranslate"><span class="pre">mB</span></code> 和 <code class="docutils literal notranslate"><span class="pre">mC</span></code> 之间的比较情况。</p>
 <p>正值表示第一个模型比第二个模型更好地解释了观测结果。例如，如果观察第一个图（<code class="docutils literal notranslate"><span class="pre">mA-mB</span></code>），模型 <code class="docutils literal notranslate"><span class="pre">mA</span></code> 比模型 <code class="docutils literal notranslate"><span class="pre">mB</span></code> 更好地解释了观测 <span class="math notranslate nohighlight">\(49\)</span> 和 <span class="math notranslate nohighlight">\(72\)</span>，而观测 <span class="math notranslate nohighlight">\(75\)</span> 和 <span class="math notranslate nohighlight">\(95\)</span> 则相反。可以看到 <code class="docutils literal notranslate"><span class="pre">mA-mB</span></code> 和 <code class="docutils literal notranslate"><span class="pre">mA-mC</span></code> 这两个图非常相似，原因是模型 <code class="docutils literal notranslate"><span class="pre">mB</span></code> 和模型 <code class="docutils literal notranslate"><span class="pre">mC</span></code> 实际上彼此非常相似。 <a class="reference internal" href="#fig-elpd-and-khat"><span class="std std-numref">Fig. 30</span></a> 表明观测 <span class="math notranslate nohighlight">\(34\)</span>、 <span class="math notranslate nohighlight">\(49\)</span>、 <span class="math notranslate nohighlight">\(72\)</span>、 <span class="math notranslate nohighlight">\(75\)</span> 和 <span class="math notranslate nohighlight">\(82\)</span> 实际上是五个最<em>极端</em>的观测。</p>
@@ -1124,9 +1125,9 @@ Data variables:
 </div>
 <div class="section" id="hat-kappa">
 <span id="k-paretto"></span><h3>2.5.4 帕累托形状参数 <span class="math notranslate nohighlight">\(\hat \kappa\)</span><a class="headerlink" href="#hat-kappa" title="Permalink to this headline">¶</a></h3>
-<p>用 LOO 近似计算 <span class="math notranslate nohighlight">\(\text{ELPD}_\text{LOO-CV}\)</span> 涉及帕累托分布的计算（ 参见 <a class="reference internal" href="chp_11.html#loo-depth"><span class="std std-ref">11.5 深入理解留一交叉验证法</span></a> ），其主要目的是获得更稳健的估计，衍生效应是帕累托分布的 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 参数还可以用于检测影响力较大的观测点，即能够指示出那些 <em>如果不参与拟合就会严重影响预测分布的</em> 观测值。通常较高的 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 值可能表明数据或模型存在问题，尤其是当 <span class="math notranslate nohighlight">\(\hat \kappa &gt; 0.7\)</span> 时 <span id="id48">[<a class="reference internal" href="references.html#id20">16</a>, <a class="reference internal" href="references.html#id19">22</a>]</span> 。此时建议 <span id="id49">[<a class="reference internal" href="references.html#id170">23</a>]</span>：</p>
+<p>用 LOO 近似计算 <span class="math notranslate nohighlight">\(\text{ELPD}_\text{LOO-CV}\)</span> 涉及帕累托分布的计算（ 参见 <a class="reference internal" href="chp_11.html#loo-depth"><span class="std std-ref">11.5 深入理解留一交叉验证法</span></a> ），其主要目的是获得更稳健的估计，衍生效应是帕累托分布的 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 参数还可以用于检测影响力较大的观测点，即能够指示出那些 <em>如果不参与拟合就会严重影响预测分布的</em> 观测值。通常较高的 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 值可能表明数据或模型存在问题，尤其是当 <span class="math notranslate nohighlight">\(\hat \kappa &gt; 0.7\)</span> 时 <span id="id49">[<a class="reference internal" href="references.html#id20">16</a>, <a class="reference internal" href="references.html#id19">22</a>]</span> 。此时建议 <span id="id50">[<a class="reference internal" href="references.html#id170">23</a>]</span>：</p>
 <ul class="simple">
-<li><p>使用匹配矩方法 <span id="id50">[<a class="reference internal" href="references.html#id147">24</a>]</span> <a class="footnote-reference brackets" href="#id78" id="id51">17</a>。通过一些额外的计算，有可能通过对后验分布样本进行变换，获得更可靠的重要性采样估计。</p></li>
+<li><p>使用匹配矩方法 <span id="id51">[<a class="reference internal" href="references.html#id147">24</a>]</span> <a class="footnote-reference brackets" href="#id79" id="id52">17</a>。通过一些额外的计算，有可能通过对后验分布样本进行变换，获得更可靠的重要性采样估计。</p></li>
 <li><p>对存在问题的观测点执行精确的留一交叉验证或使用 <span class="math notranslate nohighlight">\(k\)</span> 折交叉验证。</p></li>
 <li><p>使用对异常观测更稳健的模型。</p></li>
 </ul>
@@ -1143,11 +1144,11 @@ Data variables:
 </div>
 <div class="section" id="hat-kappa-p-loo">
 <span id="interpreting-p-loo-when-pareto-hat-kappa-is-large"></span><h3>2.5.5 当帕累托参数 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 较大时解读 <code class="docutils literal notranslate"><span class="pre">p_loo</span></code><a class="headerlink" href="#hat-kappa-p-loo" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">p_loo</span></code> 可以粗略地解释为模型中被估计的有效参数数量。然而，对于 <span class="math notranslate nohighlight">\(\hat\kappa\)</span> 值较大的模型，可以获得一些额外的信息。如果 <span class="math notranslate nohighlight">\(\hat \kappa &gt; 0.7\)</span>，那么将 <code class="docutils literal notranslate"><span class="pre">p_loo</span></code> 与参数数量 <span class="math notranslate nohighlight">\(p\)</span> 进行比较可以提供一些额外信息 <span id="id52">[<a class="reference internal" href="references.html#id170">23</a>]</span>：</p>
+<p><code class="docutils literal notranslate"><span class="pre">p_loo</span></code> 可以粗略地解释为模型中被估计的有效参数数量。然而，对于 <span class="math notranslate nohighlight">\(\hat\kappa\)</span> 值较大的模型，可以获得一些额外的信息。如果 <span class="math notranslate nohighlight">\(\hat \kappa &gt; 0.7\)</span>，那么将 <code class="docutils literal notranslate"><span class="pre">p_loo</span></code> 与参数数量 <span class="math notranslate nohighlight">\(p\)</span> 进行比较可以提供一些额外信息 <span id="id53">[<a class="reference internal" href="references.html#id170">23</a>]</span>：</p>
 <ul class="simple">
 <li><p>如果 <span class="math notranslate nohighlight">\(p\_loo &lt;&lt; p\)</span>，那么模型很可能被错误指定。你通常还会在后验预测检查中观察到后验预测样本与观测结果匹配不佳的现象。</p></li>
 <li><p>如果 <span class="math notranslate nohighlight">\(p\_loo &lt; p\)</span> ，并且与观测次数 <span class="math notranslate nohighlight">\(N\)</span> 相比 <span class="math notranslate nohighlight">\(p\)</span> 相对较大（ 例如，<span class="math notranslate nohighlight">\(p &gt; \frac{N}{5}\)</span> ），这通常表明模型过于灵活或先验信息太少。因此，模型很难预测被留出的观测。</p></li>
-<li><p>如果 <span class="math notranslate nohighlight">\(p\_loo &gt; p\)</span>，模型也很可能被严重错误指定。如果参数数量 <span class="math notranslate nohighlight">\(p &lt;&lt; N\)</span>，那么后验预测检查也可能已经揭示了一些问题 <a class="footnote-reference brackets" href="#id79" id="id53">18</a>。但是，如果 <span class="math notranslate nohighlight">\(p\)</span> 与观测次数相比相对较大，例如 <span class="math notranslate nohighlight">\(p &gt; \frac{N}{5}\)</span>，则你可能在后验预测检查中观察不到任何问题。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(p\_loo &gt; p\)</span>，模型也很可能被严重错误指定。如果参数数量 <span class="math notranslate nohighlight">\(p &lt;&lt; N\)</span>，那么后验预测检查也可能已经揭示了一些问题 <a class="footnote-reference brackets" href="#id80" id="id54">18</a>。但是，如果 <span class="math notranslate nohighlight">\(p\)</span> 与观测次数相比相对较大，例如 <span class="math notranslate nohighlight">\(p &gt; \frac{N}{5}\)</span>，则你可能在后验预测检查中观察不到任何问题。</p></li>
 </ul>
 <p>你可以尝试修复模型错误指定的一些启发式方法：为模型添加更多结构。例如，添加非线性组件、使用不同的似然（例如，用 <code class="docutils literal notranslate"><span class="pre">NegativeBinomial</span></code> 这种过度分散的似然代替 <code class="docutils literal notranslate"><span class="pre">Poisson</span></code> ）、使用混合似然等。</p>
 </div>
@@ -1169,18 +1170,18 @@ Data variables:
 </div>
 </div>
 <div class="section" id="model-averaging">
-<span id="id54"></span><h2>2.6 模型平均<a class="headerlink" href="#model-averaging" title="Permalink to this headline">¶</a></h2>
+<span id="id55"></span><h2>2.6 模型平均<a class="headerlink" href="#model-averaging" title="Permalink to this headline">¶</a></h2>
 <p>模型平均可以被视为针对模型不确定性的贝叶斯，因为模型也和参数一样具有不确定性。如果我们不能确切地认定 <em>a</em> 模型就是那个想要的模型（通常不能），那么就应该以某种方式将这种不确定性考虑到模型分析中。处理模型不确定性的方法之一是对所有模型进行加权平均，将更大的权重赋予似乎能更好解释或预测数据的模型。</p>
 <p><strong>（1）贝叶斯模型平均</strong></p>
-<p>对贝叶斯模型进行赋权的一种自然而然的想法是利用边缘似然值（即贝叶斯公式的分母项），这也被称为贝叶斯模型平均 <span id="id55">[<a class="reference internal" href="references.html#id26">25</a>]</span>。 虽然其思想在理论上很有吸引力，但在实践中却存在很多问题，因为边缘似然的计算非常棘手（ 详情参阅 <a class="reference internal" href="chp_11.html#marginal-likelihood"><span class="std std-ref">11.7 边缘似然</span></a> ）。</p>
+<p>对贝叶斯模型进行赋权的一种自然而然的想法是利用边缘似然值（即贝叶斯公式的分母项），这也被称为贝叶斯模型平均 <span id="id56">[<a class="reference internal" href="references.html#id26">25</a>]</span>。 虽然其思想在理论上很有吸引力，但在实践中却存在很多问题，因为边缘似然的计算非常棘手（ 详情参阅 <a class="reference internal" href="chp_11.html#marginal-likelihood"><span class="std std-ref">11.7 边缘似然</span></a> ）。</p>
 <p><strong>（2）伪贝叶斯模型平均</strong></p>
 <p>直接计算边缘似然存在困难，因此有人提出了另外一种赋权方法，即使用 LOO 来估计模型的权重。可以使用以下公式：</p>
 <div class="math notranslate nohighlight" id="equation-eq-pseudo-avg">
 <span class="eqno">(22)<a class="headerlink" href="#equation-eq-pseudo-avg" title="Permalink to this equation">¶</a></span>\[w_i = \frac {e^{-\Delta_i }} {\sum_j^k e^{-\Delta_j }} \]</div>
 <p>其中 <span class="math notranslate nohighlight">\(\Delta_i\)</span> 是排序后的第 <span class="math notranslate nohighlight">\(i\)</span> 个 LOO 值与最大 LOO 值之差。此处假设使用对数尺度，这也是 ArviZ 的默认值。</p>
-<p>此方法被称为 <strong>伪贝叶斯模型平均</strong> 或 <strong>类 Akaike 加权</strong> <a class="footnote-reference brackets" href="#id80" id="id56">20</a> ，是一种从 LOO 计算（若干指定）模型相对概率的启发式方法<a class="footnote-reference brackets" href="#id81" id="id57">21</a>。注意分母只是一个归一化项，以确保权重总和为 <span class="math notranslate nohighlight">\(1\)</span> 。公式 <a class="reference internal" href="#equation-eq-pseudo-avg">(22)</a> 提供的权重计算方案简单且好用，但需要注意它没有考虑 LOO 计算本身的不确定性。对此，可以假设高斯近似来计算标准误差，并相应地修改公式 <a class="reference internal" href="#equation-eq-pseudo-avg">(22)</a>；或者可以做一些更稳健的事情，比如使用贝叶斯自举法。</p>
+<p>此方法被称为 <strong>伪贝叶斯模型平均</strong> 或 <strong>类 Akaike 加权</strong> <a class="footnote-reference brackets" href="#id81" id="id57">20</a> ，是一种从 LOO 计算（若干指定）模型相对概率的启发式方法<a class="footnote-reference brackets" href="#id82" id="id58">21</a>。注意分母只是一个归一化项，以确保权重总和为 <span class="math notranslate nohighlight">\(1\)</span> 。公式 <a class="reference internal" href="#equation-eq-pseudo-avg">(22)</a> 提供的权重计算方案简单且好用，但需要注意它没有考虑 LOO 计算本身的不确定性。对此，可以假设高斯近似来计算标准误差，并相应地修改公式 <a class="reference internal" href="#equation-eq-pseudo-avg">(22)</a>；或者可以做一些更稳健的事情，比如使用贝叶斯自举法。</p>
 <p><strong>（3）预测分布的堆叠</strong></p>
-<p>模型平均的另一个选择是堆叠多个预测分布 <span id="id58">[<a class="reference internal" href="references.html#id22">26</a>]</span>。其主要思想是将多个模型组合在一个 <strong>元模型（ Meta-Model ）</strong> 中，使元模型和 <em>真实</em> 生成模型之间的散度最小化。当使用对数评分规则时，这等效于计算：</p>
+<p>模型平均的另一个选择是堆叠多个预测分布 <span id="id59">[<a class="reference internal" href="references.html#id22">26</a>]</span>。其主要思想是将多个模型组合在一个 <strong>元模型（ Meta-Model ）</strong> 中，使元模型和 <em>真实</em> 生成模型之间的散度最小化。当使用对数评分规则时，这等效于计算：</p>
 <div class="math notranslate nohighlight" id="equation-eq-stacking">
 <span class="eqno">(23)<a class="headerlink" href="#equation-eq-stacking" title="Permalink to this equation">¶</a></span>\[\max_{n} \frac{1}{n} \sum_{i=1}^{n}log\sum_{j=1}^{k} w_j p(y_i \mid y_{-i}, M_j) \]</div>
 <p>其中 <span class="math notranslate nohighlight">\(n\)</span> 是数据点数量，<span class="math notranslate nohighlight">\(k\)</span> 是模型数量。为了能够强制求解，我们将 <span class="math notranslate nohighlight">\(w\)</span> 限制为 <span class="math notranslate nohighlight">\(w_j \ge 0\)</span> 和 <span class="math notranslate nohighlight">\(\sum_{j=1}^{k} w_j = 1\)</span>。 <span class="math notranslate nohighlight">\(p(y_i \mid y_{-i}, M_j)\)</span> 是 <span class="math notranslate nohighlight">\(M_j\)</span> 模型的留一法预测分布。前面已经谈到过，该预测分布的计算成本过高，在实践中可以使用 LOO 来近似。</p>
@@ -1188,10 +1189,10 @@ Data variables:
 <p>函数 <code class="docutils literal notranslate"><span class="pre">pm.sample_posterior_predictive_w(.)</span></code> 输入参数为轨迹列表和权重列表，从而能够让我们轻松生成加权的后验预测样本。权重可以采用多种方式获取，但使用 <code class="docutils literal notranslate"><span class="pre">az.compare(.,</span> <span class="pre">method="stacking")</span></code> 计算的权重，可能更有意义。</p>
 </div>
 <div class="section" id="exercises2">
-<span id="id59"></span><h2>2.7 练习<a class="headerlink" href="#exercises2" title="Permalink to this headline">¶</a></h2>
+<span id="id60"></span><h2>2.7 练习<a class="headerlink" href="#exercises2" title="Permalink to this headline">¶</a></h2>
 <p><strong>2E1.</strong> Using your own words, what are the main differences between prior predictive checks and posterior predictive checks? How are these empirical evaluations related to Equations <a class="reference internal" href="chp_01.html#equation-eq-prior-pred-dist">(5)</a> and <a class="reference internal" href="chp_01.html#equation-eq-post-pred-dist">(6)</a>.</p>
 <p><strong>2E2.</strong> Using your own words explain: ESS, <span class="math notranslate nohighlight">\(\hat R\)</span> and MCSE. Focus your explanation on what these quantities are measuring and what potential issue with MCMC they are identifying.</p>
-<p><strong>2E3.</strong> ArviZ includes precomputed InferenceData objects for a few models. We are going to load an InferenceData object generated from a classical example in Bayesian statistic, the eight schools model <span id="id60">[<a class="reference internal" href="references.html#id115">27</a>]</span>. The InferenceData object includes prior samples, prior predictive samples and posterior samples. We can load the InferenceData object using the command <code class="docutils literal notranslate"><span class="pre">az.load_arviz_data("centered_eight")</span></code>. Use ArviZ to:</p>
+<p><strong>2E3.</strong> ArviZ includes precomputed InferenceData objects for a few models. We are going to load an InferenceData object generated from a classical example in Bayesian statistic, the eight schools model <span id="id61">[<a class="reference internal" href="references.html#id115">27</a>]</span>. The InferenceData object includes prior samples, prior predictive samples and posterior samples. We can load the InferenceData object using the command <code class="docutils literal notranslate"><span class="pre">az.load_arviz_data("centered_eight")</span></code>. Use ArviZ to:</p>
 <ol class="simple">
 <li><p>List all the groups available on the InferenceData object.</p></li>
 <li><p>Identify the number of chains and the total number of posterior   samples.</p></li>
@@ -1287,64 +1288,64 @@ Data variables:
 <p><strong>2H17.</strong> Each of the four sections in this chapter, prior predictive checks, posterior predictive checks, numerical inference diagnostics, and model comparison, detail a specific step in the Bayesian workflow. In your own words explain what the purpose of each step is, and conversely what is lacking if the step is omitted. What does each tell us about our statistical models?</p>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
 <dd><p><a class="reference external" href="https://www.countbayesie.com/blog/2015/2/18/bayes-theorem-with-lego">https://www.countbayesie.com/blog/2015/2/18/bayes-theorem-with-lego</a></p>
 </dd>
-<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
 <dd><p>We are omitting tasks related to obtaining the data in the first   place, but experimental design can be as critical if not more than   other aspects in the statistical analysis, see Chapter   <a class="reference internal" href="chp_10.html#chap10"><span class="std std-ref">9</span></a>.</p>
 </dd>
-<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
+<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
 <dd><p><a class="reference external" href="https://arviz-devs.github.io/arviz/">https://arviz-devs.github.io/arviz/</a></p>
 </dd>
-<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id11">4</a></span></dt>
+<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id11">4</a></span></dt>
 <dd><p>This example has been adapted from   <a class="reference external" href="https://mc-stan.org/users/documentation/case-studies/golf.html">https://mc-stan.org/users/documentation/case-studies/golf.html</a> and   <a class="reference external" href="https://docs.pymc.io/notebooks/putting_workflow.html">https://docs.pymc.io/notebooks/putting_workflow.html</a></p>
 </dd>
-<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id13">5</a></span></dt>
-<dd><p>The example has been adapted from <span id="id66">[<a class="reference internal" href="references.html#id78">17</a>]</span>.</p>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id13">5</a></span></dt>
+<dd><p>The example has been adapted from <span id="id67">[<a class="reference internal" href="references.html#id78">17</a>]</span>.</p>
 </dd>
-<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id14">6</a></span></dt>
+<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id14">6</a></span></dt>
 <dd><p>See Chapter <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">3</span></a> for details of the logistic   regression model.</p>
 </dd>
-<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id20">7</a></span></dt>
+<dt class="label" id="id69"><span class="brackets"><a class="fn-backref" href="#id20">7</a></span></dt>
 <dd><p>Posterior predictive checks are a very general idea. These figures   do not try to show the only available choices, just some of the   options offered by ArviZ.</p>
 </dd>
-<dt class="label" id="id69"><span class="brackets"><a class="fn-backref" href="#id21">8</a></span></dt>
+<dt class="label" id="id70"><span class="brackets"><a class="fn-backref" href="#id21">8</a></span></dt>
 <dd><p>Unless you realize you need to collect data again, but that is   another story.</p>
 </dd>
-<dt class="label" id="id70"><span class="brackets"><a class="fn-backref" href="#id24">9</a></span></dt>
+<dt class="label" id="id71"><span class="brackets"><a class="fn-backref" href="#id24">9</a></span></dt>
 <dd><p>Try <a class="reference external" href="https://www.timeanddate.com/sun/ecuador/quito">https://www.timeanddate.com/sun/ecuador/quito</a></p>
 </dd>
-<dt class="label" id="id71"><span class="brackets"><a class="fn-backref" href="#id30">10</a></span></dt>
+<dt class="label" id="id72"><span class="brackets"><a class="fn-backref" href="#id31">10</a></span></dt>
 <dd><p>Do not confuse with the standard deviation of the MCSE for the   mean.</p>
 </dd>
-<dt class="label" id="id72"><span class="brackets"><a class="fn-backref" href="#id36">11</a></span></dt>
+<dt class="label" id="id73"><span class="brackets"><a class="fn-backref" href="#id37">11</a></span></dt>
 <dd><p>Most useful and commonly used sampling methods for Bayesian   inference are variants of HMC, including for example, the default   method for continuous variables in PyMC3. For more details of this   method, see Section <a class="reference internal" href="chp_11.html#hmc"><span class="std std-ref">11.9.3 汉密尔顿蒙特卡洛采样器（ HMC ）</span></a>).</p>
 </dd>
-<dt class="label" id="id73"><span class="brackets"><a class="fn-backref" href="#id38">12</a></span></dt>
+<dt class="label" id="id74"><span class="brackets"><a class="fn-backref" href="#id39">12</a></span></dt>
 <dd><p>A function which is zero everywhere and infinite at zero.</p>
 </dd>
-<dt class="label" id="id74"><span class="brackets"><a class="fn-backref" href="#id40">13</a></span></dt>
+<dt class="label" id="id75"><span class="brackets"><a class="fn-backref" href="#id41">13</a></span></dt>
 <dd><p>For a sampler like Sequential Monte Carlo, increasing the number   of draws also increases the number of particles, and thus it could   actually provide better convergence. See Section <a class="reference internal" href="chp_11.html#smc-details"><span class="std std-ref">11.9.4 序贯蒙塔卡洛采样器</span></a>.</p>
 </dd>
-<dt class="label" id="id75"><span class="brackets"><a class="fn-backref" href="#id43">14</a></span></dt>
+<dt class="label" id="id76"><span class="brackets"><a class="fn-backref" href="#id44">14</a></span></dt>
 <dd><p>Strictly speaking we should use probabilities for discrete   models, but that distinction rapidly becomes annoying in practice.</p>
 </dd>
-<dt class="label" id="id76"><span class="brackets"><a class="fn-backref" href="#id44">15</a></span></dt>
+<dt class="label" id="id77"><span class="brackets"><a class="fn-backref" href="#id45">15</a></span></dt>
 <dd><p>In non-Bayesians contexts <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> is a point   estimate obtained, for example, by maximizing the likelihood.</p>
 </dd>
-<dt class="label" id="id77"><span class="brackets"><a class="fn-backref" href="#id46">16</a></span></dt>
+<dt class="label" id="id78"><span class="brackets"><a class="fn-backref" href="#id47">16</a></span></dt>
 <dd><p>We are also computing samples from the posterior predictive   distribution to use them to compute LOO-PIT.</p>
 </dd>
-<dt class="label" id="id78"><span class="brackets"><a class="fn-backref" href="#id51">17</a></span></dt>
+<dt class="label" id="id79"><span class="brackets"><a class="fn-backref" href="#id52">17</a></span></dt>
 <dd><p>At time of writing this book the method has not been yet   implemented in ArviZ, but it may be already available by the time   you are reading this.</p>
 </dd>
-<dt class="label" id="id79"><span class="brackets"><a class="fn-backref" href="#id53">18</a></span></dt>
+<dt class="label" id="id80"><span class="brackets"><a class="fn-backref" href="#id54">18</a></span></dt>
 <dd><p>See the case study   <a class="reference external" href="https://avehtari.github.io/modelselection/roaches.html">https://avehtari.github.io/modelselection/roaches.html</a> for an   example.</p>
 </dd>
-<dt class="label" id="id80"><span class="brackets"><a class="fn-backref" href="#id56">20</a></span></dt>
+<dt class="label" id="id81"><span class="brackets"><a class="fn-backref" href="#id57">20</a></span></dt>
 <dd><p>The Akaike information criterion (AIC) is an estimator of the   generalization error, it is commonly used in frequentists   statistics, but their assumptions are generally not adequate enough   for general use with Bayesians models.</p>
 </dd>
-<dt class="label" id="id81"><span class="brackets"><a class="fn-backref" href="#id57">21</a></span></dt>
+<dt class="label" id="id82"><span class="brackets"><a class="fn-backref" href="#id58">21</a></span></dt>
 <dd><p>This formula also works for WAIC [^22] and other information   criteria</p>
 </dd>
 </dl>
