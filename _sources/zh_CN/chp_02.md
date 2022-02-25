@@ -451,7 +451,7 @@ az.plot_trace(chains)
 
 ### 2.4.5 自相关图 
 
-正如在讨论有效样本数时所述，自相关减少了样本中包含的实际信息量，因此希望尽量将其控制在最低限度，此时我们可以使用 `az.plot_autocorr` 函数直接可视化地检查自相关性。
+正如在讨论有效样本数时所述，自相关减少了样本中包含的实际信息量，因此希望尽量将其控制在最低限度，此时可以使用 `az.plot_autocorr` 函数直接可视化地检查自相关性。
 
 ```python
 az.plot_autocorr(chains, combined=True)
@@ -470,7 +470,7 @@ az.plot_autocorr(chains, combined=True)
 
 ### 2.4.6 秩图 
 
-秩图是另一种可视化诊断工具，我们可以用它来比较链内和链间的采样行为。秩图是秩后的样本的直方图，它先组合所有链后统一计算秩，然后分别为每条链绘制结果。如果所有链都针对同一分布，则我们希望秩服从均匀分布。此外，如果所有链的秩图看起来相似，表明链的混合良好 {cite:p}`vehtari_rank_2019`。
+秩图是另一种可视化诊断工具，可以用它来比较链内和链间的采样行为。秩图是排序后样本的直方图，它先组合所有链后统一计算秩，然后再分别为每条链绘制排序结果。如果所有链都针对同一分布，则秩应当服从均匀分布。此外，如果所有链的秩图看起来相似，通常表明链的混合良好 {cite:p}`vehtari_rank_2019`。
 
 ```python 
 az.plot_rank(chains, ax=ax[0], kind="bars")
@@ -479,7 +479,7 @@ az.plot_rank(chains, ax=ax[0], kind="bars")
 ```{figure} figures/rank_plot_bars.png
 :name: fig:rank_plot_bars
 
-使用柱状图表示的秩图。特别将柱高度与表示均匀分布的虚线进行比较。理想情况下，柱图应遵循均匀分布。
+使用柱状图表示的两条链的秩图。特别将柱高度与表示均匀分布的虚线进行比较。理想情况下，柱图应遵循均匀分布。
 ```
 
 柱图表示法的一种替代方法是垂线，缩写为“vlines”。
@@ -492,20 +492,40 @@ az.plot_rank(chains, kind="vlines")
 :name: fig:rank_plot_vlines
 :width: 8.00in
 
-使用垂线表示的秩图。垂线越短越好，虚线上方的垂线表示特定秩的采样量过多，而下方的垂线表示缺少采样。
+使用垂线表示的秩图。垂线越短越好，虚线上方的垂线表示特定秩处的采样量过多，而下方的垂线表示采样量不足。
 ```
 
-我们可以在 {numref}`fig:rank_plot_bars` 和 {numref}`fig:rank_plot_vlines` 中看到，`good_chains` 的秩非常接近均匀分布，并且两条链看起来彼此相似，没有明显的模式。这与 `bad_chains0` 的结果形成鲜明对比，后者偏离了均匀分布，并且正在分别探索两组不同的值，只是在中等秩上有一些重叠。请注意，这与创建 `bad_chains0` 的方式以及轨迹图的显示一致。 `bad_chains1` 在某种程度上是均匀的，但随处都存在较大的偏离，反映出问题比 `bad_chains0` 更局部。
+在 {numref}`fig:rank_plot_bars` 和 {numref}`fig:rank_plot_vlines` 中可以看到，`good_chains` 的秩非常接近均匀分布，并且两条链彼此相似，不存在明显的模式。而 `bad_chains0` 与之形成了鲜明对比，其结果偏离了均匀分布，并且两条链在分别探索不同的区域，只是在中间的秩附近有一些重叠。这个现象与 `bad_chains0` 的创建方式以及轨迹图显示的内容是一致的。 `bad_chains1` 在某种程度上是均匀的，但随处都存在较大的偏离，反映出问题比 `bad_chains0` 更局部。
 
-秩图可能比轨迹图更敏感，因此我们推荐使用秩图。你可以使用 `az.plot_trace(., kind="rank_bars")` 或 `az.plot_trace(., kind="rank_vlines")` 绘制上面的两种秩图。这些函数不仅绘制秩，还绘制后验的边缘分布。这有助于快速了解后验*看起来像什么*，这可以帮助我们发现采样或模型定义中存在的问题。尤其是在建模早期阶段时，我们很可能不太确定真正想做的事情，因此需要探索许多不同的选择。随着进展，模型开始变得更有意义，然后我们再检查 ESS 、$\hat R$ 和 MCSE 是否正常，如果不正常我们也可以知道模型下一步需要改进的方向。
+秩图比轨迹图更敏感，因此我们推荐多使用秩图。你可以使用 `az.plot_trace(., kind="rank_bars")` 函数或 `az.plot_trace(., kind="rank_vlines")` 函数绘制上面的两种秩图。这些函数不仅可以绘制秩图，还能绘制后验的边缘分布。这有助于快速了解后验 *看起来像什么* ，并帮助我们发现采样或模型定义中存在的问题。尤其是在建模早期阶段，我们不太确定真正想做的事情时，需要探索许多不同的选择。随着进展，待模型变得更有意义后，我们再检查 ESS 、$\hat R$ 和 MCSE 等指标是否正常，如果不正常我们也可以知道模型下一步需要改进的方向。
 
 (divergences)= 
 
-### 2.4.7 发散性 
+### 2.4.7 散度 
 
-到目前为止，我们一直在研究 MCMC 方法生成的样本，以诊断采样器的工作状况。本节将介绍另外一种通过监视采样器内部工作行为做诊断的方法。此类诊断方法的一个突出例子是 **Hamiltonian Monte Carlo ( HMC )** 采样器中涉及的**散度（ Divergences ）**概念 [^11]。散度（源于物理统计学中的概念）是一种强大而灵敏的样本诊断方法，可作为前几节中诊断方法的补充。
+到目前为止，我们一直在研究 MCMC 方法生成的样本，以诊断采样器的工作状况。本节将介绍另外一种通过监视采样器内部工作行为做诊断的方法。此类诊断方法的一个突出例子是 **Hamiltonian Monte Carlo ( HMC )** 采样器中涉及的 **散度（ Divergences ）** 概念 [^11]。散度是一种强大而灵敏的样本诊断方法，可作为前几节中诊断方法的补充。
 
-让我们在一个简单模型背景下讨论散度，本书后面还能找到更现实的例子。模型由一个参数 $\theta2$ 组成，该参数服从区间 $[-\theta1, \theta1]$ 内的均匀分布，并且 $\theta1$ 采样自高斯分布。当$\theta1$ 很大时，$\theta2$ 将服从一个跨越很大范围的均匀分布，当$\theta1$ 接近于零时，$\theta2$ 的分布宽度也将接近于零。使用 PyMC3，可以将此模型编写为：
+::: {admonition} 向量场的梯度、散度和旋度
+
+梯度是一个向量，代表在协变量空间中的某点处，响应函数变化的大小和方向。协变量空间中所有点的梯度构成一个向量场，也被成为梯度场。
+
+旋度也是一个向量，代表给定一个向量场，旋度代表在该场中的某点处，环流量强度。
+
+给定一个向量场 $f$，设闭合曲线 $L$ 包围形成面积 $\Delta S$ ，当 $\Delta S \rightarrow 0$ 时， $f$ 对 $L$ 的**环量**与 $\Delta S$ 之比的极限被称为 $f$ 的旋度沿着该面法线的分量，即 $rot f = \lim_{\Delta S \rightarrow 0} \frac{\oint f \cdot dl}{\Delta S}$ 。
+
+给定一个向量场 $f$，散度代表在该场的某点处，是否存在逸出现象以及逸出的大小。散度是一个标量。严格的数学定义如下：
+
+给定一个向量场 $f$，假设一个闭合曲面 $S$ 包围形成体积 $\Delta V$ ，当 $\Delta V \rightarrow 0$ 时， $f$ 对 $S$ 的**通量**与 $\Delta V$ 之比的极限被称为 $f$ 的散度，即 $div f = \lim_{\Delta V \rightarrow 0} \frac{\oint f \cdot ds}{\Delta V}$.
+
+< 此处一定要注意和 `KL 散度` 是两个完全不相干的概念 >
+
+
+
+:::
+
+
+
+让我们在一个简单模型背景下讨论散度，本书后面还能找到更现实的例子。模型由一个参数 $\theta_2$ 组成，该参数服从区间 $[-\theta_1, + \theta_1]$ 内的均匀分布，并且 $\theta_1$ 采样自高斯分布。当$\theta_1$ 很大时，$\theta_2$ 将服从一个跨越很大范围的均匀分布，当$\theta_1$ 接近于零时，$\theta_2$ 的分布宽度也将接近于零。使用 PyMC3，可以将此模型编写为：
 
 ```{code-block} ipython3
 :name: divm0
@@ -527,29 +547,29 @@ with pm.Model() as model_0:
 
 ::: 
 
-请注意代码 [divm0](divm0) 中的模型不以任何观测为条件，这意味着 `model_0` 指定了由两个未知数（“θ1”和“θ2”）参数化的后验分布。
+请注意代码 [divm0](divm0) 中的模型不以任何观测为条件，这意味着 `model_0` 指定了由两个未知数（ $\theta_1$ 和 $\theta_2$ ）参数化的后验分布。
 
-你可能注意到代码中包含了参数 `testval=0.1`。这样做是为了指示 `PyMC3` 从特定值（本例中为 $0.1$）开始采样，而不是从其默认值 $\theta1 = 0$ 开始采样。因为对于  $\theta1 = 0$ ，$\theta2$ 的概率密度函数将对应狄拉克函数 [^12]，这会产生错误。使用 `testval=0.1` 只会影响采样的初始化方式。
+你可能注意到代码中包含了参数 `testval=0.1`。这样做是为了指示 PyMC3 从特定值（ 本例中为 $0.1$ ）开始采样，而不是从其默认值 $\theta_1 = 0$ 开始采样。因为对于  $\theta_1 = 0$ ，$\theta_2$ 的概率密度函数将对应狄拉克函数 [^12]，这会产生错误。使用 `testval=0.1` 可以调整采样的初始位置，避免出现上述错误。
 
-在 {numref}`fig:divergences_trace` 中，可以在 `model0` 的核密度估计曲线底部看到很多竖线。每条竖线都代表一个散度，表明在采样过程中出现了问题。我们可以其他图看到类似的东西，例如 {numref} `fig:divergences_pair` 中所示的 `az.plot_pair(.,divergences=True)`，这里的散度是无处不在的蓝点！
+在 {numref}`fig:divergences_trace` 中，可以在 `model0` 的核密度估计曲线底部看到很多竖线。每条竖线都代表一个散度，表明在采样过程中出现了问题。我们可以在其他图看到类似的东西，例如 {numref}`fig:divergences_pair` 中所示的 `az.plot_pair(.,divergences=True)`，其中散度表示为无处不在的蓝点！
 
 ```{figure} figures/divergences_trace.png
 :name: fig:divergences_trace
 :width: 8.00in
 
-模型 $0$ [divm0](divm0)、模型 $1$ [divm1](divm1) 、模型 $1bis$ （与模型 $1$ 相同，但带有 `pm.sample(., target_accept =0.95)` ）的核密度估计和秩图。黑色竖条代表散度。
+模型 $0$ [divm0](divm0)、模型 $1$ [divm1](divm1) 、模型 $1bis$ （ 与模型 $1$ 相同，但带有 `pm.sample(., target_accept =0.95)` ）的核密度估计图和秩图。黑色竖条代表散度。
 ```
 
 ```{figure} figures/divergences_pair.png
 :name: fig:divergences_pair
 :width: 8.00in
 
-模型 $0$ [divm0](divm0)、模型 $1$ [divm1](divm1) 、模型 $1bis$ （与模型 $1$ 相同但使用了 `pm.sample(., target_accept=0.95)` ）的后验分布样本的散点图。蓝点代表散度。
+模型 $0$ [divm0](divm0)、模型 $1$ [divm1](divm1) 、模型 $1bis$ （ 与模型 $1$ 相同但使用了 `pm.sample(., target_accept=0.95)` ）的后验分布样本的散点图。蓝点代表散度。
 ```
 
-`model0` 肯定有问题。通过检查代码 [divm0](divm0) 中的模型定义，可能会意识到我们以一种奇怪的方式定义了它。$\theta1$ 是一个以 $0$ 为中心的高斯分布，因此我们应该期望一半的值是负数，但是对于负值 $\theta2$ 将定义在区间 $[\theta1, -\theta1]$ 内，这多少有点奇怪。
+`model0` 肯定有问题。通过检查代码 [divm0](divm0) 中的模型定义，你可能会意识到我们以一种奇怪方式定义了它。$\theta_1$ 是一个以 $0$ 为中心的高斯分布，因此预期有一半的值是负数，但是对于负值， $\theta_2$ 将定义在区间 $[+\theta_1, -\theta_1]$ 内，这多少有点奇怪。
 
-因此，让我们尝试**重参数化**模型，即以不同但在数学上等效的方式表达模型。例如，我们可以这样做：
+因此，让我们尝试 **重参数化** 该模型，即采用数学上等效但参数化不同的形式来表达模型。例如，可以这样做：
 
 ```{code-block} ipython3
 :name: divm1
@@ -560,9 +580,9 @@ with pm.Model() as model_1:
     idata_1 = pm.sample(return_inferencedata=True)
 ```
 
-现在 $\theta1$ 将始终提供合理的值，可以将其输入到 $\theta2$ 的定义中。请注意，我们将 $\theta1$ 的标准差定义为 $\frac{1}{\sqrt{(1-\frac{2}{\pi})}}$ 而不是 1。这是因为半高斯分布的标准差是 $\sigma \sqrt{(1-\frac{2}{\pi})}$ 其中 $\sigma$ 是半高斯分布的尺度参数。换句话说，$\sigma$ 是 *展开了的* 高斯分布的标准差，而不是半高斯分布的标准差。
+现在 $\theta_1$ 将始终提供合理的值，可以将其输入到 $\theta_2$ 的定义中。请注意，我们将 $\theta_1$ 的标准差定义为 $\frac{1}{\sqrt{(1-\frac{2}{\pi})}}$ 而不是 $1$。这是因为半高斯分布的标准差是 $\sigma \sqrt{(1-\frac{2}{\pi})}$ ，其中 $\sigma$ 是半高斯分布的尺度参数。换句话说，$\sigma$ 是 *展开了的* 高斯分布的标准差，而不是半高斯分布的标准差。
 
-无论如何，让我们看看重参数化的模型如何处理散度。 {numref}`fig:divergences_trace` 和 {numref}`fig:divergences_pair` 表明，`model1` 的散度数量已大大减少，但仍然可以看到一部分。尝试减少散度的一个简单选择是增加 `target_accept` 的值，如代码 [divm2](divm2) 所示，默认情况下此值为 $0.8$，最大有效值为 $1$（请参阅 {ref}`hmc` 了解详情）。
+无论如何，让我们观察一下重参数化的模型是如何处理散度的。 {numref}`fig:divergences_trace` 和 {numref}`fig:divergences_pair` 表明，`model1` 的散度数量已大大减少，但仍然可以看到一部分。尝试减少散度的一个简单选择是增加 `target_accept` 的值，如代码 [divm2](divm2) 所示，默认情况下此值为 $0.8$，最大有效值为 $1$（ 请参阅 {ref}`hmc` 了解详情 ）。
 
 ```{code-block} ipython3
 :name: divm2
@@ -575,9 +595,11 @@ with pm.Model() as model_1bis:
 
 {numref}`fig:divergences_trace` 和 {numref}`fig:divergences_pair` 中的`model1bis` 与 `model1` 相同，但更改了一个采样参数的默认值 `pm.sample(., target_accept =0.95)` 。可以看到最终消除了所有散度。这是个好消息，但为了信任这些样本，仍然需要像前几节一样，检查 $\hat R$ 和 ESS 的值，。
 
+
+
 ::: {admonition} 重参数化 
 
-重参数化有助于将难以采样的后验几何形态转换为更容易采样的几何形态。这有助于消除散度，但即使不存在散度时，重参数化也会有所帮助。例如，可以在无需增加计算成本的条件下，使用它加快采样速度或增加有效样本数。此外，重参数化还有助于更好地解释或沟通模型及其结果（参见第 {ref}`conjugate_priors` 节中的 Alice 和 Bob 示例）。
+重参数化有助于将难以采样的后验几何形态转换为更容易采样的几何形态。这有助于消除散度，但即使不存在散度时，重参数化也会有所帮助。例如，可以在无需增加计算成本的条件下，使用它加快采样速度或增加有效样本数。此外，重参数化还有助于更好地解释或沟通模型及其结果（ 参见第 {ref}`conjugate_priors` 节中的 `Alice` 和 `Bob` 的示例 ）。
 
 ::: 
 
@@ -589,7 +611,7 @@ with pm.Model() as model_1bis:
 
 有时可以通过增加参数`target_accept` 来消除部分散度，例如，当散度源于数值不精确的时候。
 
-另外还有其他参数能够帮助解决采样问题，例如，我们可能希望增加 MCMC 采样器的迭代次数。在 `PyMC3` 中，有默认的采样参数 `pm.sample(.,tune=1000)`。在调整阶段，采样器参数会自动调整。而有些模型更复杂，需要更多交互才能让采样器学习到更好的参数。因此增加调整步数有助于增加 ESS 或降低 $\hat R$。增加抽样次数也有助于收敛，但总的来说其他途径更有效。如果一个模型在数千次抽取后都未能收敛，那么通常它在 $10$ 倍以上的抽取中仍然会失败，或者稍有改进但其额外计算成本并不合理。此时，重参数化、改进模型结构、提供信息更多的先验，甚至更改模型通常会更有效 [^13]。
+另外还有其他参数能够帮助解决采样问题，例如，我们可能希望增加 MCMC 采样器的迭代次数。在 PYMC3 中，有默认的采样参数 `pm.sample(.,tune=1000)`。在调整阶段，采样器参数会自动调整。而有些模型更复杂，需要更多交互才能让采样器学习到更好的参数。因此增加调整步数有助于增加 ESS 或降低 $\hat R$。增加抽样次数也有助于收敛，但总的来说其他途径更有效。如果一个模型在数千次抽取后都未能收敛，那么通常它在 $10$ 倍以上的抽取中仍然会失败，或者稍有改进但其额外计算成本并不合理。此时，重参数化、改进模型结构、提供信息更多的先验，甚至更改模型通常会更有效 [^13]。
 
 需要注意的是，在建模早期，我们可以使用较少的抽取次数来测试模型是否能够运行、是否已经编写了期望的模型、是否大致得到了合理结果等。这种初始检查大约只需要 $200$ 或 $300$ 次抽样就足够达到目的了。然后，当我们对模型更有信心时，可以将抽取次数增加到几千次，大约可以设置为 $2000$ 或 $4000$ 次。
 
@@ -1091,7 +1113,7 @@ Assess convergence by running the same diagnostics we run in the book for `bad_c
 
 [^10]: Do not confuse with the standard deviation of the MCSE for the   mean.
 
-[^11]: Most useful and commonly used sampling methods for Bayesian   inference are variants of HMC, including for example, the default   method for continuous variables in PyMC3. For more details of this   method, see Section {ref}`hmc`).
+[^11]: Most useful and commonly used sampling methods for Bayesian inference are variants of HMC, including for example, the default method for continuous variables in PyMC3. For more details of this   method, see Section {ref}`hmc`).
 
 [^12]: A function which is zero everywhere and infinite at zero.
 

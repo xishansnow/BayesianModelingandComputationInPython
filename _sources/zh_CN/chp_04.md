@@ -430,7 +430,7 @@ Y \sim& \mathcal{N}(\mu_{j}, \sigma_{j})
 
 ```
 
-这些参数被标记为 *group-specific* 参数，表示每个组都有一个专用参数。非池化的 `PyMC3` 模型体现在代码 [model_sales_unpooled](model_sales_unpooled) 中，拟合结果见 {numref}`fig:Salad_Sales_Basic_Regression_Model_Unpooled` 。此处所有组都没有截距参数，原因很简单，如果门店顾客为零，总销售额也将为零，因此没有必要为其建模。
+这些参数被标记为 *group-specific* 参数，表示每个组都有一个专用参数。非池化的 PYMC3 模型体现在代码 [model_sales_unpooled](model_sales_unpooled) 中，拟合结果见 {numref}`fig:Salad_Sales_Basic_Regression_Model_Unpooled` 。此处所有组都没有截距参数，原因很简单，如果门店顾客为零，总销售额也将为零，因此没有必要为其建模。
 
 ```{code-block} ipython3
 :name: model_sales_unpooled
@@ -581,7 +581,7 @@ Y \sim& \mathcal{N}(\mu_{j}, \sigma)
 
 ::: 
 
-重新审视食品销售模型，我们对采用池化数据来估计 $\sigma$ 非常感兴趣，因为披萨组、三明治组和沙拉组的销售额可能存在相同的方差，但我们对各组的 $\beta$ 参数并没池化，因为我们知道各组之间存在差异。有了这些想法，我们就可以编写 `PyMC3` 模型，如代码 [model_sales_mixed_effect](model_sales_mixed_effect) 所示，并生成 {numref}`fig:Salad_Sales_Basic_Regression_Model_Multilevel` 所示的模型结构图。从模型中可以得到 {numref}`fig:Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled` ，图中显示了叠加在数据上的拟合结果。此外还能够得到 {numref}`fig:Salad_Sales_ForestPlot_Sigma_Unpooled_Multilevel_Comparison` ，其中比较和展示了池化和非池化方法估计出来的 $\sigma$ 参数。
+重新审视食品销售模型，我们对采用池化数据来估计 $\sigma$ 非常感兴趣，因为披萨组、三明治组和沙拉组的销售额可能存在相同的方差，但我们对各组的 $\beta$ 参数并没池化，因为我们知道各组之间存在差异。有了这些想法，我们就可以编写 PYMC3 模型，如代码 [model_sales_mixed_effect](model_sales_mixed_effect) 所示，并生成 {numref}`fig:Salad_Sales_Basic_Regression_Model_Multilevel` 所示的模型结构图。从模型中可以得到 {numref}`fig:Salad_Sales_Basic_Regression_Scatter_Sigma_Pooled_Slope_Unpooled` ，图中显示了叠加在数据上的拟合结果。此外还能够得到 {numref}`fig:Salad_Sales_ForestPlot_Sigma_Unpooled_Multilevel_Comparison` ，其中比较和展示了池化和非池化方法估计出来的 $\sigma$ 参数。
 
 这些结果令人鼓舞，对于所有三个组别来说，拟合结果看起来都是合理的，特别是对于沙拉组来说，该模型似乎能够对此新市场的沙拉销售产生合理的推论。
 

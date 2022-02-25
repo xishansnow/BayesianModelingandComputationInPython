@@ -286,13 +286,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#pymc3">
-   7.8
-   <code class="docutils literal notranslate">
-<span class="pre">
-     PyMC3
-    </span>
-</code>
-   中的先验选择
+   7.8 PYMC3 中的先验选择
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -413,13 +407,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#pymc3">
-   7.8
-   <code class="docutils literal notranslate">
-<span class="pre">
-     PyMC3
-    </span>
-</code>
-   中的先验选择
+   7.8 PYMC3 中的先验选择
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -507,7 +495,7 @@
 <div class="section" id="priors-for-bart">
 <span id="id8"></span><h2>7.3 贝叶斯加性回归树的先验<a class="headerlink" href="#priors-for-bart" title="Permalink to this headline">¶</a></h2>
 <p>原始的贝叶斯加性回归树论文 <span id="id9">[<a class="reference internal" href="references.html#id5">71</a>]</span>，以及大多数后续改进和实现都依赖于共轭先验。</p>
-<p><code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中的贝叶斯加性回归树实现并未使用共轭先验，并且在其他方​​面也存在差异。本节中将专注于 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 实现，并将其用于我们的示例。</p>
+<p>PYMC3 中的贝叶斯加性回归树实现并未使用共轭先验，并且在其他方​​面也存在差异。本节中将专注于 PYMC3 实现，并将其用于我们的示例。</p>
 <div class="section" id="prior-independence">
 <span id="id10"></span><h3>7.3.1 先验的独立性<a class="headerlink" href="#prior-independence" title="Permalink to this headline">¶</a></h3>
 <p>为了简化先验的指定，我们假设树结构 <span class="math notranslate nohighlight">\(\mathcal{T}_j\)</span> 和叶子节点值 <span class="math notranslate nohighlight">\(\mathcal{M}_j\)</span> 是独立的。此外，这些先验独立于其他参数，即方程 <a class="reference internal" href="#equation-eq-bart">(71)</a> 中的 <span class="math notranslate nohighlight">\(\theta\)</span>。通过独立性假设，我们可以将先验的指定分成几部分。否则，我们需要发明一种方法来为整个树空间指定一个先验 <a class="footnote-reference brackets" href="#id43" id="id11">2</a>。</p>
@@ -523,16 +511,16 @@
 </div>
 <div class="section" id="mu-ij-m">
 <span id="bart-mu-m-priors"></span><h3>7.3.3 叶子结点值 <span class="math notranslate nohighlight">\(\mu_{ij}\)</span> 和树数量 <span class="math notranslate nohighlight">\(m\)</span> 的先验<a class="headerlink" href="#mu-ij-m" title="Permalink to this headline">¶</a></h3>
-<p>默认情况下，<code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 不会为叶子节点的值设置先验，而是在采样算法的每次迭代中返回残差的均值。</p>
+<p>默认情况下，PYMC3 不会为叶子节点的值设置先验，而是在采样算法的每次迭代中返回残差的均值。</p>
 <p>集成方法中决策树的数量 <span class="math notranslate nohighlight">\(m\)</span> 通常也是用户预定义的。实践表明，设置 <span class="math notranslate nohighlight">\(m=200\)</span> 甚至低至 <span class="math notranslate nohighlight">\(m=10\)</span> 的值都能获得良好的结果。此外，推断对于 <span class="math notranslate nohighlight">\(m\)</span> 的确切值来说可能非常稳健。因此，一般的经验法则是多尝试一些 <span class="math notranslate nohighlight">\(m\)</span> 值，并执行交叉验证以选择最适合特定问题的值 <a class="footnote-reference brackets" href="#id46" id="id14">4</a>。</p>
 </div>
 </div>
 <div class="section" id="fitting-bayesian-additive-regression-trees">
 <span id="id15"></span><h2>7.4 拟合贝叶斯加性回归树<a class="headerlink" href="#fitting-bayesian-additive-regression-trees" title="Permalink to this headline">¶</a></h2>
 <p>到目前为止，我们讨论了如何使用决策树来编码分段函数，我们可以使用这些函数来建模回归或分类问题。我们还讨论了如何为决策树指定先验。现在我们将讨论如何有效地对树进行采样，以便找到给定数据集的树的后验分布。有很多策略可以实现这一点，而且细节对于本书来说过于具体。鉴于此，我们将只描述主要要素。</p>
-<p>为了拟合贝叶斯加性回归树模型，我们不能使用类似 <code class="docutils literal notranslate"><span class="pre">Hamiltonian</span> <span class="pre">Monte</span> <span class="pre">Carlo</span></code> 的基于梯度的采样器，因为树空间是离散的，对梯度并不友好。出于此原因，研究人员开发了为树量身定制的 MCMC 和序贯蒙特卡洛 (SMC) 变体。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中实现的贝叶斯加性回归树采样器以顺序和迭代方式工作。简而言之，从一棵树开始并将其拟合到结果变量 <span class="math notranslate nohighlight">\(Y\)</span> ，残差 <span class="math notranslate nohighlight">\(R\)</span> 计算为 <span class="math notranslate nohighlight">\(R = Y - g_0(\boldsymbol{X}; \mathcal{T}_0, \mathcalf{M}_0)\)</span> 。第二棵树拟合到 <span class="math notranslate nohighlight">\(R\)</span>，而不是<span class="math notranslate nohighlight">\(Y\)</span>。然后考虑目前为止已经拟合的所有树并更新残差 <span class="math notranslate nohighlight">\(R\)</span>， <span class="math notranslate nohighlight">\(R - g_1(\boldsymbol{X}; \mathcal{T}_0, \mathcal{M}_0) + g_0( \boldsymbol{X}; \mathcal{T}_1, \mathcal{M}_1)\)</span> 。一直这样做，直到拟合了 <span class="math notranslate nohighlight">\(m\)</span> 棵树。</p>
+<p>为了拟合贝叶斯加性回归树模型，我们不能使用类似 <code class="docutils literal notranslate"><span class="pre">Hamiltonian</span> <span class="pre">Monte</span> <span class="pre">Carlo</span></code> 的基于梯度的采样器，因为树空间是离散的，对梯度并不友好。出于此原因，研究人员开发了为树量身定制的 MCMC 和序贯蒙特卡洛 (SMC) 变体。 PYMC3 中实现的贝叶斯加性回归树采样器以顺序和迭代方式工作。简而言之，从一棵树开始并将其拟合到结果变量 <span class="math notranslate nohighlight">\(Y\)</span> ，残差 <span class="math notranslate nohighlight">\(R\)</span> 计算为 <span class="math notranslate nohighlight">\(R = Y - g_0(\boldsymbol{X}; \mathcal{T}_0, \mathcalf{M}_0)\)</span> 。第二棵树拟合到 <span class="math notranslate nohighlight">\(R\)</span>，而不是<span class="math notranslate nohighlight">\(Y\)</span>。然后考虑目前为止已经拟合的所有树并更新残差 <span class="math notranslate nohighlight">\(R\)</span>， <span class="math notranslate nohighlight">\(R - g_1(\boldsymbol{X}; \mathcal{T}_0, \mathcal{M}_0) + g_0( \boldsymbol{X}; \mathcal{T}_1, \mathcal{M}_1)\)</span> 。一直这样做，直到拟合了 <span class="math notranslate nohighlight">\(m\)</span> 棵树。</p>
 <p>此过程将产生后验分布的一个样本，一个拥有 <span class="math notranslate nohighlight">\(m\)</span> 棵树的样本。第一次迭代很容易导致次优树，主要原因是：第一次拟合的树会比必要的更为复杂，并且可能会陷入局部最小值，最终，后面树的拟合会受到以前树的影响。当继续采样时，所有这些影响将趋于消失，因为采样方法会多次重复访问以前拟合过的树，并让它们有机会重新适应更新后的残差。事实上，在拟合贝叶斯加性回归树模型时，一个常见的观测结果是，第一轮中的树往往更深，然后它们会逐步 <em>塌陷</em> 成较浅的树。</p>
-<p>在文献中，特定的贝叶斯加性回归树通常是为特定采样器量身定制的，因为它们依赖于共轭性。正因为如此，具有高斯似然的贝叶斯加性回归树与具有泊松似然的贝叶斯加性回归树不同。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 使用了一个基于粒子 Gibbs 采样器 <span id="id16">[<a class="reference internal" href="references.html#id9">73</a>]</span> 的采样器，该采样器专门用于处理树。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 会自动将此采样器分配给 <code class="docutils literal notranslate"><span class="pre">pm.BART</span></code> 分布；如果模型中还存在其他随机变量，PyMC3 会为这些变量分配其他采样器（如 NUTS）。</p>
+<p>在文献中，特定的贝叶斯加性回归树通常是为特定采样器量身定制的，因为它们依赖于共轭性。正因为如此，具有高斯似然的贝叶斯加性回归树与具有泊松似然的贝叶斯加性回归树不同。 PYMC3 使用了一个基于粒子 Gibbs 采样器 <span id="id16">[<a class="reference internal" href="references.html#id9">73</a>]</span> 的采样器，该采样器专门用于处理树。 PYMC3 会自动将此采样器分配给 <code class="docutils literal notranslate"><span class="pre">pm.BART</span></code> 分布；如果模型中还存在其他随机变量，PyMC3 会为这些变量分配其他采样器（如 NUTS）。</p>
 </div>
 <div class="section" id="bart-bike">
 <span id="id17"></span><h2>7.5 示例：自行车数据的贝叶斯加性回归树<a class="headerlink" href="#bart-bike" title="Permalink to this headline">¶</a></h2>
@@ -545,7 +533,7 @@
 Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 \end{split}
 \end{aligned}\end{split}\]</div>
-<p>在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中构建贝叶斯加性回归树模型与构建其他类型的模型非常相似，不同之处在于为随机变量指定 <code class="docutils literal notranslate"><span class="pre">pm.BART</span></code>时，既需要知道预测变量，也需要知道结果变量。主要原因在于：用于拟合贝叶斯加性回归树模型的采样方法在残差方面提出了一个新树，如前节所述。</p>
+<p>在 PYMC3 中构建贝叶斯加性回归树模型与构建其他类型的模型非常相似，不同之处在于为随机变量指定 <code class="docutils literal notranslate"><span class="pre">pm.BART</span></code>时，既需要知道预测变量，也需要知道结果变量。主要原因在于：用于拟合贝叶斯加性回归树模型的采样方法在残差方面提出了一个新树，如前节所述。</p>
 <p>在做了所有这些澄清之后，PyMC3 中的模型如下所示：</p>
 <div class="literal-block-wrapper docutils container" id="bart-model-gauss">
 <div class="code-block-caption"><span class="caption-number">Listing 102 </span><span class="caption-text">bart_model_gauss</span><a class="headerlink" href="#bart-model-gauss" title="Permalink to this code">¶</a></div>
@@ -573,7 +561,7 @@ Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 </div>
 <div class="section" id="generalized-bart-models">
 <span id="id19"></span><h2>7.6 广义贝叶斯加性回归树<a class="headerlink" href="#generalized-bart-models" title="Permalink to this headline">¶</a></h2>
-<p>贝叶斯加性回归树的 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 实现试图让似然的调整变得更简单 <a class="footnote-reference brackets" href="#id48" id="id20">6</a> ，类似于在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中的广义线性模型。让我们看看如何在贝叶斯加性回归树中使用伯努利似然。对于这个例子，我们将使用太空流感的疾病数据集，该流感主要影响年轻人和老年人，但不影响中年人。幸运的是，太空流感并不严重，因为它已经完全被控制了。在此数据集中，记录了接受太空流感检测的人及检测结果，如确诊 ( <span class="math notranslate nohighlight">\(1\)</span> ) 还是健康 ( <span class="math notranslate nohighlight">\(0\)</span> ) 、受检者年龄等。使用代码 <a class="reference internal" href="#bart-model-gauss"><span class="std std-ref">bart_model_gauss</span></a> 中具有高斯似然的贝叶斯加性回归树模型作为参考，可以看出伯努利似然模型与之差别不大：</p>
+<p>贝叶斯加性回归树的 PYMC3 实现试图让似然的调整变得更简单 <a class="footnote-reference brackets" href="#id48" id="id20">6</a> ，类似于在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中的广义线性模型。让我们看看如何在贝叶斯加性回归树中使用伯努利似然。对于这个例子，我们将使用太空流感的疾病数据集，该流感主要影响年轻人和老年人，但不影响中年人。幸运的是，太空流感并不严重，因为它已经完全被控制了。在此数据集中，记录了接受太空流感检测的人及检测结果，如确诊 ( <span class="math notranslate nohighlight">\(1\)</span> ) 还是健康 ( <span class="math notranslate nohighlight">\(0\)</span> ) 、受检者年龄等。使用代码 <a class="reference internal" href="#bart-model-gauss"><span class="std std-ref">bart_model_gauss</span></a> 中具有高斯似然的贝叶斯加性回归树模型作为参考，可以看出伯努利似然模型与之差别不大：</p>
 <div class="literal-block-wrapper docutils container" id="bart-model-bern">
 <div class="code-block-caption"><span class="caption-number">Listing 103 </span><span class="caption-text">bart_model_bern</span><a class="headerlink" href="#bart-model-bern" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
@@ -594,7 +582,7 @@ Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 <a class="reference internal image-reference" href="../_images/BART_space_flu_fit.png"><img alt="../_images/BART_space_flu_fit.png" src="../_images/BART_space_flu_fit.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 127 </span><span class="caption-text"><span class="math notranslate nohighlight">\(m=\{2、10、20、50\}\)</span> 时，根据 Space Influenza 数据集拟合的贝叶斯加性回归树。结果与 LOO 一致， <span class="math notranslate nohighlight">\(m=2\)</span> 的模型是欠拟合的，而 <span class="math notranslate nohighlight">\(m=50\)</span> 的模型存在过拟合问题。</span><a class="headerlink" href="#fig-bart-space-flu-fit" title="Permalink to this image">¶</a></p>
 </div>
-<p>到目前为止，我们已经讨论了具有单个预测变量的回归。但可以使用更多预测变量来拟合数据集。从 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 的实现角度来看，这很容易，我们只需要传递一个包含超过 <span class="math notranslate nohighlight">\(1\)</span> 个预测变量的二维数组 <span class="math notranslate nohighlight">\(X\)</span> 即可。不过，多元预测变量带来了一些有趣的统计问题，例如：如何解释具有许多预测变量的贝叶斯加性回归树模型？如何找出每个预测变量对结果的贡献程度？</p>
+<p>到目前为止，我们已经讨论了具有单个预测变量的回归。但可以使用更多预测变量来拟合数据集。从 PYMC3 的实现角度来看，这很容易，我们只需要传递一个包含超过 <span class="math notranslate nohighlight">\(1\)</span> 个预测变量的二维数组 <span class="math notranslate nohighlight">\(X\)</span> 即可。不过，多元预测变量带来了一些有趣的统计问题，例如：如何解释具有许多预测变量的贝叶斯加性回归树模型？如何找出每个预测变量对结果的贡献程度？</p>
 <p>在接下来的章节中，我们将回答这些问题。</p>
 </div>
 <div class="section" id="interpretability-of-barts">
@@ -680,15 +668,15 @@ Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 </div>
 </div>
 <div class="section" id="pymc3">
-<span id="priors-for-bart-in-pymc3"></span><h2>7.8 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中的先验选择<a class="headerlink" href="#pymc3" title="Permalink to this headline">¶</a></h2>
-<p>与本书中的其他模型相比，BART 是最“黑盒”的。我们无法设置想要生成贝叶斯加性回归树模型的任何先验。相反，我们需要通过一些参数来控制预定义的先验。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 允许使用 <span class="math notranslate nohighlight">\(3\)</span> 个参数来控制贝叶斯加性回归树的先验：</p>
+<span id="priors-for-bart-in-pymc3"></span><h2>7.8 PYMC3 中的先验选择<a class="headerlink" href="#pymc3" title="Permalink to this headline">¶</a></h2>
+<p>与本书中的其他模型相比，BART 是最“黑盒”的。我们无法设置想要生成贝叶斯加性回归树模型的任何先验。相反，我们需要通过一些参数来控制预定义的先验。 PYMC3 允许使用 <span class="math notranslate nohighlight">\(3\)</span> 个参数来控制贝叶斯加性回归树的先验：</p>
 <ul class="simple">
 <li><p>树的数量 <span class="math notranslate nohighlight">\(m\)</span></p></li>
 <li><p>树的深度 <span class="math notranslate nohighlight">\(\alpha\)</span></p></li>
 <li><p>切分变量的分布</p></li>
 </ul>
-<p>我们已经看到了改变树数量的效果，这被证明可以为 <span class="math notranslate nohighlight">\(50-200\)</span> 区间内的值提供可靠的预测。还有很多例子表明使用交叉验证来确定这个数字可能是有益的。我们还可以看到，通过扫描 <span class="math notranslate nohighlight">\(m\)</span> 来寻找相对较低的值，例如 <span class="math notranslate nohighlight">\(25-100\)</span> 范围内的值，能够评估变量的重要性。我们没有费心去改变 <span class="math notranslate nohighlight">\(\alpha=0.25\)</span> 的默认值，因为此调整似乎影响更小，尽管仍然需要研究来更好地理解这个先验 <span id="id38">[<a class="reference internal" href="references.html#id67">72</a>]</span>。与 <span class="math notranslate nohighlight">\(m\)</span> 一样，交叉验证也可用于调整它以提高效率。最后，<code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 提供了传递权重向量的选项，因此不同变量具有不同的被选中先验概率，当用户有证据表明某些变量可能比其他变量更重要时，这很有用，否则最好保持均匀分布。已经提出了更复杂的基于 Dirichlet 的先验来实现这一目标，并在需要归纳稀疏性时允许更好的推断 <a class="footnote-reference brackets" href="#id52" id="id39">10</a> 。这在我们有很多预测变量，但只有少数可能有贡献，且事先不知道哪些最相关的场景中非常有用。这种情况比较常见，例如，在基因研究中，测量数百或更多基因的活性相对容易，但它们之间的关系不仅未知，而且是科学家研究的目标。</p>
-<p>大多数贝叶斯加性回归树的实现都是在单个软件包场景中完成的，在某些情况下甚至面向特定的子学科。它们通常不是概率编程语言的一部分，因此不希望用户过多地调整贝叶斯加性回归树模型。因此，即使可以直接为 <span class="math notranslate nohighlight">\(m\)</span> 设置先验，在实践中通常也不建议这样做。相反，贝叶斯加性回归树相关的文献鼓励在默认参数下的良好性能，同时认识到可以使用交叉验证来获得额外的收益。 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中的贝叶斯加性回归树实现稍微偏离了这一传统，允许了一些额外的灵活性，但与高斯、泊松分布，甚至像高斯过程这样的非参数分布相比，这种灵活性仍然非常有限。预计会很快出现更灵活的贝叶斯加性回归树的软件实现，以允许用户构建灵活和针对问题的模型。</p>
+<p>我们已经看到了改变树数量的效果，这被证明可以为 <span class="math notranslate nohighlight">\(50-200\)</span> 区间内的值提供可靠的预测。还有很多例子表明使用交叉验证来确定这个数字可能是有益的。我们还可以看到，通过扫描 <span class="math notranslate nohighlight">\(m\)</span> 来寻找相对较低的值，例如 <span class="math notranslate nohighlight">\(25-100\)</span> 范围内的值，能够评估变量的重要性。我们没有费心去改变 <span class="math notranslate nohighlight">\(\alpha=0.25\)</span> 的默认值，因为此调整似乎影响更小，尽管仍然需要研究来更好地理解这个先验 <span id="id38">[<a class="reference internal" href="references.html#id67">72</a>]</span>。与 <span class="math notranslate nohighlight">\(m\)</span> 一样，交叉验证也可用于调整它以提高效率。最后，PYMC3 提供了传递权重向量的选项，因此不同变量具有不同的被选中先验概率，当用户有证据表明某些变量可能比其他变量更重要时，这很有用，否则最好保持均匀分布。已经提出了更复杂的基于 Dirichlet 的先验来实现这一目标，并在需要归纳稀疏性时允许更好的推断 <a class="footnote-reference brackets" href="#id52" id="id39">10</a> 。这在我们有很多预测变量，但只有少数可能有贡献，且事先不知道哪些最相关的场景中非常有用。这种情况比较常见，例如，在基因研究中，测量数百或更多基因的活性相对容易，但它们之间的关系不仅未知，而且是科学家研究的目标。</p>
+<p>大多数贝叶斯加性回归树的实现都是在单个软件包场景中完成的，在某些情况下甚至面向特定的子学科。它们通常不是概率编程语言的一部分，因此不希望用户过多地调整贝叶斯加性回归树模型。因此，即使可以直接为 <span class="math notranslate nohighlight">\(m\)</span> 设置先验，在实践中通常也不建议这样做。相反，贝叶斯加性回归树相关的文献鼓励在默认参数下的良好性能，同时认识到可以使用交叉验证来获得额外的收益。 PYMC3 中的贝叶斯加性回归树实现稍微偏离了这一传统，允许了一些额外的灵活性，但与高斯、泊松分布，甚至像高斯过程这样的非参数分布相比，这种灵活性仍然非常有限。预计会很快出现更灵活的贝叶斯加性回归树的软件实现，以允许用户构建灵活和针对问题的模型。</p>
 </div>
 <div class="section" id="exercises7">
 <span id="id40"></span><h2>7.9 练习<a class="headerlink" href="#exercises7" title="Permalink to this headline">¶</a></h2>

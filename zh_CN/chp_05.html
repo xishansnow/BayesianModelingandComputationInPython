@@ -219,13 +219,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#pymc3">
-   5.5 在
-   <code class="docutils literal notranslate">
-<span class="pre">
-     PyMC3
-    </span>
-</code>
-   中拟合样条
+   5.5 在 PYMC3 中拟合样条
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -300,13 +294,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#pymc3">
-   5.5 在
-   <code class="docutils literal notranslate">
-<span class="pre">
-     PyMC3
-    </span>
-</code>
-   中拟合样条
+   5.5 在 PYMC3 中拟合样条
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -474,11 +462,11 @@
 </div>
 </div>
 <p>到目前为止，我们已经探索了几个示例，以直观了解样条线是什么以及如何在 <code class="docutils literal notranslate"><span class="pre">Patsy</span></code> 的帮助下自动创建它们。</p>
-<p>我们现在可以继续计算权重。让我们看看如何使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 在贝叶斯模型中做到这一点。</p>
+<p>我们现在可以继续计算权重。让我们看看如何使用 PYMC3 在贝叶斯模型中做到这一点。</p>
 </div>
 <div class="section" id="pymc3">
-<span id="fitting-splines-in-pymc3"></span><h2>5.5 在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中拟合样条<a class="headerlink" href="#pymc3" title="Permalink to this headline">¶</a></h2>
-<p>在本节中，我们将使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 通过将一组基样条拟合到数据来获得回归系数 <span class="math notranslate nohighlight">\(\beta\)</span> 的值。</p>
+<span id="fitting-splines-in-pymc3"></span><h2>5.5 在 PYMC3 中拟合样条<a class="headerlink" href="#pymc3" title="Permalink to this headline">¶</a></h2>
+<p>在本节中，我们将使用 PYMC3 通过将一组基样条拟合到数据来获得回归系数 <span class="math notranslate nohighlight">\(\beta\)</span> 的值。</p>
 <p>现代自行车共享系统允许全球许多城市的人们以完全自动化的方式租用和归还自行车，有助于提高公共交通的效率，并可能使社会的一部分更健康、更快乐。我们将使用来自加州大学欧文分校机器学习库 <a class="footnote-reference brackets" href="#id35" id="id17">12</a> 的此类自行车共享系统的数据集。对于我们的示例，我们将估计 24 小时内每小时租用的自行车数量。让我们加载并绘制数据：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/bikes_hour.csv"</span><span class="p">)</span>
 <span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">"hour"</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

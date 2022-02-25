@@ -807,7 +807,7 @@
 <p>话虽如此，我们有一个强大的先验，如果你做到了这一点，那么你就是一个勤奋的读者，并且了解我们迄今为止的所有选择，所以让我们深入推断。</p>
 <div class="section" id="applied-example-running-inference-on-flight-delays-models">
 <span id="id22"></span><h3>9.5.1 应用示例： 运行航班延误模型上的推断<a class="headerlink" href="#applied-example-running-inference-on-flight-delays-models" title="Permalink to this headline">¶</a></h3>
-<p>我们选择使用 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中默认的 HMC 采样器从后验分布中采样。</p>
+<p>我们选择使用 PYMC3 中默认的 HMC 采样器从后验分布中采样。</p>
 <p>让我们运行我们的采样器并使用典型的诊断评估我们的 MCMC 链。我们对采样挑战的第一个迹象是 MCMC 采样期间的分歧。有了这些数据和模型，没有人提出来。但是，如果提出了一些问题，则表明应该进行进一步的探索，例如我们在 <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题</span></a> 部分中执行的步骤。</p>
 <div class="literal-block-wrapper docutils container" id="airline-model-inference">
 <div class="code-block-caption"><span class="caption-number">Listing 115 </span><span class="caption-text">airline_model_inference</span><a class="headerlink" href="#airline-model-inference" title="Permalink to this code">¶</a></div>
@@ -1062,7 +1062,7 @@
 <p>在执行分析时，重要的是要注意或保留作为分析基础的原始数据。这就是为什么您会一遍又一遍地看到相同的数据集，例如 Palmer Penguins、Radon 和 Eight Schools。这些数据很容易理解并且很容易获得，这使其成为那些希望共享方法的人的简单参考。标记、识别、存储和访问特定数据的具体方法因情况、规模、组织以及道德和合法性而异，但重要的是要注意这一点。一些示例包括在代码版本控制中包含数据或引用存储在服务器上的数据集的链接。</p>
 <p>接下来是建模和分析代码，例如贯穿本书的所有代码。理想情况下，此代码将使用版本控制系统（例如 git）进行版本控制，并存储在可访问的位置，例如开源存储库。我们想强调版本控制是有用的，即使你是一个单独的从业者而不是在一个团队中工作。使用版本控制将允许您在代码版本之间跳转，它使您能够轻松地测试想法，减少知识丢失或丢失结果的风险。这极大地有助于提高工作流程中步骤之间的迭代速度并比较结果。
 在计算统计中，任何结果的关键部分都是计算机本身。虽然计算机制在很大程度上没有改变，但用于计算的库变化很快。正如我们所见，现代贝叶斯方法至少依赖于概率编程语言，但这只是冰山一角。操作系统版本以及结合使用的数百个其他软件库都在提供结果方面发挥了作用。当环境无法复制时，一个结果是代码正在运行，现在抛出异常或错误并失败。</p>
-<p>这个结果虽然令人沮丧，但至少是有帮助的，因为失败状态是显而易见的。一个更危险但微妙的问题是代码仍然运行但结果不同。这可能是因为库可能会更改，或者算法本身可能会发生变化。例如，TFP 可能会改变调整样本的数量，或者 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 可能会在一个版本和下一个版本之间重构采样器。不管是什么原因，即使数据和分析代码相同，在没有完整的计算环境规范的情况下，仅靠两者都不足以在计算上完全重现分析。指定环境的一种常见方法是通过显式的依赖项列表，在 Python 包中常见为 <em>requirements.txt</em> 或 <em>environment.yml</em> 文件。</p>
+<p>这个结果虽然令人沮丧，但至少是有帮助的，因为失败状态是显而易见的。一个更危险但微妙的问题是代码仍然运行但结果不同。这可能是因为库可能会更改，或者算法本身可能会发生变化。例如，TFP 可能会改变调整样本的数量，或者 PYMC3 可能会在一个版本和下一个版本之间重构采样器。不管是什么原因，即使数据和分析代码相同，在没有完整的计算环境规范的情况下，仅靠两者都不足以在计算上完全重现分析。指定环境的一种常见方法是通过显式的依赖项列表，在 Python 包中常见为 <em>requirements.txt</em> 或 <em>environment.yml</em> 文件。</p>
 <p>另一种方法是通过计算环境虚拟化，例如虚拟机或容器化。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">播种伪随机数生成器</p>

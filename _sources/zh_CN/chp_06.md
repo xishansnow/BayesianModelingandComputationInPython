@@ -188,7 +188,7 @@ def ts_regression_model():
         name="observed")
 ```
 
-正如在前面章节中提到的，与 `PyMC3` 相比，`TFP` 提供了较低级别的 API 。虽然与低级模块和组件交互更灵活，但与其他概率编程语言相比，也需要更多代码，并且需要在模型中进行额外的 `shape` 形状处理。例如，在代码 [regression_model_for_timeseries](regression_model_for_timeseries) 中，我们使用 `einsum` 而不是 `matmul` 以便代码能够处理任意的 *批形状*（详情参阅  {ref}`shape_ppl` ）。
+正如在前面章节中提到的，与 PYMC3 相比，`TFP` 提供了较低级别的 API 。虽然与低级模块和组件交互更灵活，但与其他概率编程语言相比，也需要更多代码，并且需要在模型中进行额外的 `shape` 形状处理。例如，在代码 [regression_model_for_timeseries](regression_model_for_timeseries) 中，我们使用 `einsum` 而不是 `matmul` 以便代码能够处理任意的 *批形状*（详情参阅  {ref}`shape_ppl` ）。
 
 代码 [regression_model_for_timeseries](regression_model_for_timeseries) 提供了回归模型 `ts_regression_model`。它具有和 `tfd.Distribution` 类似的功能，要抽取先验和先验预测样本，我们可以调用 `.sample(.)` 方法，参见代码 [prior_predictive](prior_predictive)，其结果显示在 {numref}`fig:fig3_prior_predictive1` 中。
 
