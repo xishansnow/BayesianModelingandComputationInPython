@@ -343,7 +343,7 @@ target_density_function = jd_penguin_mass_observed.unnormalized_log_prob
 
 ```{code-block} ipython3
 :name: tfp_posterior_inference
-:caption: tfp_posterior_inference
+:caption: TFp 的后验推断
 
 run_mcmc = tf.function(
     tfp.experimental.mcmc.windowed_adaptive_nuts,
@@ -396,21 +396,22 @@ inf_data_model_penguin_mass_all_species2.add_groups(
 
 ## 3.2 线性回归 
 
-在上一节中，我们通过在高斯分布的均值和标准差上设置先验分布来模拟企鹅体重的分布。重要的是，我们假设体重不随数据中的其他特征而变化。然而，我们希望其他观测数据点可以提供有关预期企鹅体重的信息。直观地说，如果我们看到两只企鹅，一只长鳍，一只短鳍，我们会认为较大的企鹅，即长鳍的企鹅，即使我们手头没有秤来精确测量它们的体重，也会有更大的体重。估计观测到的鳍状肢长度与估计体重的关系的最简单方法之一是拟合线性回归模型，其中均值*有条件*建模为其他变量的线性组合。
+在上一节中，我们通过在高斯分布的均值和标准差参数上设置先验分布，来模拟企鹅体重的分布。特别是，我们假设了体重不会随数据中其他特征的变化而变化。不过，我们可能更希望通过已有的观测数据，能够预测企鹅的体重信息。直观地说，如果看到两只企鹅，其中一只长鳍、一只短鳍，那么即使手边没有设备来精确测量体重，我们也会认为长鳍企鹅会是那个体重较大的企鹅。利用鳍状肢长度来估计企鹅体重的最简单方法是拟合一个线性回归模型，其中体重的均值被 *有条件* 地建模为其他变量的线性组合：
 
 ```{math}
 :label: eq:expanded_regression
 
 \begin{split}
-  \mu =& \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m \\
+\mu =& \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m \\
 Y \sim& \mathcal{N}(\mu, \sigma)
 \end{split}
 ```
-其中系数，也称为预测变量，由参数 $\beta_i$ 表示。例如，$\beta_0$ 是线性模型的截距。 $X_i$ 称为预测变量或自变量，$Y$ 通常称为目标、输出、响应或因变量。重要的是要注意 $\boldsymbol{X}$ 和 $Y$ 都是观测数据，并且它们是成对的 $\{y_j, x_j\}$。也就是说，如果我们改变 $Y$ 的顺序而不改变 $X$，我们将破坏数据中的一些信息。
 
-我们称之为线性回归，因为参数（不是预测变量）以线性方式进入模型。同样对于具有单个预测变量的模型，我们可以将此模型视为将一条线拟合到 $(X, y)$ 数据，对于更高维度的平面或更一般的超平面。
+其中系数由参数 $\beta_i$ 表示，其中 $\beta_0$ 是线性模型的截距； $X_i$ 被称为预测变量或协变量； $Y$ 被称为目标变量、输出、响应变量或因变量。公式中需要注意， $\boldsymbol{X}$ 和 $Y$ 都是观测数据，并且它们是成对的 $\{y_j, x_j\}$ （ 也就是说，如果改变 $Y$ 的顺序而不改变 $X$ 的顺序，将会破坏数据中的信息 ）。
 
-或者，我们可以使用矩阵表示法表示公式 {eq}`eq:expanded_regression`：
+上述模型我们称之为线性回归模型，因为其中参数（注意：并非预测变量）以线性方式被引入到模型中。对于具有单个预测变量的模型，我们可以将模型视为将一条线拟合到观测数据 $(X, y)$ ，对于更高维度，则可能是一个平面或超平面。
+
+我们可以采用矩阵表示法表示公式 {eq}`eq:expanded_regression`：
 
 ```{math} 
 :label: eq:linear_model_matrix 
@@ -418,9 +419,7 @@ Y \sim& \mathcal{N}(\mu, \sigma)
 \mu = \mathbf{X}\boldsymbol{\beta} 
 ``` 
 
-这里我们取系数列向量 $\beta$ 和预测变量矩阵 $\mathbf{X}$ 之间的矩阵向量乘积。
-
-你可能在其他（非贝叶斯）场合看到的另一种表达方式是将公式 {eq}`eq:expanded_regression` 重写为对某些线性预测的噪声观测：
+这里用系数列向量 $\beta$ 和预测变量矩阵 $\mathbf{X}$ 之间的矩阵向量乘积表达了这种线性关系。在其他（非贝叶斯）场合中，你可能会看到另一种表达方式，将公式 {eq}`eq:expanded_regression` 重写为对线性预测的含噪声观测：
 
 ```{math} 
 :label: eq:linear_model_engine 
@@ -428,7 +427,7 @@ Y \sim& \mathcal{N}(\mu, \sigma)
 Y = \mathbf{X}\boldsymbol{\beta} + \epsilon,\; \epsilon \sim \mathcal{N}(0, \sigma)
 ``` 
 
-公式 {eq}`eq:linear_model_engine` 中的公式将线性回归的确定性部分（线性预测）和随机部分（噪声）分开。然而，我们更喜欢公式 {eq}`eq:expanded_regression`，因为它更清楚地显示了生成过程。
+公式 {eq}`eq:linear_model_engine` 将线性回归的确定性部分（线性预测）和随机部分（噪声）分开。不过公式 {eq}`eq:expanded_regression` 能够更清楚地展示出数据的生成过程。
 
 ::: {admonition} Design Matrix 
 
@@ -440,25 +439,28 @@ Y = \mathbf{X}\boldsymbol{\beta} + \epsilon,\; \epsilon \sim \mathcal{N}(0, \sig
 
 ::: 
 
-如果在 “三维空间” 中绘制公式 {eq}`eq:expanded_regression`，我们会得到 {numref}`fig:3d_linear_regression`，它显示了似然函数的被估参数，如何根据观测数据 $x$ 发生变化。需要说明的是，在本章中，我们仅使用了线性关系来建模 $x$ 和 $Y$ 之间的关系，并使用高斯分布作为似然，但在很多其他模型架构中，更可能会选择不同的选择，这一点将在第 [4] 章（chap3）中有所体现。
+如果在 “三维空间” 中绘制公式 {eq}`eq:expanded_regression`，我们会得到 {numref}`fig:3d_linear_regression`，它显示了结果变量按照似然函数的模型，随着观测数据 $x$ 的变化而变化。
+
+需要说明的是，本章仅使用了线性关系来建模 $x$ 和 $Y$ 之间的关系，使用高斯分布作为似然。但在许多其他模型架构中，可能会有不同的选择，这一点在 [第 4 章](chap3) 中有所体现。
+
 
 ```{figure} figures/3d_linear_regression.png
 :name: fig:3d_linear_regression 
 :width: 7.00in 
 
-在 $3$ 个点处评估使用了高斯似然的线性回归。请注意，此图仅显示了 $x$ 的每个值处可能的一种高斯分布，在完成整个贝叶斯模型拟合后，将最终得到高斯分布，该高斯分布的参数遵循的并非一定是高斯分布。
+在 $3$ 个点处评估了使用高斯似然的线性回归。此图仅显示了三个 $x$ 点处的一种可能的高斯分布（因为 $\beta_0,\beta_1,\sigma$ 都是随机变量）；在完成整个贝叶斯模型拟合后，将得到最终的高斯分布。不过该高斯分布的参数（即均值和标准差）并非一定要服从高斯分布。
 
 ``` 
 
 (linear_regression_intro)= 
 
-### 3.2.1 线性企鹅模型
+### 3.2.1 一个简单的线性模型
 
-如果回顾企鹅示例，我们对使用额外数据来估计企鹅的平均体重更感兴趣。我们在代码 [non_centered_regression](non_centered_regression) 中编写了一个线性回归模型，其中包括两个新参数 $\beta_0$ 和 $\beta_1$，通常称为截距和斜率。对于这个例子，我们设置了 $\mathcal{N}(0, 4000)$ 的宽泛先验，这也与我们没有领域知识的假设一致。随后运行采样器，它现在估计了三个参数 $\sigma$ 、$\beta_1$ 和 $\beta_0$。
+如果回顾企鹅的例子，我们对使用鳍长度来估计和预测企鹅平均体重更感兴趣，可以在代码 [non_centered_regression](non_centered_regression) 中构建一个线性回归模型，其中包括两个新参数 $\beta_0$ 和 $\beta_1$ （通常称为截距和斜率）。对于此示例，代码中设置了 $\mathcal{N}(0, 4000)$ 的宽泛先验，这符合我们没有领域先验知识的假设。在运行采样器后，会估计出三个参数 $\sigma$ 、$\beta_1$ 和 $\beta_0$ 。
 
 ```{code-block} ipython3
 :name: non_centered_regression
-:caption: non_centered_regression
+:caption: 未做中心化处理的线性回归模型
 
 adelie_flipper_length_obs = penguins.loc[adelie_mask, "flipper_length_mm"]
 
@@ -476,22 +478,22 @@ with pm.Model() as model_adelie_flipper_regression:
     inf_data_adelie_flipper_regression = pm.sample(return_inferencedata=True)
 ```
 
-为了节省篇幅，本书中不会每次都展示诊断程序，但你不应盲目相信采样器。相反，你应该将运行诊断程序作为工作流程中的固定步骤，以验证你是否有可靠的后验近似。
+为了节省篇幅，本书中不会每次都展示诊断程序，但你不应盲目相信采样器。相反，你应该将运行诊断程序作为工作流程中的固定步骤，以验证你是否有可靠的近似后验。
 
 ```{figure} figures/adelie_coefficient_posterior_plots.png 
 :name: fig:adelie_coefficient_posterior_plots 
 :width: 5in 
  
-`model_adelie_flipper_regression` 中的线性回归系数的后验分布。
+`model_adelie_flipper_regression` 中系数的后验分布。
 ``` 
 
-在采样器完成运行后，我们可以绘制 {numref}`fig:adelie_coefficient_posterior_plots`，它显示了检查 $\beta_0$ 和 $\beta_1$ 的完整后验图。
+在采样器完成运行后，可以绘制参数的近似后验分布图 {numref}`fig:adelie_coefficient_posterior_plots`，其中显示了 $\beta_0$ 和 $\beta_1$ 的完整后验。
 
-系数 $\beta_1$ 表示，对于 `Adelie 种`来说，鳍状肢长度的每毫米变化，理论上上我们预计会产生 $32$ 克的体重变化，尽管在 $22$ 克到 $41$ 克之间的任何地方都是可能发生的变化。此外，从 {numref}`fig:adelie_coefficient_posterior_plots` 中可以看到 $$94\%$$ 的最高密度区间未覆盖 $0$ 克，这支持了我们的假设，即体重和鳍状肢长度之间存在关系。这一观察对于解释 “鳍状肢长度和体重之间如何相关” 非常有用。但我们应该注意：**不要过度解释系数或认为线性模型必然意味着因果关系**。例如，如果对一只企鹅进行脚蹼的扩展手术，这不一定会造成体重增加，而实际上由于企鹅获取食物的障碍，体重反而可能降低。相反的关系也不一定正确，给企鹅提供更多食物有助于其拥有更大的鳍状肢，但也可能使其成为一只更胖的企鹅。
+系数 $\beta_1$ 表示，对于 `Adelie 种`来说，鳍状肢长度的每毫米变化，理论上预计会平均产生 $32$ 克的体重变化，不过任何在 $22$ 克到 $41$ 克之间的变化值也都是可能发生的。此外，从 {numref}`fig:adelie_coefficient_posterior_plots` 中可以看到 $94\%$ 的最高密度区间未覆盖 $0$ 克，这表明体重和鳍状肢长度之间确实存在某种联系，支撑了我们的假设。此观察对于解释 “鳍状肢长度和体重之间的关系” 非常有用。但我们应该注意：**不要过度解释系数，或认为线性模型必然意味着因果关系**。例如，如果对一只企鹅进行鳍状肢的增肢手术，这会造成鳍长度增加，但不一定会造成体重增加。实际上，由于企鹅获取食物困难，体重反而可能降低。两者之间的逆向关系也不一定正确，给企鹅提供更多食物使其增重，这有助于其拥有更大的鳍状肢，但也可能使其成为一只更肥胖的企鹅。
 
-现在看一下 $\beta_0$，它代表什么？根据后验估计结果，如果看到一只鳍状肢长度为 $0$ 毫米的`Adelie 种`企鹅，我们预计这只不可能的企鹅的体重在 $-4213$ 到 $-546$ 克之间。根据模型，这个陈述是正确的，但负的体重并没有意义。这不一定是问题，没有规定模型中的每个参数都必须可解释，也没有规定模型对每个参数值都必须提供合理预测。
+现在看一下 $\beta_0$，它代表什么？根据后验估计结果，如果看到一只鳍状肢长度为 $0$ 毫米的`Adelie 种`企鹅，我们预计这只不存在的企鹅，体重在 $-4213$ 到 $-546$ 克之间。这个陈述按照模型来说是正确的，但负的体重并没有意义。这不一定是问题，没有规定模型中的每个参数都必须可解释，也没有规定模型对每个参数值都必须提供合理预测。
 
-在我们整书旅程中的当下，上述特定模型的有限目的只是估计鳍状肢长度和`企鹅体重`之间的关系，而通过后验估计，我们已经成功实现了这个目标。
+在当前情况下，上述特定模型的有限目的只是估计`鳍状肢长度`和`企鹅体重`之间的关系，通过后验估计，我们已经成功实现了这个目标。
 
 ::: {admonition} 模型: 数学和现实之间的平衡 
 
@@ -513,18 +515,18 @@ with pm.Model() as model_adelie_flipper_regression:
 :name: fig:Flipper_length_mass_regression
 :width: 7.00in 
 
-观测到的鳍状肢长度与 `Adelie 种` 的体重数据作散点图，似然的均值估计为黑线，均值的 $94\%$ HDI 为灰色区间。请注意估计的均值如何随着鳍状肢长度变化而变化。
+观测到的鳍状肢长度与 `Adelie 种` 的体重数据作散点图，似然的均值参数估计为黑线，均值参数的 $94\%$ HDI 为灰色区域。请注意均值在随鳍状肢长度变化而变化。
 ``` 
 
 (chp2_predictions)= 
 
 ### 3.2.2 预测 
 
-在 {ref}`linear_regression_intro` 中，我们估计了鳍状肢长度和体重之间的线性关系。回归的另一用途是利用此关系进行预测。在本例中，给定企鹅的鳍状肢长度，我们能够预测它的体重吗？事实上可以。我们可以使用 `model_adelie_flipper_regression` 的结果来执行此预测操作。
+在 {ref}`linear_regression_intro` 中，我们估计了`鳍状肢长度`和`体重`之间的线性关系。而回归的主要用途之一是利用此关系进行预测。在本例中，给定企鹅的鳍状肢长度，我们能够预测它的体重吗？当然可以！可以使用模型 `model_adelie_flipper_regression` 的推断结果来做预测。
 
-由于在贝叶斯统计中，我们处理的是都是分布，因此最终不会得到关于体重的单个预测值，而是所有可能体重值的分布。该分布就是公式 [eq:post_pred_dist](eq:post_pred_dist) 中定义的后验预测分布。
+在贝叶斯统计中，处理的对象都是概率分布，因此最终不会得到体重的单一预测值，而是所有可能体重值构成的分布。该分布就是公式 [eq:post_pred_dist](eq:post_pred_dist) 中定义的后验预测分布。
 
-在实践中，我们通常不会（也可能无法）解析地计算预测，但使用概率编程语言，可以用后验分布样本来估计预测值的分布。例如，如果有一只平均鳍状肢长度的企鹅，并且想使用 PYMC3 预测其可能的体重，我们可以编写代码 [penguins_ppd](penguins_ppd)：
+在实践中，我们通常不会（也可能无法）解析地计算预测分布，而是使用概率编程语言，利用后验分布的样本来估计预测值的分布（ 注：本质上是对模型参数的边缘化计算 ）。例如，如果有一只具有平均鳍状肢长度的企鹅，想预测其可能的体重，可以编写代码 [penguins_ppd](penguins_ppd)：
 
 ```{code-block} ipython3
 :name: penguins_ppd
@@ -538,28 +540,27 @@ with model_adelie_flipper_regression:
         inf_data_adelie_flipper_regression.posterior, var_names=["mass", "μ"])
 ```
 
-在代码 [penguins_ppd](penguins_ppd) 的第一行中，我们将鳍状肢长度的值固定为观测到的鳍状肢的平均长度。然后使用回归模型 `model_adelie_flipper_regression`，可以在该固定值处生成企鹅体重的后验预测样本。在 {numref}`fig:Flipper_length_mass_posterior_predictive` 中，我们绘制了具有平均鳍状肢长度的企鹅，其体重的后验预测分布，沿着均值的后验。
+在代码 [penguins_ppd](penguins_ppd) 的第一行，我们将鳍状肢长度的值固定为观测数据中鳍状肢的平均长度。然后使用回归模型 `model_adelie_flipper_regression`，在该固定值处生成企鹅体重的后验预测样本。 {numref}`fig:Flipper_length_mass_posterior_predictive` 中绘制了具有平均鳍状肢长度的企鹅体重的后验预测分布。
 
 ```{figure} figures/Flipper_length_mass_posterior_predictive.png 
 :name: fig:Flipper_length_mass_posterior_predictive 
 :width: 7.00in 
  
-在平均鳍状肢长度处评估的均值参数 $\mu$ 的后验分布，标记为蓝色；同时，在平均鳍状肢长度处评估的企鹅体重的后验预测分布标记为黑色。可以看出，黑色曲线更宽，因为它描述了（给定鳍状肢长度时）所以可能预测结果的分布，而蓝色曲线仅表达了其中均值的分布。
+在平均鳍状肢长度处评估的均值参数 $\mu$ 的后验分布，标记为蓝色；同时，在平均鳍状肢长度处评估的企鹅体重的后验预测分布标记为黑色。可以看出，黑色曲线更宽，因为它描述了（给定鳍状肢长度时）所以可能体重的分布（即均值参数和标准差参数的边缘化结果），而蓝色曲线仅表达了均值参数的分布（即均值的边缘分布）。
 ``` 
 
-简而言之，我们不仅可以使用代码 [non_centered_regression](non_centered_regression) 中的模型来估计鳍状肢长度和企鹅体重之间的关系，还可以在任意鳍状肢长度处获得其对应的企鹅体重估计值。
+简而言之，我们不仅可以使用代码 [non_centered_regression](non_centered_regression) 中的模型来估计鳍状肢长度和企鹅体重之间的关系，还可以在任意鳍状肢长度处获得对应的企鹅体重估计分布。
 
-换句话说，我们可以利用贝叶斯估计得出的 $\beta_1$ 和 $\beta_0$ 系数，通过后验预测分布来预测任意鳍状肢长度的企鹅体重。
+换句话说，我们可以利用贝叶斯推断得出 $\beta_1$ 和 $\beta_0$ 系数，通过后验预测分布来预测任意鳍状肢长度对应的企鹅体重。
 
-因此，后验预测分布在贝叶斯环境中是一个特别强大的工具，它让我们不仅可以预测最可能的值，还可以预测包含不确定性的合理值分布，如公式 [eq:post_pred_dist](eq:post_pred_dist) 。
+因此，后验预测分布在贝叶斯环境中是一个强大的工具，它不仅让我们可以预测最可能的值，还可以预测包含不确定性的合理值的分布，如公式 [eq:post_pred_dist](eq:post_pred_dist) 。
+
 
 (centering)= 
 
 ### 3.2.3 中心化处理 
 
-我们在代码 [non_centered_regression](non_centered_regression) 中的模型在估计鳍状肢长度和企鹅体重之间的相关性以及预测给定鳍状肢长度下的企鹅体重方面效果很好。
-
-遗憾的是，数据和模型提供的对 $\beta_0$ 的估计并不是特别有用。但我们可以通过数据转换来使 $\beta_0$ 更易于解释。通常我们会选择中心化处理，即采纳一组数据并将其均值中心化为零，如代码 [flipper_centering](flipper_centering) 所示。
+代码 [non_centered_regression](non_centered_regression) 中的模型在估计鳍状肢长度和企鹅体重之间的关系，以及预测给定鳍状肢长度下的企鹅体重方面效果很好。遗憾的是，数据和模型对 $\beta_0$ 的估计并不是特别有意义，因此我们可以通过数据转换来使 $\beta_0$ 更易于解释。通常我们会选择中心化处理，即采纳一组数据并将其均值中心化为零，如代码 [flipper_centering](flipper_centering) 所示。
 
 ```{code-block} ipython3
 :name: flipper_centering
@@ -615,23 +616,23 @@ inf_data_adelie_flipper_length_c = az.from_dict(
 :name: fig:SingleSpecies_multipleRegression_Centered 
 :width: 7.00in 
 
-来自代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 的系数估计。
-注意，$beta\_1$ 的分布与 {numref}`fig:adelie_coefficient_posterior_plots` 中相同，但 $beta\_0$ 的分布发生了偏移。因为我们在鳍状肢长度的均值处做了中心化处理，$beta\_0$ 现在代表具有平均鳍状肢长度的企鹅的概率体重分布。
+来自代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 的系数估计。注意，$beta\_1$ 的分布与 {numref}`fig:adelie_coefficient_posterior_plots` 中相同，但 $beta\_0$ 的分布发生了偏移。由于我们在鳍状肢长度的均值处做了中心化处理，因此 $beta\_0$ 现在代表了具有平均鳍状肢长度的企鹅体重分布。
 ``` 
 
-在代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 中定义的数学模型与代码 [non_centered_regression](non_centered_regression) 中的 PYMC3 模型 `model_adelie_flipper_regression` 相同，唯一区别是对预测变量做的中心化处理。然而，在概率编程语言方面，`TFP` 的结构需要在各行中添加 `tensor_x[..., None]` 以扩展一批标量，以便它们能够与一批向量一起广播。具体来说，`None` 会添加一个新轴，这也可以使用 `np.newaxis` 或 `tf.newaxis` 来完成。此外，`TFP` 还将模型包装在一个函数中，以便轻松地以不同的预测变量作为条件。当然，此处使用中心化后的鳍状肢长度作为预测变量，但其实也可以项 PYMC3 一样使用非中心化的方式，两者结果是相似的。
+代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 中定义的数学模型与代码 [non_centered_regression](non_centered_regression) 中的 PYMC3 模型 `model_adelie_flipper_regression` 基本等价，唯一区别是对预测变量做了中心化处理。不过，在概率编程语言方面，`TFP` 的结构需要在不同行中添加 `tensor_x[..., None]` 来扩展标量的批次，使其能够与向量批次一起广播。具体来说，`None` 会添加一个新轴，这也可以使用 `np.newaxis` 或 `tf.newaxis` 来完成。此外，`TFP` 还将模型包装在一个函数中，以便轻松地将不同的预测变量作为条件。当然，中心化处理后，预测变量也应当是中心化后的变量。
 
-当我们再次绘制系数时，$\beta_1$ 与 PYMC3 模型相同，但 $\beta_0$ 的分布发生了变化。由于我们将输入的数据中心化到了其均值上，$\beta_0$ 的分布与我们对非中心化数据集的组均值的预测相同。通过将数据中心化，现在可以直接将 $\beta_0$ 解释为具有平均鳍状肢长度的 `Adelie 种`企鹅的平均体重分布。
+当再次绘制系数的后验分布时，$\beta_1$ 与 PYMC3 模型相同，但 $\beta_0$ 的分布发生了变化。由于我们将输入数据中心化到了其均值上，$\beta_0$ 的后验分布将代表非中心化数据集中均值对应的预测分布。通过将数据中心化，现在可以将 $\beta_0$ 解释为具有平均鳍状肢长度的 `Adelie 种`企鹅的平均体重分布。
 
-转换输入变量的想法也可以在任意选择的值上执行。例如，我们可以减去最小鳍状肢长度后拟合模型。在这种转换中，会将 $\beta_0$ 的解释更改为观测到的最小鳍状肢长度的均值分布。
+转换输入变量的想法也可以在任意选择的值上执行。例如，可以减去最小鳍状肢长度后拟合模型。在做这种转换后，可以将 $\beta_0$ 的解释变更为观测到的最小鳍状肢长度的平均体重分布。
 
-为了更深入地讨论线性回归中的转换，我们推荐应用回归分析和广义线性模型 {cite:p}`fox_fox_2016`。
+为了更深入地讨论线性回归中的转换，推荐应用回归分析和广义线性模型 {cite:p}`fox_fox_2016`。
+
 
 (multiple-linear-regression)= 
 
 ## 3.3 多元线性回归 
 
-在许多物种中，不同性别之间存在双态性或差异。企鹅性别双态性的研究实际上是收集 `Palmer Penguin 数据集` {cite:p}`gorman_williams_fraser_2014` 的出发点之一。为了更仔细地研究企鹅的双态性，我们添加第二个预测变量：性别，将其编码为类别型变量，看看我们是否可以更精确地估计企鹅的体重。
+在许多物种中，不同性别之间存在双态性或差异。企鹅性别的双态性研究是收集 `Palmer Penguin 数据集` {cite:p}`gorman_williams_fraser_2014` 的出发点之一。为了更仔细地研究企鹅的双态性，数据集中添加了第二个预测变量：性别（ sex ），并将其编码为二值型类别变量，现在来看我们是否可以更精确地估计企鹅的体重。
 
 ```{code-block} ipython3
 :name: penguin_mass_multi
@@ -655,18 +656,22 @@ with pm.Model() as model_penguin_mass_categorical:
         target_accept=.9, return_inferencedata=True)
 ```
 
-你会注意到一个新参数 $\beta_{2}$ 对 $\mu$ 的值也有贡献。由于性别是一个类别型预测变量（ 本例中为“雄性”和“雌性”），我们将其分别编码为 $0$ 和 $1$。对于该模型，意味着对于雌性企鹅来说，$\mu$ 的值是 $3$ 个项的总和，而对于雄性企鹅来说，是两个项的总和（因为 $\beta_2$ 项将归零）。
+你会注意到新参数 $\beta_{2}$ 对体重的期望 $\mu$ 也有贡献。由于性别是一个类别型预测变量（ 本例中为 `male` 和 `female` ），我们将其分别编码为 $0$ 和 $1$。代码中的模型意味着：对于雌性企鹅来说，$\mu$ 的值是 $3$ 个项的总和；而对于雄性企鹅来说，是两个项的总和（因为 $\beta_2$ 项将被性别的取值归零）。
 
 ```{figure} figures/adelie_sex_coefficient_posterior.png
 :name: fig:adelie_sex_coefficient_posterior
 :width: 7.00in
 
-估计模型中的性别预测变量系数 $\beta_{2}$ 。雄性企鹅编码为 $0$，雌性企鹅编码为 $1$ ，这表示我们预计，具有相同鳍状肢长度的雄性和雌性 `Adelie 种` 企鹅之间存在额外的体重差别。
+估计模型中的性别预测变量系数 $\beta_{2}$ 。雄性企鹅编码为 $0$，雌性企鹅编码为 $1$ ，这表示我们认可：具有相同鳍状肢长度的雄性和雌性 `Adelie 种` 企鹅之间存在额外的体重差别。
 ```
 
-::: {admonition} Syntactic Linear Sugar 
+::: {admonition} 线性模型的语法糖 
 
-线性模型的使用如此广泛，以至于有人为回归专门编写了语法、方法和库。其中一个典型库是 `Bambi`（ 贝叶斯模型构建接口，BAyesian Model-Building Interface 的缩写 ）{cite:p}`capretto2020`）。 `Bambi` 是一个 `Python` 包，使用形式化语法来拟合广义线性层次模型，类似于在 `R` 包中可以找到的内容，例如 `lme4 包` {cite:p}`lme4`、`nlme 包` {cite:p}`nlme`、`rstanarm 包` {cite:p}`gabry_goodrich_2020` 或 `brms 包` {cite:p}`brms`）。 `Bambi` 在底层使用 PYMC3 并提供更高级别的 API。要编写同一个模型，在忽略代码 [penguin_mass_multi](penguin_mass_multi) 中的先验 [^4] 时，可以用 `Bambi` 编程为：
+线性模型的使用如此广泛，以至于有人为其回归专门编写了语法、方法和库。其中一个典型库是 `Bambi`（ 贝叶斯模型构建接口，Bayesian Model-Building Interface 的缩写 ）{cite:p}`capretto2020`）。 
+
+`Bambi` 是一个 `Python` 软件包，使用形式化语法来拟合广义线性层次模型，类似于在 `R` 包中的 `lme4 包` {cite:p}`lme4`、`nlme 包` {cite:p}`nlme`、`rstanarm 包` {cite:p}`gabry_goodrich_2020` 或 `brms 包` {cite:p}`brms`）等。
+
+`Bambi` 在底层使用 PYMC3 并提供更高级别的 API。要编写同一个模型，在忽略代码 [penguin_mass_multi](penguin_mass_multi) 中的先验 [^4] 时，可以用 `Bambi` 编程为：
 
 ```{code-block} ipython3
 :name: bambi_categorical
@@ -678,20 +683,20 @@ model = bmb.Model("body_mass_g ~ flipper_length_mm + sex",
 trace = model.fit()
 ```
 
-如果不人为提供先验，软件包会像上述代码一样自动分配先验。在 `Bambi` 内部几乎存储了 PYMC3 生成的所有对象，使用户可以轻松检索、检查和修改这些对象。此外，`Bambi` 返回一个 `az.InferenceData` 对象，可以直接与 `ArviZ` 一起使用。
+如果不人为设置先验，软件包会自动分配先验。在 `Bambi` 内部几乎存储了 PYMC3 生成的所有对象，使用户可以轻松检索、检查和修改这些对象。此外，`Bambi` 还返回一个 `az.InferenceData` 对象，可以直接与 `ArviZ` 一起使用。
 
 ::: 
 
-由于我们将 “雄性” 编码为 $0$，因此来自 `model_penguin_mass_categorical` 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。最后一部分非常重要，通过添加第二个预测变量，我们现在有了一个多元线性回归，而同时在解释系数时必须更加小心。在这种情况下，系数通常提供了：**如果**所有其他预测变量保持不变的情况下，某个预测变量与结果变量之间的关系 [^5]。
+由于我们将 “雄性” 编码为 $0$，因此来自 `model_penguin_mass_categorical` 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。这里比较重要的一点是：模型通过引入第二个预测变量，形成了一个多元线性回归，同时我们在解释系数时也必须更加小心了。在多元线性回归中，系数通常提供了如下信息：**如果所有其他预测变量保持不变时，某个预测变量与结果变量之间的线性关系** [^5]。
 
 ```{figure} figures/Single_Species_Categorical_Regression.png 
 :name: fig:Single_Species_Categorical_Regression  
 :width: 7.00in 
  
-使用类别型预测变量编码的雄性和雌性 `Adelie 种` 企鹅的鳍状肢长度与体重的多元回归。注意雄性和雌性企鹅之间的体重差异在每个鳍状肢长度上保持不变，该差异相当于 $\beta_2$ 系数的大小。
+使用类别型预测变量编码的雄性和雌性 `Adelie 种` 企鹅的鳍状肢长度与体重之间的多元回归。注意雄性和雌性企鹅之间的体重差异所有鳍状肢长度上保持不变，该差异相当于 $\beta_2$ 系数的大小。
 ``` 
 
-我们可以再次在 {numref}`fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison` 中比较三个模型的标准差，看看是否减少了估计中的不确定性，可以看出，额外提供的信息进一步改进了估计。在当前情况下，我们对 $\sigma$ 的估计从无预测变量模型中的平均 $462$ 克下降到了多元线性模型中的平均 $298$ 克。这种不确定性的减少表明，性别确实为估计企鹅体重提供了有用信息。
+我们可以再次在 {numref}`fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison` 中比较三个模型的标准差，看看是否减少了估计中的不确定性。可以看出，额外提供的信息进一步改进了估计。在当前情况下，我们对 $\sigma$ 的估计从无预测变量模型中的平均 $462$ 克下降到了多元线性模型中的平均 $298$ 克。这种不确定性的减少表明，性别确实为估计企鹅体重提供了有用信息。
 
 ```{code-block} ipython3
 :name: forest_multiple_models
@@ -707,12 +712,12 @@ az.plot_forest([inf_data_adelie_penguin_mass,
 :name: fig:SingleSpecies_multipleRegression_Forest_Sigma_Comparison 
 :width: 7.00in 
 
-将性别作为预测变量纳入 `model_penguin_mass_categorical` 中，该模型中 $\sigma$ 的估计分布以 $300$ 克为中心，低于无预测变量模型和单预测变量模型的估计值。该图由代码 [forest_multiple_models](forest_multiple_models) 生成。
+将性别作为预测变量纳入 `model_penguin_mass_categorical` 中，可以观察到，该模型中 $\sigma$ 参数的估计值以 $300$ 克为中心，远低于无预测变量模型和单预测变量模型的估计结果，说明新模型的不确定性有减少。该图由代码 [forest_multiple_models](forest_multiple_models) 生成。
 ``` 
 
-::: {admonition} More covariates is not always better 
+::: {admonition} 更多的预测变量（或协变量）并非总是好事 
 
-所有模型拟合算法都会找到一个信号，即使它是随机噪声。这种现象被称为过度拟合，它描述了一种情况，即算法可以很容易地将预测变量映射到已见案例中的结果，但无法推广到新的观测结果。在线性回归中，我们可以通过生成 100 个随机预测变量并将它们拟合到随机模拟数据集 {cite:p}`mcelreath_2020` 来证明这一点。即使没有关系，我们也会被引导相信我们的线性模型做得很好。
+模型拟合算法能够拟合所有观测信号（ 即便该信号是一个随机噪声信号 ）的现象，被称为产生了过度拟合（简称过拟合）。过拟合描述了一种情况，即算法可以很容易地将预测变量映射到已知案例中的结果，但无法推广到新的数据。在线性回归中，我们可以随机地生成 $100$ 个预测变量，并将它们拟合到随机的模拟数据集上，能够很好地证明这种现象 {cite:p}`mcelreath_2020` 。 结果会表明，即便预测变量和结果变量之间完全随机且没有任何关系，最终也会归纳出一个对已有数据做得非常好的模型。
 
 ::: 
 
@@ -720,7 +725,7 @@ az.plot_forest([inf_data_adelie_penguin_mass,
 
 ### 3.3.1 反事实分析 
 
-在代码 [penguins_ppd](penguins_ppd) 中，我们使用单预测变量模型拟合的参数进行预测，并调整鳍状肢长度以获得相应的体重估计。在多元回归中，我们可以做类似的工作。我们可以保持其他所有预测变量固定，然后查看剩下的那个预测变量如何改变预测结果。这种分析方法通常被称为**反事实分析**。
+在一元回归的代码 [penguins_ppd](penguins_ppd) 中，我们使用拟合的参数进行预测，调整鳍状肢长度以获得相应的体重估计。在多元回归中，可以做类似的工作。我们可以保持其他所有预测变量固定，然后查看剩下的那个预测变量和结果变量之间的关系。此分析方法通常被称为**反事实分析（ Counterfactual Analysis）**。
 
 让我们扩展上一节代码 [penguin_mass_multi](penguin_mass_multi) 的多元回归，这次增加`喙长度（ Bill Length ）`，并在 `TFP` 中运行反事实分析。模型构建和推断见代码 [tfp_flipper_bill_sex](tfp_flipper_bill_sex) 。
 
