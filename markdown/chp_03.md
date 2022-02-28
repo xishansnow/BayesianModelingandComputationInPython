@@ -1836,7 +1836,9 @@ Given these choices we can write our model in Code Block
 run inference, and generate samples to estimate posterior distribution.
 From the data and model we estimate that the mean of $\beta_1$ to be
 1.4, meaning the least attractive group when compared to the most
-attractive group the birth ratio will differ by 7.4% on average. In
+attractive group the birth ratio will differ by 7.4% on average. 
+
+In
 {numref}`fig:PosteriorUninformativeLinearRegression` if we include the
 uncertainty, the ratio can vary by over 20% per unit of attractiveness
 from a random sample of 50 possible "lines of fit" prior to

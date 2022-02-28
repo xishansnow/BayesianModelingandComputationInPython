@@ -18,7 +18,7 @@ kernelspec:
 
 <style>p{text-indent:2em;2}</style>
 
-在 [第 3 章](chap2) 中，我们展示了扩展线性回归的几种方法。但其实还可以用线性模型做更多的事情，从“预测变量变换”，到“可变方差”，再到 “分层模型”。这些想法为为更广泛地使用线性回归提供了灵活性。
+在 [第 3 章](chap2) 中，我们展示了扩展线性回归的几种方法。但其实还可以用线性模型做更多的事情，从“对预测变量做变换”，到“支持可变的方差”，再到 “分层模型”。这些想法为为更广泛地使用线性回归提供了灵活性。
 
 (transforming_covariates)= 
 
@@ -122,19 +122,19 @@ with pm.Model() as model_baby_sqrt:
 
 ## 4.2 可变的方差
 
-到目前为止，我们使用线性模型对 $Y$ 的均值进行建模，同时假设残差 [^1] 的方差在响应范围内是恒定的。然而，这种固定方差的假设可能是一种不够充分的建模选择。为了能够解释不断变化的不确定性，我们可以将方程 {eq}`eq:covariate_transformation_regression` 扩展为：
+到目前为止，我们使用线性模型对 $Y$ 的均值进行建模，同时假设残差具有在响应范围内恒定的方差。但这种恒定方差的假设可能是一种不够充分的建模选择。为了能够对不断变化的不确定性（一般指观测空间中的不确定性）做出解释，可以将公式 {eq}`eq:covariate_transformation_regression` 扩展为：
 
 ```{math} 
 :label: eq:varying_variance
 
 \begin{split}
-    \mu =& \beta_0 + \beta_1 f_1(X_1) + \dots + \beta_m f_m(X_m) \\
-    \sigma =& \delta_0 + \delta_1 g_1(X_1) + \dots + \delta_m g_m(X_m) \\
-    Y \sim& \mathcal{N}(\mu, \sigma)
+\mu =& \beta_0 + \beta_1 f_1(X_1) + \dots + \beta_m f_m(X_m) \\
+\sigma =& \delta_0 + \delta_1 g_1(X_1) + \dots + \delta_m g_m(X_m) \\
+Y \sim& \mathcal{N}(\mu, \sigma)
 \end{split}
 ```
 
-估计 $\sigma$ 的第二行代码与对均值建模的线性项非常相似。我们不仅可以使用线性模型对均值参数建模，还可以对其他参数进行建模。让我们扩展在代码 [babies_transformed](babies_transformed) 中定义的 `model_sqrt`。现在假设当孩子们小的时候，他们的身高更集中一些，但随着年龄增长，他们的身高变得越来越分散。
+估计 $\sigma$ 的第二行代码与对均值建模的线性项非常相似。我们不仅可以使用线性模型对均值参数建模，还可以对其他参数进行建模。让我们扩展在代码 [babies_transformed](babies_transformed) 中定义的 `model_sqrt`。现在假设当孩子们小的时候，身高更集中一些，但随着年龄增长，他们的身高变得越来越发散。
 
 ```{code-block} ipython3
 :name: babies_varying_variance
@@ -187,7 +187,7 @@ Y \sim& \mathcal{N}(\mu, \sigma)
 
 式中 $\beta_3$ 是交互项 $X_1X_2$ 的系数。其实还存在其他引入交互的方法，但采用原始预测变量乘积的形式应用比较广泛。
 
-现在定义了交互效应是什么，我们就可以对比性地定义 **主效应** ，即一个预测变量对结果变量的影响，只与自身取值有关，与所有其他预测变量取值无关。
+现在定义了交互效应是什么，我们就可以对比性地定义 **主效应** ，即一个预测变量对结果变量的影响只与自身取值有关，与所有其他预测变量取值无关。
 
 为了说明，我们使用一个消费模型的例子，代码 [tips_no_interaction](tips_no_interaction) 对用餐者留下的小费金额进行了建模，将小费建模为总账单的函数。这听起来很合理，因为小费金额通常是按总账单的百分比来计算的。不过确切的百分比会因不同因素而异，例如餐厅类型、服务质量、所在国家等。在此示例中，我们重点关注吸烟者与非吸烟者的小费金额差异，重点研究吸烟与总账单金额之间是否存在交互作用 [^2]。就像模型 [penguin_mass_multi](penguin_mass_multi) 一样，先将吸烟者作为独立的预测变量添加到回归模型中。
 
@@ -557,7 +557,7 @@ with pm.Model() as model_sales_pooled:
 
 (mixing-group-and-common-parameters)= 
 
-### 4.5.3 组混合与多级模型
+### 4.5.3 组混合与多级模型 
 
 在非池化方法中，我们具有保留组间差异的优势，能够获得每个组的参数估计结果。在池化方法中，我们利用了所有数据来估计同一组参数，以得到更通用的估计。幸运的是，我们还可以将两种方法混合在一个模型中，如公式 {eq}`eq:multilevel_regression` 所示。在该公式中，我们保持各组的 $\beta$ 估计是非池化的，但 $\sigma$ 估计是池化的。示例中依然没有考虑截距，但应当清楚有截距项的回归模型也是类似的。
 
@@ -577,7 +577,7 @@ Y \sim& \mathcal{N}(\mu_{j}, \sigma)
 
 特定于每个级别的参数和跨级别的通用参数有着不同的名称，前者被称为随机效应或变化效应，而后者被成为固定效应或恒定效应。经常令人困惑的是，不同的人可能会对这些术语赋予不同含义，尤其是在谈论固定效应和随机效应时 {cite:p}`gelman2005`。
 
-如果必须有区别地标记这些术语，我们建议采用 *组间通用参数* 和 *组内专用参数* {cite:p}`gabry_goodrich_2020, capretto2020`。但是，由于所有这些术语都被广泛使用，我们建议你始终验证模型的细节，以避免混淆和误解。
+如果必须有区别地标记这些术语，我们建议采用 **组间通用的参数** 和 **组内专用的参数** {cite:p}`gabry_goodrich_2020, capretto2020`。但是，由于所有这些术语都被广泛使用，我们建议你始终验证模型的细节，以避免混淆和误解。
 
 ::: 
 
@@ -639,7 +639,7 @@ with pm.Model() as model_pooled_sigma_sales:
 
 ### 4.6.1 什么是分层模型
 
-在贝叶斯建模中，有一种 *分层模型（ Hierarchical Models ）* 可以来表达这种情形。在分层模型中，参数是 *部分池化的* 。部分是指各组之间并不共享某个固定的参数，而是共享一个用来生成该参数值的概率分布。这个想法的概念图见 {numref}`fig:partial_pooled_model` 。图中各组都有自己的参数，但这些参数都来自同一个超先验分布。也就是说，先验分布的建模对象是模型的参数，而超先验的建模对象是模型参数所服从概率分布的参数，因此被成为分层模型。
+在贝叶斯建模中，有一种 **分层模型（ Hierarchical Models ）** 可以来表达这种情形。在分层模型中，参数是 **部分池化的** 。部分是指各组之间并不共享固定的参数值，而是共享用于生成该参数值的同一个概率分布。此想法的概念图见 {numref}`fig:partial_pooled_model` 。图中各组都有自己的参数，但这些参数值都来自于同一个超先验分布。**先验分布的建模对象是模型中的参数**，而**超先验的建模对象是模型参数所服从的概率分布的参数**，因此被称为分层模型。
 
 ```{figure} figures/partial_pooled_model.png
 :name: fig:partial_pooled_model
@@ -777,19 +777,19 @@ with pm.Model() as model_hierarchical_sales:
 
 (model_geometry)= 
 
-### 4.6.2 分层模型的问题 --- 后验几何形态的复杂性带来的采样难题
+### 4.6.2 分层模型的新问题 --- 后验几何形态的复杂性带来的采样难题
 
-到目前为止，我们主要关注模型背后的结构和数学，并假设采样器能够提供后验的“准确”估计。对于相对简单的模型而言，这在很大程度上是正确的，最新版本的通用推断引擎大多能够“正常工作”，但最要命的是它们并不总是能够工作。某些后验的几何形态对采样器而言具有较大挑战，一个常见例子是在 {numref}`fig:Neals_Funnel` 中显示的 `Neal 漏斗` {cite:p}`neal_2003`。正如名字暗示的那样，此类分布的几何形态中，有一端形状很宽，然后在另一端变窄形成瓶颈。回顾 {ref}`sampling_methods_intro` 节，采样器的功能是从一组参数值转移到另一组参数值，其中一个关键设置是在探索后验时要采取多大步长。在复杂的几何形态中，例如 `Neal 漏斗`，某步长在一个区域运行良好，但在另一个区域却会惨遭失败。
+到目前为止，我们主要关注模型背后的结构和数学，并假设采样器能够提供对后验的“准确”估计。对于相对简单的模型而言，这大体上是对的，最新版本的通用推断引擎大多能够“正常工作”，但要命的是它们并不总是能够工作。某些后验的几何形态对采样器而言具有较大挑战，一个常见例子是在 {numref}`fig:Neals_Funnel` 中显示的 `Neal 漏斗` {cite:p}`neal_2003`。正如名字暗示的那样，此类分布的几何形态中，有一端形状很宽，然后在另一端变窄形成瓶颈。回顾 {ref}`sampling_methods_intro` 节，采样器的功能是从一组参数值转移到另一组参数值，其中一个关键设置是在探索后验时要采取多大步长。在复杂的几何形态中，例如 `Neal 漏斗`，某步长在一个区域运行良好，但在另一个区域却会惨遭失败。
 
 ```{figure} figures/Neals_Funnel.png
 :name: fig:Neals_Funnel
 :width: 7.00in
 
-被称为 `Neal 漏斗` 的特定形状概率分布的样本。当在 $Y$ 值为 $6$ 到 $8$ 左右的漏斗顶部采样时，采样器可以采取比如 $1$ 个单位的大步长，并能够保持在后验的密集区域内。但是，如果在 $Y$ 值约为 $-6$ 到 $-8$ 的漏斗底部附近进行采样，则几乎在任何方向上的 $1$ 个单位步长，都可能走入低密度区域（图中蓝色点区域表示高密度区域，白色区域表示低密度区域）。后验几何形态造成的这种差异，会造成采样器后验估计性能变差，尤其是在基于采样的近似方法中。对于 HMC 采样器，散度的出现有助于诊断此类采样问题。
+被称为 `Neal 漏斗` 的特定几何形态的概率分布及其样本。当在 $Y$ 值为 $6$ 到 $8$ 左右的漏斗顶部采样时，采样器使用 $1$ 个单位的大步长进行转移，依然能够保持在后验的密集区域内。但是，如果在 $Y$ 值约为 $-6$ 到 $-8$ 的漏斗底部附近进行采样，则几乎在任何方向上的 $1$ 个单位步长，都会导致转移至低密度区域（图中蓝色点区域表示高密度区域，白色区域表示低密度区域）。后验几何形态造成的这种差异，会使采样器的后验估计性能变差。对于 HMC 采样器，散度会有助于诊断此类采样问题。
 
 ``` 
 
-在分层模型中，后验的几何形态主要由超先验和其他参数之间的相关性定义，这种相关性可能导致上述难以采样的漏斗形态。这并非一种理论上的可能，而是切实存在的问题。幸运的是，有一种被称为“非中心参数化”的建模技巧，有助于缓解此问题。
+在分层模型中，后验的几何形态主要由超先验和其他参数之间的相关性定义，这种相关性会导致上述难以采样的漏斗形态。这并非一种理论上的可能，而是切实存在的问题。幸运的是，有一种被称为“非中心参数化”的建模技巧，有助于缓解此问题。
 
 继续沙拉示例，假设我们开了 $6$ 家沙拉餐厅，并且像以前一样，希望将销售额预测为顾客数量的某个函数。合成数据集已经由 Python 代码生成，并显示在 {numref}`fig:Multiple_Salad_Sales_Scatter` 中。由于餐厅销售完全相同的产品，因此分层模型适用于跨组共享信息。我们在公式 {eq}`eq:centered_hierarchical_regression` 和代码 [model_hierarchical_salad_sales](model_hierarchical_salad_sales) 中以数学方式编写了中心化后的模型。我们将在本章剩余部分使用 `TFP` 和 `tfd.JointDistributionCoroutine`，这更容易突出参数化的改变。该模型遵循标准的分层格式，其中一个超先验参数被用于部分池化斜率参数 $\beta_m$ 。
 
@@ -858,9 +858,7 @@ centered_model, observed = gen_hierarchical_salad_sales(
     hierarchical_salad_df, centered_beta_prior_fn)
 ```
 
-如上所示，代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 定义了中心化的斜率参数 $\beta_m$ ，它服从具有超参数 `hyper_mu` 和 `hyper_sigma` 的高斯分布。
-
-`centered_beta_prior_fn` 是一个产生 `tfp.distribution` 的函数，类似于我们编写 `tfd.JointDistributionCoroutine` 模型的方式。
+如上所示，代码 [model_hierarchical_salad_sales_centered](model_hierarchical_salad_sales_centered) 定义了中心化的斜率参数 $\beta_m$ ，它服从具有超参数 `hyper_mu` 和 `hyper_sigma` 的高斯分布。`centered_beta_prior_fn` 是一个产生 `tfp.distribution` 的函数，类似于我们编写 `tfd.JointDistributionCoroutine` 模型的方式。
 
 现在我们有了模型，可以在代码 [model_hierarchical_salad_sales_centered_inference](model_hierarchical_salad_sales_centered_inference) 中运行推断并检查结果。
 
@@ -880,9 +878,7 @@ print(f"""There were {divergent_per_chain} divergences after tuning per chain.""
 There were [37 31 17 37] divergences after tuning per chain.
 ```
 
-我们重用之前在代码 [tfp_posterior_inference](tfp_posterior_inference) 中显示的推断代码来运行模型。结果中的第一个问题迹象是散度，我们在第 {ref}`divergences` 中介绍过它。样本空间中的图是下一个诊断工具，展示在 {numref}`fig:Neals_Funnel_Salad_Centered` 中。
-
-注意随着超先验 $\beta_{\sigma h}$ 接近零，$\beta_m$ 参数的后验估计的宽度趋于缩小。特别注意零附近没有样本。换句话说，当 $\beta_{\sigma h}$ 接近零时，对参数 $\beta_m$ 进行采样的区域会崩溃，并且采样器无法有效地表征这个后验空间。
+我们重用之前在代码 [tfp_posterior_inference](tfp_posterior_inference) 中显示的推断代码来运行模型。结果中的第一个问题是散度，我们在第 {ref}`divergences` 中介绍过它。样本空间中的另外一个诊断工具展示在 {numref}`fig:Neals_Funnel_Salad_Centered` 中。注意随着超先验 $\beta_{\sigma h}$ 接近零，$\beta_m$ 参数的后验估计的宽度趋于缩小。特别注意零附近没有样本。换句话说，当 $\beta_{\sigma h}$ 接近零时，对参数 $\beta_m$ 进行采样的区域会崩溃，并且采样器无法有效地表征这个后验空间。
 
 ```{figure} figures/Neals_Funnel_Salad_Centered.png
 :name: fig:Neals_Funnel_Salad_Centered
@@ -944,19 +940,19 @@ There were [1 0 2 0] divergences after tuning per chain.
 
 虽然再次提醒这个事实可能会令人不快，但采样器只是估计后验分布，虽然在许多情况下它们做得很好，但不能保证永远很好！如果出现警告，请务必注意诊断并进行更深入的检查。
 
-值得注意的是，对于中心或非中心参数化 {cite:p}`Papaspiliopoulos2007`，没有一种适合所有解决方案的通用方法。它是组级个体似然的信息量（通常对于特定组拥有的数据越多，似然函数的信息量越多）、组级先验的信息量和参数化之间的复杂交互。一般的启发式方法是，如果观测不多，则首选非中心参数化。然而实践中，你应该尝试使用不同的先验规范的居中和非居中参数化的几种不同组合。你甚至可能会发现在单个模型中需要*同时*居中和非居中参数化的情况。如果你怀疑模型参数化导致你出现采样问题，我们建议你阅读 Michael Betancourt 的案例研究分层建模 {cite:p}`betancourt_2020_hierarchical`。
+值得注意的是，对于中心或非中心参数化 {cite:p}`Papaspiliopoulos2007` 方案，没有一种适合所有解决方案的通用方法。它是组级个体似然的信息量（通常对于特定组拥有的数据越多，似然函数的信息量越多）、组级先验的信息量和参数化之间的复杂交互。一般的启发式方法是，如果观测不多，则首选非中心参数化。然而实践中，你应该尝试使用指定了不同先验的中心化和非中心化参数的同组合。你甚至可能会发现，在单个模型中需要同时采用中心化和非中心化的情况。如果你怀疑模型的参数化导致了采样问题，建议你阅读 Michael Betancourt 的分层建模案例研究 {cite:p}`betancourt_2020_hierarchical`。
 
 ```{figure} figures/Salad_Sales_Hierarchical_Comparison.png
 :name: fig:Salad_Sales_Hierarchical_Comparison
 :width: 7.00in
 
-$\beta_{\sigma h}$ 在中心和非中心参数化中分布的 KDE。这种变化是由于采样器能够更充分地探索可能的参数空间。
+$\beta_{\sigma h}$ 在中心化和非中心化参数的概率分布（ KDE 处理）。这种变化源于采样器能够更充分地探索可能的参数空间。
 
 ``` 
 
 (predictions-at-multiple-levels)= 
 
-### 4.6.3 分层模型的优势 --- 支持多个层次上的预测
+### 4.6.3 分层模型的优势 --- 支持在多个层次上的预测
 
 分层模型的一个微妙特征是它们能够在多个层次上进行估计。虽然看起来很明显，但它非常有用，因为它让我们可以使用一个模型来回答比单层模型更多的问题。在 [ 第 3 章 ](chap2) 中，我们可以建立一个模型来估计单个物种的质量，或者建立一个单独的模型来估计任何企鹅的质量，而不考虑物种。使用分层模型，我们可以用一个模型同时估计所有企鹅和每个企鹅物种的质量。使用我们的沙拉销售模型，我们既可以对单个位置进行估计，也可以对整个整体进行估计。我们可以使用代码 [model_hierarchical_salad_sales_non_centered](model_hierarchical_salad_sales_non_centered) 的 `non_centered_model` 模型来做到这一点，然后编写一个 `out_of_sample_prediction_model` 模型，如代码 [model_hierarchical_salad_sales_predictions](model_hierarchical_salad_sales_predictions) 所示。
 
