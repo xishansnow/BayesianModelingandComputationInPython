@@ -808,7 +808,7 @@
 <div class="section" id="applied-example-running-inference-on-flight-delays-models">
 <span id="id22"></span><h3>9.5.1 应用示例： 运行航班延误模型上的推断<a class="headerlink" href="#applied-example-running-inference-on-flight-delays-models" title="Permalink to this headline">¶</a></h3>
 <p>我们选择使用 PYMC3 中默认的 HMC 采样器从后验分布中采样。</p>
-<p>让我们运行我们的采样器并使用典型的诊断评估我们的 MCMC 链。我们对采样挑战的第一个迹象是 MCMC 采样期间的分歧。有了这些数据和模型，没有人提出来。但是，如果提出了一些问题，则表明应该进行进一步的探索，例如我们在 <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.2 分层模型的问题 — 后验几何形态的复杂性带来的采样难题</span></a> 部分中执行的步骤。</p>
+<p>让我们运行我们的采样器并使用典型的诊断评估我们的 MCMC 链。我们对采样挑战的第一个迹象是 MCMC 采样期间的分歧。有了这些数据和模型，没有人提出来。但是，如果提出了一些问题，则表明应该进行进一步的探索，例如我们在 <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.2 分层模型的新问题 — 后验几何形态的复杂性带来的采样难题</span></a> 部分中执行的步骤。</p>
 <div class="literal-block-wrapper docutils container" id="airline-model-inference">
 <div class="code-block-caption"><span class="caption-number">Listing 115 </span><span class="caption-text">airline_model_inference</span><a class="headerlink" href="#airline-model-inference" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">normal_model</span><span class="p">:</span>

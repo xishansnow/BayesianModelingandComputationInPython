@@ -244,12 +244,12 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#logistic-regression">
-     3.4.1 逻辑斯谛回归
+     3.4.1 结果变量取值为概率时 — 逻辑斯谛回归
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#classifying-penguins">
-     3.4.2 对企鹅进行分类
+     3.4.2 结果变量为类别变量时 — 分类模型
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
@@ -261,7 +261,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#picking-priors-in-regression-models">
-   3.5 选择回归模型中的先验
+   3.5 回归模型的先验选择
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -340,12 +340,12 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#logistic-regression">
-     3.4.1 逻辑斯谛回归
+     3.4.1 结果变量取值为概率时 — 逻辑斯谛回归
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#classifying-penguins">
-     3.4.2 对企鹅进行分类
+     3.4.2 结果变量为类别变量时 — 分类模型
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
@@ -357,7 +357,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#picking-priors-in-regression-models">
-   3.5 选择回归模型中的先验
+   3.5 回归模型的先验选择
   </a>
 </li>
 <li class="toc-h2 nav-item toc-entry">
@@ -964,7 +964,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </pre></div>
 </div>
 </div>
-<p>在该模型中，你会注意到添加了另一个系数 <code class="docutils literal notranslate"><span class="pre">beta_3</span></code> 以对应于预测变量<code class="docutils literal notranslate"><span class="pre">喙长度</span></code>。推断完成后，我们可以固定企鹅性别为<code class="docutils literal notranslate"><span class="pre">雄性</span></code>、喙长度为数据集均值，然后模拟具有不同鳍状肢长度的企鹅体重。这在代码 <a class="reference internal" href="#tfp-flipper-bill-sex-counterfactuals"><span class="std std-ref">tfp_flipper_bill_sex_counterfactuals</span></a> 中实现，结果见 <a class="reference internal" href="#fig-linearcounterfactual"><span class="std std-numref">Fig. 47</span></a> 。由于我们将模型生成过程封装在了 <code class="docutils literal notranslate"><span class="pre">Python</span></code> 函数中（ 一种函数式编程风格的方法 ），因此很容易在新预测变量上做条件化，这对于反事实分析也非常有用。</p>
+<p>在该模型中，添加了另一个系数 <code class="docutils literal notranslate"><span class="pre">beta_3</span></code> 对应于预测变量<code class="docutils literal notranslate"><span class="pre">喙长度</span></code>。推断完成后，我们可以固定企鹅性别为<code class="docutils literal notranslate"><span class="pre">雄性</span></code>、喙长度为数据集均值，然后模拟具有不同鳍状肢长度的企鹅体重。这在代码 <a class="reference internal" href="#tfp-flipper-bill-sex-counterfactuals"><span class="std std-ref">tfp_flipper_bill_sex_counterfactuals</span></a> 中实现，结果见 <a class="reference internal" href="#fig-linearcounterfactual"><span class="std std-numref">Fig. 47</span></a> 。由于将模型生成过程封装在了 <code class="docutils literal notranslate"><span class="pre">Python</span></code> 函数中（ 一种函数式编程风格的方法 ），因此很容易在新预测变量上做条件化，这对于反事实分析非常有用。</p>
 <div class="literal-block-wrapper docutils container" id="tfp-flipper-bill-sex-counterfactuals">
 <div class="code-block-caption"><span class="caption-number">Listing 33 </span><span class="caption-text">tfp_flipper_bill_sex_counterfactuals</span><a class="headerlink" href="#tfp-flipper-bill-sex-counterfactuals" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean_flipper_length</span> <span class="o">=</span> <span class="n">penguins</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adelie_mask</span><span class="p">,</span> <span class="s2">"flipper_length_mm"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -984,12 +984,15 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </div>
 <div class="figure align-default" id="fig-linearcounterfactual">
 <a class="reference internal image-reference" href="../_images/Linear_CounterFactual.png"><img alt="../_images/Linear_CounterFactual.png" src="../_images/Linear_CounterFactual.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 47 </span><span class="caption-text">来自代码 <a class="reference internal" href="#tfp-flipper-bill-sex-counterfactuals"><span class="std std-ref">tfp_flipper_bill_sex_counterfactuals</span></a> 的 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code> 企鹅的反事实法体重估计值，其中仅鳍状肢长度变化，所有其他预测变量都保持不变。</span><a class="headerlink" href="#fig-linearcounterfactual" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 47 </span><span class="caption-text">代码 <a class="reference internal" href="#tfp-flipper-bill-sex-counterfactuals"><span class="std std-ref">tfp_flipper_bill_sex_counterfactuals</span></a> 中，采用反事实分析方法获得的 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code> 企鹅的体重估计值，其中仅鳍状肢长度变化，所有其他预测变量都保持不变。</span><a class="headerlink" href="#fig-linearcounterfactual" title="Permalink to this image">¶</a></p>
 </div>
-<p>遵循 McElreath<span id="id26">[<a class="reference internal" href="references.html#id33">10</a>]</span> 的提法， <a class="reference internal" href="#fig-linearcounterfactual"><span class="std std-numref">Fig. 47</span></a> 被称为反事实图。正如“反事实”一词所暗示的那样，我们正在评估与观测数据或事实相反的情况。换句话说，我们正在评估尚未发生的情况。反事实图的最简单用途是调整预测变量并探索预测结果。这是一种很棒的方法，因为它使我们能够探索无法实现的 <em>what-if</em> 场景 <a class="footnote-reference brackets" href="#id46" id="id27">6</a>。但是，我们在解释这种方法时必须谨慎。第一个陷阱是反事实值有可能根本不可能出现，例如，可能永远不会存在鳍状肢长度大于 <span class="math notranslate nohighlight">\(1500\)</span> 毫米的企鹅，但该模型会机械地提供对这种情况的估计。第二个陷阱更隐蔽，我们假设可以独立地改变每个预测变量，但实际上这可能几乎不可能出现。例如，随着企鹅鳍状肢长度的增加，它的喙长度也会增加。反事实法的强大之处在于其允许我们探索尚未发生的结果，或者至少没有被观测到发生的结果。但是它们也可以很容易地为<strong>永远</strong>不会发生的情况生成估计值。模型本身无法区分两者，因此作为建模者，你必须得学会识别它们。</p>
+<p>遵循 McElreath<span id="id26">[<a class="reference internal" href="references.html#id33">10</a>]</span> 的提法， <a class="reference internal" href="#fig-linearcounterfactual"><span class="std std-numref">Fig. 47</span></a> 被称为反事实图。正如 “反事实” 一词所暗示的那样，我们正在评估一种与观测数据或事实相悖的情况。或者换句话说，我们正在评估尚未发生的情况。</p>
+<p>反事实图的用途之一是通过调整预测变量来探索结果变量的预测值。这是一种很棒的方法，因为它使我们能够探索现实中无法实现的一些 <em>what-if</em> 场景 <a class="footnote-reference brackets" href="#id46" id="id27">6</a>。但是，在解释这种方法时我们必须谨慎，因为可能存在一些陷阱。第一个陷阱是反事实的结果有可能根本不会出现，例如，永远不会存在鳍状肢长度大于 <span class="math notranslate nohighlight">\(1500\)</span> 毫米的企鹅，但该模型会机械地提供对这种情况的估计。第二个陷阱更隐蔽，即假设可以独立地改变每个预测变量。这在实际中几乎不可能出现。例如，随着企鹅鳍状肢长度的增加，其他预测变量（如喙长度）也会增加。</p>
+<p>反事实分析法的强大之处在于：<strong>其允许我们探索尚未发生的结果，或者至少没有被观测到发生的结果</strong>；但该方法也很容易为 <em>永远</em> 不会发生的情况生成估计值。模型本身无法区分两者，只能由建模者来识别它们。</p>
 <div class="admonition-correlation-causality admonition">
 <p class="admonition-title">相关性（ Correlation ）与因果性（ Causality ）</p>
-<p>在解释线性回归时，很容易将其描述为 “<span class="math notranslate nohighlight">\(X\)</span> 的增加<strong>导致</strong> <span class="math notranslate nohighlight">\(Y\)</span> 的增加”，但情况并不一定如此。事实上因果陈述不能仅从回归中得出。在数学上，回归模型将两个（或更多变量）联系在一起，但这种联系不需要是因果关系。例如，增加为植物提供的水量当然可以（并且因果地）增加植物的生长（至少在一定范围内），但没有什么能阻止我们在模型中颠倒这种关系并使用植物的生长来估计降雨量，即使植物生长不会导致降雨 <a class="footnote-reference brackets" href="#id47" id="id28">7</a>。因果推断的统计子领域涉及在随机实验或观测研究背景下做出因果陈述所必需的工具和程序（ 参见 <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref"> 第 7 章 </span></a> 进行的简要讨论 ）</p>
+<p>在解释线性回归时，很容易将其描述为 “ <span class="math notranslate nohighlight">\(X\)</span> 的增加导致了 <span class="math notranslate nohighlight">\(Y\)</span> 的增加 ” （ 即 <span class="math notranslate nohighlight">\(Y\)</span> 是  <span class="math notranslate nohighlight">\(X\)</span> 的结果 ），但事实并不一定如此。事实上 <em>因果陈述</em> 无法仅从回归关系中得出。<strong>在数学上，回归模型只是将两个（或更多变量）联系在一起，但这种联系不需要是因果关系</strong>。例如，增加降水量可以（并且因果地）促进植物的生长，但没有什么能够阻止我们颠倒这种关系，即用植物的生长来估计降水量，尽管我们都知道植物的生长不会导致降雨 <a class="footnote-reference brackets" href="#id47" id="id28">7</a>。</p>
+<p>因果推断涉及在随机实验或观测研究背景下做出因果陈述所必需的一些工具和程序，感兴趣的读者可以参见 <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref"> 第 7 章 </span></a>  中的简要讨论 。</p>
 </div>
 </div>
 </div>
@@ -1002,9 +1005,9 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 Y \sim&amp; \Psi (\mu, \theta)
 \end{split}\end{split}\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(\Psi\)</span> 是一些由 <span class="math notranslate nohighlight">\(\mu\)</span> 和 <span class="math notranslate nohighlight">\(\theta\)</span> 参数化的分布，表示数据的似然。</p>
-<p>反向链接函数的具体目的是将实数范围 <span class="math notranslate nohighlight">\((-\infty, \infty)\)</span> 的输出映射到受限区间范围。换句话说，反向链接函数是我们将线性模型推广到更多模型架构所需的一种 “技巧”。我们在这里处理的仍然是线性模型，因为生成观测数据所使用的分布的期望仍然遵循参数和预测变量的线性函数，只不过现在我们可以将这些模型的使用和应用推广到更多场景 <a class="footnote-reference brackets" href="#id49" id="id31">9</a>。</p>
+<p>反向链接函数的具体目的是将实数范围 <span class="math notranslate nohighlight">\((-\infty, \infty)\)</span> 的输出映射到受限区间范围。换句话说，反向链接函数是将线性模型推广到更多模型架构所需的一种 “技巧”。我们在这里处理的仍然是线性模型，因为生成观测数据的分布（即似然）均值仍然遵循模型参数和预测变量之间的线性函数，只不过现在可以将其使用和推广到更多场景 <a class="footnote-reference brackets" href="#id49" id="id31">9</a>。</p>
 <div class="section" id="logistic-regression">
-<span id="id32"></span><h3>3.4.1 逻辑斯谛回归<a class="headerlink" href="#logistic-regression" title="Permalink to this headline">¶</a></h3>
+<span id="id32"></span><h3>3.4.1 结果变量取值为概率时 — 逻辑斯谛回归<a class="headerlink" href="#logistic-regression" title="Permalink to this headline">¶</a></h3>
 <p>最常见的广义线性模型之一是逻辑斯谛回归。它在只有两种可能结果之一的数据建模中特别有用。掷硬币中“正面”或“反面”结果的概率是常见的教科书示例。更多“现实世界”中的例子包括：生产中的缺陷可能性、癌症测试的阴性或阳性、火箭发射是否失败 <span id="id33">[<a class="reference internal" href="references.html#id79">38</a>]</span>。</p>
 <p>在逻辑斯谛回归中，反向链接函数被称为 <code class="docutils literal notranslate"><span class="pre">逻辑斯谛函数（</span> <span class="pre">logistic</span> <span class="pre">function</span> <span class="pre">）</span></code>，它将 <span class="math notranslate nohighlight">\((-\infty, \infty)\)</span> 映射到 <span class="math notranslate nohighlight">\((0,1)\)</span> 区间。这很方便，因为现在我们可以将线性函数映射到概率值的 <span class="math notranslate nohighlight">\(0\)</span> 到 <span class="math notranslate nohighlight">\(1\)</span> 范围内。</p>
 <div class="math notranslate nohighlight" id="equation-eq-logistic">
@@ -1024,7 +1027,7 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 <p>请注意，<span class="math notranslate nohighlight">\(logit\)</span> 是 <span class="math notranslate nohighlight">\(logistic\)</span> 的逆函数。也就是说，一旦拟合了逻辑斯谛模型，我们就可以使用系数 <span class="math notranslate nohighlight">\(\beta_0\)</span> 和 <span class="math notranslate nohighlight">\(\beta_1\)</span> 轻松计算出类概率大于 <span class="math notranslate nohighlight">\(0.5\)</span> 的 <span class="math notranslate nohighlight">\(x\)</span> 值。</p>
 </div>
 <div class="section" id="classifying-penguins">
-<span id="id34"></span><h3>3.4.2 对企鹅进行分类<a class="headerlink" href="#classifying-penguins" title="Permalink to this headline">¶</a></h3>
+<span id="id34"></span><h3>3.4.2 结果变量为类别变量时 — 分类模型<a class="headerlink" href="#classifying-penguins" title="Permalink to this headline">¶</a></h3>
 <p>在前面部分中，我们使用企鹅性别和喙长度来估计企鹅的体重。现在改变以下该问题：如果给定企鹅的体重、性别和喙长，我们能够预测其物种吗？</p>
 <p>让我们使用 <code class="docutils literal notranslate"><span class="pre">Adelie</span></code>和 <code class="docutils literal notranslate"><span class="pre">Chinstrap</span></code> 这两个企鹅物种来完成此二元任务。就像上次一样，首先使用一个简单模型，只有一个预测变量，即喙长度。我们在代码 <a class="reference internal" href="#model-logistic-penguins-bill-length"><span class="std std-ref">model_logistic_penguins_bill_length</span></a> 中编写这个逻辑斯谛模型：</p>
 <div class="literal-block-wrapper docutils container" id="model-logistic-penguins-bill-length">
@@ -1325,8 +1328,8 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 </div>
 </div>
 <div class="section" id="picking-priors-in-regression-models">
-<span id="id37"></span><h2>3.5 选择回归模型中的先验<a class="headerlink" href="#picking-priors-in-regression-models" title="Permalink to this headline">¶</a></h2>
-<p>熟悉了广义线性模型之后，现在让我们关注一下先验及其对后验估计的影响。我们将从 <span id="id38">[<a class="reference internal" href="references.html#id62">40</a>]</span> 中借用一个例子，特别是其中一项父母吸引力与生女孩的概率之间关系研究<span id="id39">[<a class="reference internal" href="references.html#id63">13</a>]</span>。在这项研究中，研究人员以五分制评估了美国青少年的吸引力。最终，这些受试者中许多人都有了孩子，其中每种吸引力类别对应的性别比例都在代码 <a class="reference internal" href="#uninformative-prior-sex-ratio"><span class="std std-ref">uninformative_prior_sex_ratio</span></a> 中做了计算，其结果以数据点形式显示在 <a class="reference internal" href="#fig-beautyratio"><span class="std std-numref">Fig. 54</span></a> 中。在同一个代码块中，我们还编写了一个单变量回归模型。这一次重点关注如何一起评估先验和似然，而不是单独进行评估。</p>
+<span id="id37"></span><h2>3.5 回归模型的先验选择<a class="headerlink" href="#picking-priors-in-regression-models" title="Permalink to this headline">¶</a></h2>
+<p>熟悉了广义线性模型之后，现在让我们关注一下先验及其对后验估计的影响。我们将从 <span id="id38">[<a class="reference internal" href="references.html#id62">40</a>]</span> 中借用一个例子，特别是其中一项父母吸引力与生女孩的概率之间的关系研究<span id="id39">[<a class="reference internal" href="references.html#id63">13</a>]</span>。在这项研究中，研究人员以五分制评估了美国青少年的吸引力。最终，这些受试者中许多人都有了孩子，其中每种吸引力类别对应的性别比例都在代码 <a class="reference internal" href="#uninformative-prior-sex-ratio"><span class="std std-ref">uninformative_prior_sex_ratio</span></a> 中做了计算，其结果以数据点形式显示在 <a class="reference internal" href="#fig-beautyratio"><span class="std std-numref">Fig. 54</span></a> 中。在同一个代码块中，我们还编写了一个单变量回归模型。这一次重点关注如何对先验和似然一起评估，而不是分别评估。</p>
 <div class="figure align-default" id="fig-beautyratio">
 <a class="reference internal image-reference" href="../_images/BeautyRatio.png"><img alt="../_images/BeautyRatio.png" src="../_images/BeautyRatio.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 54 </span><span class="caption-text">父母的吸引力数据与子女的性别比例图。</span><a class="headerlink" href="#fig-beautyratio" title="Permalink to this image">¶</a></p>
@@ -1358,13 +1361,13 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 </div>
 <div class="figure align-default" id="fig-posterioruninformativelinearregression">
 <a class="reference internal image-reference" href="../_images/PosteriorUninformativeLinearRegression.png"><img alt="../_images/PosteriorUninformativeLinearRegression.png" src="../_images/PosteriorUninformativeLinearRegression.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 55 </span><span class="caption-text">在模糊先验或宽先验的情况下，该模型表明，对于被评为有吸引力的父母，出生性别比率可能存在很大差异。其中一些可能的拟合值存在高达 20% 的变化，这似乎令人难以置信，因为没有其他研究表明对出生性别比有如此大的影响。</span><a class="headerlink" href="#fig-posterioruninformativelinearregression" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 55 </span><span class="caption-text">在采用模糊先验或宽泛先验的情况下，该模型表明，有吸引力的父母所生孩子的性别比率存在很大差异。其中一些拟合值存在高达 20% 的变化，这似乎令人难以置信，因为没有其他研究表明吸引力会对出生性别有如此大的影响。</span><a class="headerlink" href="#fig-posterioruninformativelinearregression" title="Permalink to this image">¶</a></p>
 </div>
-<p>名义上，我们将假设出生在男性和女性之间平均分配，并且吸引力对性别比例没有影响。这意味着将截距 <span class="math notranslate nohighlight">\(\beta_0\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(50\)</span>，将系数 <span class="math notranslate nohighlight">\(\beta_1\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(0\)</span>。我们还设置了宽的离散度来表达我们对截距和吸引力对性别比影响的不确定性。这并不是一个完全<em>无信息的先验</em>，我们在第 <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 量化先验中信息的几种可选方法</span></a> 节中介绍过它，不过它是一个非常宽的先验。</p>
-<p>根据上述选择，我们在代码 <a class="reference internal" href="#uninformative-prior-sex-ratio"><span class="std std-ref">uninformative_prior_sex_ratio</span></a>) 中编写了模型、运行推断、并生成样本来估计后验分布。
-根据数据和模型，我们估计 <span class="math notranslate nohighlight">\(\beta_1\)</span> 的均值为 <span class="math notranslate nohighlight">\(1.4\)</span>，这意味着与最具吸引力的群体相比，吸引力最小的群体的出生率平均相差 <span class="math notranslate nohighlight">\(7.4\%\)</span> 。在 <a class="reference internal" href="#fig-posterioruninformativelinearregression"><span class="std std-numref">Fig. 55</span></a> 中，如果我们包括不确定性，则在将参数条件化为数据之前，从 <span class="math notranslate nohighlight">\(50\)</span> 条可能的“拟合线”随机样本中，每单位吸引力的出生比率可以变化超过 <span class="math notranslate nohighlight">\(20\%\)</span> 。</p>
-<p>从数学角度来看，该结果是有效的。但从常识和我们对该研究之外的出生性别比来理解，这些结果值得怀疑。出生时的“自然”性别比约为 “ <span class="math notranslate nohighlight">\(105\)</span> 个男孩/<span class="math notranslate nohighlight">\(100\)</span> 个女孩” ( 大约 <span class="math notranslate nohighlight">\(103\)</span> 到 <span class="math notranslate nohighlight">\(107\)</span> 个男孩 )，这意味着出生时的性别比为 <span class="math notranslate nohighlight">\(48.5%\)</span> ，标准差为 <span class="math notranslate nohighlight">\(0.5\)</span>。此外，即便与人类生物学更内在联系的因素，也不会对出生率影响到这种大的程度，这主观上削弱了吸引力应该具有这种影响程度的信念。鉴于此信息，两组之间 <span class="math notranslate nohighlight">\(8%\)</span> 的变化将需要特殊的观测。</p>
-<p>让我们再次运行模型，但这次使用代码 <a class="reference internal" href="#informative-prior-sex-ratio"><span class="std std-ref">informative_prior_sex_ratio</span></a> 中显示的更具信息性的先验。抽取后验样本，会发现系数的非常集中，并且在考虑可能的比率时，抽取的后验直线落入了更合理的范围内。</p>
+<p>名义上讲，我们将假设生男孩和生女孩的比例一样，并且吸引力对性别比例没有影响。这意味着将截距 <span class="math notranslate nohighlight">\(\beta_0\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(50\)</span>，将斜率 <span class="math notranslate nohighlight">\(\beta_1\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(0\)</span>；并且由于我们缺乏领域专业知识，因为还为两个参数都设置了比较宽泛的先验以表达这种不确定性。该先验并非一个完全<em>无信息的先验</em>（ <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 量化先验中信息的几种可选方法</span></a> ），但它确实是一个非常宽泛的先验。</p>
+<p>根据上述选择，我们在代码 <a class="reference internal" href="#uninformative-prior-sex-ratio"><span class="std std-ref">uninformative_prior_sex_ratio</span></a>) 中编写了模型、运行推断、并生成样本来估计后验分布。</p>
+<p>根据数据和模型， <span class="math notranslate nohighlight">\(\beta_1\)</span> 的估计均值为 <span class="math notranslate nohighlight">\(1.4\)</span>，这意味着与最具吸引力的群体相比，吸引力最小的群体的男女出生率平均相差 <span class="math notranslate nohighlight">\(7.4\%\)</span> 。在 <a class="reference internal" href="#fig-posterioruninformativelinearregression"><span class="std std-numref">Fig. 55</span></a> 中，如果考虑不确定性，则在将参数条件化为数据之前，从 <span class="math notranslate nohighlight">\(50\)</span> 条可能的 “拟合线” 样本中，每单位吸引力的变化可能带来超过 <span class="math notranslate nohighlight">\(20\%\)</span> 的男女出生比率变化 。</p>
+<p>从数学角度来看，此结果是有效的。但从常识和出生性别比来理解，此结果值得怀疑。出生时的“自然”性别比约为 “ <span class="math notranslate nohighlight">\(105\)</span> 个男孩/<span class="math notranslate nohighlight">\(100\)</span> 个女孩” ( 大约 <span class="math notranslate nohighlight">\(103\)</span> 到 <span class="math notranslate nohighlight">\(107\)</span> 个男孩 )，这意味着出生时的性别比为 <span class="math notranslate nohighlight">\(48.5%\)</span> ，标准差为 <span class="math notranslate nohighlight">\(0.5\)</span>。此外，即便与人类生物学存在内在联系因素，也不会对出生率影响到这种大程度，这主观上削弱了吸引力应该具有此影响程度的信念。鉴于此信息，两组之间 <span class="math notranslate nohighlight">\(8%\)</span> 的变化将需要特殊的观测。</p>
+<p>让我们再次运行模型，但这次使用代码 <a class="reference internal" href="#informative-prior-sex-ratio"><span class="std std-ref">informative_prior_sex_ratio</span></a> 中的信息性先验。抽取后验样本，会发现系数的分布非常集中，并且在考虑可能的比率时，抽取的后验预测直线会落入了更合理的范围内。</p>
 <div class="literal-block-wrapper docutils container" id="informative-prior-sex-ratio">
 <div class="code-block-caption"><span class="caption-number">Listing 43 </span><span class="caption-text">informative_prior_sex_ratio</span><a class="headerlink" href="#informative-prior-sex-ratio" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model_informative_prior_sex_ratio</span><span class="p">:</span>
