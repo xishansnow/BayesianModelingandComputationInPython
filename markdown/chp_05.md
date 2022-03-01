@@ -744,7 +744,7 @@ overfitting, we may want to use a *rather large* number of knots and
 then choose a regularizing prior. From the definition of splines and
 {numref}`fig:splines_weighted` we can see that the closer the
 consecutive $\boldsymbol{\beta}$ coefficients are to each other, the
-smoother the resulting function will be. Imagine you are dropping two
+smoother the resulting function will bjin xing
 consecutive columns of the design matrix in
 {numref}`fig:splines_weighted`, effectively setting those coefficients
 to 0, the fit will be much less *smooth* as we do not have enough
@@ -812,9 +812,7 @@ black line corresponds to the mean spline function computed from
 For a final example of splines we are going to use data from an
 experimental study {cite:p}`Potvin1990, Pedersen2019`. The experiment consists
 of measuring the CO₂ uptake in 12 different plants under varying
-conditions. Here we will only explore the effect of the external CO₂
-concentration, i.e. how the CO₂ concentration in the environment
-affects the consumption of CO₂ by different plants. The CO₂ uptake
+conditions. Here we will only explore the effect of the external CO₂ concentration, i.e. how the CO₂ concentration in the environment affects the consumption of CO₂ by different plants. The CO₂ uptake
 was measured at seven CO₂ concentrations for each plant, the same
 seven values for each one of the 12 plants. Let us begin by loading and
 tidying up the data.
