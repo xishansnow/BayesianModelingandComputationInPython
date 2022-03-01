@@ -612,10 +612,10 @@
 <span id="id2"></span><h2>9.1 工作流、上下文和问题<a class="headerlink" href="#bayesworkflowsection" title="Permalink to this headline">¶</a></h2>
 <p>通常，所有烹饪菜谱都遵循类似结构：选择食材，通过一种或多种方法加工，然后组装出菜。具体如何做则取决于用餐者。如果他们想要三明治，那么食材包括西红柿和面包，同时还要准备加工用的刀具。如果他们想要番茄汤，则仍然需要番茄，但还需要一个炉子来加工。对周围环境的考虑也很重要，如果在野餐时准备饭菜，而且没有炉子，那么从头开始做汤似乎不太可能。</p>
 <p>在较高层面中，执行贝叶斯分析与烹饪菜谱有一些相似之处，但只是表面的。贝叶斯数据分析过程通常是迭代的，并且以非线性方式执行各个步骤。此外，贝叶斯分析过程更难以提前知道获得良好结果所需的确切步骤。</p>
-<p>贝叶斯数据分析过程也被称为贝叶斯工作流 <span id="id3">[<a class="reference internal" href="references.html#id78">17</a>]</span>，其简化版本显示在 <a class="reference internal" href="#fig-bayesianworkflow"><span class="std std-numref">Fig. 152</span></a> 中。贝叶斯工作流包括模型构建的三个步骤：推断、模型检查和改进、模型比较。在此场景下，模型比较的目的不仅限于选择最佳模型，更重要的是能够帮助我们更好地理解模型。贝叶斯工作流（ 而不仅仅是贝叶斯推断 ）非常重要。贝叶斯计算可能具有挑战性，通常需要对可选模型进行探索和迭代，以获得我们可以信任的推断结果。对于复杂问题，通常我们不会提前知道想要拟合什么模型，但即便如此，我们仍然想了解拟合的模型及其与数据的关系。所有贝叶斯分析所需的一些共同要素包括（ 反映在 <a class="reference internal" href="#fig-bayesianworkflow"><span class="std std-numref">Fig. 152</span></a> 中）：对数据和先验（或领域）知识的需求、用于处理数据的技术、听众通常希望得到的某种体现我们所需内容的报告等等。</p>
+<p>贝叶斯数据分析过程也被称为贝叶斯工作流 <span id="id3">[<a class="reference internal" href="references.html#id78">17</a>]</span>，其简化版本显示在 <a class="reference internal" href="#fig-bayesianworkflow"><span class="std std-numref">Fig. 150</span></a> 中。贝叶斯工作流包括模型构建的三个步骤：推断、模型检查和改进、模型比较。在此场景下，模型比较的目的不仅限于选择最佳模型，更重要的是能够帮助我们更好地理解模型。贝叶斯工作流（ 而不仅仅是贝叶斯推断 ）非常重要。贝叶斯计算可能具有挑战性，通常需要对可选模型进行探索和迭代，以获得我们可以信任的推断结果。对于复杂问题，通常我们不会提前知道想要拟合什么模型，但即便如此，我们仍然想了解拟合的模型及其与数据的关系。所有贝叶斯分析所需的一些共同要素包括（ 反映在 <a class="reference internal" href="#fig-bayesianworkflow"><span class="std std-numref">Fig. 150</span></a> 中）：对数据和先验（或领域）知识的需求、用于处理数据的技术、听众通常希望得到的某种体现我们所需内容的报告等等。</p>
 <div class="figure align-default" id="fig-bayesianworkflow">
 <a class="reference internal image-reference" href="../_images/Bayesian_workflow.png"><img alt="../_images/Bayesian_workflow.png" src="../_images/Bayesian_workflow.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 152 </span><span class="caption-text">体现主要步骤的高层次通用贝叶斯工作流。该工作流有许多需要决策的节点，其中有些步骤可能会完全省略，从业人员有责任在其所面临的问题中做出决定。例如，“选择一个模型” 可能意味着 “选择某个单一模型”、“对所有模型进行平均”、或者甚至是“展示所有模型并讨论其优缺点”。另请注意，所有 “评估” 步骤都可用于模型比较。我们可以根据模型的后验预测分布来比较和选择模型、或者选择具有更好收敛性诊断的模型、或者选择具有更接近领域知识的先验预测分布的模型。最后，必须清楚，有时我们需要放弃。即便我们对某些模型并不完全满意，它也可能是在可用资源情况下能够实现的最佳模型。</span><a class="headerlink" href="#fig-bayesianworkflow" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 150 </span><span class="caption-text">体现主要步骤的高层次通用贝叶斯工作流。该工作流有许多需要决策的节点，其中有些步骤可能会完全省略，从业人员有责任在其所面临的问题中做出决定。例如，“选择一个模型” 可能意味着 “选择某个单一模型”、“对所有模型进行平均”、或者甚至是“展示所有模型并讨论其优缺点”。另请注意，所有 “评估” 步骤都可用于模型比较。我们可以根据模型的后验预测分布来比较和选择模型、或者选择具有更好收敛性诊断的模型、或者选择具有更接近领域知识的先验预测分布的模型。最后，必须清楚，有时我们需要放弃。即便我们对某些模型并不完全满意，它也可能是在可用资源情况下能够实现的最佳模型。</span><a class="headerlink" href="#fig-bayesianworkflow" title="Permalink to this image">¶</a></p>
 <div class="legend">
 <p>贝叶斯工作流的详细版本可以在 Gelman 等人的一篇题为贝叶斯工作流的论文 <span id="id4">[<a class="reference internal" href="references.html#id78">17</a>]</span> 和 Betancourt 的论文 “Towards a Principled Bayesian Workflow” 中看到 <span id="id5">[<a class="reference internal" href="references.html#id135">43</a>]</span> 。</p>
 </div>
@@ -700,7 +700,7 @@
 <li><p>我们可以在合理的时间内估计后验分布吗？</p></li>
 <li><p>后验计算是否显示任何缺陷？</p></li>
 </ul>
-<p>所有这些问题都不需要立即回答，几乎每个人在最初构建新模型时都会弄错。虽然最终模型的最终目标是回答驱动问题，但这通常不是第一个模型的目标。第一个模型的目标是表达最简单合理且可计算的模型。然后我们使用这个简单的模型来了解我们的理解，调整模型，然后重新运行，如 <a class="reference internal" href="#fig-bayesianworkflow"><span class="std std-numref">Fig. 152</span></a> 所示。为此，我们使用了贯穿本书的大量工具、诊断和可视化。</p>
+<p>所有这些问题都不需要立即回答，几乎每个人在最初构建新模型时都会弄错。虽然最终模型的最终目标是回答驱动问题，但这通常不是第一个模型的目标。第一个模型的目标是表达最简单合理且可计算的模型。然后我们使用这个简单的模型来了解我们的理解，调整模型，然后重新运行，如 <a class="reference internal" href="#fig-bayesianworkflow"><span class="std std-numref">Fig. 150</span></a> 所示。为此，我们使用了贯穿本书的大量工具、诊断和可视化。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">统计模型的类型</p>
 <p>如果我们参考 DR Cox <span id="id16">[<a class="reference internal" href="references.html#id12">112</a>]</span>，有两种一般的方式来考虑构建统计模型，一种基于模型的方法，其中“感兴趣的参数旨在捕获该生成过程的重要且可解释的特征，分开来自特定数据的偶然特征。或者基于设计的方法，其中“对现有人群进行采样和实验设计有一种不同的方法，其中概率计算基于调查人员在调查计划阶段使用的随机化\ “。贝叶斯公式的基本原理对使用哪种方法没有意见，贝叶斯方法可以用于两种方法。我们的航空公司示例是基于模型的方法，而本章末尾的实验模型是基于设计的方法。例如，可以说大多数基于频率论的分析都遵循基于设计的方法。</p>
@@ -710,7 +710,7 @@
 <div class="section" id="applied-example-picking-flight-delay-likelihoods">
 <span id="id17"></span><h3>9.3.2 应用示例：选择航班延误的似然<a class="headerlink" href="#applied-example-picking-flight-delay-likelihoods" title="Permalink to this headline">¶</a></h3>
 <p>对于我们的航班延误困境，我们决定通过选择观察到的航班延误的可能性来开始建模之旅。我们花一点时间来收集我们现有领域知识的详细信息。在我们的数据集中，延迟可以是负值或正值。正值表示航班晚，负值表示航班早。我们可以在这里选择只模拟延误并忽略所有提前到达。但是，我们将选择对所有到达进行建模，以便我们可以为所有航班到达建立生成模型。这对于我们稍后将要进行的决策分析可能会派上用场。</p>
-<p>我们的驱动问题没有提出任何有关相关性或因果关系的问题，因此为了简单起见，我们将在没有任何协变量的情况下对观察到的分布进行建模。这样我们就可以只关注可能性和先验。添加协变量可能有助于对观察到的分布进行建模，即使它们本身对个人没有兴趣，但我们不想超越自己。让我们使用代码块 <a class="reference internal" href="#plot-flight-data"><span class="std std-ref">plot_flight_data</span></a> 绘制观测数据以了解其分布，结果显示在 <a class="reference internal" href="#fig-arrivaldistributions"><span class="std std-numref">Fig. 153</span></a> 中。</p>
+<p>我们的驱动问题没有提出任何有关相关性或因果关系的问题，因此为了简单起见，我们将在没有任何协变量的情况下对观察到的分布进行建模。这样我们就可以只关注可能性和先验。添加协变量可能有助于对观察到的分布进行建模，即使它们本身对个人没有兴趣，但我们不想超越自己。让我们使用代码块 <a class="reference internal" href="#plot-flight-data"><span class="std std-ref">plot_flight_data</span></a> 绘制观测数据以了解其分布，结果显示在 <a class="reference internal" href="#fig-arrivaldistributions"><span class="std std-numref">Fig. 151</span></a> 中。</p>
 <div class="literal-block-wrapper docutils container" id="plot-flight-data">
 <div class="code-block-caption"><span class="caption-number">Listing 112 </span><span class="caption-text">plot_flight_data</span><a class="headerlink" href="#plot-flight-data" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/948363589_T_ONTIME_MARKETING.zip"</span><span class="p">)</span>
@@ -726,11 +726,11 @@
 </div>
 <div class="figure align-default" id="fig-arrivaldistributions">
 <a class="reference internal image-reference" href="../_images/ArrivalDistributions.png"><img alt="../_images/ArrivalDistributions.png" src="../_images/ArrivalDistributions.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 153 </span><span class="caption-text">观察到的到达延迟数据的核密度估计图。请注意几个有趣的功能。所有航班到达的大部分都在 -20 到 40 之间，并且在该地区有一个普遍的钟形图案。然而，大值的长尾表明虽然相对较少的航班晚点，但其中一些航班在抵达麦迪逊机场时可能真的晚了。</span><a class="headerlink" href="#fig-arrivaldistributions" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 151 </span><span class="caption-text">观察到的到达延迟数据的核密度估计图。请注意几个有趣的功能。所有航班到达的大部分都在 -20 到 40 之间，并且在该地区有一个普遍的钟形图案。然而，大值的长尾表明虽然相对较少的航班晚点，但其中一些航班在抵达麦迪逊机场时可能真的晚了。</span><a class="headerlink" href="#fig-arrivaldistributions" title="Permalink to this image">¶</a></p>
 </div>
 <p>考虑可能性，我们有几个选择。我们可以将其建模为离散的分类分布，其中每一分钟都被分配一个概率。但这可能会带来一些挑战：从统计角度来看，我们需要选择桶的数量。虽然有非参数技术可以改变桶的数量，但这意味着我们还必须创建一个可以估计桶数量的模型，除了估计每个桶的每个概率。</p>
 <p>根据领域专业知识，我们知道每一分钟并不是完全独立的。如果很多飞机晚点 5 分钟，直观的感觉就是很多飞机也会晚点 4 分钟或 6 分钟。因此，连续分布似乎更自然。我们希望对早到和晚到都进行建模，因此分布必须支持负数和正数。结合统计和领域知识，我们知道大多数飞机准点，而且航班通常会早一点或晚一点到达，但如果晚点，他们可能真的会晚点。</p>
-<p>用尽我们的领域专业知识，我们现在可以绘制数据，检查与我们的领域专业知识的一致性以及帮助形成我们的模型的进一步线索。从 <a class="reference internal" href="#fig-arrivaldistributions"><span class="std std-numref">Fig. 153</span></a>，我们有几个合理的似然分布选择：高斯分布、偏斜高斯分布和 Gumbel 分布。普通高斯分布是对称的，与分布的偏度不一致，但它是一种直观的分布，可用于基线比较。顾名思义，Skew-Normal 有一个附加参数 <span class="math notranslate nohighlight">\(\alpha\)</span> 控制分布的偏度。最后，Gumbel 分布专门用于描述一组值的最大值。</p>
+<p>用尽我们的领域专业知识，我们现在可以绘制数据，检查与我们的领域专业知识的一致性以及帮助形成我们的模型的进一步线索。从 <a class="reference internal" href="#fig-arrivaldistributions"><span class="std std-numref">Fig. 151</span></a>，我们有几个合理的似然分布选择：高斯分布、偏斜高斯分布和 Gumbel 分布。普通高斯分布是对称的，与分布的偏度不一致，但它是一种直观的分布，可用于基线比较。顾名思义，Skew-Normal 有一个附加参数 <span class="math notranslate nohighlight">\(\alpha\)</span> 控制分布的偏度。最后，Gumbel 分布专门用于描述一组值的最大值。</p>
 <p>如果我们想象飞机延误是由行李装载、乘客装载和其他潜在因素的最大值引起的，那么这种分布的想法就符合航班到达过程的现实。</p>
 <p>由于航空公司流程受到严格监管，我们认为目前不需要对缺失数据进行建模。此外，我们选择忽略协变量以简化我们的贝叶斯工作流。通常建议从一个简单的模型开始，让完整的贝叶斯工作流通知您根据需要添加复杂性的决定，而不是从一个复杂的模型开始，在以后的步骤中调试变得更具挑战性。
 通常，我们会选择一种可能性，并在尝试另一种可能性之前一直使用贝叶斯工作流。但是为了避免回溯这个例子，我们将继续并行处理两个。现在我们将继续使用代码块 <a class="reference internal" href="#plane-likelihoods"><span class="std std-ref">plane_likelihoods</span></a> 中的 Normal 和 Gumbel 似然，将 Skew-Normal 似然模型留给读者作为练习。</p>
@@ -795,9 +795,9 @@
 </div>
 <div class="figure align-default" id="fig-airline-prior-predictive">
 <a class="reference internal image-reference" href="../_images/Airline_Prior_Predictive.png"><img alt="../_images/Airline_Prior_Predictive.png" src="../_images/Airline_Prior_Predictive.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 154 </span><span class="caption-text">每个模型的先验预测分布。在对数据进行调节之前，两种分布对于我们的领域问题看起来都是合理的，并且彼此相似。</span><a class="headerlink" href="#fig-airline-prior-predictive" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 152 </span><span class="caption-text">每个模型的先验预测分布。在对数据进行调节之前，两种分布对于我们的领域问题看起来都是合理的，并且彼此相似。</span><a class="headerlink" href="#fig-airline-prior-predictive" title="Permalink to this image">¶</a></p>
 </div>
-<p>在概率编程语言报告的先前预测模拟中没有错误并且在 <a class="reference internal" href="#fig-airline-prior-predictive"><span class="std std-numref">Fig. 154</span></a> 中具有合理的先验预测分布，我们决定我们选择的先验足以继续我们的下一步。</p>
+<p>在概率编程语言报告的先前预测模拟中没有错误并且在 <a class="reference internal" href="#fig-airline-prior-predictive"><span class="std std-numref">Fig. 152</span></a> 中具有合理的先验预测分布，我们决定我们选择的先验足以继续我们的下一步。</p>
 </div>
 </div>
 <div class="section" id="inference-and-inference-diagnostics">
@@ -823,13 +823,13 @@
 </div>
 <div class="figure align-default" id="fig-airline-rank-plot">
 <a class="reference internal image-reference" href="../_images/rank_plot_bars_normal.png"><img alt="../_images/rank_plot_bars_normal.png" src="../_images/rank_plot_bars_normal.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 155 </span><span class="caption-text">来自具有高斯似然的模型的后验样本的秩图。</span><a class="headerlink" href="#fig-airline-rank-plot" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 153 </span><span class="caption-text">来自具有高斯似然的模型的后验样本的秩图。</span><a class="headerlink" href="#fig-airline-rank-plot" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-rank-plot-bars-gumbel">
 <a class="reference internal image-reference" href="../_images/rank_plot_bars_gumbel.png"><img alt="../_images/rank_plot_bars_gumbel.png" src="../_images/rank_plot_bars_gumbel.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 156 </span><span class="caption-text">具有 Gumbel 似然的模型的后验样本的秩图。</span><a class="headerlink" href="#fig-rank-plot-bars-gumbel" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 154 </span><span class="caption-text">具有 Gumbel 似然的模型的后验样本的秩图。</span><a class="headerlink" href="#fig-rank-plot-bars-gumbel" title="Permalink to this image">¶</a></p>
 </div>
-<p>对于这两个模型，秩图（如图 <a class="reference internal" href="#fig-airline-rank-plot"><span class="std std-numref">Fig. 155</span></a> 和 <a class="reference internal" href="#fig-rank-plot-bars-gumbel"><span class="std std-numref">Fig. 156</span></a> 所示）在所有秩中看起来都相当一致，这表明跨链的偏差很小。由于此示例中缺乏挑战，推断似乎就像“按下按钮并获得结果”一样简单。</p>
+<p>对于这两个模型，秩图（如图 <a class="reference internal" href="#fig-airline-rank-plot"><span class="std std-numref">Fig. 153</span></a> 和 <a class="reference internal" href="#fig-rank-plot-bars-gumbel"><span class="std std-numref">Fig. 154</span></a> 所示）在所有秩中看起来都相当一致，这表明跨链的偏差很小。由于此示例中缺乏挑战，推断似乎就像“按下按钮并获得结果”一样简单。</p>
 <p>然而，这很容易，因为我们已经花时间预先了解数据，思考好的模型架构，并设置好的先验。在练习中，您将被要求故意做出“错误”的选择，然后进行推断以查看采样期间会发生什么。</p>
 <p>对 NUTS 采样器生成的后验样本感到满意，我们将进入下一步，生成估计延迟的后验预测样本。</p>
 </div>
@@ -839,22 +839,22 @@
 <p>正如我们所讨论的，后验图主要用于可视化后验分布。有时后验图是分析的最终目标，请参阅 <a class="reference internal" href="#applied-experimental-example"><span class="std std-ref">9.11 实验性示例: 在两个组之间比较</span></a> 示例。在其他一些情况下，对后验分布的直接检查几乎没有意义。我们的航空公司示例就是这种情况，我们将在下面进一步详细说明。</p>
 <div class="section" id="applied-example-posterior-of-flight-delays-models">
 <span id="id24"></span><h3>9.6.1 应用示例：航班延误模型的后验<a class="headerlink" href="#applied-example-posterior-of-flight-delays-models" title="Permalink to this headline">¶</a></h3>
-<p>在确保我们的模型中没有推断错误后，我们快速检查图 <a class="reference internal" href="#fig-posterior-plot-normal"><span class="std std-numref">Fig. 157</span></a> 和 <a class="reference internal" href="#fig-posterior-plot-gumbel"><span class="std std-numref">Fig. 158</span></a> 中 Normal 和 Gumbel 模型的后验图。乍一看，它们看起来形状良好，没有意外的异常。在这两种分布中，从领域的角度来看，<span class="math notranslate nohighlight">\(\mu\)</span> 的均值估计低于零是合理的，这表明大多数飞机准时。除了这两个观察值之外，参数本身并不是很有意义。</p>
+<p>在确保我们的模型中没有推断错误后，我们快速检查图 <a class="reference internal" href="#fig-posterior-plot-normal"><span class="std std-numref">Fig. 155</span></a> 和 <a class="reference internal" href="#fig-posterior-plot-gumbel"><span class="std std-numref">Fig. 156</span></a> 中 Normal 和 Gumbel 模型的后验图。乍一看，它们看起来形状良好，没有意外的异常。在这两种分布中，从领域的角度来看，<span class="math notranslate nohighlight">\(\mu\)</span> 的均值估计低于零是合理的，这表明大多数飞机准时。除了这两个观察值之外，参数本身并不是很有意义。</p>
 <p>毕竟，您的老板需要决定是保持当前的收费结构还是接受航空公司提出的新收费结构的建议。</p>
 <p>鉴于决策是我们分析的目标，在快速健全性检查后，我们继续工作流程。</p>
 <div class="figure align-default" id="fig-posterior-plot-normal">
 <a class="reference internal image-reference" href="../_images/posterior_plot_delays_normal.png"><img alt="../_images/posterior_plot_delays_normal.png" src="../_images/posterior_plot_delays_normal.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 157 </span><span class="caption-text">高斯模型的后验图。两种分布看起来都是合理的，并且没有分歧增加了更多证据表明我们的采样器已经合理地估计了参数。</span><a class="headerlink" href="#fig-posterior-plot-normal" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 155 </span><span class="caption-text">高斯模型的后验图。两种分布看起来都是合理的，并且没有分歧增加了更多证据表明我们的采样器已经合理地估计了参数。</span><a class="headerlink" href="#fig-posterior-plot-normal" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-posterior-plot-gumbel">
 <a class="reference internal image-reference" href="../_images/posterior_plot_delays_gumbel.png"><img alt="../_images/posterior_plot_delays_gumbel.png" src="../_images/posterior_plot_delays_gumbel.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 158 </span><span class="caption-text">Gumbel 模型参数的后验图。与 <a class="reference internal" href="#fig-posterior-plot-normal"><span class="std std-numref">Fig. 157</span></a> 类似，这些估计看起来格式正确，让我们对参数估计充满信心。</span><a class="headerlink" href="#fig-posterior-plot-gumbel" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 156 </span><span class="caption-text">Gumbel 模型参数的后验图。与 <a class="reference internal" href="#fig-posterior-plot-normal"><span class="std std-numref">Fig. 155</span></a> 类似，这些估计看起来格式正确，让我们对参数估计充满信心。</span><a class="headerlink" href="#fig-posterior-plot-gumbel" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 </div>
 <div class="section" id="workflow-posterior-predictive">
 <span id="id25"></span><h2>9.7 评估后验预测分布<a class="headerlink" href="#workflow-posterior-predictive" title="Permalink to this headline">¶</a></h2>
-<p>如 <a class="reference internal" href="#fig-bayesianworkflow"><span class="std std-numref">Fig. 152</span></a> 中的工作流所示，一旦获得后验估计，贝叶斯分析就不会结束。</p>
+<p>如 <a class="reference internal" href="#fig-bayesianworkflow"><span class="std std-numref">Fig. 150</span></a> 中的工作流所示，一旦获得后验估计，贝叶斯分析就不会结束。</p>
 <p>我们可以采取许多额外的步骤，例如，如果需要以下任何一项，则生成后验预测分布。</p>
 <ul class="simple">
 <li><p>我们想使用后验预测检查来评估我们的模型校准。</p></li>
@@ -879,14 +879,14 @@
 </div>
 <div class="figure align-default" id="fig-delays-model-posterior-predictive">
 <a class="reference internal image-reference" href="../_images/Delays_Model_Posterior_Predictive.png"><img alt="../_images/Delays_Model_Posterior_Predictive.png" src="../_images/Delays_Model_Posterior_Predictive.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 159 </span><span class="caption-text">Normal 和 Gumbel 模型的后验预测检查。高斯模型不能很好地捕捉长尾，并且还会返回更多低于观察数据界限的预测。 Gumbel 模型拟合更好，但对于低于 0 的值和尾部仍然存在相当多的不匹配。</span><a class="headerlink" href="#fig-delays-model-posterior-predictive" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 157 </span><span class="caption-text">Normal 和 Gumbel 模型的后验预测检查。高斯模型不能很好地捕捉长尾，并且还会返回更多低于观察数据界限的预测。 Gumbel 模型拟合更好，但对于低于 0 的值和尾部仍然存在相当多的不匹配。</span><a class="headerlink" href="#fig-delays-model-posterior-predictive" title="Permalink to this image">¶</a></p>
 </div>
-<p>从 <a class="reference internal" href="#fig-delays-model-posterior-predictive"><span class="std std-numref">Fig. 159</span></a> 我们可以看到 Normal 模型无法捕获到达时间的分布。</p>
+<p>从 <a class="reference internal" href="#fig-delays-model-posterior-predictive"><span class="std std-numref">Fig. 157</span></a> 我们可以看到 Normal 模型无法捕获到达时间的分布。</p>
 <p>转到 Gumbel 模型，我们可以看到后验预测样本似乎在预测早到的航班方面做得很差，但在模拟晚到的航班方面做得更好。我们可以使用两个测试统计数据运行后验预测检查来确认。第一个是检查航班迟到的比例，第二个是检查后验预测分布和观测数据之间的航班延误中位数（以分钟为单位）。</p>
-<p><a class="reference internal" href="#fig-arrival-test-statistics-for-gumbel-posterior-predictive"><span class="std std-numref">Fig. 160</span></a> 表明 Gumbel 模型在拟合航班延误中位数方面比 Normal 模型做得更好，但在拟合准时到达比例方面做得很差。 Gumbel 模型在拟合航班延误的中位数方面也做得更好。</p>
+<p><a class="reference internal" href="#fig-arrival-test-statistics-for-gumbel-posterior-predictive"><span class="std std-numref">Fig. 158</span></a> 表明 Gumbel 模型在拟合航班延误中位数方面比 Normal 模型做得更好，但在拟合准时到达比例方面做得很差。 Gumbel 模型在拟合航班延误的中位数方面也做得更好。</p>
 <div class="figure align-default" id="fig-arrival-test-statistics-for-gumbel-posterior-predictive">
 <a class="reference internal image-reference" href="../_images/Arrival_Test_Statistics_for_Gumbel_Posterior_Predictive.png"><img alt="../_images/Arrival_Test_Statistics_for_Gumbel_Posterior_Predictive.png" src="../_images/Arrival_Test_Statistics_for_Gumbel_Posterior_Predictive.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 160 </span><span class="caption-text">使用 Gumbel 模型的检验统计量进行后验预测检查。在左侧，我们看到与观察到的比例相比，准时比例的估计分布。右侧是延迟中位数分钟的测试统计量。似乎 Gumbel 模型更适合估计航班迟到的时间与航班迟到的比例。</span><a class="headerlink" href="#fig-arrival-test-statistics-for-gumbel-posterior-predictive" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 158 </span><span class="caption-text">使用 Gumbel 模型的检验统计量进行后验预测检查。在左侧，我们看到与观察到的比例相比，准时比例的估计分布。右侧是延迟中位数分钟的测试统计量。似乎 Gumbel 模型更适合估计航班迟到的时间与航班迟到的比例。</span><a class="headerlink" href="#fig-arrival-test-statistics-for-gumbel-posterior-predictive" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 </div>
@@ -957,14 +957,14 @@
 <p><a class="reference internal" href="#tab-airline-delays-loo"><span class="std std-numref">Table 17</span></a>，使用代码块 <a class="reference internal" href="#delays-comparison"><span class="std std-ref">delays_comparison</span></a> 生成，显示按其 ELPD 秩的模型。毫不奇怪，Gumbel 模型在对观测数据进行建模方面做得更好。</p>
 <div class="figure align-default" id="fig-loo-pit-delays">
 <a class="reference internal image-reference" href="../_images/loo_pit_delays.png"><img alt="../_images/loo_pit_delays.png" src="../_images/loo_pit_delays.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 161 </span><span class="caption-text">使用 LOO-PIT 进行模型校准。我们可以看到，这两个模型在捕获数据的相同部分时都存在问题。这些模型低估了最大的观测值（最大的延迟）并高估了较早的到达。这些观察结果符合 <a class="reference internal" href="#fig-delays-model-posterior-predictive"><span class="std std-numref">Fig. 159</span></a>。即使两个模型都出现问题，Gumbel 模型与预期的均匀分布的偏差也较小。</span><a class="headerlink" href="#fig-loo-pit-delays" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 159 </span><span class="caption-text">使用 LOO-PIT 进行模型校准。我们可以看到，这两个模型在捕获数据的相同部分时都存在问题。这些模型低估了最大的观测值（最大的延迟）并高估了较早的到达。这些观察结果符合 <a class="reference internal" href="#fig-delays-model-posterior-predictive"><span class="std std-numref">Fig. 157</span></a>。即使两个模型都出现问题，Gumbel 模型与预期的均匀分布的偏差也较小。</span><a class="headerlink" href="#fig-loo-pit-delays" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-default" id="fig-elpd-plot-delays">
 <a class="reference internal image-reference" href="../_images/elpd_plot_delays.png"><img alt="../_images/elpd_plot_delays.png" src="../_images/elpd_plot_delays.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 162 </span><span class="caption-text">Gumbel 和 Normal 模型之间的顶部面板 ELPD 差异。对偏差最大的 3 个观测值进行了注释（157、158 和 164）。底部面板，来自 Pareto 平滑重要性采样的 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 值的图。观测值 157、158 和 164 的值大于 0.7</span><a class="headerlink" href="#fig-elpd-plot-delays" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 160 </span><span class="caption-text">Gumbel 和 Normal 模型之间的顶部面板 ELPD 差异。对偏差最大的 3 个观测值进行了注释（157、158 和 164）。底部面板，来自 Pareto 平滑重要性采样的 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 值的图。观测值 157、158 和 164 的值大于 0.7</span><a class="headerlink" href="#fig-elpd-plot-delays" title="Permalink to this image">¶</a></p>
 </div>
-<p>从 <a class="reference internal" href="#tab-airline-delays-loo"><span class="std std-numref">Table 17</span></a> 我们可以看到，Normal 模型给出的 <code class="docutils literal notranslate"><span class="pre">p_loo</span></code> 值远高于模型中的参数数量，表明模型指定错误。此外，我们收到一条警告，表明我们至少有一个 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 的高值。从 <a class="reference internal" href="#fig-elpd-plot-delays"><span class="std std-numref">Fig. 162</span></a>（右下图）我们可以看到违规观察是数据点 157。从上图我们还可以看到（图 <a class="reference internal" href="#fig-elpd-plot-delays"><span class="std std-numref">Fig. 162</span></a> 上图）Normal 模型很难将这一观测与观测 158 和 164 一起捕获。对数据的检查表明，这 3 个观测是延迟最大的观测。</p>
-<p>我们还可以使用代码块 <a class="reference internal" href="#delays-comparison-plot"><span class="std std-ref">delays_comparison_plot</span></a> 生成视觉检查，结果是 <a class="reference internal" href="#fig-model-comparison-airlines"><span class="std std-numref">Fig. 163</span></a>。我们看到，即使考虑 LOO 中的不确定性，Gumbel 模型也比 Normal 模型更好地表示数据。</p>
+<p>从 <a class="reference internal" href="#tab-airline-delays-loo"><span class="std std-numref">Table 17</span></a> 我们可以看到，Normal 模型给出的 <code class="docutils literal notranslate"><span class="pre">p_loo</span></code> 值远高于模型中的参数数量，表明模型指定错误。此外，我们收到一条警告，表明我们至少有一个 <span class="math notranslate nohighlight">\(\hat \kappa\)</span> 的高值。从 <a class="reference internal" href="#fig-elpd-plot-delays"><span class="std std-numref">Fig. 160</span></a>（右下图）我们可以看到违规观察是数据点 157。从上图我们还可以看到（图 <a class="reference internal" href="#fig-elpd-plot-delays"><span class="std std-numref">Fig. 160</span></a> 上图）Normal 模型很难将这一观测与观测 158 和 164 一起捕获。对数据的检查表明，这 3 个观测是延迟最大的观测。</p>
+<p>我们还可以使用代码块 <a class="reference internal" href="#delays-comparison-plot"><span class="std std-ref">delays_comparison_plot</span></a> 生成视觉检查，结果是 <a class="reference internal" href="#fig-model-comparison-airlines"><span class="std std-numref">Fig. 161</span></a>。我们看到，即使考虑 LOO 中的不确定性，Gumbel 模型也比 Normal 模型更好地表示数据。</p>
 <div class="literal-block-wrapper docutils container" id="delays-comparison-plot">
 <div class="code-block-caption"><span class="caption-number">Listing 118 </span><span class="caption-text">delays_comparison_plot</span><a class="headerlink" href="#delays-comparison-plot" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.plot_compare.html#arviz.plot_compare" title="arviz.plot_compare"><span class="n">az</span><span class="o">.</span><span class="n">plot_compare</span></a><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
@@ -973,7 +973,7 @@
 </div>
 <div class="figure align-default" id="fig-model-comparison-airlines">
 <a class="reference internal image-reference" href="../_images/model_comparison_airlines.png"><img alt="../_images/model_comparison_airlines.png" src="../_images/model_comparison_airlines.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 163 </span><span class="caption-text">使用代码块 <a class="reference internal" href="#delays-comparison-plot"><span class="std std-ref">delays_comparison_plot</span></a> 中的两个航班延误模型的 LOO 进行模型比较。我们证实了我们的观点，即 Gumbel 数据在估计观察到的分布方面比高斯模型更好。</span><a class="headerlink" href="#fig-model-comparison-airlines" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 161 </span><span class="caption-text">使用代码块 <a class="reference internal" href="#delays-comparison-plot"><span class="std std-ref">delays_comparison_plot</span></a> 中的两个航班延误模型的 LOO 进行模型比较。我们证实了我们的观点，即 Gumbel 数据在估计观察到的分布方面比高斯模型更好。</span><a class="headerlink" href="#fig-model-comparison-airlines" title="Permalink to this image">¶</a></p>
 </div>
 <p>根据我们之前对后验预测检查的比较，以及我们直接的 LOO 比较，我们可以做出明智的选择，只使用 Gumbel 模型。这并不意味着我们的 Normal 模型没有用，事实上恰恰相反。开发多个模型有助于建立对我们选择一个模型或模型子集的信心。这也不意味着 Gumbel 模型是真实的甚至是最好的模型，事实上我们有证据证明它的缺点。因此，如果我们探索不同的可能性、收集更多数据或进行一些其他修改，仍有改进的空间。在这一步重要的是，我们充分确信 Gumbel 模型是我们评估过的所有合理模型中最“充分”的模型。</p>
 </div>
@@ -981,7 +981,7 @@
 <div class="section" id="reward-functions">
 <span id="id28"></span><h2>9.9 奖励函数和决策<a class="headerlink" href="#reward-functions" title="Permalink to this headline">¶</a></h2>
 <p>在本书中，我们已经看到如何将一个空间中的一组数量转换为另一个空间，从而使我们的计算变得更简单或改变我们的思维方式。例如，在上一节中，我们使用后验预测采样从参数空间移动到观察量空间。奖励函数，有时也称为成本、损失或效用函数，是从观察量空间到从结果（或决策空间）派生的奖励的另一种转换。回想 <a class="reference internal" href="chp_07.html#bart-bike"><span class="std std-ref">7.5 示例：自行车数据的贝叶斯加性回归树</span></a> 节中的示例，我们有每小时租用自行车数量的后验估计（参见例如</p>
-<p><a class="reference internal" href="chp_07.html#fig-bart-bikes"><span class="std std-numref">Fig. 125</span></a>。如果我们对每天的收入感兴趣，我们可以使用奖励函数来计算每次租金的收入并将总计数相加，从而有效地将计数转换为收入。另一个例子是估计一个人在下雨和干燥时的幸福程度。如果我们有一个模型和对是否会下雨的估计（基于天气数据），并且我们有一个函数可以将一个人的衣服的干湿程度映射到幸福值，我们可以将天气估计映射到预期幸福估计。</p>
+<p><a class="reference internal" href="chp_07.html#fig-bart-bikes"><span class="std std-numref">Fig. 123</span></a>。如果我们对每天的收入感兴趣，我们可以使用奖励函数来计算每次租金的收入并将总计数相加，从而有效地将计数转换为收入。另一个例子是估计一个人在下雨和干燥时的幸福程度。如果我们有一个模型和对是否会下雨的估计（基于天气数据），并且我们有一个函数可以将一个人的衣服的干湿程度映射到幸福值，我们可以将天气估计映射到预期幸福估计。</p>
 <p>奖励函数变得特别有用的地方是存在决策。通过能够估计所有未来结果，并将这些结果映射到预期回报，您可以做出可能产生最大回报的选择。一个直观的例子是决定在早上收拾雨伞。带伞很烦人，这可以被认为是一种负面的奖励，但被雨淋湿是更糟糕的结果。是否带雨伞的选择取决于下雨的可能性。</p>
 <p>我们可以进一步扩展这个例子来揭示一个关键思想。假设您想建立一个模型，帮助您的家人决定何时收拾雨伞。你建立一个贝叶斯模型来估计下雨的概率，这是推断部分。然而，当你建立模型后，你发现你的兄弟非常讨厌带伞，除非已经下雨了，否则他永远不会带伞，而你的母亲非常讨厌被淋湿，即使没有云，她也会抢先带伞天空。在这种情况下，估计的数量，即下雨的概率，完全相同，但由于奖励不同，采取的行动也不同。更具体地说，模型的贝叶斯部分是一致的，但奖励的差异会产生不同的动作。</p>
 <p>奖励和行动都不需要是二元的，两者都可以是连续的。供应链中的一个典型例子是报刊供应商模型 <a class="footnote-reference brackets" href="#id55" id="id29">1</a>，其中报刊供应商必须在需求不确定时决定每天早上购买多少份报纸。如果他们买得太少，他们就有失去销售的风险，如果他们买太多，他们就会在未售出的库存上赔钱。</p>
@@ -1018,9 +1018,9 @@
 </div>
 <div class="figure align-default" id="fig-late-fee-current-structure-hist">
 <a class="reference internal image-reference" href="../_images/Late_fee_current_structure_hist.png"><img alt="../_images/Late_fee_current_structure_hist.png" src="../_images/Late_fee_current_structure_hist.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 164 </span><span class="caption-text">使用奖励函数和后验预测分布计算的当前滞纳金结构的预期延迟航班收入。很少有非常晚的航班，因此情节的右侧部分看似空旷。</span><a class="headerlink" href="#fig-late-fee-current-structure-hist" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 162 </span><span class="caption-text">使用奖励函数和后验预测分布计算的当前滞纳金结构的预期延迟航班收入。很少有非常晚的航班，因此情节的右侧部分看似空旷。</span><a class="headerlink" href="#fig-late-fee-current-structure-hist" title="Permalink to this image">¶</a></p>
 </div>
-<p>从后验预测分布和当前的滞纳金结构来看，我们预计每个延迟航班平均可提供 3930 美元的收入。我们还可以在 <a class="reference internal" href="#fig-late-fee-current-structure-hist"><span class="std std-numref">Fig. 164</span></a> 中绘制每个航班晚点航班收入的分布。</p>
+<p>从后验预测分布和当前的滞纳金结构来看，我们预计每个延迟航班平均可提供 3930 美元的收入。我们还可以在 <a class="reference internal" href="#fig-late-fee-current-structure-hist"><span class="std std-numref">Fig. 162</span></a> 中绘制每个航班晚点航班收入的分布。</p>
 <p>回顾航空公司提出的成本结构，如果航班晚点 0 到 10 分钟，费用为 1000 美元。如果航班迟到 10 到 300 分钟，费用为 5,000 美元，如果迟到 100 分钟以上，费用为 30,000 美元。假设成本结构对飞机的准时或迟到没有影响，您可以通过编写新的成本函数并重用先前计算的后验预测分布来估计新提案下的收入。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.vectorize.html#numpy.vectorize" title="numpy.vectorize"><span class="nd">@np</span><span class="o">.</span><span class="n">vectorize</span></a>
 <span class="k">def</span> <span class="nf">proposed_revenue</span><span class="p">(</span><span class="n">delay</span><span class="p">):</span>
@@ -1041,9 +1041,9 @@
 </div>
 <div class="figure align-default" id="fig-late-fee-proposed-structure-hist">
 <a class="reference internal image-reference" href="../_images/Late_fee_proposed_structure_hist.png"><img alt="../_images/Late_fee_proposed_structure_hist.png" src="../_images/Late_fee_proposed_structure_hist.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 165 </span><span class="caption-text">使用建议的奖励函数和后验预测分布计算的预期延迟航班收入。请注意，后验预测分布与 <a class="reference internal" href="#fig-late-fee-current-structure-hist"><span class="std std-numref">Fig. 164</span></a> 中的完全相同。只是奖励函数的变化使该图有所不同。</span><a class="headerlink" href="#fig-late-fee-proposed-structure-hist" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 163 </span><span class="caption-text">使用建议的奖励函数和后验预测分布计算的预期延迟航班收入。请注意，后验预测分布与 <a class="reference internal" href="#fig-late-fee-current-structure-hist"><span class="std std-numref">Fig. 162</span></a> 中的完全相同。只是奖励函数的变化使该图有所不同。</span><a class="headerlink" href="#fig-late-fee-proposed-structure-hist" title="Permalink to this image">¶</a></p>
 </div>
-<p>在新的成本结构中，您估计机场平均每晚航班将赚取 2921.97 美元，低于当前的罚款定价结构。我们再次可以在 <a class="reference internal" href="#fig-late-fee-proposed-structure-hist"><span class="std std-numref">Fig. 165</span></a> 中绘制估计的迟到航班收入的分布。</p>
+<p>在新的成本结构中，您估计机场平均每晚航班将赚取 2921.97 美元，低于当前的罚款定价结构。我们再次可以在 <a class="reference internal" href="#fig-late-fee-proposed-structure-hist"><span class="std std-numref">Fig. 163</span></a> 中绘制估计的迟到航班收入的分布。</p>
 </div>
 </div>
 <div class="section" id="section-sharing-results">
@@ -1092,7 +1092,7 @@
 </div>
 <div class="section" id="static-visual-aids">
 <span id="id36"></span><h3>9.10.3 静态可视化辅助<a class="headerlink" href="#static-visual-aids" title="Permalink to this headline">¶</a></h3>
-<p>有句谚语说一张照片值一千字。对于贝叶斯统计数据尤其如此，其中后验图传达了一个不容易用文字描述的细节水平。 ArviZ 预先打包了许多常见的可视化，例如后验图。但是，我们也建议制作定制图形。本文中的示例包括后验估计，例如 <a class="reference internal" href="chp_07.html#fig-bart-bikes"><span class="std std-numref">Fig. 125</span></a>，它显示了一天所有时间的观察数据、平均趋势和不确定性。静态视觉辅助工具就像数字摘要，如今它们也很容易共享。</p>
+<p>有句谚语说一张照片值一千字。对于贝叶斯统计数据尤其如此，其中后验图传达了一个不容易用文字描述的细节水平。 ArviZ 预先打包了许多常见的可视化，例如后验图。但是，我们也建议制作定制图形。本文中的示例包括后验估计，例如 <a class="reference internal" href="chp_07.html#fig-bart-bikes"><span class="std std-numref">Fig. 123</span></a>，它显示了一天所有时间的观察数据、平均趋势和不确定性。静态视觉辅助工具就像数字摘要，如今它们也很容易共享。</p>
 <p>随着笔记本电脑和手机以及互联网连接设备的广泛使用，共享图片变得比以前更容易。</p>
 <p>但是，缺点是它们确实需要纸张或屏幕来共享，并且需要准备好或在需要时快速找到它们。</p>
 <p>另一个风险是他们可能与您的听众交流太多，他们有时可能只想要平均或最大似然值。</p>
@@ -1120,7 +1120,7 @@
 <p>在接近你的老板之前，你需要与你的同事完成一次同行评审。由于您的同行精通统计和计算，您可以为他们提供 Jupyter Notebook 的分析，其中混合了叙述、代码和结果。这本笔记本包含了你以前为老板推荐的所有模型、假设和情节。由于笔记本包含所有细节并且可重现，因此您的同事能够自信地评估您的工作是否正确。</p>
 <p>您的一些同事询问他们是否可以使用不同的先验运行模型来检查先验敏感性。您提供 Dockerfile<a class="footnote-reference brackets" href="#id62" id="id46">8</a>，它完全指定了环境。这样他们就可以运行 Jupyter notebook 并重新创建部分工作流程。</p>
 <p>现在专注于通知老板的初始任务，您开始思考如何与她沟通的策略。你知道你最多有 30 分钟，而且会在她的办公室。您将使用笔记本电脑来展示视觉辅助工具，但您知道您的老板也需要能够在她没有视觉辅助工具的情况下将这个想法传达给她的同事。您还知道您的老板可能想测试不同的收费结构，以了解她可以安全谈判的地方。</p>
-<p>换句话说，她想看看不同奖励函数的效果。您设置了一个简单的笔记本，将奖励函数作为输入并生成收入直方图和表格。你与你的老板开会并迅速解释说“我花了一些时间利用过去的晚班航班延误来创建一个未来航班延误的模型。使用我估计在当前费用结构中的模型，我们每次晚班可以赚 3930 美元平均航班，在航空公司提议的费用结构中，我们将平均每晚航班赚 2921 美元。”您向老板展示底部图 <a class="reference internal" href="#fig-delays-model-posterior-predictive"><span class="std std-numref">Fig. 159</span></a>，解释这是预期和建模的晚班航班的分布，<a class="reference internal" href="#fig-late-fee-current-structure-hist"><span class="std std-numref">Fig. 164</span></a> 显示预计将在未来产生的收入.然后，您向老板展示 <a class="reference internal" href="#table-late-flight-revenue"><span class="std std-numref">Table 18</span></a>，显示新范式下的预期收入。您选择了一个表格而不是一个数字，因为 100 分钟以上延迟类别中的航班比例在图中并不明显。您使用该表来解释可能晚点超过 100 分钟的航班非常少，从收入的角度来看，该类别在您的模拟中可以忽略不计。您建议您的老板要么拒绝该提议，要么就 0 到 100 分钟范围内的延误协商更高的滞纳金。然后你的老板问你是否可以测试她选择的几种不同的费用结构，以便她看到效果。随着你老板的理解，推断的目标已经实现，你的老板拥有在她的谈判中做出明智决定所需的所有信息。</p>
+<p>换句话说，她想看看不同奖励函数的效果。您设置了一个简单的笔记本，将奖励函数作为输入并生成收入直方图和表格。你与你的老板开会并迅速解释说“我花了一些时间利用过去的晚班航班延误来创建一个未来航班延误的模型。使用我估计在当前费用结构中的模型，我们每次晚班可以赚 3930 美元平均航班，在航空公司提议的费用结构中，我们将平均每晚航班赚 2921 美元。”您向老板展示底部图 <a class="reference internal" href="#fig-delays-model-posterior-predictive"><span class="std std-numref">Fig. 157</span></a>，解释这是预期和建模的晚班航班的分布，<a class="reference internal" href="#fig-late-fee-current-structure-hist"><span class="std std-numref">Fig. 162</span></a> 显示预计将在未来产生的收入.然后，您向老板展示 <a class="reference internal" href="#table-late-flight-revenue"><span class="std std-numref">Table 18</span></a>，显示新范式下的预期收入。您选择了一个表格而不是一个数字，因为 100 分钟以上延迟类别中的航班比例在图中并不明显。您使用该表来解释可能晚点超过 100 分钟的航班非常少，从收入的角度来看，该类别在您的模拟中可以忽略不计。您建议您的老板要么拒绝该提议，要么就 0 到 100 分钟范围内的延误协商更高的滞纳金。然后你的老板问你是否可以测试她选择的几种不同的费用结构，以便她看到效果。随着你老板的理解，推断的目标已经实现，你的老板拥有在她的谈判中做出明智决定所需的所有信息。</p>
 <table class="table" id="table-late-flight-revenue">
 <caption><span class="caption-number">Table 18 </span><span class="caption-text">Percentages of expected revenue from each fee category. There are so few late flights in the $30000 fee category that it is essentially negligible.</span><a class="headerlink" href="#table-late-flight-revenue" title="Permalink to this table">¶</a></caption>
 <colgroup>
@@ -1200,13 +1200,13 @@
 </pre></div>
 </div>
 </div>
-<p>我们在 <a class="reference internal" href="#fig-uni-sd-posterior-plot"><span class="std std-numref">Fig. 166</span></a> 中绘制后验结果。正如贝叶斯建模方法多次看到的那样，我们得到了平均极限强度和标准偏差参数的分布估计，这对于理解这种特定材料的可靠性非常有帮助。</p>
+<p>我们在 <a class="reference internal" href="#fig-uni-sd-posterior-plot"><span class="std std-numref">Fig. 164</span></a> 中绘制后验结果。正如贝叶斯建模方法多次看到的那样，我们得到了平均极限强度和标准偏差参数的分布估计，这对于理解这种特定材料的可靠性非常有帮助。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.plot_posterior.html#arviz.plot_posterior" title="arviz.plot_posterior"><span class="n">az</span><span class="o">.</span><span class="n">plot_posterior</span></a><span class="p">(</span><span class="n">uni_data</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="fig-uni-sd-posterior-plot">
 <a class="reference internal image-reference" href="../_images/Posterior_Uni.png"><img alt="../_images/Posterior_Uni.png" src="../_images/Posterior_Uni.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 166 </span><span class="caption-text">具有 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 和点统计量的所有参数的后验图</span><a class="headerlink" href="#fig-uni-sd-posterior-plot" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 164 </span><span class="caption-text">具有 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 和点统计量的所有参数的后验图</span><a class="headerlink" href="#fig-uni-sd-posterior-plot" title="Permalink to this image">¶</a></p>
 </div>
 <p>然而，我们的研究问题是关于单向和双向复合材料之间极限强度的差异。虽然我们可以为双向样本运行另一个模型并比较估计值，但更方便的选择是在单个模型中比较两者。我们可以利用“贝叶斯估计取代 t 检验”中定义的 John Kruschke 的模型框架{引用：p}<code class="docutils literal notranslate"><span class="pre">kruschke_2013</span></code> 来获得这种“一劳永逸”的比较，如代码块 <a class="reference internal" href="#comparison-model"><span class="std std-ref">comparison_model</span></a> 中所示。</p>
 <div class="literal-block-wrapper docutils container" id="comparison-model">
@@ -1248,13 +1248,13 @@
 </pre></div>
 </div>
 </div>
-<p>拟合模型后，我们可以使用 <a class="reference internal" href="#fig-composite-forest-plot"><span class="std std-numref">Fig. 167</span></a> 中的 Forest Plot 可视化均值的差异，两种样本的均值之间似乎没有太多重叠，表明它们的最终强度确实不同，单向更强，甚至更可靠。</p>
+<p>拟合模型后，我们可以使用 <a class="reference internal" href="#fig-composite-forest-plot"><span class="std std-numref">Fig. 165</span></a> 中的 Forest Plot 可视化均值的差异，两种样本的均值之间似乎没有太多重叠，表明它们的最终强度确实不同，单向更强，甚至更可靠。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.plot_forest.html#arviz.plot_forest" title="arviz.plot_forest"><span class="n">az</span><span class="o">.</span><span class="n">plot_forest</span></a><span class="p">(</span><span class="n">t_trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">"uni_mean"</span><span class="p">,</span><span class="s2">"bi_mean"</span><span class="p">])</span> 
 </pre></div>
 </div>
 <div class="figure align-default" id="fig-composite-forest-plot">
 <a class="reference internal image-reference" href="../_images/Posterior_Forest_Plot.png"><img alt="../_images/Posterior_Forest_Plot.png" src="../_images/Posterior_Forest_Plot.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 167 </span><span class="caption-text">每组均值的森林图。 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 是分开的，表明均值不同。</span><a class="headerlink" href="#fig-composite-forest-plot" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 165 </span><span class="caption-text">每组均值的森林图。 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 是分开的，表明均值不同。</span><a class="headerlink" href="#fig-composite-forest-plot" title="Permalink to this image">¶</a></p>
 </div>
 <p>Kruschke 的公式还有一个额外的好处，以及我们的概率编程语言中的一个技巧。我们可以让模型直接自动计算差异，在这种情况下，其中之一是均值差异的后验分布。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.plot_posterior.html#arviz.plot_posterior" title="arviz.plot_posterior"><span class="n">az</span><span class="o">.</span><span class="n">plot_posterior</span></a><span class="p">(</span><span class="n">trace</span><span class="p">,</span> 
@@ -1264,7 +1264,7 @@
 </div>
 <div class="figure align-default" id="fig-composite-difference-of-means">
 <a class="reference internal image-reference" href="../_images/Composite_Difference_Of_Means.png"><img alt="../_images/Composite_Difference_Of_Means.png" src="../_images/Composite_Difference_Of_Means.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 168 </span><span class="caption-text">均值和效应大小差异的后验图，包括 0 处的参考值。在这两个图中，0 值似乎相对不太可能表明既有效应又有差异。</span><a class="headerlink" href="#fig-composite-difference-of-means" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 166 </span><span class="caption-text">均值和效应大小差异的后验图，包括 0 处的参考值。在这两个图中，0 值似乎相对不太可能表明既有效应又有差异。</span><a class="headerlink" href="#fig-composite-difference-of-means" title="Permalink to this image">¶</a></p>
 </div>
 <p>我们也可以比较每个参数的数值摘要。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.summary.html#arviz.summary" title="arviz.summary"><span class="n">az</span><span class="o">.</span><span class="n">summary</span></a><span class="p">(</span><span class="n">t_trace</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"stats"</span><span class="p">)</span>
