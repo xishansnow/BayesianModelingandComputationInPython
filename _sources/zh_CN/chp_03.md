@@ -207,7 +207,7 @@ with pm.Model() as model_penguin_mass_all_species:
                 "σ_dim_0": all_species.categories})
 ```
 
-我们为每个参数使用了可选的 **形状（ Shape ，Python 中描述多维张量各维度大小的术语 ）** 参数，并在似然中添加一个索引，以告诉 PYMC3 我们希望独立调节每个物种的后验。在编程语言设计中，使表达思想更加无缝的小技巧被称为**语法糖**。概率编程开发人员也会使用一些语法糖；概率编程语言会努力让表达模型更容易且错误更少。
+我们为每个参数使用了可选的 **形状（ Shape ，Python 中描述多维张量各维度大小的术语 ）** 参数，并在似然中添加一个索引，以告诉 `PYMC3` 我们希望独立调节每个物种的后验。在编程语言设计中，使表达思想更加无缝的小技巧被称为**语法糖**。概率编程开发人员也会使用一些语法糖；概率编程语言会努力让表达模型更容易且错误更少。
 
 运行模型后，再次检查核密度估计曲线和秩图，参阅 {numref}`fig:all_penguins_rank_kde_plot`。与 {numref}`fig:single_penguins_rank_kde_plot` 相比，你将看到 $4$ 个额外的图，每个物种添加了 $2$ 个参数。花点时间将均值的估计与 {numref}`tab:penguin_mass_parameters_point_estimates` 中各物种的汇总均值进行比较。为了更好地可视化各物种分布之间的差异，可以使用代码 [mass_forest_plot](mass_forest_plot) 来绘制多个后验分布的森林图。
 
@@ -251,15 +251,15 @@ az.plot_forest(inf_data_model_penguin_mass_all_species, var_names=["σ"])
 
 ### 3.1.1 比较两种概率编程语言 
 
-在进一步扩展统计建模思想之前，我们先花点时间讨论概率编程语言，并介绍将在本书中使用的另一种概率编程语言：`TensorFlow Probability (TFP)`。我们将在代码 [nocovariate_mass](nocovariate_mass) 中，将 PYMC3 的截距模型转换为 `TFP` ，以便于大家理解。
+在进一步扩展统计建模思想之前，我们先花点时间讨论概率编程语言，并介绍将在本书中使用的另一种概率编程语言：`TensorFlow Probability (TFP)`。我们将在代码 [nocovariate_mass](nocovariate_mass) 中，将 `PYMC3` 的截距模型转换为 `TFP` ，以便于大家理解。
 
 学习不同的概率编程语言似乎没有必要。但本书中选择使用两种概率编程语言有些特殊的原因：*在不同概率编程语言中看到相同的工作流程，将使你对贝叶斯建模和计算有更透彻的理解，帮助你将计算细节与统计思想分开，并使你成为一个更强大的建模者*。
 
-此外，不同概率编程语言有不同的能力和重点。 PYMC3 是更高级别的概率编程语言，可以轻松地以更少代码表达模型，而 `TFP` 为建模和推断提供了更低级别的概率编程能力。并非所有概率编程语言都能够像彼此一样非常容易地表达所有模型。例如，时间序列模型（ [第 6 章](chap4) ）在 `TFP` 中更容易定义，而贝叶斯加性回归树在 PYMC3 中更容易表达（ [第 7 章](chap6) ）。通过对多种语言的接触，你将对贝叶斯建模的基本要素以及其在在计算上的实现有更深入了解。
+此外，不同概率编程语言有不同的能力和重点。 `PYMC3` 是更高级别的概率编程语言，可以轻松地以更少代码表达模型，而 `TFP` 为建模和推断提供了更低级别的概率编程能力。并非所有概率编程语言都能够像彼此一样非常容易地表达所有模型。例如，时间序列模型（ [第 6 章](chap4) ）在 `TFP` 中更容易定义，而贝叶斯加性回归树在 `PYMC3` 中更容易表达（ [第 7 章](chap6) ）。通过对多种语言的接触，你将对贝叶斯建模的基本要素以及其在在计算上的实现有更深入了解。
 
 概率编程语言由原语组成，在编程语言中，原语是用于构建更复杂程序的最简单元素。你可以将原语理解成自然语言中的单词，能够形成更复杂的结构，比如句子。由于不同语言使用不同的词，不同概率编程语言也会使用不同的原语。这些原语主要用于表达模型、执行推断或表达工作流的其他部分。
 
-在 PYMC3 中，与模型构建相关的原语包含在命名空间 `pm` 下。例如，在代码 [penguin_mass](penguin_mass) 中，可以看到 `pm.HalfStudentT(.)` 和 `pm.Normal(.)`，其中“ $.$` ”代表一个随机变量。 `with pm.Model() as .` 语句调用 Python 的上下文环境管理器，PYMC3 使用该语句来收集上下文管理器中的随机变量，并构建模型 `model_adelie_penguin_mass`。然后可以使用 `pm.sample_prior_predictive(.)` 和 `pm.sample(.)` 分别获得先验预测分布和后验分布的样本。
+在 `PYMC3` 中，与模型构建相关的原语包含在命名空间 `pm` 下。例如，在代码 [penguin_mass](penguin_mass) 中，可以看到 `pm.HalfStudentT(.)` 和 `pm.Normal(.)`，其中“ $.$` ”代表一个随机变量。 `with pm.Model() as .` 语句调用 Python 的上下文环境管理器，PYMC3 使用该语句来收集上下文管理器中的随机变量，并构建模型 `model_adelie_penguin_mass`。然后可以使用 `pm.sample_prior_predictive(.)` 和 `pm.sample(.)` 分别获得先验预测分布和后验分布的样本。
 
 类似地，TFP 为用户提供了在  `tfp.distributions` 中指定分布和模型、运行 MCMC 推断( `tfp.mcmc` ) 等原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 `tfd.JointDistribution` 的 API 原语 {cite:p}`piponi2020joint`。在本书的其余部分中，我们会主要使用 `tfd.JointDistributionCoroutine`，但读者应当知道还有 `tfd.JointDistribution` 的一些变体可能更适合你的应用 [^1]。由于导入数据和计算汇总统计量的代码和 [penguin_load](penguin_load) 和 [penguin_mass_empirical](penguin_mass_empirical) 一致，因此这里我们专注于模型构建和推断。
 
@@ -295,7 +295,7 @@ def jd_penguin_mass_all_species():
         name="mass")
 ```
 
-这是我们第一次遇到用 `TFP` 编写的贝叶斯模型，所以花点时间来详细介绍一下。 `tfp.distributions` 是原语中的分布类，我们通常为其赋予一个较短的别名 `tfd = tfp.distributions` 。 `tfd` 中包含了常用的分布，例如高斯分布 `tfd.Normal(.)` 。代码中还使用了 `tfd.Sample`，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 PYMC3 语法糖 `shape=(.)` 的功能 ）。 `tfd.Independent` 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 `reinterpreted_batch_ndims` 函参指定。通常用 `tfd.Independent` 封装与观测相关的分布 [^2] 。你可以在 {ref}`shape_PPL` 部分阅读更多关于 `TFP` 和概率编程语言中的形状处理的信息。
+这是我们第一次遇到用 `TFP` 编写的贝叶斯模型，所以花点时间来详细介绍一下。 `tfp.distributions` 是原语中的分布类，我们通常为其赋予一个较短的别名 `tfd = tfp.distributions` 。 `tfd` 中包含了常用的分布，例如高斯分布 `tfd.Normal(.)` 。代码中还使用了 `tfd.Sample`，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 `PYMC3` 语法糖 `shape=(.)` 的功能 ）。 `tfd.Independent` 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 `reinterpreted_batch_ndims` 函参指定。通常用 `tfd.Independent` 封装与观测相关的分布 [^2] 。你可以在 {ref}`shape_PPL` 部分阅读更多关于 `TFP` 和概率编程语言中的形状处理的信息。
 
 代码中的模型签名 `@tfd.JointDistributionCoroutine` 很有意思，顾名思义，就是在 Python 中使用协程（ Coroutine ），不过我们在此不过多地介绍生成器和协程的概念。 
 
@@ -339,7 +339,7 @@ jd_penguin_mass_observed = jd_penguin_mass_all_species.experimental_pin(
 target_density_function = jd_penguin_mass_observed.unnormalized_log_prob
 ```
 
-推断是使用 `target_density_function` 完成的，例如，我们可以找到函数的最大值，这给出了**最大后验概率**（MAP）估计。我们还可以使用 `tfp.mcmc` {cite:p}`lao2020tfpmcmc` 中的方法从后验采样。或者更方便的是，使用类似于 PYMC3 [^3] 中当前使用的标准采样例程，如代码 [tfp_posterior_inference](tfp_posterior_inference) 所示：
+推断是使用 `target_density_function` 完成的，例如，我们可以找到函数的最大值，这给出了**最大后验概率**（MAP）估计。我们还可以使用 `tfp.mcmc` {cite:p}`lao2020tfpmcmc` 中的方法从后验采样。或者更方便的是，使用类似于 `PYMC3` [^3] 中当前使用的标准采样例程，如代码 [tfp_posterior_inference](tfp_posterior_inference) 所示：
 
 ```{code-block} ipython3
 :name: tfp_posterior_inference
@@ -390,7 +390,7 @@ inf_data_model_penguin_mass_all_species2.add_groups(
 )
 ```
 
-我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是*以贝叶斯为中心*，哪些概念是*以概率编程语言为中心*。在本章的剩余部分和下一章中，我们将在 PYMC3 和 `TFP` 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。
+我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是*以贝叶斯为中心*，哪些概念是*以概率编程语言为中心*。在本章的剩余部分和下一章中，我们将在 `PYMC3` 和 `TFP` 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。
 
 (linear-regression)= 
 
@@ -619,9 +619,9 @@ inf_data_adelie_flipper_length_c = az.from_dict(
 来自代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 的系数估计。注意，$beta\_1$ 的分布与 {numref}`fig:adelie_coefficient_posterior_plots` 中相同，但 $beta\_0$ 的分布发生了偏移。由于我们在鳍状肢长度的均值处做了中心化处理，因此 $beta\_0$ 现在代表了具有平均鳍状肢长度的企鹅体重分布。
 ``` 
 
-代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 中定义的数学模型与代码 [non_centered_regression](non_centered_regression) 中的 PYMC3 模型 `model_adelie_flipper_regression` 基本等价，唯一区别是对预测变量做了中心化处理。不过，在概率编程语言方面，`TFP` 的结构需要在不同行中添加 `tensor_x[..., None]` 来扩展标量的批次，使其能够与向量批次一起广播。具体来说，`None` 会添加一个新轴，这也可以使用 `np.newaxis` 或 `tf.newaxis` 来完成。此外，`TFP` 还将模型包装在一个函数中，以便轻松地将不同的预测变量作为条件。当然，中心化处理后，预测变量也应当是中心化后的变量。
+代码 [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) 中定义的数学模型与代码 [non_centered_regression](non_centered_regression) 中的 `PYMC3` 模型 `model_adelie_flipper_regression` 基本等价，唯一区别是对预测变量做了中心化处理。不过，在概率编程语言方面，`TFP` 的结构需要在不同行中添加 `tensor_x[..., None]` 来扩展标量的批次，使其能够与向量批次一起广播。具体来说，`None` 会添加一个新轴，这也可以使用 `np.newaxis` 或 `tf.newaxis` 来完成。此外，`TFP` 还将模型包装在一个函数中，以便轻松地将不同的预测变量作为条件。当然，中心化处理后，预测变量也应当是中心化后的变量。
 
-当再次绘制系数的后验分布时，$\beta_1$ 与 PYMC3 模型相同，但 $\beta_0$ 的分布发生了变化。由于我们将输入数据中心化到了其均值上，$\beta_0$ 的后验分布将代表非中心化数据集中均值对应的预测分布。通过将数据中心化，现在可以将 $\beta_0$ 解释为具有平均鳍状肢长度的 `Adelie 种`企鹅的平均体重分布。
+当再次绘制系数的后验分布时，$\beta_1$ 与 `PYMC3` 模型相同，但 $\beta_0$ 的分布发生了变化。由于我们将输入数据中心化到了其均值上，$\beta_0$ 的后验分布将代表非中心化数据集中均值对应的预测分布。通过将数据中心化，现在可以将 $\beta_0$ 解释为具有平均鳍状肢长度的 `Adelie 种`企鹅的平均体重分布。
 
 转换输入变量的想法也可以在任意选择的值上执行。例如，可以减去最小鳍状肢长度后拟合模型。在做这种转换后，可以将 $\beta_0$ 的解释变更为观测到的最小鳍状肢长度的平均体重分布。
 
@@ -671,7 +671,7 @@ with pm.Model() as model_penguin_mass_categorical:
 
 `Bambi` 是一个 `Python` 软件包，使用形式化语法来拟合广义线性层次模型，类似于在 `R` 包中的 `lme4 包` {cite:p}`lme4`、`nlme 包` {cite:p}`nlme`、`rstanarm 包` {cite:p}`gabry_goodrich_2020` 或 `brms 包` {cite:p}`brms`）等。
 
-`Bambi` 在底层使用 PYMC3 并提供更高级别的 API。要编写同一个模型，在忽略代码 [penguin_mass_multi](penguin_mass_multi) 中的先验 [^4] 时，可以用 `Bambi` 编程为：
+`Bambi` 在底层使用 `PYMC3` 并提供更高级别的 API。要编写同一个模型，在忽略代码 [penguin_mass_multi](penguin_mass_multi) 中的先验 [^4] 时，可以用 `Bambi` 编程为：
 
 ```{code-block} ipython3
 :name: bambi_categorical
@@ -683,7 +683,7 @@ model = bmb.Model("body_mass_g ~ flipper_length_mm + sex",
 trace = model.fit()
 ```
 
-如果不人为设置先验，软件包会自动分配先验。在 `Bambi` 内部几乎存储了 PYMC3 生成的所有对象，使用户可以轻松检索、检查和修改这些对象。此外，`Bambi` 还返回一个 `az.InferenceData` 对象，可以直接与 `ArviZ` 一起使用。
+如果不人为设置先验，软件包会自动分配先验。在 `Bambi` 内部几乎存储了 `PYMC3` 生成的所有对象，使用户可以轻松检索、检查和修改这些对象。此外，`Bambi` 还返回一个 `az.InferenceData` 对象，可以直接与 `ArviZ` 一起使用。
 
 ::: 
 
@@ -1266,7 +1266,7 @@ with pm.Model() as model_informative_prior_sex_ratio:
 
 (exercises3)= 
 
-## 3.6 练习 
+## 习题 
 
 **E1.** Comparisons are part of everyday life. What is something you compare on a daily basis and answer the following question: 
 
@@ -1298,7 +1298,7 @@ Explain how they are different, the steps to perform each, and situations where 
 
  **E4.** In Code Block [flipper_centering](flipper_centering) and Code Block [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) we centered the flipper length covariate. Refit the model, but instead of centering, subtract the minimum observed flipped length. Compare the posterior estimates of the slope and intercept parameters of the centered model. What is different, what is the same. How does the interpretation of this model change when compared to the centered model? 
 
-**E5.** Translate the following primitives from PYMC3 to TFP. Assume the model name is `pymc_model` 
+**E5.** Translate the following primitives from `PYMC3` to TFP. Assume the model name is `pymc_model` 
 
 1.  `pm.StudentT("x", 0, 10, 20)` 
 
@@ -1306,7 +1306,7 @@ Explain how they are different, the steps to perform each, and situations where 
 
 Hint: write the model and inference first in PYMC3, and find the similar primitives in TFP using the code shown in this chapter.
 
- **E6.** PYMC3 and TFP use different argument names for their distribution parameterizations. For example in PYMC3 the Uniform Distribution is parameterized as `pm.Uniform.dist(lower=, upper=)` whereas in TFP it is `tfd.Uniform(low=, high=)`. Use the online documentation to identify the difference in argument names for the following distributions.
+ **E6.** `PYMC3` and TFP use different argument names for their distribution parameterizations. For example in `PYMC3` the Uniform Distribution is parameterized as `pm.Uniform.dist(lower=, upper=)` whereas in TFP it is `tfd.Uniform(low=, high=)`. Use the online documentation to identify the difference in argument names for the following distributions.
 
 1. Normal 
 
@@ -1336,7 +1336,7 @@ Do you get better inference results? Note that there are divergence with the ori
 
  **M13.** Duplicate the flipper length covariate in Code Block [non_centered_regression](non_centered_regression) by adding a $\beta_2$ coefficient and rerun the model. What do diagnostics such as ESS and rhat indicate about this model with a duplicated coefficient? 
 
-**M14.** Translate the PYMC3 model in Code Block [non_centered_regression](non_centered_regression) into Tensorflow Probability. List three of the syntax differences.
+**M14.** Translate the `PYMC3` model in Code Block [non_centered_regression](non_centered_regression) into Tensorflow Probability. List three of the syntax differences.
 
  **M15.** Translate the TFP model in Code Block [tfp_penguins_centered_predictor](tfp_penguins_centered_predictor) into PYMC3. List three of the syntax differences.
 
@@ -1344,7 +1344,7 @@ Do you get better inference results? Note that there are divergence with the ori
 
 Explain why its the case that a logistic regression with many covariates generate a prior response with extreme values.
 
- **H17.** Translate the PYMC3 model in Code Block [model_logistic_penguins_bill_length_mass](model_logistic_penguins_bill_length_mass) into TFP to classify Adelie and Chinstrap penguins. Reuse the same model to classify Chinstrap and Gentoo penguins. Compare the coefficients, how do they differ? 
+ **H17.** Translate the `PYMC3` model in Code Block [model_logistic_penguins_bill_length_mass](model_logistic_penguins_bill_length_mass) into TFP to classify Adelie and Chinstrap penguins. Reuse the same model to classify Chinstrap and Gentoo penguins. Compare the coefficients, how do they differ? 
 
 **H18.** In Code Block [penguin_mass](penguin_mass) our model allowed for negative values mass. Change the model so negative values are no longer possible. Run a prior predictive check to verify that your change was effective. Perform MCMC sampling and plot the posterior. Has the posterior changed from the original model? Given the results why would you choose one model over the other and why? 
 
@@ -1353,6 +1353,9 @@ Explain why its the case that a logistic regression with many covariates generat
 Do these covariates help estimate Adelie mass more precisely? Justify your answer using the parameter estimates and model comparison tools.
 
  **H20.** Similar the exercise 2H19, see if adding bill depth or island covariates to the penguin logistic regression help classify Adelie and Gentoo penguins more precisely. Justify if the additional covariates helped using the numerical and visual tools shown in this chapter.
+
+
+## 参考文献
 
 [^1]: You can find more information in the TensorFlow tutorials and   documentations. For example,   <https://www.tensorflow.org/probability/examples/JointDistributionAutoBatched_A_Gentle_Tutorial>   and   <https://www.tensorflow.org/probability/examples/Modeling_with_JointDistribution>.
 

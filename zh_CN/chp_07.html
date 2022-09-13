@@ -92,12 +92,12 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_01.html">
-   第一章: 贝叶斯推断
+   第一章：贝叶斯推断
   </a>
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_02.html">
-   第二章: 贝叶斯模型的探索性分析
+   第二章：贝叶斯模型的探索性分析
   </a>
 </li>
 <li class="toctree-l1">
@@ -142,7 +142,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_11.html">
-   第十一章: 附加主题
+   第十一章：附加主题
   </a>
 </li>
 <li class="toctree-l1">
@@ -152,7 +152,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="references.html">
-   References
+   参考文献
   </a>
 </li>
 </ul>
@@ -291,7 +291,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises7">
-   7.9 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id41">
+   参考文献
   </a>
 </li>
 </ul>
@@ -412,7 +417,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises7">
-   7.9 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id41">
+   参考文献
   </a>
 </li>
 </ul>
@@ -425,7 +435,7 @@
 <span id="id1"></span><h1>第七章：贝叶斯加性回归树<a class="headerlink" href="#chap6" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
 <p>在 <a class="reference internal" href="chp_05.html#chap3-5"><span class="std std-ref"> 第 5 章 </span></a>中，我们看到了如何通过一系列基函数的求和来构造一个近似函数，同时展示了 <code class="docutils literal notranslate"><span class="pre">B-样条</span></code> 作为基函数时带来的一些不错的性质。在本章中，我们将讨论一种类似方法，但会使用<strong>决策树</strong>而不是 <code class="docutils literal notranslate"><span class="pre">B-样条</span></code>。</p>
-<p>决策树是表示分段常数或阶跃函数的另外一种比较灵活方式。在这里，我们将重点关注<strong>贝叶斯加性回归树（ BART ）</strong> 。贝叶斯加性回归树是一种贝叶斯非参数模型，它通过对多个决策树求和来获得更灵活的模型 <a class="footnote-reference brackets" href="#id41" id="id2">1</a>。加性回归树通常以更接近机器学习的术语而不是统计术语来讨论 <span id="id3">[<a class="reference internal" href="references.html#id148">69</a>]</span>。从某种意义上说，相较其他章节中的模型而言，<code class="docutils literal notranslate"><span class="pre">BART</span></code> 更像一个“一劳永逸的模型”。</p>
+<p>决策树是表示分段常数或阶跃函数的另外一种比较灵活方式。在这里，我们将重点关注<strong>贝叶斯加性回归树（ BART ）</strong> 。贝叶斯加性回归树是一种贝叶斯非参数模型，它通过对多个决策树求和来获得更灵活的模型 <a class="footnote-reference brackets" href="#id42" id="id2">1</a>。加性回归树通常以更接近机器学习的术语而不是统计术语来讨论 <span id="id3">[<a class="reference internal" href="references.html#id148">69</a>]</span>。从某种意义上说，相较其他章节中的模型而言，<code class="docutils literal notranslate"><span class="pre">BART</span></code> 更像一个“一劳永逸的模型”。</p>
 <p>在 <code class="docutils literal notranslate"><span class="pre">BART</span></code> 的文献中，人们通常不讨论基函数，而是讨论学习器，但总体思路非常相似。我们使用简单函数（也称为学习器）的组合来逼近复杂函数，并具备足够的正则化，这样就可以在模型不太复杂的情况下获得足够的灵活性。使用多个学习器来求解同一问题的方法被称为<strong>集成方法（ Ensemble Methods ）</strong>，其中学习器可以是任何统计模型或数据算法。集成方法基于这样一个基本观测：<strong>组合多个弱学习器通常比使用单个强学习器效果更好</strong>。为了在准确度和泛化方面获得良好效果，一般认为基础学习器应该尽可能准确，并且尽可能多样化 <span id="id4">[<a class="reference internal" href="references.html#id6">70</a>]</span> 。 <code class="docutils literal notranslate"><span class="pre">BART</span></code> 的主要贝叶斯思想是：<strong>决策树很容易过拟合，因此我们为每棵树添加一个正则化先验（ 或收缩先验 ），以使其表现为一个弱学习器</strong>。</p>
 <p>为了将上述描述转化为可以理解和应用的东西，我们下面会首先讨论决策树。如果你已经熟悉这个板块的内容，可以跳过下一节。</p>
 <div class="section" id="decision-trees">
@@ -498,13 +508,13 @@
 <p>PYMC3 中的贝叶斯加性回归树实现并未使用共轭先验，并且在其他方​​面也存在差异。本节中将专注于 PYMC3 实现，并将其用于我们的示例。</p>
 <div class="section" id="prior-independence">
 <span id="id10"></span><h3>7.3.1 先验的独立性<a class="headerlink" href="#prior-independence" title="Permalink to this headline">¶</a></h3>
-<p>为了简化先验的指定，我们假设树结构 <span class="math notranslate nohighlight">\(\mathcal{T}_j\)</span> 和叶子节点值 <span class="math notranslate nohighlight">\(\mathcal{M}_j\)</span> 是独立的。此外，这些先验独立于其他参数，即方程 <a class="reference internal" href="#equation-eq-bart">(71)</a> 中的 <span class="math notranslate nohighlight">\(\theta\)</span>。通过独立性假设，我们可以将先验的指定分成几部分。否则，我们需要发明一种方法来为整个树空间指定一个先验 <a class="footnote-reference brackets" href="#id43" id="id11">2</a>。</p>
+<p>为了简化先验的指定，我们假设树结构 <span class="math notranslate nohighlight">\(\mathcal{T}_j\)</span> 和叶子节点值 <span class="math notranslate nohighlight">\(\mathcal{M}_j\)</span> 是独立的。此外，这些先验独立于其他参数，即方程 <a class="reference internal" href="#equation-eq-bart">(71)</a> 中的 <span class="math notranslate nohighlight">\(\theta\)</span>。通过独立性假设，我们可以将先验的指定分成几部分。否则，我们需要发明一种方法来为整个树空间指定一个先验 <a class="footnote-reference brackets" href="#id44" id="id11">2</a>。</p>
 </div>
 <div class="section" id="mathcal-t-j">
 <span id="prior-for-the-tree-structure-mathcalt-j"></span><h3>7.3.2 树结构 <span class="math notranslate nohighlight">\(\mathcal{T}_j\)</span> 的先验<a class="headerlink" href="#mathcal-t-j" title="Permalink to this headline">¶</a></h3>
 <p>树结构 <span class="math notranslate nohighlight">\(\mathcal{T}_j\)</span> 的先验由三个方面指定：</p>
 <ul class="simple">
-<li><p>深度为 <span class="math notranslate nohighlight">\(d=(0, 1, 2, \dots)\)</span> 的节点是非叶子结点的概率，由 <span class="math notranslate nohighlight">\(\alpha^{d}\)</span> 给出。 <span class="math notranslate nohighlight">\(\alpha\)</span> 建议为 <span class="math notranslate nohighlight">\(\in [0, 0.5)\)</span> <span id="id12">[<a class="reference internal" href="references.html#id67">72</a>]</span> <a class="footnote-reference brackets" href="#id45" id="id13">3</a>。</p></li>
+<li><p>深度为 <span class="math notranslate nohighlight">\(d=(0, 1, 2, \dots)\)</span> 的节点是非叶子结点的概率，由 <span class="math notranslate nohighlight">\(\alpha^{d}\)</span> 给出。 <span class="math notranslate nohighlight">\(\alpha\)</span> 建议为 <span class="math notranslate nohighlight">\(\in [0, 0.5)\)</span> <span id="id12">[<a class="reference internal" href="references.html#id67">72</a>]</span> <a class="footnote-reference brackets" href="#id46" id="id13">3</a>。</p></li>
 <li><p>切分变量的分布。也就是树中包含哪些预测变量（即 <a class="reference internal" href="#fig-decision-tree"><span class="std std-numref">Fig. 119</span></a> 中的 <span class="math notranslate nohighlight">\(X_i\)</span> ）。最常见的是所有可用预测变量上的均匀分布。</p></li>
 <li><p>切分规则的分布。也就是，一旦选择了一个切分用的预测变量，我们使用什么值做出决策（ 即 <a class="reference internal" href="#fig-decision-tree"><span class="std std-numref">Fig. 119</span></a> 中的 <span class="math notranslate nohighlight">\(c_i\)</span> ）。这通常是可用值上的均匀分布。</p></li>
 </ul>
@@ -512,7 +522,7 @@
 <div class="section" id="mu-ij-m">
 <span id="bart-mu-m-priors"></span><h3>7.3.3 叶子结点值 <span class="math notranslate nohighlight">\(\mu_{ij}\)</span> 和树数量 <span class="math notranslate nohighlight">\(m\)</span> 的先验<a class="headerlink" href="#mu-ij-m" title="Permalink to this headline">¶</a></h3>
 <p>默认情况下，PYMC3 不会为叶子节点的值设置先验，而是在采样算法的每次迭代中返回残差的均值。</p>
-<p>集成方法中决策树的数量 <span class="math notranslate nohighlight">\(m\)</span> 通常也是用户预定义的。实践表明，设置 <span class="math notranslate nohighlight">\(m=200\)</span> 甚至低至 <span class="math notranslate nohighlight">\(m=10\)</span> 的值都能获得良好的结果。此外，推断对于 <span class="math notranslate nohighlight">\(m\)</span> 的确切值来说可能非常稳健。因此，一般的经验法则是多尝试一些 <span class="math notranslate nohighlight">\(m\)</span> 值，并执行交叉验证以选择最适合特定问题的值 <a class="footnote-reference brackets" href="#id46" id="id14">4</a>。</p>
+<p>集成方法中决策树的数量 <span class="math notranslate nohighlight">\(m\)</span> 通常也是用户预定义的。实践表明，设置 <span class="math notranslate nohighlight">\(m=200\)</span> 甚至低至 <span class="math notranslate nohighlight">\(m=10\)</span> 的值都能获得良好的结果。此外，推断对于 <span class="math notranslate nohighlight">\(m\)</span> 的确切值来说可能非常稳健。因此，一般的经验法则是多尝试一些 <span class="math notranslate nohighlight">\(m\)</span> 值，并执行交叉验证以选择最适合特定问题的值 <a class="footnote-reference brackets" href="#id47" id="id14">4</a>。</p>
 </div>
 </div>
 <div class="section" id="fitting-bayesian-additive-regression-trees">
@@ -557,11 +567,11 @@ Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 <a class="reference internal image-reference" href="../_images/BART_bikes.png"><img alt="../_images/BART_bikes.png" src="../_images/BART_bikes.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 123 </span><span class="caption-text">使用 BART（ 特别是 <code class="docutils literal notranslate"><span class="pre">bart_model</span></code> ）拟合的自行车数据（黑点）。带阴影的曲线代表均值参数的 <span class="math notranslate nohighlight">\(94\%\)</span> HDI 区间，蓝色曲线代表均值的趋势。与 <a class="reference internal" href="chp_05.html#fig-bikes-data2"><span class="std std-numref">Fig. 93</span></a> 进行比较。</span><a class="headerlink" href="#fig-bart-bikes" title="Permalink to this image">¶</a></p>
 </div>
-<p>围绕贝叶斯加性回归树的文献倾向于强调其通常无需调整即可提供有竞争力的答案 <a class="footnote-reference brackets" href="#id47" id="id18">5</a>。例如，与拟合样条曲线相比，我们无需担心手动设置连接点或选择先验来调整连接点。当然，也有人可能会争辩说，对于某些问题，能够调整连接点对问题或许是有益的。</p>
+<p>围绕贝叶斯加性回归树的文献倾向于强调其通常无需调整即可提供有竞争力的答案 <a class="footnote-reference brackets" href="#id48" id="id18">5</a>。例如，与拟合样条曲线相比，我们无需担心手动设置连接点或选择先验来调整连接点。当然，也有人可能会争辩说，对于某些问题，能够调整连接点对问题或许是有益的。</p>
 </div>
 <div class="section" id="generalized-bart-models">
 <span id="id19"></span><h2>7.6 广义贝叶斯加性回归树<a class="headerlink" href="#generalized-bart-models" title="Permalink to this headline">¶</a></h2>
-<p>贝叶斯加性回归树的 PYMC3 实现试图让似然的调整变得更简单 <a class="footnote-reference brackets" href="#id48" id="id20">6</a> ，类似于在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中的广义线性模型。让我们看看如何在贝叶斯加性回归树中使用伯努利似然。对于这个例子，我们将使用太空流感的疾病数据集，该流感主要影响年轻人和老年人，但不影响中年人。幸运的是，太空流感并不严重，因为它已经完全被控制了。在此数据集中，记录了接受太空流感检测的人及检测结果，如确诊 ( <span class="math notranslate nohighlight">\(1\)</span> ) 还是健康 ( <span class="math notranslate nohighlight">\(0\)</span> ) 、受检者年龄等。使用代码 <a class="reference internal" href="#bart-model-gauss"><span class="std std-ref">bart_model_gauss</span></a> 中具有高斯似然的贝叶斯加性回归树模型作为参考，可以看出伯努利似然模型与之差别不大：</p>
+<p>贝叶斯加性回归树的 PYMC3 实现试图让似然的调整变得更简单 <a class="footnote-reference brackets" href="#id49" id="id20">6</a> ，类似于在 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref"> 第 3 章 </span></a> 中的广义线性模型。让我们看看如何在贝叶斯加性回归树中使用伯努利似然。对于这个例子，我们将使用太空流感的疾病数据集，该流感主要影响年轻人和老年人，但不影响中年人。幸运的是，太空流感并不严重，因为它已经完全被控制了。在此数据集中，记录了接受太空流感检测的人及检测结果，如确诊 ( <span class="math notranslate nohighlight">\(1\)</span> ) 还是健康 ( <span class="math notranslate nohighlight">\(0\)</span> ) 、受检者年龄等。使用代码 <a class="reference internal" href="#bart-model-gauss"><span class="std std-ref">bart_model_gauss</span></a> 中具有高斯似然的贝叶斯加性回归树模型作为参考，可以看出伯努利似然模型与之差别不大：</p>
 <div class="literal-block-wrapper docutils container" id="bart-model-bern">
 <div class="code-block-caption"><span class="caption-number">Listing 103 </span><span class="caption-text">bart_model_bern</span><a class="headerlink" href="#bart-model-bern" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
@@ -633,7 +643,7 @@ Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 <a class="reference internal image-reference" href="../_images/pdp_vs_ice_toy.png"><img alt="../_images/pdp_vs_ice_toy.png" src="../_images/pdp_vs_ice_toy.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 129 </span><span class="caption-text">部分依赖图与单体条件期望图。左图为 <span class="math notranslate nohighlight">\(X_1\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span> 之间的散点图，中图为部分依赖图，右图为单体条件期望图。</span><a class="headerlink" href="#fig-pdp-vs-ice-toy" title="Permalink to this image">¶</a></p>
 </div>
-<p><a class="reference internal" href="#fig-pdp-vs-ice-toy"><span class="std std-numref">Fig. 129</span></a> 的左图绘制了 <span class="math notranslate nohighlight">\(X_1\)</span> 与 <span class="math notranslate nohighlight">\(Y\)</span> 的散点图。考虑到 <span class="math notranslate nohighlight">\(X_1,X_2\)</span> 之间存在交互效应， <span class="math notranslate nohighlight">\(Y\)</span> 值随 <span class="math notranslate nohighlight">\(X_1\)</span> 线性增加或减少的关系依赖于 <span class="math notranslate nohighlight">\(X_2\)</span> 的值，该图表现出了 <em>X 形</em> 的模式。中图显示了一个部分依赖图，根据图可以看出关系是平坦的，这在 <em>平均</em> 时是正确的，但隐藏了交互作用。右图为个体条件期望图，更好地揭示这种关系，因为每条灰色曲线代表了一个 <span class="math notranslate nohighlight">\(X_{0,2}\)</span> 的值 <a class="footnote-reference brackets" href="#id49" id="id29">7</a> 。图中蓝色曲线是灰色曲线的均值，虽然与部分依赖图不完全相同，但显示了相同的信息 <a class="footnote-reference brackets" href="#id50" id="id30">8</a>。</p>
+<p><a class="reference internal" href="#fig-pdp-vs-ice-toy"><span class="std std-numref">Fig. 129</span></a> 的左图绘制了 <span class="math notranslate nohighlight">\(X_1\)</span> 与 <span class="math notranslate nohighlight">\(Y\)</span> 的散点图。考虑到 <span class="math notranslate nohighlight">\(X_1,X_2\)</span> 之间存在交互效应， <span class="math notranslate nohighlight">\(Y\)</span> 值随 <span class="math notranslate nohighlight">\(X_1\)</span> 线性增加或减少的关系依赖于 <span class="math notranslate nohighlight">\(X_2\)</span> 的值，该图表现出了 <em>X 形</em> 的模式。中图显示了一个部分依赖图，根据图可以看出关系是平坦的，这在 <em>平均</em> 时是正确的，但隐藏了交互作用。右图为个体条件期望图，更好地揭示这种关系，因为每条灰色曲线代表了一个 <span class="math notranslate nohighlight">\(X_{0,2}\)</span> 的值 <a class="footnote-reference brackets" href="#id50" id="id29">7</a> 。图中蓝色曲线是灰色曲线的均值，虽然与部分依赖图不完全相同，但显示了相同的信息 <a class="footnote-reference brackets" href="#id51" id="id30">8</a>。</p>
 </div>
 </div>
 <div class="section" id="sec-variable-selection">
@@ -655,7 +665,7 @@ Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 <p><a class="reference internal" href="#fig-bart-vi-toy"><span class="std std-numref">Fig. 130</span></a> 之类的图可用于帮助将更重要的变量与不太重要的变量分开 <span id="id34">[<a class="reference internal" href="references.html#id5">71</a>, <a class="reference internal" href="references.html#id71">79</a>]</span>。我们可以查看 <span class="math notranslate nohighlight">\(m\)</span> 从低值转移到高值的过程中会发生什么。如果相对重要性降低，则变量 <em>更重要</em> ，如果变量重要性增加，则变量 <em>不那么重要</em> 。例如，在第一个图中，很明显对于不同的 <span class="math notranslate nohighlight">\(m\)</span> 值，前两个变量比其他变量重要得多。对于前 <span class="math notranslate nohighlight">\(5\)</span> 个变量，可以从第二个子图得出类似的结论。在最后一个子图上，所有变量都同样（不）重要。</p>
 <p>这种评估变量重要性的方法可能很有用，但也很棘手。在某些情况下，为变量重要性设置信念区间会有所帮助，而不仅仅是点估计。我们可以通过使用相同的参数和数据多次运行贝叶斯加性回归树来实现这一点。然而，缺乏将重要变量与不重要变量分开的明确阈值，可能被视为问题。目前已经提出了一些替代方法 <span id="id35">[<a class="reference internal" href="references.html#id71">79</a>, <a class="reference internal" href="references.html#id76">80</a>]</span>。其中一种方法可以总结如下：</p>
 <ol class="simple">
-<li><p>使用较小的 <span class="math notranslate nohighlight">\(m\)</span> 值（ 例如 <span class="math notranslate nohighlight">\(25\)</span> ）多次拟合模型（大约 <span class="math notranslate nohighlight">\(50\)</span> 次），记录均方根误差 <a class="footnote-reference brackets" href="#id51" id="id36">9</a> 。</p></li>
+<li><p>使用较小的 <span class="math notranslate nohighlight">\(m\)</span> 值（ 例如 <span class="math notranslate nohighlight">\(25\)</span> ）多次拟合模型（大约 <span class="math notranslate nohighlight">\(50\)</span> 次），记录均方根误差 <a class="footnote-reference brackets" href="#id52" id="id36">9</a> 。</p></li>
 <li><p>剔除所有 <span class="math notranslate nohighlight">\(50\)</span> 次运行中信息最少的变量。</p></li>
 <li><p>重复 <span class="math notranslate nohighlight">\(1\)</span> 和 <span class="math notranslate nohighlight">\(2\)</span> ，每次在模型中剔除一个变量。一旦达到模型中指定数量的预测变量（不一定是 <span class="math notranslate nohighlight">\(1\)</span> ），就停止迭代。</p></li>
 <li><p>最后，选择平均均方根误差最小的模型。</p></li>
@@ -675,11 +685,11 @@ Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 <li><p>树的深度 <span class="math notranslate nohighlight">\(\alpha\)</span></p></li>
 <li><p>切分变量的分布</p></li>
 </ul>
-<p>我们已经看到了改变树数量的效果，这被证明可以为 <span class="math notranslate nohighlight">\(50-200\)</span> 区间内的值提供可靠的预测。还有很多例子表明使用交叉验证来确定这个数字可能是有益的。我们还可以看到，通过扫描 <span class="math notranslate nohighlight">\(m\)</span> 来寻找相对较低的值，例如 <span class="math notranslate nohighlight">\(25-100\)</span> 范围内的值，能够评估变量的重要性。我们没有费心去改变 <span class="math notranslate nohighlight">\(\alpha=0.25\)</span> 的默认值，因为此调整似乎影响更小，尽管仍然需要研究来更好地理解这个先验 <span id="id38">[<a class="reference internal" href="references.html#id67">72</a>]</span>。与 <span class="math notranslate nohighlight">\(m\)</span> 一样，交叉验证也可用于调整它以提高效率。最后，PYMC3 提供了传递权重向量的选项，因此不同变量具有不同的被选中先验概率，当用户有证据表明某些变量可能比其他变量更重要时，这很有用，否则最好保持均匀分布。已经提出了更复杂的基于 Dirichlet 的先验来实现这一目标，并在需要归纳稀疏性时允许更好的推断 <a class="footnote-reference brackets" href="#id52" id="id39">10</a> 。这在我们有很多预测变量，但只有少数可能有贡献，且事先不知道哪些最相关的场景中非常有用。这种情况比较常见，例如，在基因研究中，测量数百或更多基因的活性相对容易，但它们之间的关系不仅未知，而且是科学家研究的目标。</p>
+<p>我们已经看到了改变树数量的效果，这被证明可以为 <span class="math notranslate nohighlight">\(50-200\)</span> 区间内的值提供可靠的预测。还有很多例子表明使用交叉验证来确定这个数字可能是有益的。我们还可以看到，通过扫描 <span class="math notranslate nohighlight">\(m\)</span> 来寻找相对较低的值，例如 <span class="math notranslate nohighlight">\(25-100\)</span> 范围内的值，能够评估变量的重要性。我们没有费心去改变 <span class="math notranslate nohighlight">\(\alpha=0.25\)</span> 的默认值，因为此调整似乎影响更小，尽管仍然需要研究来更好地理解这个先验 <span id="id38">[<a class="reference internal" href="references.html#id67">72</a>]</span>。与 <span class="math notranslate nohighlight">\(m\)</span> 一样，交叉验证也可用于调整它以提高效率。最后，PYMC3 提供了传递权重向量的选项，因此不同变量具有不同的被选中先验概率，当用户有证据表明某些变量可能比其他变量更重要时，这很有用，否则最好保持均匀分布。已经提出了更复杂的基于 Dirichlet 的先验来实现这一目标，并在需要归纳稀疏性时允许更好的推断 <a class="footnote-reference brackets" href="#id53" id="id39">10</a> 。这在我们有很多预测变量，但只有少数可能有贡献，且事先不知道哪些最相关的场景中非常有用。这种情况比较常见，例如，在基因研究中，测量数百或更多基因的活性相对容易，但它们之间的关系不仅未知，而且是科学家研究的目标。</p>
 <p>大多数贝叶斯加性回归树的实现都是在单个软件包场景中完成的，在某些情况下甚至面向特定的子学科。它们通常不是概率编程语言的一部分，因此不希望用户过多地调整贝叶斯加性回归树模型。因此，即使可以直接为 <span class="math notranslate nohighlight">\(m\)</span> 设置先验，在实践中通常也不建议这样做。相反，贝叶斯加性回归树相关的文献鼓励在默认参数下的良好性能，同时认识到可以使用交叉验证来获得额外的收益。 PYMC3 中的贝叶斯加性回归树实现稍微偏离了这一传统，允许了一些额外的灵活性，但与高斯、泊松分布，甚至像高斯过程这样的非参数分布相比，这种灵活性仍然非常有限。预计会很快出现更灵活的贝叶斯加性回归树的软件实现，以允许用户构建灵活和针对问题的模型。</p>
 </div>
 <div class="section" id="exercises7">
-<span id="id40"></span><h2>7.9 练习<a class="headerlink" href="#exercises7" title="Permalink to this headline">¶</a></h2>
+<span id="id40"></span><h2>习题<a class="headerlink" href="#exercises7" title="Permalink to this headline">¶</a></h2>
 <p><strong>7E1.</strong> Explain each of the following</p>
 <ol class="simple">
 <li><p>How is BART different from linear regression and splines.</p></li>
@@ -710,37 +720,39 @@ Y \sim&amp; \; \mathcal{N}(\mu, \sigma)
 <p>Use Partial Dependence Plots and Individual Conditional Expectation. To find out how the different covariates contribute the probability of identifying “Adelie”, and “Chinstrap” species.</p>
 <p>Refit the model but this time using only 3 covariates “bill_depth_m”, “flipper_length_mm”, and “body_mass_g”. How results differ from using the four covariates? Justify.</p>
 <p><strong>7M12.</strong> Use BART to redo the penguin classification we performed in Section <a class="reference internal" href="chp_03.html#classifying-penguins"><span class="std std-ref">3.4.2 结果变量为类别变量时 — 分类模型</span></a>. Build a model with the covariates “bill_length_mm”, “bill_depth_mm”, “flipper_length_mm”, and “body_mass_g” and assess their relative variable importance. Compare the results with the PDPs from the previous exercise.</p>
-<hr class="docutils"/>
+</div>
+<div class="section" id="id41">
+<h2>参考文献<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h2>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id41"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
-<dd><p>Maybe you have heard about its non-Bayesian cousin: Random Forest   <span id="id42">[<a class="reference internal" href="references.html#id149">81</a>]</span></p>
+<dt class="label" id="id42"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dd><p>Maybe you have heard about its non-Bayesian cousin: Random Forest   <span id="id43">[<a class="reference internal" href="references.html#id149">81</a>]</span></p>
 </dd>
-<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id11">2</a></span></dt>
-<dd><p>for alternatives see   <span id="id44">[<a class="reference internal" href="references.html#id8">82</a>, <a class="reference internal" href="references.html#id7">83</a>]</span></p>
+<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id11">2</a></span></dt>
+<dd><p>for alternatives see   <span id="id45">[<a class="reference internal" href="references.html#id8">82</a>, <a class="reference internal" href="references.html#id7">83</a>]</span></p>
 </dd>
-<dt class="label" id="id45"><span class="brackets"><a class="fn-backref" href="#id13">3</a></span></dt>
+<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id13">3</a></span></dt>
 <dd><p>Node depth is defined as distance from the root. Thus, the root   itself has depth 0, its first child node has depth 1, etc.</p>
 </dd>
-<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id14">4</a></span></dt>
+<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id14">4</a></span></dt>
 <dd><p>In principle we can go fully Bayesian and estimate the number of   tree <span class="math notranslate nohighlight">\(m\)</span> from the data, but there are reports showing this is not   always the best approach. More research is likely needed in this   area.</p>
 </dd>
-<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id18">5</a></span></dt>
+<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id18">5</a></span></dt>
 <dd><p>The same literature generally shows that using cross-validation to   tune the number of trees and/or the prior over the depth of the tree   can be further beneficial.</p>
 </dd>
-<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id20">6</a></span></dt>
+<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id20">6</a></span></dt>
 <dd><p>Other implementations are less flexible or require adjustments   under the hood to make this work.</p>
 </dd>
-<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id29">7</a></span></dt>
+<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id29">7</a></span></dt>
 <dd><p>This notation means the variables (<span class="math notranslate nohighlight">\(X_0\)</span>, <span class="math notranslate nohighlight">\(X_2\)</span>), that is,   excluding <span class="math notranslate nohighlight">\(X_1\)</span></p>
 </dd>
-<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id30">8</a></span></dt>
+<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id30">8</a></span></dt>
 <dd><p>The mean of the ICE curves and the mean partial dependence curve   are slightly different. This is due to internal details on how these   plots were made including the order in which we average over the   posterior samples or over the observations. What really matter is   the general features, for instance in this case that both curves are   essentially flat. Also, to speed up computation we evaluate <span class="math notranslate nohighlight">\(X_1\)</span>   over 10 equally separated points for partial dependence plots and we   subsample <span class="math notranslate nohighlight">\(X_{0,2}\)</span> for computing the individual conditional   expectation plot</p>
 </dd>
-<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id36">9</a></span></dt>
+<dt class="label" id="id52"><span class="brackets"><a class="fn-backref" href="#id36">9</a></span></dt>
 <dd><p>The original proposal suggests 10, but our experience with the   BART implementation in PyMC3 is that values of <span class="math notranslate nohighlight">\(m\)</span> below 20 or 25   could be problematic.</p>
 </dd>
-<dt class="label" id="id52"><span class="brackets"><a class="fn-backref" href="#id39">10</a></span></dt>
+<dt class="label" id="id53"><span class="brackets"><a class="fn-backref" href="#id39">10</a></span></dt>
 <dd><p>This is likely to be added in the future versions of PyMC3.</p>
 </dd>
 </dl>

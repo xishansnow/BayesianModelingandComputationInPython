@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>第十一章: 附加主题 — Bayesian Modeling and Computation in Python</title>
+<title>第十一章：附加主题 — Bayesian Modeling and Computation in Python</title>
 <link href="../_static/css/theme.css" rel="stylesheet"/>
 <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet"/>
 <link href="../_static/vendor/fontawesome/5.13.0/css/all.min.css" rel="stylesheet"/>
@@ -92,12 +92,12 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_01.html">
-   第一章: 贝叶斯推断
+   第一章：贝叶斯推断
   </a>
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_02.html">
-   第二章: 贝叶斯模型的探索性分析
+   第二章：贝叶斯模型的探索性分析
   </a>
 </li>
 <li class="toctree-l1">
@@ -142,7 +142,7 @@
 </li>
 <li class="toctree-l1 current active">
 <a class="current reference internal" href="#">
-   第十一章: 附加主题
+   第十一章：附加主题
   </a>
 </li>
 <li class="toctree-l1">
@@ -152,7 +152,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="references.html">
-   References
+   参考文献
   </a>
 </li>
 </ul>
@@ -424,7 +424,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#hmc">
-     11.9.3 汉密尔顿蒙特卡洛采样器（ HMC ）
+     11.9.3 哈密顿蒙特卡洛采样器（ HMC ）
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
@@ -476,6 +476,11 @@
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id97">
+   参考文献
+  </a>
+</li>
 </ul>
 </nav>
 </div>
@@ -485,7 +490,7 @@
 <div class="col-12 col-md-9 pl-md-3 pr-md-0">
 <!-- Table of contents that is only displayed when printing the page -->
 <div class="onlyprint" id="jb-print-docs-body">
-<h1>第十一章: 附加主题</h1>
+<h1>第十一章：附加主题</h1>
 <!-- Table of contents -->
 <div id="print-main-content">
 <div id="jb-print-toc">
@@ -727,7 +732,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#hmc">
-     11.9.3 汉密尔顿蒙特卡洛采样器（ HMC ）
+     11.9.3 哈密顿蒙特卡洛采样器（ HMC ）
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
@@ -779,6 +784,11 @@
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id97">
+   参考文献
+  </a>
+</li>
 </ul>
 </nav>
 </div>
@@ -786,13 +796,13 @@
 </div>
 <div>
 <div class="tex2jax_ignore mathjax_ignore section" id="app">
-<span id="id1"></span><h1>第十一章: 附加主题<a class="headerlink" href="#app" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>第十一章：附加主题<a class="headerlink" href="#app" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
 <p>本章与其他章节不同，它不是关于任何特定主题的。相反，它是不同主题的集合，通过补充其他章节中讨论的主题，为本书的其余部分提供支撑。这些主题适用于有兴趣深入了解每种理论和方法的读者。就写作风格而言，本章将比其他章节更具理论性和抽象性。</p>
 <div class="section" id="probability-background">
 <span id="id2"></span><h2>11.1 概率背景<a class="headerlink" href="#probability-background" title="Permalink to this headline">¶</a></h2>
-<p>西班牙语单词 <code class="docutils literal notranslate"><span class="pre">azahar</span></code> 和 <code class="docutils literal notranslate"><span class="pre">azar</span></code> 含义不同并非纯属运气，因为它们都来自于阿拉伯语 <a class="footnote-reference brackets" href="#id104" id="id3">1</a>。从远古时代开始至今，一些机会游戏会使用具有两个面的骨头，这种骨头类似于硬币或双面骰子。为了更容易区分一侧和另一侧，其中至少一侧有明显的标记，古代阿拉伯人常用一朵花做标记。随着时间推移，西班牙语逐步采用了 <code class="docutils literal notranslate"><span class="pre">azahar</span></code> 一词来表示某些花，而用 <code class="docutils literal notranslate"><span class="pre">azar</span></code> 表示随机性。</p>
-<p>概率论发展的动机之一可以追溯到理解机会游戏，并试图在此过程中发点小财。因此，让我们简要从六面骰子（ Die With Six Faces ）开始，介绍概率论中一些核心概念<a class="footnote-reference brackets" href="#id105" id="id4">2</a>。每次掷骰子时，只能获得一个从 <span class="math notranslate nohighlight">\(1\)</span> 到 <span class="math notranslate nohighlight">\(6\)</span> 的整数，而且他们之间相互没有依从喜好。使用 Python，可以通过以下方式编写这样的骰子游戏：</p>
+<p>西班牙语单词 <code class="docutils literal notranslate"><span class="pre">azahar</span></code> 和 <code class="docutils literal notranslate"><span class="pre">azar</span></code> 含义不同并非纯属运气，因为它们都来自于阿拉伯语 <a class="footnote-reference brackets" href="#id98" id="id3">1</a>。从远古时代开始至今，一些机会游戏会使用具有两个面的骨头，这种骨头类似于硬币或双面骰子。为了更容易区分一侧和另一侧，其中至少一侧有明显的标记，古代阿拉伯人常用一朵花做标记。随着时间推移，西班牙语逐步采用了 <code class="docutils literal notranslate"><span class="pre">azahar</span></code> 一词来表示某些花，而用 <code class="docutils literal notranslate"><span class="pre">azar</span></code> 表示随机性。</p>
+<p>概率论发展的动机之一可以追溯到理解机会游戏，并试图在此过程中发点小财。因此，让我们简要从六面骰子（ Die With Six Faces ）开始，介绍概率论中一些核心概念<a class="footnote-reference brackets" href="#id99" id="id4">2</a>。每次掷骰子时，只能获得一个从 <span class="math notranslate nohighlight">\(1\)</span> 到 <span class="math notranslate nohighlight">\(6\)</span> 的整数，而且他们之间相互没有依从喜好。使用 Python，可以通过以下方式编写这样的骰子游戏：</p>
 <div class="literal-block-wrapper docutils container" id="die">
 <div class="code-block-caption"><span class="caption-number">Listing 161 </span><span class="caption-text">die</span><a class="headerlink" href="#die" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">die</span><span class="p">():</span>
@@ -829,15 +839,14 @@
 <p>尽管如此，数据收集和分析还是可以帮助我们估计结果的频率列表 ，事实上，随着 “N” 值的增加，这种能力会有所提高。运行实验 <code class="docutils literal notranslate"><span class="pre">N=10000</span></code> 次，你会看到获得的频率约为 <span class="math notranslate nohighlight">\(0.17\)</span> 。如果骰子上的每个数字有同样的机会，该结果也表明 <span class="math notranslate nohighlight">\(0.17 \approx \frac{1}{6}\)</span> 正是我们所预期的。</p>
 <p>上述两点观测不仅限于骰子和机会游戏。</p>
 <p>如果每天称体重，我们会得到不同的值，因为体重与吃的食物量、喝的水、上厕所的次数、秤的精度、穿的衣服和许多其他因素有关。因此，单次测量可能无法代表我们的体重，但重要的是，数据测量和/或收集伴随着不确定性。</p>
-<p>统计学基本上是关于如何处理实际问题中的不确定性的领域，概率论是统计学的理论支柱之一。概率论帮助我们将讨论的内容形式化，就像刚刚讨论的那样，并将其扩展到骰子之外。这样我们就可以更好地提出和解答与预期结果相关的问题，例如当增加实验次数时会发生什么？什么事件比另一个事件更有机会？</p>
+<p><strong>统计学基本上是关于如何处理实际问题中的不确定性的领域，概率论是统计学的理论支柱之一</strong>。概率论帮助我们将讨论的内容形式化，就像刚刚讨论的那样，并将其扩展到骰子之外。这样我们就可以更好地提出和解答与预期结果相关的问题，例如当增加实验次数时会发生什么？什么事件比另一个事件更有机会？</p>
 <div class="section" id="probability">
 <span id="id5"></span><h3>11.1.1 概率<a class="headerlink" href="#probability" title="Permalink to this headline">¶</a></h3>
 <p>概率是一种允许我们量化不确定性的理论数学工具。像其他数学对象和理论一样，它们完全可以从纯数学角度来证明。然而，从实践角度来看，我们可以证明概率是通过进行实验、收集观测数据甚至在进行计算模拟时自然产生的。为简单起见，我们将讨论实验，因为我们在非常广泛的意义上在使用该术语。</p>
 <p>我们可以用数学集合来思考概率。 <strong>样本空间</strong> <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> 是来自<strong>实验</strong>的所有可能事件的集合。 <strong>事件</strong> <span class="math notranslate nohighlight">\(A\)</span> 是 <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> 的子集。在我们进行实验时，称 <span class="math notranslate nohighlight">\(A\)</span> 事件发生，并得到集合 <span class="math notranslate nohighlight">\(A\)</span> 作为结果。对于典型的六面骰子，可以写为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-sample-space-dice">
-<span class="eqno">(85)<a class="headerlink" href="#equation-eq-sample-space-dice" title="Permalink to this equation">¶</a></span>\[\mathcal{X} = \{1, 2, 3, 4, 5, 6\}
-  \]</div>
-<p>我们可以将事件 <span class="math notranslate nohighlight">\(A\)</span> 定义为 <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> 的任何子集，例如，得到偶数 <span class="math notranslate nohighlight">\(A = \{2, 4, 6\}\)</span>。我们将概率与事件联系起来，如果想表示事件 <span class="math notranslate nohighlight">\(A\)</span> 的概率，可以写成 <span class="math notranslate nohighlight">\(P(A=\{2, 4, 6\})\)</span> 或更简洁的 <span class="math notranslate nohighlight">\(P(A)\)</span> 。概率函数 <span class="math notranslate nohighlight">\(P\)</span> 将事件 <span class="math notranslate nohighlight">\(A\)</span> 作为输入并返回 <span class="math notranslate nohighlight">\(P(A)\)</span> 。概率 <span class="math notranslate nohighlight">\(P(A)\)</span> 可以取区间 <span class="math notranslate nohighlight">\([0,1]\)</span> 中的任何数字。如果事件从未发生，则该事件的概率为 <span class="math notranslate nohighlight">\(0\)</span>，例如 <span class="math notranslate nohighlight">\(P(A=-1)=0\)</span> ；如果事件总是发生，则概率为 <span class="math notranslate nohighlight">\(1\)</span> ，例如 <span class="math notranslate nohighlight">\(P(A=\{1, 2,3,4,5,6\})=1\)</span> 。如果事件不能一起发生，我们就称事件是互斥的，例如，如果事件 <span class="math notranslate nohighlight">\(A_1​​\)</span> 代表奇数， <span class="math notranslate nohighlight">\(A_2\)</span> 代表偶数数字，那么掷骰子同时得到 <span class="math notranslate nohighlight">\(A_1​​\)</span> 和 <span class="math notranslate nohighlight">\(A_2\)</span> 的概率为 <span class="math notranslate nohighlight">\(0\)</span> 。如果事件 <span class="math notranslate nohighlight">\(A_1, A_2, \cdots A_n\)</span> 是互斥的，意味着这些事件不能同时发生，那么 <span class="math notranslate nohighlight">\(\sum_i^n P(A_i) = 1\)</span> 。继续 <span class="math notranslate nohighlight">\(A_1​​\)</span> 表示奇数、 <span class="math notranslate nohighlight">\(A_2\)</span> 表示偶数的示例，掷骰子的结果为 <span class="math notranslate nohighlight">\(A_1​​\)</span> 或 <span class="math notranslate nohighlight">\(A_2\)</span> 的概率为 <span class="math notranslate nohighlight">\(1\)</span> 。满足此性质的任何函数都是有效的概率函数。我们可以将概率视为分配给可能事件的正守恒量 <a class="footnote-reference brackets" href="#id107" id="id6">3</a> 。</p>
+<span class="eqno">(85)<a class="headerlink" href="#equation-eq-sample-space-dice" title="Permalink to this equation">¶</a></span>\[\mathcal{X} = \{1, 2, 3, 4, 5, 6\}\]</div>
+<p>我们可以将事件 <span class="math notranslate nohighlight">\(A\)</span> 定义为 <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> 的任何子集，例如，得到偶数 <span class="math notranslate nohighlight">\(A = \{2, 4, 6\}\)</span>。我们将概率与事件联系起来，如果想表示事件 <span class="math notranslate nohighlight">\(A\)</span> 的概率，可以写成 <span class="math notranslate nohighlight">\(P(A=\{2, 4, 6\})\)</span> 或更简洁的 <span class="math notranslate nohighlight">\(P(A)\)</span> 。概率函数 <span class="math notranslate nohighlight">\(P\)</span> 将事件 <span class="math notranslate nohighlight">\(A\)</span> 作为输入并返回 <span class="math notranslate nohighlight">\(P(A)\)</span> 。概率 <span class="math notranslate nohighlight">\(P(A)\)</span> 可以取区间 <span class="math notranslate nohighlight">\([0,1]\)</span> 中的任何数字。如果事件从未发生，则该事件的概率为 <span class="math notranslate nohighlight">\(0\)</span>，例如 <span class="math notranslate nohighlight">\(P(A=-1)=0\)</span> ；如果事件总是发生，则概率为 <span class="math notranslate nohighlight">\(1\)</span> ，例如 <span class="math notranslate nohighlight">\(P(A=\{1, 2,3,4,5,6\})=1\)</span> 。如果事件不能一起发生，我们就称事件是互斥的，例如，如果事件 <span class="math notranslate nohighlight">\(A_1\)</span> 代表奇数， <span class="math notranslate nohighlight">\(A_2\)</span> 代表偶数数字，那么掷骰子同时得到 <span class="math notranslate nohighlight">\(A_1\)</span> 和 <span class="math notranslate nohighlight">\(A_2\)</span> 的概率为 <span class="math notranslate nohighlight">\(0\)</span> 。如果事件 <span class="math notranslate nohighlight">\(A_1, A_2, \cdots A_n\)</span> 是互斥的，意味着这些事件不能同时发生，那么 <span class="math notranslate nohighlight">\(\sum_i^n P(A_i) = 1\)</span> 。继续 <span class="math notranslate nohighlight">\(A_1\)</span> 表示奇数、 <span class="math notranslate nohighlight">\(A_2\)</span> 表示偶数的示例，掷骰子的结果为 <span class="math notranslate nohighlight">\(A_1\)</span> 或 <span class="math notranslate nohighlight">\(A_2\)</span> 的概率为 <span class="math notranslate nohighlight">\(1\)</span> 。满足此性质的任何函数都是有效的概率函数。我们可以将概率视为分配给可能事件的正守恒量 <a class="footnote-reference brackets" href="#id101" id="id6">3</a> 。</p>
 <p>正如刚刚看到的，概率有一个明确的数学定义。如何解释概率有着不同的故事，也有着不同的思想流派。作为贝叶斯主义者，我们倾向于将概率解释为不确定性的程度。例如，对于一个公平的骰子，掷骰子时得到奇数的概率是 <span class="math notranslate nohighlight">\(50\%\)</span> ，这意味着我们有一半把握会得到一个奇数。或者可以将这个数字解释为，如果无限次掷骰子，有一半的时间会得到奇数，一半的时间会得到偶数，而这是频率主义者的解释。如果你不想无限次掷骰子，也可以多次掷骰子，然后获得大约一半的几率。这实际上就是在代码 <a class="reference internal" href="#experiment"><span class="std std-ref">experiment</span></a> 中做的。最后，我们注意到对于公平骰子，期望得到任何单个数字的概率为 <span class="math notranslate nohighlight">\(\frac{1}{6}\)</span>，但对于非公平骰子，此概率可能有所不同，而等概率结果只是一个特例。</p>
 <p>如果概率反映了不确定性，那么提出 “火星的质量是 <span class="math notranslate nohighlight">\(6.39 \times 10^{23}\)</span> 公斤的概率是多少？”，或者“赫尔辛基 <span class="math notranslate nohighlight">\(5\)</span> 月 <span class="math notranslate nohighlight">\(1\)</span> 日下雨的概率是多少？”，或者“未来三年资本主义被其他社会经济制度取代的概率是多少？” 等问题，都是非常自然的。我们说概率的定义是认知层面的，因为它不是一个关于真实世界的属性，而是一个关于我们对世界认知的属性。我们收集并分析数据，因为我们认为根据外部信息，我们能够更新内心里的知识状态。</p>
 <p>我们注意到现实世界中可能发生的事情取决于实验的所有细节，包括我们无法控制或不知道的那些。而样本空间是我们隐式或显式定义的数学对象。例如，通过将骰子的样本空间定义为方程 <a class="reference internal" href="#equation-eq-sample-space-dice">(85)</a>，我们排除了骰子落在边缘的可能性，虽然这实际上在非平面中滚动骰子时有可能发生。</p>
@@ -859,10 +868,10 @@
 </div>
 <div class="section" id="probability-distribution">
 <span id="id9"></span><h3>11.1.3 概率分布<a class="headerlink" href="#probability-distribution" title="Permalink to this headline">¶</a></h3>
-<p>我们可能更感兴趣的是找出骰子上所有数字的<em>概率列表</em>，而不是计算掷骰子时获得数字 5 的概率。一旦计算出这个列表，我们就可以显示它或使用它来计算其他数量，比如得到数字 5 的概率，或者得到等于或大于 5 的数字的概率。这个 <em>list</em> 的正式名称是 <strong>probability分配</strong>。</p>
+<p>我们可能更感兴趣的是找出骰子上所有数字的<em>概率列表</em>，而不是计算掷骰子时获得数字 5 的概率。一旦计算出这个列表，我们就可以显示它或使用它来计算其他数量，比如得到数字 5 的概率，或者得到等于或大于 5 的数字的概率。这个 <em>list</em> 的正式名称是 <strong>probability 分配</strong>。</p>
 <p>使用 Code Block <a class="reference internal" href="#experiment"><span class="std std-ref">experiment</span></a> 我们得到了一个骰子的经验概率分布，即从数据中计算出来的分布。但也有理论分布，它们在统计学中很重要，因为它们允许构建概率模型。</p>
 <p>理论概率分布具有精确的数学公式，类似于圆具有精确的数学定义。</p>
-<p>圆是平面上与另一个称为中心的点等距的点的几何空间。给定参数半径，完美定义了一个圆 <a class="footnote-reference brackets" href="#id109" id="id10">4</a>。我们可以说不存在单个圆周，而是一个圆周族，其中每个成员与其他成员的区别仅在于参数 radius 的值，因为一旦还定义了此参数，则定义了圆周。</p>
+<p>圆是平面上与另一个称为中心的点等距的点的几何空间。给定参数半径，完美定义了一个圆 <a class="footnote-reference brackets" href="#id103" id="id10">4</a>。我们可以说不存在单个圆周，而是一个圆周族，其中每个成员与其他成员的区别仅在于参数 radius 的值，因为一旦还定义了此参数，则定义了圆周。</p>
 <p>类似地，概率分布也出现在家族中，其成员完全由一个或多个参数定义。通常使用希腊字母来编写参数名称，尽管情况并非总是如此。 <a class="reference internal" href="#fig-dice-distribution"><span class="std std-numref">Fig. 170</span></a> 是此类分布系列的一个示例，我们可以用它来表示已加载的骰子。我们可以看到这个概率分布是如何由两个参数 <span class="math notranslate nohighlight">\(\alpha\)</span> 和 <span class="math notranslate nohighlight">\(\beta\)</span> 控制的。如果我们改变分布的<em>形状</em>，我们可以使其平坦或集中在一侧，将大部分质量推向极端，或将质量集中在中间。由于圆周半径被限制为正，分布的参数也有限制，实际上<span class="math notranslate nohighlight">\(\alpha\)</span>和<span class="math notranslate nohighlight">\(\beta\)</span>必须都是正的。</p>
 <div class="figure align-default" id="fig-dice-distribution">
 <a class="reference internal image-reference" href="../_images/dice_distribution.png"><img alt="../_images/dice_distribution.png" src="../_images/dice_distribution.png" style="width: 8.00in;"/></a>
@@ -892,7 +901,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <p>It is important to remark that the term <em>random</em> in random variable does not implies that any value is allowed, only those in the sample space.</p>
 <p>For example, we can not get the value orange from <span class="math notranslate nohighlight">\(C\)</span>, nor the value 13 from <span class="math notranslate nohighlight">\(S\)</span>. Another common source of confusion is that the term random implies equal probability, but that is not true, the probability of each event is given by the PMF, for example, we may have <span class="math notranslate nohighlight">\(P(C=\text{red}) = \frac{1}{2}, P(C=\text{green}) = \frac{1}{4}, P(C=\text{blue}) = \frac{1}{4}\)</span>.</p>
 <p>The equiprobability is just a special case.</p>
-<p>We can also define a discrete random variable using a cumulative distribution function (CDF). The CDF of a random variable <span class="math notranslate nohighlight">\(X\)</span> is the function <span class="math notranslate nohighlight">\(F_X\)</span> given by <span class="math notranslate nohighlight">\(F_X(x) = P(X \le x)\)</span>. For a CDF to be valid, it must be monotonically increasing <a class="footnote-reference brackets" href="#id110" id="id12">5</a>, right-continuous <a class="footnote-reference brackets" href="#id111" id="id13">6</a>, converge to 0 as <span class="math notranslate nohighlight">\(x\)</span> approaches to <span class="math notranslate nohighlight">\(- \infty\)</span>, and converge to 1 as <span class="math notranslate nohighlight">\(x\)</span> approaches <span class="math notranslate nohighlight">\(\infty\)</span>.</p>
+<p>We can also define a discrete random variable using a cumulative distribution function (CDF). The CDF of a random variable <span class="math notranslate nohighlight">\(X\)</span> is the function <span class="math notranslate nohighlight">\(F_X\)</span> given by <span class="math notranslate nohighlight">\(F_X(x) = P(X \le x)\)</span>. For a CDF to be valid, it must be monotonically increasing <a class="footnote-reference brackets" href="#id104" id="id12">5</a>, right-continuous <a class="footnote-reference brackets" href="#id105" id="id13">6</a>, converge to 0 as <span class="math notranslate nohighlight">\(x\)</span> approaches to <span class="math notranslate nohighlight">\(- \infty\)</span>, and converge to 1 as <span class="math notranslate nohighlight">\(x\)</span> approaches <span class="math notranslate nohighlight">\(\infty\)</span>.</p>
 <p>In principle, nothing prevents us from defining our own probability distribution. But there are many already defined distributions that are so commonly used, they have their own names. It is a good idea to become familiar with them as they appear quite often. If you check the models defined in this book you will see that most of them use combinations of predefined probability distributions and only a few examples used custom defined distribution. For example, in Section <a class="reference internal" href="chp_08.html#abc-ma"><span class="std std-ref">8.6 移动平均模型的近似</span></a> Code Block <a class="reference internal" href="chp_08.html#ma2-abc"><span class="std std-ref">MA2_abc</span></a> we used a Uniform distribution and two potentials to define a 2D triangular distribution.</p>
 <p>Figures <a class="reference internal" href="#fig-discrete-uniform-pmf-cdf"><span class="std std-numref">Fig. 172</span></a>, <a class="reference internal" href="#fig-binomial-pmf-cdf"><span class="std std-numref">Fig. 173</span></a>, and <a class="reference internal" href="#fig-poisson-pmf-cdf"><span class="std std-numref">Fig. 174</span></a>, are example of some common discrete distribution represented with their PMF and CDF. On the left we have the PMFs, the height of the bars represents the probability of each <span class="math notranslate nohighlight">\(x\)</span>. On the right we have the CDF, here the <em>jump</em> between two horizontal lines at a value of <span class="math notranslate nohighlight">\(x\)</span> represents the probability of <span class="math notranslate nohighlight">\(x\)</span>. The figure also includes the values of the mean and standard deviation of the distributions, is important to remark that these values are properties of the distributions, like the length of a circumference, and not something that we compute from a finite sample (see Section <a class="reference internal" href="#expectations"><span class="std std-ref">11.1.8 期望</span></a> for details).</p>
 <p>Another way to describe random variables is to use stories. A story for <span class="math notranslate nohighlight">\(X\)</span> describes an experiment that could give rise to a random variable with the same distribution as <span class="math notranslate nohighlight">\(X\)</span>. Stories are not formal devices, but they are useful anyway. Stories have helped humans to make sense of their surrounding for millennia and they continue to be useful today, even in statistics. In the book Introduction to Probability <span id="id14">[<a class="reference internal" href="references.html#id10">5</a>]</span> Joseph K. Blitzstein and Jessica Hwang make extensive use of this device. They even use story proofs extensively, these are similar to mathematical proof but they can be more intuitive. Stories are also very useful devices to create statistical models, you can think about how the data may have been generated, and then try to write that down in statistical notation and/or code. We do this, for example, in Chapter [9]](chap9) with our flight delay example.</p>
@@ -927,7 +936,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 </div>
 <div class="section" id="binomial-distribution">
 <span id="id16"></span><h4>( 2 ) 二项分布<a class="headerlink" href="#binomial-distribution" title="Permalink to this headline">¶</a></h4>
-<p>A Bernoulli trial is an experiment with only two possible outcomes yes/no (success/failure, happy/sad, ill/healthy, etc). Suppose we perform <span class="math notranslate nohighlight">\(n\)</span> independent <a class="footnote-reference brackets" href="#id112" id="id17">7</a> Bernoulli trials, each with the same success probability <span class="math notranslate nohighlight">\(p\)</span> and let us call <span class="math notranslate nohighlight">\(X\)</span> the number of success. Then the distribution of <span class="math notranslate nohighlight">\(X\)</span> is called the Binomial distribution with parameters <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(p\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is a positive integer and <span class="math notranslate nohighlight">\(p \in [0, 1]\)</span>. Using statistical notation we can write <span class="math notranslate nohighlight">\(X \sim Bin(n, p)\)</span> to mean that <span class="math notranslate nohighlight">\(X\)</span> has the Binomial distribution with parameters <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(p\)</span>, with the PMF being:</p>
+<p>A Bernoulli trial is an experiment with only two possible outcomes yes/no (success/failure, happy/sad, ill/healthy, etc). Suppose we perform <span class="math notranslate nohighlight">\(n\)</span> independent <a class="footnote-reference brackets" href="#id106" id="id17">7</a> Bernoulli trials, each with the same success probability <span class="math notranslate nohighlight">\(p\)</span> and let us call <span class="math notranslate nohighlight">\(X\)</span> the number of success. Then the distribution of <span class="math notranslate nohighlight">\(X\)</span> is called the Binomial distribution with parameters <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(p\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is a positive integer and <span class="math notranslate nohighlight">\(p \in [0, 1]\)</span>. Using statistical notation we can write <span class="math notranslate nohighlight">\(X \sim Bin(n, p)\)</span> to mean that <span class="math notranslate nohighlight">\(X\)</span> has the Binomial distribution with parameters <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(p\)</span>, with the PMF being:</p>
 <div class="math notranslate nohighlight">
 \[P(X = x) = \frac{n!}{x!(n-x)!}p^x(1-p)^{n-x}\]</div>
 <p>The term <span class="math notranslate nohighlight">\(p^x(1-p)^{n-x}\)</span> counts the number of <span class="math notranslate nohighlight">\(x\)</span> success in <span class="math notranslate nohighlight">\(n\)</span> trials. This term only considers the total number of success but not the precise sequence, for example, <span class="math notranslate nohighlight">\((0,1)\)</span> is the same as <span class="math notranslate nohighlight">\((1,0)\)</span>, as both have one success in two trials. The first term is known as Binomial Coefficient and computes all the possible combinations of <span class="math notranslate nohighlight">\(x\)</span> elements taken from a set of <span class="math notranslate nohighlight">\(n\)</span> elements.</p>
@@ -947,10 +956,9 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 </ul>
 <p>The PMF of a Poisson is defined as:</p>
 <div class="math notranslate nohighlight" id="equation-eq-poisson-pmf">
-<span class="eqno">(87)<a class="headerlink" href="#equation-eq-poisson-pmf" title="Permalink to this equation">¶</a></span>\[P(X = x)  = \frac{\mu^{x} e^{-\mu}}{x!}, x = 0, 1, 2, \dots
-  \]</div>
+<span class="eqno">(87)<a class="headerlink" href="#equation-eq-poisson-pmf" title="Permalink to this equation">¶</a></span>\[P(X = x)  = \frac{\mu^{x} e^{-\mu}}{x!}, x = 0, 1, 2, \dots\]</div>
 <p>Notice that the support of this PMF are all the natural numbers, which is an infinite set. So we have to be careful with our <em>list</em> of probabilities analogy, as summing an infinite series can be tricky. In fact Equation <a class="reference internal" href="#equation-eq-poisson-pmf">(87)</a> is a valid PMF because of the Taylor series <span class="math notranslate nohighlight">\(\sum_0^{\infty} \frac{\mu^{x}}{x!} = e^{\mu}\)</span></p>
-<p>Both the mean and variance of the Poisson distribution are defined by <span class="math notranslate nohighlight">\(\mu\)</span>. As <span class="math notranslate nohighlight">\(\mu\)</span> increases, the Poisson distribution approximates to a Normal distribution, although the latter is continuous and the Poisson is discrete. The Poisson distribution is also closely related to the Binomial distribution. A Binomial distribution can be approximated with a Poisson, when <span class="math notranslate nohighlight">\(n &gt;&gt; p\)</span> <a class="footnote-reference brackets" href="#id113" id="id19">8</a>, that is, when the probability of success (<span class="math notranslate nohighlight">\(p\)</span>) is low compared with the number o trials (<span class="math notranslate nohighlight">\(n\)</span>) then <span class="math notranslate nohighlight">\(\text{Pois}(\mu=np) \approx \text{Bin}(n, p)\)</span>. For this reason the Poisson distribution is also known as <em>the law of small numbers</em> or the <em>law of rare events</em>. As we previously mentioned this does not mean that <span class="math notranslate nohighlight">\(\mu\)</span> has to be small, but instead that <span class="math notranslate nohighlight">\(p\)</span> is low with respect to <span class="math notranslate nohighlight">\(n\)</span>.</p>
+<p>Both the mean and variance of the Poisson distribution are defined by <span class="math notranslate nohighlight">\(\mu\)</span>. As <span class="math notranslate nohighlight">\(\mu\)</span> increases, the Poisson distribution approximates to a Normal distribution, although the latter is continuous and the Poisson is discrete. The Poisson distribution is also closely related to the Binomial distribution. A Binomial distribution can be approximated with a Poisson, when <span class="math notranslate nohighlight">\(n &gt;&gt; p\)</span> <a class="footnote-reference brackets" href="#id107" id="id19">8</a>, that is, when the probability of success (<span class="math notranslate nohighlight">\(p\)</span>) is low compared with the number o trials (<span class="math notranslate nohighlight">\(n\)</span>) then <span class="math notranslate nohighlight">\(\text{Pois}(\mu=np) \approx \text{Bin}(n, p)\)</span>. For this reason the Poisson distribution is also known as <em>the law of small numbers</em> or the <em>law of rare events</em>. As we previously mentioned this does not mean that <span class="math notranslate nohighlight">\(\mu\)</span> has to be small, but instead that <span class="math notranslate nohighlight">\(p\)</span> is low with respect to <span class="math notranslate nohighlight">\(n\)</span>.</p>
 <div class="figure align-default" id="fig-poisson-pmf-cdf">
 <a class="reference internal image-reference" href="../_images/poisson_pmf_cdf.png"><img alt="../_images/poisson_pmf_cdf.png" src="../_images/poisson_pmf_cdf.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 174 </span><span class="caption-text"><span class="math notranslate nohighlight">\(\text{Pois}(2.3)\)</span> On the left the PMF. The height of the lines represents the probabilities for each value of <span class="math notranslate nohighlight">\(x\)</span>. On the right the CDF. The height of the jump at each value of <span class="math notranslate nohighlight">\(x\)</span> represent its probability. Values outside of the support of the distribution are not represented.</span><a class="headerlink" href="#fig-poisson-pmf-cdf" title="Permalink to this image">¶</a></p>
@@ -960,7 +968,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <div class="section" id="cont-rvs">
 <span id="id20"></span><h3>11.1.5 连续型随机变量及其分布<a class="headerlink" href="#cont-rvs" title="Permalink to this headline">¶</a></h3>
 <p>So far we have seen discrete random variables. There is another type of random variable that is widely used called continuous random variables, whose support takes values in <span class="math notranslate nohighlight">\(\mathbb {R}\)</span>. The most important difference between discrete and continuous random variables is that the latter can take on any <span class="math notranslate nohighlight">\(x\)</span> value in an interval, although the probability of any <span class="math notranslate nohighlight">\(x\)</span> value is exactly 0. Introduced this way you may think that these are the most useless probability distributions ever.</p>
-<p>But that is not the case, the actual problem is that our analogy of treating a probability distribution as a finite list is a very limited analogy and it fails badly with continuous random variables <a class="footnote-reference brackets" href="#id114" id="id21">9</a>.</p>
+<p>But that is not the case, the actual problem is that our analogy of treating a probability distribution as a finite list is a very limited analogy and it fails badly with continuous random variables <a class="footnote-reference brackets" href="#id108" id="id21">9</a>.</p>
 <p>In Figures <a class="reference internal" href="#fig-discrete-uniform-pmf-cdf"><span class="std std-numref">Fig. 172</span></a>, <a class="reference internal" href="#fig-binomial-pmf-cdf"><span class="std std-numref">Fig. 173</span></a>, and <a class="reference internal" href="#fig-poisson-pmf-cdf"><span class="std std-numref">Fig. 174</span></a>, to represent PMFs (discrete variables), we used the height of the lines to represent the probability of each event. If we add the heights we always get 1, that is, the total sum of the probabilities. In a continuous distribution we do not have <em>lines</em> but rather we have a continuous curve, the height of that curve is not a probability but a <strong>probability density</strong> and instead of of a PMF we use a Probability Density Function (PDF). One important difference is that height of <span class="math notranslate nohighlight">\(\text{PDF}(x)\)</span> can be larger than 1, as is not the probability value but a probability density. To obtain a probability from a PDF instead we must integrate over some interval:</p>
 <div class="math notranslate nohighlight">
 \[P(a &lt; X &lt; b) =  \int_a^b pdf(x) dx\]</div>
@@ -968,7 +976,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <p>In many texts, including this one, it is common to use the symbol <span class="math notranslate nohighlight">\(p\)</span> to talk about the <span class="math notranslate nohighlight">\(pmf\)</span> or <span class="math notranslate nohighlight">\(pdf\)</span>. This is done in favour of generality and hoping to avoid being very rigorous with the notation which can be an actual burden when the difference can be more or less clear from the context.</p>
 <p>For a discrete random variable, the CDF jumps at every point in the support, and is flat everywhere else. Working with the CDF of a discrete random variable is awkward because of this jumpiness. Its derivative is almost useless since it is undefined at the jumps and 0 everywhere else.</p>
 <p>This is a problem for gradient-based sampling methods like Hamiltonian Monte Carlo (Section <a class="reference internal" href="#inference-methods"><span class="std std-ref">11.9 推断方法</span></a>). On the contrary for continuous random variables, the CDF is often very convenient to work with, and its derivative is precisely the probability density function (PDF) that we have discussed before.</p>
-<p><a class="reference internal" href="#fig-cmf-pdf-pmf"><span class="std std-numref">Fig. 175</span></a> summarize the relationship between the CDF, PDF and PMF. The transformations between discrete CDF and PMF on one side and continuous CDF and PMF on the other are well defined and thus we used arrows with solid lines. Instead the transformations between discrete and continuous variables are more about numerical approximation than well defined mathematical operations. To approximately get from a discrete to a continuous distribution we use a smoothing method. One form of smoothing is to use a continuous distribution instead of a discrete one. To go from continuous to discrete we can discretize or bin the continuous outcomes. For example, a Poisson distribution with a large value of <span class="math notranslate nohighlight">\(\mu\)</span> approximately Gaussian <a class="footnote-reference brackets" href="#id115" id="id22">10</a>, while still being discrete. For those cases using a scenarios using a Poisson or a Gaussian maybe be interchangeable from a practical point of view. Using ArviZ you can use <code class="docutils literal notranslate"><span class="pre">az.plot_kde</span></code> with discrete data to approximate a continuous functions, how nice the results of this operation look depends on many factors. As we already said it may look good for a Poisson distribution with a relatively large value of <span class="math notranslate nohighlight">\(\mu\)</span>. When calling <code class="docutils literal notranslate"><span class="pre">az.plot_bpv(.)</span></code> for a discrete variable, ArviZ will smooth it, using an interpolation method, because the probability integral transform only works for continuous variables.</p>
+<p><a class="reference internal" href="#fig-cmf-pdf-pmf"><span class="std std-numref">Fig. 175</span></a> summarize the relationship between the CDF, PDF and PMF. The transformations between discrete CDF and PMF on one side and continuous CDF and PMF on the other are well defined and thus we used arrows with solid lines. Instead the transformations between discrete and continuous variables are more about numerical approximation than well defined mathematical operations. To approximately get from a discrete to a continuous distribution we use a smoothing method. One form of smoothing is to use a continuous distribution instead of a discrete one. To go from continuous to discrete we can discretize or bin the continuous outcomes. For example, a Poisson distribution with a large value of <span class="math notranslate nohighlight">\(\mu\)</span> approximately Gaussian <a class="footnote-reference brackets" href="#id109" id="id22">10</a>, while still being discrete. For those cases using a scenarios using a Poisson or a Gaussian maybe be interchangeable from a practical point of view. Using ArviZ you can use <code class="docutils literal notranslate"><span class="pre">az.plot_kde</span></code> with discrete data to approximate a continuous functions, how nice the results of this operation look depends on many factors. As we already said it may look good for a Poisson distribution with a relatively large value of <span class="math notranslate nohighlight">\(\mu\)</span>. When calling <code class="docutils literal notranslate"><span class="pre">az.plot_bpv(.)</span></code> for a discrete variable, ArviZ will smooth it, using an interpolation method, because the probability integral transform only works for continuous variables.</p>
 <div class="figure align-default" id="fig-cmf-pdf-pmf">
 <a class="reference internal image-reference" href="../_images/cmf_pdf_pmf.png"><img alt="../_images/cmf_pdf_pmf.png" src="../_images/cmf_pdf_pmf.png" style="width: 5.5in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 175 </span><span class="caption-text">Relationship between the CDF, PDF and PMF. Adapted from the book Think Stats <span id="id23">[<a class="reference internal" href="references.html#id92">131</a>]</span>.</span><a class="headerlink" href="#fig-cmf-pdf-pmf" title="Permalink to this image">¶</a></p>
@@ -987,7 +995,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 </div>
 <div class="section" id="gaussian-or-normal-distribution">
 <span id="id25"></span><h4>( 2 ) 高斯（正态）分布<a class="headerlink" href="#gaussian-or-normal-distribution" title="Permalink to this headline">¶</a></h4>
-<p>This is perhaps the best known distribution <a class="footnote-reference brackets" href="#id116" id="id26">11</a>. On the one hand, because many phenomena can be described approximately using this distribution (thanks to central limit theorem, see Subsection <a class="reference internal" href="#appendix-clt"><span class="std std-ref">( 2 ) 中心极限定律</span></a> below). On the other hand, because it has certain mathematical properties that make it easier to work with it analytically.</p>
+<p>This is perhaps the best known distribution <a class="footnote-reference brackets" href="#id110" id="id26">11</a>. On the one hand, because many phenomena can be described approximately using this distribution (thanks to central limit theorem, see Subsection <a class="reference internal" href="#appendix-clt"><span class="std std-ref">( 2 ) 中心极限定律</span></a> below). On the other hand, because it has certain mathematical properties that make it easier to work with it analytically.</p>
 <p>The Gaussian distribution is defined by two parameters, the mean <span class="math notranslate nohighlight">\(\mu\)</span> and the standard deviation <span class="math notranslate nohighlight">\(\sigma\)</span> as shown in Equation <a class="reference internal" href="#equation-eq-gaussian-pdf">(88)</a>. A Gaussian distribution with <span class="math notranslate nohighlight">\(\mu=0\)</span> and <span class="math notranslate nohighlight">\(\sigma=1\)</span> is known as the <strong>standard Gaussian distribution</strong>.</p>
 <div class="math notranslate nohighlight" id="equation-eq-gaussian-pdf">
 <span class="eqno">(88)<a class="headerlink" href="#equation-eq-gaussian-pdf" title="Permalink to this equation">¶</a></span>\[    p (x \mid \mu, \sigma) = \frac {1} {\sigma \sqrt {2 \pi}} e^{-\frac {(x -\mu)^2} {2 \sigma^2}}\]</div>
@@ -999,11 +1007,11 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 </div>
 <div class="section" id="t">
 <span id="students-t-distribution"></span><h4>( 3 ) 学生 <span class="math notranslate nohighlight">\(t\)</span> 分布<a class="headerlink" href="#t" title="Permalink to this headline">¶</a></h4>
-<p>Historically this distribution arose to estimate the mean of a normally distributed population when the sample size is small <a class="footnote-reference brackets" href="#id117" id="id27">12</a>. In Bayesian statistics, a common use case is to generate models that are robust against aberrant data as we discussed in Section <a class="reference internal" href="chp_04.html#robust-regression"><span class="std std-ref">4.4 更稳健的回归</span></a>.</p>
+<p>Historically this distribution arose to estimate the mean of a normally distributed population when the sample size is small <a class="footnote-reference brackets" href="#id111" id="id27">12</a>. In Bayesian statistics, a common use case is to generate models that are robust against aberrant data as we discussed in Section <a class="reference internal" href="chp_04.html#robust-regression"><span class="std std-ref">4.4 更稳健的回归</span></a>.</p>
 <div class="math notranslate nohighlight">
 \[p (x \mid \nu, \mu, \sigma) = \frac {\Gamma (\frac {\nu + 1} {2})} {\Gamma (\frac{\nu} {2}) \sqrt {\pi \nu} \sigma} \left (1+ \frac{1}{\nu} \left (\frac {x- \mu} {\sigma} \right)^2 \right)^{-\frac{\nu + 1}{2}}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\Gamma\)</span> is the gamma function <a class="footnote-reference brackets" href="#id118" id="id28">13</a> and <span class="math notranslate nohighlight">\(\nu\)</span> is commonly called degrees of freedom. We also like the name degree of normality, since as <span class="math notranslate nohighlight">\(\nu\)</span> increases, the distribution approaches a Gaussian. In the extreme case of <span class="math notranslate nohighlight">\(\lim_{\nu \to \infty}\)</span> the distribution is exactly equal to a Gaussian distribution with the same mean and standard deviation equal to <span class="math notranslate nohighlight">\(\sigma\)</span>.</p>
-<p>When <span class="math notranslate nohighlight">\(\nu=1\)</span> we get the Cauchy distribution <a class="footnote-reference brackets" href="#id119" id="id29">14</a>. Which is similar to a Gaussian but with tails decreasing very slowly, so slowly that this distribution does not have a defined mean or variance. That is, it is possible to calculate a mean from a data set, but if the data came from a Cauchy distribution, the spread around the mean will be high and this spread will not decrease as the sample size increases. The reason for this strange behavior is that distributions, like the Cauchy, are dominated by the tail behavior of the distribution, contrary to what happens with, for example, the Gaussian distribution.</p>
+<p>where <span class="math notranslate nohighlight">\(\Gamma\)</span> is the gamma function <a class="footnote-reference brackets" href="#id112" id="id28">13</a> and <span class="math notranslate nohighlight">\(\nu\)</span> is commonly called degrees of freedom. We also like the name degree of normality, since as <span class="math notranslate nohighlight">\(\nu\)</span> increases, the distribution approaches a Gaussian. In the extreme case of <span class="math notranslate nohighlight">\(\lim_{\nu \to \infty}\)</span> the distribution is exactly equal to a Gaussian distribution with the same mean and standard deviation equal to <span class="math notranslate nohighlight">\(\sigma\)</span>.</p>
+<p>When <span class="math notranslate nohighlight">\(\nu=1\)</span> we get the Cauchy distribution <a class="footnote-reference brackets" href="#id113" id="id29">14</a>. Which is similar to a Gaussian but with tails decreasing very slowly, so slowly that this distribution does not have a defined mean or variance. That is, it is possible to calculate a mean from a data set, but if the data came from a Cauchy distribution, the spread around the mean will be high and this spread will not decrease as the sample size increases. The reason for this strange behavior is that distributions, like the Cauchy, are dominated by the tail behavior of the distribution, contrary to what happens with, for example, the Gaussian distribution.</p>
 <p>For this distribution <span class="math notranslate nohighlight">\(\sigma\)</span> is not the standard deviation, which as already said could be undefined, <span class="math notranslate nohighlight">\(\sigma\)</span> is the scale. As <span class="math notranslate nohighlight">\(\nu\)</span> increases the scale converges to the standard deviation of a Gaussian distribution.</p>
 <p>On the left panel of <a class="reference internal" href="#fig-student-t-pdf-cdf"><span class="std std-numref">Fig. 178</span></a> we have the PDF, and on the right we have the CDF. Compare with <a class="reference internal" href="#fig-normal-pdf-cdf"><span class="std std-numref">Fig. 177</span></a>, a standard normal and see how the tails are heavier for the Student T distribution with parameter <span class="math notranslate nohighlight">\(\mathcal{T}(\nu=4, \mu=0, \sigma=1)\)</span></p>
 <div class="figure align-default" id="fig-student-t-pdf-cdf">
@@ -1052,7 +1060,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <p><a class="reference internal" href="#fig-joint-dist-conditional"><span class="std std-numref">Fig. 181</span></a> 演示了在 <span class="math notranslate nohighlight">\(X\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span> 联合分布的上下文中的条件反射。为了以 <span class="math notranslate nohighlight">\(Y=y\)</span> 为条件，我们采用 <span class="math notranslate nohighlight">\(Y=y\)</span> 值处的联合分布，而忽略其余部分。即那些 <span class="math notranslate nohighlight">\(Y \ne y\)</span>，这类似于索引二维数组并选择单个列或行。 <span class="math notranslate nohighlight">\(X\)</span> 的 <em>remaining</em> 值，<a class="reference internal" href="#fig-joint-dist-conditional"><span class="std std-numref">Fig. 181</span></a> 中的粗体值需要总和为 1 才能成为有效的 PMF，因此我们通过除以 <span class="math notranslate nohighlight">\(P(Y=y)\)</span> 重新归一化。</p>
 <div class="figure align-default" id="fig-joint-dist-conditional">
 <a class="reference internal image-reference" href="../_images/joint_dist_conditional.png"><img alt="../_images/joint_dist_conditional.png" src="../_images/joint_dist_conditional.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 181 </span><span class="caption-text">左边是 <span class="math notranslate nohighlight">\(x\)</span> 和 <span class="math notranslate nohighlight">\(y\)</span> 的联合分布。蓝线代表条件分布 <span class="math notranslate nohighlight">\(p(x \ mid y=3)\)</span>。在右侧，我们分别绘制了相同的条件分布。请注意，<span class="math notranslate nohighlight">\(x\)</span> 的条件 PMF 与 <span class="math notranslate nohighlight">\(​​y\)</span> 的值一样多，反之亦然。我们只是强调一种可能性。</span><a class="headerlink" href="#fig-joint-dist-conditional" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 181 </span><span class="caption-text">左边是 <span class="math notranslate nohighlight">\(x\)</span> 和 <span class="math notranslate nohighlight">\(y\)</span> 的联合分布。蓝线代表条件分布 <span class="math notranslate nohighlight">\(p(x \ mid y=3)\)</span>。在右侧，我们分别绘制了相同的条件分布。请注意，<span class="math notranslate nohighlight">\(x\)</span> 的条件 PMF 与 <span class="math notranslate nohighlight">\(y\)</span> 的值一样多，反之亦然。我们只是强调一种可能性。</span><a class="headerlink" href="#fig-joint-dist-conditional" title="Permalink to this image">¶</a></p>
 </div>
 <p>我们将连续联合 CDF 定义为方程 <a class="reference internal" href="#equation-eq-join-cdf">(89)</a>，与离散变量相同，联合 PDF 作为 CDF 关于 <span class="math notranslate nohighlight">\(x\)</span> 和 <span class="math notranslate nohighlight">\(y\)</span> 的导数。我们要求有效的联合 PDF 是非负的并且积分为 1。对于连续变量，我们可以以与离散变量类似的方式将变量边缘化，不同之处在于我们需要计算积分而不是总和。</p>
 <div class="math notranslate nohighlight">
@@ -1144,7 +1152,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[\mathbb{V}(X + Y) \neq \mathbb{V}(X) + \mathbb{V}(Y)\]</div>
 <p>除非，例如，当 <span class="math notranslate nohighlight">\(X\)</span> 和 <span class="math notranslate nohighlight">\(Y\)</span> 是独立的。</p>
-<p>我们将随机变量 <span class="math notranslate nohighlight">\(X\)</span> 的第 n 个矩表示为 <span class="math notranslate nohighlight">\(\mathbb{E}(​​X^n)\)</span>，因此期望值和方差也称为分布的一阶矩和二阶矩。第三个时刻，偏斜，告诉我们分布的不对称性。具有均值 <span class="math notranslate nohighlight">\(\mu\)</span> 和方差 <span class="math notranslate nohighlight">\(\sigma^2\)</span> 的随机变量 <span class="math notranslate nohighlight">\(X\)</span> 的偏度是 <span class="math notranslate nohighlight">\(X\)</span> 的第三个（标准化矩）：</p>
+<p>我们将随机变量 <span class="math notranslate nohighlight">\(X\)</span> 的第 n 个矩表示为 <span class="math notranslate nohighlight">\(\mathbb{E}(X^n)\)</span>，因此期望值和方差也称为分布的一阶矩和二阶矩。第三个时刻，偏斜，告诉我们分布的不对称性。具有均值 <span class="math notranslate nohighlight">\(\mu\)</span> 和方差 <span class="math notranslate nohighlight">\(\sigma^2\)</span> 的随机变量 <span class="math notranslate nohighlight">\(X\)</span> 的偏度是 <span class="math notranslate nohighlight">\(X\)</span> 的第三个（标准化矩）：</p>
 <div class="math notranslate nohighlight">
 \[\text{skew}(X) = \mathbb{E}\left(\frac{X -\mu}{\sigma}\right)^3\]</div>
 <p>将偏斜计算为标准化量的原因，即减去均值并除以标准差是为了使偏斜独立于 <span class="math notranslate nohighlight">\(X\)</span> 的定位和规模，这是合理的，因为我们已经从均值中获得了该信息和方差，并且它会使偏度独立于 <span class="math notranslate nohighlight">\(X\)</span> 的单位，因此比较偏度变得更容易。</p>
@@ -1152,10 +1160,10 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <p>情况并非总是如此，原因是 0 偏斜意味着两侧尾部的<em>总质量</em>是平衡的。所以我们也可以通过一条又长又细的尾巴和另一条又短又肥的尾巴来平衡质量。</p>
 <p>第四矩，称为峰度，告诉我们尾部的行为或<em>极端值</em> <span id="id34">[<a class="reference internal" href="references.html#id94">132</a>]</span>。它被定义为</p>
 <div class="math notranslate nohighlight" id="equation-kurtosis">
-<span class="eqno">(91)<a class="headerlink" href="#equation-kurtosis" title="Permalink to this equation">¶</a></span>\[\text{Kurtosis}(X) = \mathbb{E}\left(\frac{X -\mu}{\sigma}\right)^4 - 3  \]</div>
+<span class="eqno">(91)<a class="headerlink" href="#equation-kurtosis" title="Permalink to this equation">¶</a></span>\[\text{Kurtosis}(X) = \mathbb{E}\left(\frac{X -\mu}{\sigma}\right)^4 - 3\]</div>
 <p>减去 3 的原因是为了让高斯的峰度为 0，因为经常将峰度与高斯分布进行比较来讨论，但有时它通常在没有 <span class="math notranslate nohighlight">\(-3\)</span> 的情况下计算，所以当有疑问时问，或阅读，以了解在特定情况下使用的确切定义。通过检查方程 <a class="reference internal" href="#equation-kurtosis">(91)</a> 中的峰度定义，我们可以看到我们实际上是在计算标准化数据的四次方的期望值。因此，任何小于 1 的标准化值对峰度几乎没有任何贡献。相反，唯一有贡献的值是 <em>extreme</em> 值。</p>
 <p>随着我们在 Student t 分布中增加 <span class="math notranslate nohighlight">\(\nu\)</span> 的值，峰度减小（高斯分布为零），并且随着我们减少 <span class="math notranslate nohighlight">\(\nu\)</span> 峰度增加。峰态仅在 <span class="math notranslate nohighlight">\(\nu &gt; 4\)</span> 时定义，实际上对于 Student T 分布，第 <span class="math notranslate nohighlight">\(n\)</span> 时刻仅在 <span class="math notranslate nohighlight">\(\nu &gt; n\)</span> 时定义。</p>
-<p>SciPy 的 stats 模块提供了一种方法 <code class="docutils literal notranslate"><span class="pre">stats(moments)</span></code> 来计算分布的矩，正如你在代码块 <a class="reference internal" href="#scipy-unif"><span class="std std-ref">scipy_unif</span></a> 中看到的那样，它用于获取均值和方差。我们注意到，我们在本节中讨论的只是从概率分布而不是样本计算期望和矩，因此我们讨论的是理论分布的属性。当然，在实践中，我们通常希望从数据中估计分布的矩，因此统计学家有研究估计量，例如，样本均值和样本中位数是 <span class="math notranslate nohighlight">\(\mathbb{E}(​​X)\)</span> 的估计量。</p>
+<p>SciPy 的 stats 模块提供了一种方法 <code class="docutils literal notranslate"><span class="pre">stats(moments)</span></code> 来计算分布的矩，正如你在代码块 <a class="reference internal" href="#scipy-unif"><span class="std std-ref">scipy_unif</span></a> 中看到的那样，它用于获取均值和方差。我们注意到，我们在本节中讨论的只是从概率分布而不是样本计算期望和矩，因此我们讨论的是理论分布的属性。当然，在实践中，我们通常希望从数据中估计分布的矩，因此统计学家有研究估计量，例如，样本均值和样本中位数是 <span class="math notranslate nohighlight">\(\mathbb{E}(X)\)</span> 的估计量。</p>
 </div>
 <div class="section" id="transformations">
 <span id="id35"></span><h3>11.1.9 变换<a class="headerlink" href="#transformations" title="Permalink to this headline">¶</a></h3>
@@ -1218,8 +1226,8 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <span id="id39"></span><h3>11.1.11 马尔可夫链<a class="headerlink" href="#markov-chains" title="Permalink to this headline">¶</a></h3>
 <p>A Markov Chain is a sequence of random variables <span class="math notranslate nohighlight">\(X_0, X_1, \dots\)</span> for which the future state is conditionally independent from all past ones given the current state. In other words, knowing the current state is enough to know the probabilities for all future states. This is known as the Markov property and we can write it as:</p>
 <div class="math notranslate nohighlight" id="equation-markov-property">
-<span class="eqno">(94)<a class="headerlink" href="#equation-markov-property" title="Permalink to this equation">¶</a></span>\[P(X_{n+1} = j \mid X_n = i, X_{n-1} = i_{n-1} , \dots, X_0 = i_0) = P(X_{n+1} = j \mid X_n = i)   \]</div>
-<p>A rather effective way to visualize Markov Chains is imagining you or some object moving in space <a class="footnote-reference brackets" href="#id120" id="id40">15</a>. The analogy is easier to grasp if the space is finite, for example, moving a piece in a square board like checkers or a salesperson visiting different cities. Given this scenarios you can ask questions like, how likely is to visit one state (specific squares in the board, cities, etc)? Or maybe more interesting if we keep moving from state to state how much time will we spend at each state in the long-run?</p>
+<span class="eqno">(94)<a class="headerlink" href="#equation-markov-property" title="Permalink to this equation">¶</a></span>\[P(X_{n+1} = j \mid X_n = i, X_{n-1} = i_{n-1} , \dots, X_0 = i_0) = P(X_{n+1} = j \mid X_n = i)\]</div>
+<p>A rather effective way to visualize Markov Chains is imagining you or some object moving in space <a class="footnote-reference brackets" href="#id114" id="id40">15</a>. The analogy is easier to grasp if the space is finite, for example, moving a piece in a square board like checkers or a salesperson visiting different cities. Given this scenarios you can ask questions like, how likely is to visit one state (specific squares in the board, cities, etc)? Or maybe more interesting if we keep moving from state to state how much time will we spend at each state in the long-run?</p>
 <p><a class="reference internal" href="#fig-markov-chains-graph"><span class="std std-numref">Fig. 188</span></a> shows four examples of Markov Chains, the first one show a classical example, an oversimplified weather model, where the states are rainy or sunny, the second example shows a deterministic die. The last two example are more abstract as we have not assigned any concrete representation to them.</p>
 <div class="figure align-default" id="fig-markov-chains-graph">
 <a class="reference internal image-reference" href="../_images/markov_chains_graph.png"><img alt="../_images/markov_chains_graph.png" src="../_images/markov_chains_graph.png" style="width: 8.00in;"/></a>
@@ -1227,7 +1235,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 </div>
 <p>A convenient way to study Markov Chains is to collect the probabilities of moving between states in one step in a transition matrix <span class="math notranslate nohighlight">\(\mathbf{T} = (t_{ij})\)</span>. For example, the transition matrix of example A in <a class="reference internal" href="#fig-markov-chains-graph"><span class="std std-numref">Fig. 188</span></a> is</p>
 <!---
-```{math} 
+```{math}
 \begin{blockarray}{ccc}
 \; & \text{sunny} & \text{rainy} \\
 \begin{block}{c(cc)}
@@ -1243,7 +1251,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 \end{bmatrix}\end{split}\]</div>
 <p>and, for example, the transition matrix of example B in <a class="reference internal" href="#fig-markov-chains-graph"><span class="std std-numref">Fig. 188</span></a> is</p>
 <!---
-```{math} 
+```{math}
 \begin{blockarray}{ccccccc}
 \; & 0 & 1 & 2 & 3 & 4 & 5\\
 \begin{block}{c(cccccc)}
@@ -1271,10 +1279,10 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <p>We can also specify the starting point of the Markov chain, i.e. the initial conditions <span class="math notranslate nohighlight">\(s_i = P(X_0 = i)\)</span> and let <span class="math notranslate nohighlight">\(\mathbf{s}=(s_1, \dots, s_M)\)</span>. With this information we can compute the marginal PMF of <span class="math notranslate nohighlight">\(X_n\)</span> as <span class="math notranslate nohighlight">\(\mathbf{s}\mathbf{T}^n\)</span>.</p>
 <p>When studying Markov chains it makes sense to define properties of individual states and also properties on the entire chain. For example, if a chain returns to a state over and over again we call that state recurrent. Instead a transient state is one that the chain will eventually leave forever, in example (d) in <a class="reference internal" href="#fig-markov-chains-graph"><span class="std std-numref">Fig. 188</span></a> all states other than 0 or <span class="math notranslate nohighlight">\(N\)</span> are transient. Also, we can call a chain irreducible if it is possible to get from any state to any other state in a finite number of steps example (c) in <a class="reference internal" href="#fig-markov-chains-graph"><span class="std std-numref">Fig. 188</span></a> is not irreducible, as states 1,2 and 3 are disconnected from states A and B.</p>
 <p>Understanding the long-term behavior of Markov chains is of interest. In fact, they were introduced by Andrey Markov with the purpose of demonstrating that the law of large numbers can be applied also to non-independent random variables. The previously mentioned concepts of recurrence and transience are important for understanding this long-term run behavior. If we have a chain with transient and recurrent states, the chain may spend time in the transient states, but it will eventually spend all the eternity in the recurrent states. A natural question we can ask is how much time the chain is going to be at each state. The answer is provided by finding the <strong>stationary distribution</strong> of the chain.</p>
-<p>For a finite Markov chain, the stationary distribution <span class="math notranslate nohighlight">\(\mathbf{s}\)</span> is a PMF such that <span class="math notranslate nohighlight">\(\mathbf{s}\mathbf{T} = \mathbf{s}\)</span> <a class="footnote-reference brackets" href="#id121" id="id41">16</a>. That is a distribution that is not changed by the transition matrix <span class="math notranslate nohighlight">\(\mathbf{T}\)</span>.</p>
+<p>For a finite Markov chain, the stationary distribution <span class="math notranslate nohighlight">\(\mathbf{s}\)</span> is a PMF such that <span class="math notranslate nohighlight">\(\mathbf{s}\mathbf{T} = \mathbf{s}\)</span> <a class="footnote-reference brackets" href="#id115" id="id41">16</a>. That is a distribution that is not changed by the transition matrix <span class="math notranslate nohighlight">\(\mathbf{T}\)</span>.</p>
 <p>Notice that this does not mean the chain is not moving anymore, it means that the chain moves in such a way that the time it will spend at each state is the one defined by <span class="math notranslate nohighlight">\(\mathbf{s}\)</span>. Maybe a physical analogy could helps here. Imagine we have a glass not completely filled with water at a given temperature. If we seal it with a cover, the water molecules will evaporate into the air as moisture. Interestingly it is also the case that the water molecules in the air will move to the liquid water.</p>
 <p>Initially more molecules might be going one way or another, but at a given point the system will find a dynamic equilibrium, with the same amount of water molecules moving to the air from the liquid water, as the number of water molecules moving from the liquid water to the air.</p>
-<p>In physics/chemistry this is called a steady-state, locally things are moving, but globally nothing changes <a class="footnote-reference brackets" href="#id122" id="id42">17</a>. Steady state is also an alternative name to stationary distribution.</p>
+<p>In physics/chemistry this is called a steady-state, locally things are moving, but globally nothing changes <a class="footnote-reference brackets" href="#id116" id="id42">17</a>. Steady state is also an alternative name to stationary distribution.</p>
 <p>Interestingly, under various conditions, the stationary distribution of a finite Markov chain exists and is unique, and the PMF of <span class="math notranslate nohighlight">\(X_n\)</span> converges to <span class="math notranslate nohighlight">\(\mathbf{s}\)</span> as <span class="math notranslate nohighlight">\(n \to \infty\)</span>. Example (d) in <a class="reference internal" href="#fig-markov-chains-graph"><span class="std std-numref">Fig. 188</span></a> does not have a unique stationary distribution. We notice that once this chain reaches the states 0 or <span class="math notranslate nohighlight">\(N\)</span>, meaning gambler A or B lost all the money, the chain stays in that state forever, so both <span class="math notranslate nohighlight">\(s_0=(1, 0, \dots , 0)\)</span> and <span class="math notranslate nohighlight">\(s_N=(0, 0, \dots , 1)\)</span> are both stationary distributions. On the contrary example B in <a class="reference internal" href="#fig-markov-chains-graph"><span class="std std-numref">Fig. 188</span></a> has a unique stationary distribution which is <span class="math notranslate nohighlight">\(s=(1/6, 1/6, 1/6, 1/6, 1/6, 1/6)\)</span>, event thought the transition is deterministic.</p>
 <p>If a PMF <span class="math notranslate nohighlight">\(\mathbf{s}\)</span> satisfies the reversibility condition (also known as detailed balance), that is <span class="math notranslate nohighlight">\(s_i t_{ij} = s_j t_{ji}\)</span> for all <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>, we have the guarantee that <span class="math notranslate nohighlight">\(\mathbf{s}\)</span> is a stationary distribution of the Markov chain with transition matrix <span class="math notranslate nohighlight">\(\mathbf{T} = t_{ij}\)</span>. Such Markov chains are called reversible. In Section <a class="reference internal" href="#inference-methods"><span class="std std-ref">11.9 推断方法</span></a> we will use this property to show why Metropolis-Hastings is guaranteed to, asymptotically, work.</p>
 <p>Markov chains satisfy a central limit theorem which is similar to Equation <a class="reference internal" href="#equation-eq-central-limit">(93)</a> except that instead of dividing by <span class="math notranslate nohighlight">\(n\)</span> we need to divide by the effective sample size (ESS). In Section <a class="reference internal" href="chp_02.html#ess"><span class="std std-ref">2.4.1 有效样本数量 （ ESS ）</span></a> we discussed how to estimate the effective sample size from a Markov Chain and how to use it to diagnose the quality of the chain. The square root of <span class="math notranslate nohighlight">\(\frac{\sigma^2} {\text{ESS}}\)</span> is the Monte Carlo standard error (MCSE) that we also discussed in Section <a class="reference internal" href="chp_02.html#monte-carlo-standard-error"><span class="std std-ref">2.4.3 蒙特卡洛标准误差</span></a>.</p>
@@ -1282,12 +1290,12 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 </div>
 <div class="section" id="entropy">
 <span id="id43"></span><h2>11.2 熵<a class="headerlink" href="#entropy" title="Permalink to this headline">¶</a></h2>
-<p>In the <em>Zentralfriedhof</em>, Vienna, we can find the grave of Ludwig Boltzmann. His tombstone has the legend <span class="math notranslate nohighlight">\(S = k \log W\)</span>, which is a beautiful way of saying that the second law of thermodynamics is a consequence of the laws of probability. With this equation Boltzmann contributed to the development of one of the pillars of modern physics, statistical mechanics. Statistical mechanics describes how macroscopic observations such as temperature are related to the microscopic world of molecules. Imagine a glass with water, what we perceive with our senses is basically the average behavior of a huge number water molecules inside that glass <a class="footnote-reference brackets" href="#id123" id="id44">18</a>. At a given temperature there is a given number of arrangements of the water molecules compatible with that temperature (Figure <a class="reference internal" href="#fig-entropy-t"><span class="std std-numref">Fig. 189</span></a>). As we decrease the temperature we will find that less and less arrangements are possible until we find a single one. We have just reached 0 Kelvin, the lowest possible temperature in the universe! If we move into the other direction we will find that molecules can be found in more and more arrangements.</p>
+<p>In the <em>Zentralfriedhof</em>, Vienna, we can find the grave of Ludwig Boltzmann. His tombstone has the legend <span class="math notranslate nohighlight">\(S = k \log W\)</span>, which is a beautiful way of saying that the second law of thermodynamics is a consequence of the laws of probability. With this equation Boltzmann contributed to the development of one of the pillars of modern physics, statistical mechanics. Statistical mechanics describes how macroscopic observations such as temperature are related to the microscopic world of molecules. Imagine a glass with water, what we perceive with our senses is basically the average behavior of a huge number water molecules inside that glass <a class="footnote-reference brackets" href="#id117" id="id44">18</a>. At a given temperature there is a given number of arrangements of the water molecules compatible with that temperature (Figure <a class="reference internal" href="#fig-entropy-t"><span class="std std-numref">Fig. 189</span></a>). As we decrease the temperature we will find that less and less arrangements are possible until we find a single one. We have just reached 0 Kelvin, the lowest possible temperature in the universe! If we move into the other direction we will find that molecules can be found in more and more arrangements.</p>
 <div class="figure align-default" id="fig-entropy-t">
 <a class="reference internal image-reference" href="../_images/entropy_T.png"><img alt="../_images/entropy_T.png" src="../_images/entropy_T.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 189 </span><span class="caption-text">The number of possible arrangements particles can take is related to the temperature of the system. Here we represent discrete system of 3 equivalent particles, the number of possible arrangements is represented by the available cells (gray high lines). increasing the temperature is equivalent to increasing the number of available cells. At <span class="math notranslate nohighlight">\(T=0\)</span> only one arrangement is possible, as the temperature increase the particles can occupy more and more states.</span><a class="headerlink" href="#fig-entropy-t" title="Permalink to this image">¶</a></p>
 </div>
-<p>We can analyze this mental experiment in terms of uncertainty. If we know a system is at 0 Kelvin we know the system can only be in a single possible arrangement, our certainty is absolute <a class="footnote-reference brackets" href="#id124" id="id45">19</a>, as we increase the temperature the number of possible arrangements will increase and then it will become more and more difficult to say, “Hey look! Water molecules are in this particular arrangement at this particular time!” Thus our uncertainty about the microscopic state will increase. We will still be able to characterize the system by averages such the temperature, volume, etc, but at the microscopic level the certainty about particular arrangements will decrease. Thus, we can think of entropy as a way of measuring uncertainty.</p>
+<p>We can analyze this mental experiment in terms of uncertainty. If we know a system is at 0 Kelvin we know the system can only be in a single possible arrangement, our certainty is absolute <a class="footnote-reference brackets" href="#id118" id="id45">19</a>, as we increase the temperature the number of possible arrangements will increase and then it will become more and more difficult to say, “Hey look! Water molecules are in this particular arrangement at this particular time!” Thus our uncertainty about the microscopic state will increase. We will still be able to characterize the system by averages such the temperature, volume, etc, but at the microscopic level the certainty about particular arrangements will decrease. Thus, we can think of entropy as a way of measuring uncertainty.</p>
 <p>The concept of entropy is not only valid for molecules. It could also be applies to arrangements of pixels, characters in a text, musical notes, socks, bubbles in a sourdough bread and more. The reason that entropy is so flexible is because it quantifies the arrangements of objects - it is a property of the underlying distributions. The larger the entropy of a distribution the less informative that distribution will be and the more evenly it will assign probabilities to its events. Getting an answer of “<span class="math notranslate nohighlight">\(42\)</span>” is more certain than “<span class="math notranslate nohighlight">\(42 \pm 5\)</span>”, which again more certain than “any real number”. Entropy can translate this qualitative observation into numbers.</p>
 <p>The concept of entropy applies to continue and discrete distributions, but it is easier to think about it using discrete states and we will see some example in the rest of this section. But keep in mind the same concepts apply to the continuous cases.</p>
 <p>For a probability distribution <span class="math notranslate nohighlight">\(p\)</span> with <span class="math notranslate nohighlight">\(n\)</span> possible different events which each possible event <span class="math notranslate nohighlight">\(i\)</span> having probability <span class="math notranslate nohighlight">\(p_i\)</span>, the entropy is defined as:</p>
@@ -1341,7 +1349,7 @@ C(\text{blue})\, = 2\end{aligned}\end{split}\]</div>
 <span id="dkl"></span><h2>11.3 KL 散度<a class="headerlink" href="#kl" title="Permalink to this headline">¶</a></h2>
 <p>统计学中常用一个概率分布<span class="math notranslate nohighlight">\(q\)</span>来表示另一个<span class="math notranslate nohighlight">\(p\)</span>，我们通常在不知道<span class="math notranslate nohighlight">\(p\)</span>但可以用<span class="math notranslate nohighlight">\(q\)</span>近似的情况下这样做。或者 <span class="math notranslate nohighlight">\(p\)</span> 很复杂，我们想找到一个更简单或更方便的分布 <span class="math notranslate nohighlight">\(q\)</span>。在这种情况下，我们可能会问通过使用 <span class="math notranslate nohighlight">\(q\)</span> 来表示 <span class="math notranslate nohighlight">\(p\)</span>，我们丢失了多少信息，或者等效地，我们引入了多少额外的不确定性。直观地说，我们希望数量只有在 <span class="math notranslate nohighlight">\(q\)</span> 等于 <span class="math notranslate nohighlight">\(p\)</span> 时才变为零，否则为正值。根据方程 <a class="reference internal" href="#equation-eq-entropy">(95)</a> 中的熵定义，我们可以通过计算 <span class="math notranslate nohighlight">\(\log(p)\)</span> 和 <span class="math notranslate nohighlight">\(\log(q)\)</span> 之间的差值的期望值来实现这一点。这被称为 Kullback-Leibler (KL) 散度：</p>
 <div class="math notranslate nohighlight" id="equation-eq-kl-divergence">
-<span class="eqno">(96)<a class="headerlink" href="#equation-eq-kl-divergence" title="Permalink to this equation">¶</a></span>\[\mathbb{KL}(p \parallel q) = \mathbb{E}_p[\log{p}-\log{q}]   \]</div>
+<span class="eqno">(96)<a class="headerlink" href="#equation-eq-kl-divergence" title="Permalink to this equation">¶</a></span>\[\mathbb{KL}(p \parallel q) = \mathbb{E}_p[\log{p}-\log{q}]\]</div>
 <p>因此，<span class="math notranslate nohighlight">\(\mathbb{KL}(p \parallel q)\)</span> 给出了当使用 <span class="math notranslate nohighlight">\(q\)</span> 来近似 <span class="math notranslate nohighlight">\(p\)</span> 时对数概率的平均差异。因为事件根据 <span class="math notranslate nohighlight">\(p\)</span> 出现在我们面前，我们需要计算关于 <span class="math notranslate nohighlight">\(p\)</span> 的期望。对于离散分布，我们有：</p>
 <div class="math notranslate nohighlight">
 \[\mathbb{KL}(p \parallel q) = \sum_{i}^n p_i (\log{p_i} - \log{q_i})\]</div>
@@ -1404,11 +1412,11 @@ p(\boldsymbol{x}) \log \frac{p(\boldsymbol{x})}{0} = \infty\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(\hat{\theta}_{mle}\)</span> 是 <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> 的最大似然估计，<span class="math notranslate nohighlight">\(p_{AIC}\)</span> 只是模型中参数的数量。</p>
 <p>AIC 在非贝叶斯设置中非常流行，但不能很好地处理贝叶斯模型的一般性。它不使用完整的后验分布，因此丢弃了可能有用的信息。</p>
 <p>平均而言，当我们从平面先验转向弱信息或信息先验时，和/或如果我们在模型中添加更多结构，比如分层模型，AIC 的表现会越来越差。 AIC 假设后验可以由高斯分布很好地表示（至少渐近地），但是对于许多模型来说，这并不正确，包括层次模型、混合模型、神经网络等。总之我们希望使用一些更好的备择方案。</p>
-<p>广泛适用的信息准则 (<code class="docutils literal notranslate"><span class="pre">WAIC</span></code> <a class="footnote-reference brackets" href="#id125" id="id49">20</a>) <span id="id50">[<a class="reference internal" href="references.html#id14">135</a>]</span> 可以看作是 AIC 的完全贝叶斯扩展。它还包含两个术语，与 Akaike 标准的解释大致相同。最重要的区别是这些项是使用完整的后验分布计算的。</p>
+<p>广泛适用的信息准则 (<code class="docutils literal notranslate"><span class="pre">WAIC</span></code> <a class="footnote-reference brackets" href="#id119" id="id49">20</a>) <span id="id50">[<a class="reference internal" href="references.html#id14">135</a>]</span> 可以看作是 AIC 的完全贝叶斯扩展。它还包含两个术语，与 Akaike 标准的解释大致相同。最重要的区别是这些项是使用完整的后验分布计算的。</p>
 <div class="math notranslate nohighlight" id="equation-eq-waic">
-<span class="eqno">(97)<a class="headerlink" href="#equation-eq-waic" title="Permalink to this equation">¶</a></span>\[WAIC =  \sum_i^n \log \left(\frac{1}{s} \sum_{j}^S p(y_i \mid \boldsymbol{\theta}^j) \right) \; - \sum_i^n  \left(\mathop{\mathbb{V}}_{j}^s \log p(Y_i \mid \boldsymbol{\theta}^j) \right)   \]</div>
+<span class="eqno">(97)<a class="headerlink" href="#equation-eq-waic" title="Permalink to this equation">¶</a></span>\[WAIC =  \sum_i^n \log \left(\frac{1}{s} \sum_{j}^S p(y_i \mid \boldsymbol{\theta}^j) \right) \; - \sum_i^n  \left(\mathop{\mathbb{V}}_{j}^s \log p(Y_i \mid \boldsymbol{\theta}^j) \right)\]</div>
 <p>方程 <a class="reference internal" href="#equation-eq-waic">(97)</a> 中的第一项只是 AIC 中的对数似然，但逐点评估，即在 <span class="math notranslate nohighlight">\(n\)</span> 观测值上的每个 <span class="math notranslate nohighlight">\(i\)</span> 观测数据点。我们通过取后验 <span class="math notranslate nohighlight">\(s\)</span> 样本的平均值来考虑后验的不确定性。第一项是计算公式 <a class="reference internal" href="chp_02.html#equation-eq-elpd">(19)</a> 中定义的理论预期对数逐点预测密度 (ELPD) 及其在公式 <a class="reference internal" href="chp_02.html#equation-eq-elpd-practice">(20)</a> 中的近似值的实用方法。</p>
-<p>第二项可能看起来有点奇怪，<span class="math notranslate nohighlight">\(​​s\)</span> 后验样本（每个观测）的方差也是如此。直观地，我们可以看到，对于每个观测，如果后验分布的对数似然相似，则方差会很低，如果后验分布中不同样本的对数似然变化更大，则方差会更大。我们发现对后验<em>细节</em>敏感的观测越多，惩罚就越大。我们也可以从另一个等效的角度来看待这一点；更灵活的模型是可以有效容纳更多数据集的模型。例如，包含直线但也包含向上曲线的模型比只允许直线的模型更灵活；因此，在后一个模型上评估的那些观测值的对数似然平均将具有更高的方差。如果更灵活的模型不能用更高的估计 ELPD 来补偿这种惩罚，那么我们会将更简单的模型列为更好的选择。因此，方程 <a class="reference internal" href="#equation-eq-waic">(97)</a> 中的方差项通过惩罚过于复杂的模型来防止过度拟合，并且可以松散地解释为 AIC 中的有效参数数量。</p>
+<p>第二项可能看起来有点奇怪，<span class="math notranslate nohighlight">\(s\)</span> 后验样本（每个观测）的方差也是如此。直观地，我们可以看到，对于每个观测，如果后验分布的对数似然相似，则方差会很低，如果后验分布中不同样本的对数似然变化更大，则方差会更大。我们发现对后验<em>细节</em>敏感的观测越多，惩罚就越大。我们也可以从另一个等效的角度来看待这一点；更灵活的模型是可以有效容纳更多数据集的模型。例如，包含直线但也包含向上曲线的模型比只允许直线的模型更灵活；因此，在后一个模型上评估的那些观测值的对数似然平均将具有更高的方差。如果更灵活的模型不能用更高的估计 ELPD 来补偿这种惩罚，那么我们会将更简单的模型列为更好的选择。因此，方程 <a class="reference internal" href="#equation-eq-waic">(97)</a> 中的方差项通过惩罚过于复杂的模型来防止过度拟合，并且可以松散地解释为 AIC 中的有效参数数量。</p>
 <p>AIC 和 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 都没有试图衡量模型是否<em>真实</em>，它们只是比较替代模型的相对衡量。</p>
 <p>从贝叶斯的角度来看，先验是模型的一部分，但 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 是在后验上评估的，并且先验效果只是通过影响结果后验的方式间接考虑在内。还有其他信息标准，如 BIC 和 WBIC，试图回答这个问题，可以看作是边际似然的近似值，但我们不会在本书中讨论它们。</p>
 </div>
@@ -1425,12 +1433,10 @@ p(\boldsymbol{x}) \log \frac{p(\boldsymbol{x})}{0} = \infty\]</div>
 <p>鉴于在实践中我们不知道 <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> 的值，我们可以使用来自后验的 <span class="math notranslate nohighlight">\(s\)</span> 样本来近似方程 <span class="math notranslate nohighlight">\(\ref{eq:elpd_loo_cv}\)</span>：</p>
 <div class="math notranslate nohighlight" id="equation-eq-loo-cv-naive">
 <span class="eqno">(98)<a class="headerlink" href="#equation-eq-loo-cv-naive" title="Permalink to this equation">¶</a></span>\[\sum_{i}^{n} \log
-  \left(\frac{1}{s}\sum_j^s \ p(y_i \mid \boldsymbol{\theta_{-i}^j}) \right)
-  \]</div>
+  \left(\frac{1}{s}\sum_j^s \ p(y_i \mid \boldsymbol{\theta_{-i}^j}) \right)\]</div>
 <p>请注意，这个术语看起来类似于方程 <a class="reference internal" href="#equation-eq-waic">(97)</a> 中的第一项，除了我们每次都在计算 <span class="math notranslate nohighlight">\(n\)</span> 后验，删除一个观测值。因此，与 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 相反，我们不需要添加惩罚项。在 <a class="reference internal" href="#equation-eq-loo-cv-naive">(98)</a> 中计算 <span class="math notranslate nohighlight">\(\text{ELPD}_\text{LOO-CV}\)</span> 非常昂贵，因为我们需要计算 <span class="math notranslate nohighlight">\(n\)</span> 后验。幸运的是，如果 <span class="math notranslate nohighlight">\(n\)</span> 观测是条件独立的，我们可以用方程 <a class="reference internal" href="#equation-eq-loo">(99)</a> <span id="id54">[<a class="reference internal" href="references.html#id21">136</a>, <a class="reference internal" href="references.html#id24">137</a>]</span> 来近似方程 <a class="reference internal" href="#equation-eq-loo-cv-naive">(98)</a>：</p>
 <div class="math notranslate nohighlight" id="equation-eq-loo">
-<span class="eqno">(99)<a class="headerlink" href="#equation-eq-loo" title="Permalink to this equation">¶</a></span>\[\text{ELPD}_{psis-loo} = \sum_i^n \log \sum_j^s w_i^j p(y_i \mid \boldsymbol{\theta}^j)
-  \]</div>
+<span class="eqno">(99)<a class="headerlink" href="#equation-eq-loo" title="Permalink to this equation">¶</a></span>\[\text{ELPD}_{psis-loo} = \sum_i^n \log \sum_j^s w_i^j p(y_i \mid \boldsymbol{\theta}^j)\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(w\)</span> 是归一化权重的向量。</p>
 <p>为了计算 <span class="math notranslate nohighlight">\(w\)</span>，我们使用了重要性抽样，这是一种估计感兴趣的特定分布 <span class="math notranslate nohighlight">\(f\)</span> 的属性的技术，因为我们只有来自不同分布 <span class="math notranslate nohighlight">\(g\)</span> 的样本。当从 <span class="math notranslate nohighlight">\(g\)</span> 采样比从 <span class="math notranslate nohighlight">\(f\)</span> 采样更容易时，使用重要性采样是有意义的。如果我们有一组来自随机变量 <span class="math notranslate nohighlight">\(X\)</span> 的样本，并且我们能够逐点评估 <span class="math notranslate nohighlight">\(g\)</span> 和 <span class="math notranslate nohighlight">\(f\)</span>，我们可以将重要性权重计算为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-importance-weights">
@@ -1460,7 +1466,7 @@ p(\boldsymbol{x}) \log \frac{p(\boldsymbol{x})}{0} = \infty\]</div>
 <p>在本节中，我们将展示如何找到二项似然的 Jeffreys 先验，首先是成功次数参数 <span class="math notranslate nohighlight">\(\theta\)</span>，然后是几率参数 <span class="math notranslate nohighlight">\(\kappa\)</span>，其中 <span class="math notranslate nohighlight">\(\kappa = \frac{\ theta}{1-\theta}\)</span>。</p>
 <p>回想一下 <a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref">第 1 章</span></a> ，对于 <span class="math notranslate nohighlight">\(\theta\)</span> 的一维情况 JP 定义为：</p>
 <div class="math notranslate nohighlight">
-\[p(\theta) \propto \sqrt{I(\theta)}   \]</div>
+\[p(\theta) \propto \sqrt{I(\theta)}\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(I(\theta)\)</span> 是 Fisher 信息：</p>
 <div class="math notranslate nohighlight">
 \[I(\theta) = - \mathbb{E_{Y}}\left[\frac{d^2}{d\theta^2} \log p(Y \mid \theta)\right]\]</div>
@@ -1468,7 +1474,7 @@ p(\boldsymbol{x}) \log \frac{p(\boldsymbol{x})}{0} = \infty\]</div>
 <span id="jeffreys-prior-for-the-binomial-likelihood-in-terms-of-theta"></span><h3>11.6.1 依据 <span class="math notranslate nohighlight">\(\theta\)</span> 的二项似然 Jeffreys 先验<a class="headerlink" href="#theta-jeffreys" title="Permalink to this headline">¶</a></h3>
 <p>二项式似然可以表示为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-binomial-kernel">
-<span class="eqno">(101)<a class="headerlink" href="#equation-eq-binomial-kernel" title="Permalink to this equation">¶</a></span>\[p(Y \mid \theta) \propto \theta^{y} (1-\theta)^{n-y} \]</div>
+<span class="eqno">(101)<a class="headerlink" href="#equation-eq-binomial-kernel" title="Permalink to this equation">¶</a></span>\[p(Y \mid \theta) \propto \theta^{y} (1-\theta)^{n-y}\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(y\)</span> 是成功的次数，<span class="math notranslate nohighlight">\(n\)</span> 是试验的总数，因此 <span class="math notranslate nohighlight">\(n-y\)</span> 是失败的次数。我们写成比例，因为似然中的二项式系数不依赖于 <span class="math notranslate nohighlight">\(\theta\)</span>。</p>
 <p>为了计算 Fisher 信息，我们需要取似然的对数：</p>
 <div class="math notranslate nohighlight">
@@ -1480,7 +1486,7 @@ p(\boldsymbol{x}) \log \frac{p(\boldsymbol{x})}{0} = \infty\]</div>
 \frac{d \ell}{d\theta} &amp;= \frac{y}{\theta} - \frac{n-y}{1-\theta} \\
 \frac{d^{2} \ell}{d \theta^{2}} &amp;= -\frac{y}{\theta^{2}} - \frac{n-y}{ (1-\theta)^{2}}
 \end{split}\end{aligned}\end{split}\]</div>
-<p>Fisher信息是似然二阶导数的期望值，则：</p>
+<p>Fisher 信息是似然二阶导数的期望值，则：</p>
 <div class="math notranslate nohighlight">
 \[I(\theta) = - \mathbb{E}_{Y}\left[-\frac{y}{\theta^{2}} + \frac{n-y}{ (1-\theta)^{2}} \right]\]</div>
 <p>由于 <span class="math notranslate nohighlight">\(\mathbb{E}[y] = n\theta\)</span>，我们可以写成：</p>
@@ -1497,7 +1503,7 @@ p(\boldsymbol{x}) \log \frac{p(\boldsymbol{x})}{0} = \infty\]</div>
 \[I(\theta) = n \frac{1}{\theta (1-\theta)}\]</div>
 <p>如果我们省略 <span class="math notranslate nohighlight">\(n\)</span> 那么我们可以这样写：</p>
 <div class="math notranslate nohighlight" id="equation-eq-fisher-info">
-<span class="eqno">(102)<a class="headerlink" href="#equation-eq-fisher-info" title="Permalink to this equation">¶</a></span>\[I(\theta) \propto \frac{1}{\theta (1-\theta)} = \theta^{-1} (1-\theta)^{-1} \]</div>
+<span class="eqno">(102)<a class="headerlink" href="#equation-eq-fisher-info" title="Permalink to this equation">¶</a></span>\[I(\theta) \propto \frac{1}{\theta (1-\theta)} = \theta^{-1} (1-\theta)^{-1}\]</div>
 <p>最后，我们需要对方程 <a class="reference internal" href="#equation-eq-fisher-info">(102)</a> 中的 Fisher 信息取平方根，从而得出二项式似然的 <span class="math notranslate nohighlight">\(\theta\)</span> 的 Jeffreys 先验如下：</p>
 <div class="math notranslate nohighlight" id="equation-eq-alice-prior">
 <span class="eqno">(103)<a class="headerlink" href="#equation-eq-alice-prior" title="Permalink to this equation">¶</a></span>\[\begin{aligned}
@@ -1514,7 +1520,7 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 \[p(Y \mid \kappa) \propto \kappa^y (\kappa + 1)^{-y} (\kappa +1)^{-n + y}\]</div>
 <p>并进一步简化为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-likelihood-binom-odds">
-<span class="eqno">(104)<a class="headerlink" href="#equation-eq-likelihood-binom-odds" title="Permalink to this equation">¶</a></span>\[p(Y \mid \kappa) \propto \kappa^y (\kappa + 1)^{-n} \]</div>
+<span class="eqno">(104)<a class="headerlink" href="#equation-eq-likelihood-binom-odds" title="Permalink to this equation">¶</a></span>\[p(Y \mid \kappa) \propto \kappa^y (\kappa + 1)^{-n}\]</div>
 <p>现在我们需要取对数：</p>
 <div class="math notranslate nohighlight">
 \[\ell = \log(p(Y \mid \kappa)) \propto y \log{\kappa} -n \log{(\kappa + 1)}\]</div>
@@ -1542,16 +1548,16 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 \[I(\kappa) = \frac{n}{\kappa (\kappa + 1)^2}\]</div>
 <p>最后，通过取平方根，我们得到 Jeffreys 在由几率参数化时的二项似然先验：</p>
 <div class="math notranslate nohighlight" id="equation-eq-bob-prior">
-<span class="eqno">(105)<a class="headerlink" href="#equation-eq-bob-prior" title="Permalink to this equation">¶</a></span>\[p(\kappa) \propto \kappa^{-0.5} (1 + \kappa)^{-1} \]</div>
+<span class="eqno">(105)<a class="headerlink" href="#equation-eq-bob-prior" title="Permalink to this equation">¶</a></span>\[p(\kappa) \propto \kappa^{-0.5} (1 + \kappa)^{-1}\]</div>
 </div>
 <div class="section" id="jeffreys-posterior-for-the-binomial-likelihood">
 <span id="id57"></span><h3>11.6.3 二项似然的 Jeffreys 后验<a class="headerlink" href="#jeffreys-posterior-for-the-binomial-likelihood" title="Permalink to this headline">¶</a></h3>
 <p>为了在根据 <span class="math notranslate nohighlight">\(\theta\)</span> 参数化似然性时获得 Jeffrey 的后验，我们可以将方程 <a class="reference internal" href="#equation-eq-binomial-kernel">(101)</a> 与方程 <a class="reference internal" href="#equation-eq-alice-prior">(103)</a> 结合起来</p>
 <div class="math notranslate nohighlight" id="equation-eq-alice-posterior">
-<span class="eqno">(106)<a class="headerlink" href="#equation-eq-alice-posterior" title="Permalink to this equation">¶</a></span>\[p(\theta \mid Y) \propto  \theta^{y} (1-\theta)^{n-y} \theta^{-0.5} (1-\theta)^{-0.5} = \theta^{y-0.5} (1-\theta)^{n-y-0.5} \]</div>
+<span class="eqno">(106)<a class="headerlink" href="#equation-eq-alice-posterior" title="Permalink to this equation">¶</a></span>\[p(\theta \mid Y) \propto  \theta^{y} (1-\theta)^{n-y} \theta^{-0.5} (1-\theta)^{-0.5} = \theta^{y-0.5} (1-\theta)^{n-y-0.5}\]</div>
 <p>类似地，当似然用 <span class="math notranslate nohighlight">\(\kappa\)</span> 参数化时，Jeffreys 的后验我们可以将 <a class="reference internal" href="#equation-eq-likelihood-binom-odds">(104)</a> 与 <a class="reference internal" href="#equation-eq-bob-prior">(105)</a> 结合起来</p>
 <div class="math notranslate nohighlight" id="equation-eq-bob-posterior">
-<span class="eqno">(107)<a class="headerlink" href="#equation-eq-bob-posterior" title="Permalink to this equation">¶</a></span>\[p(\kappa \mid Y) \propto \kappa^y (\kappa + 1)^{-n}  \kappa^{-0.5} (1 + \kappa)^{-1} = \kappa^{(y-0.5)}  (\kappa + 1)^{(-n-1)}) \]</div>
+<span class="eqno">(107)<a class="headerlink" href="#equation-eq-bob-posterior" title="Permalink to this equation">¶</a></span>\[p(\kappa \mid Y) \propto \kappa^y (\kappa + 1)^{-n}  \kappa^{-0.5} (1 + \kappa)^{-1} = \kappa^{(y-0.5)}  (\kappa + 1)^{(-n-1)})\]</div>
 </div>
 </div>
 <div class="section" id="marginal-likelihood">
@@ -1564,10 +1570,10 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <span id="id61"></span><h3>11.7.1 调和平均估计器<a class="headerlink" href="#harmonic-mean" title="Permalink to this headline">¶</a></h3>
 <p>一个相当臭名昭著的<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>估计器是调和平均估计器 <span id="id62">[<a class="reference internal" href="references.html#id29">139</a>]</span>。这个估计器的一个非常吸引人的特性是它只需要来自后验的样本 <span class="math notranslate nohighlight">\(s\)</span> ：</p>
 <div class="math notranslate nohighlight" id="equation-eq-harmonic-mean-approx">
-<span class="eqno">(108)<a class="headerlink" href="#equation-eq-harmonic-mean-approx" title="Permalink to this equation">¶</a></span>\[p(Y) \approx \left(\frac{1}{s} \sum_{i=1}^{s} \frac{1}{p(Y \mid \boldsymbol{\theta}_i)} \right)^{-1} \]</div>
+<span class="eqno">(108)<a class="headerlink" href="#equation-eq-harmonic-mean-approx" title="Permalink to this equation">¶</a></span>\[p(Y) \approx \left(\frac{1}{s} \sum_{i=1}^{s} \frac{1}{p(Y \mid \boldsymbol{\theta}_i)} \right)^{-1}\]</div>
 <p>我们可以看到，我们正在对取自后验的样本的似然倒数进行平均，然后计算结果的倒数。原则上，这是以下期望的有效蒙特卡洛估计：</p>
 <div class="math notranslate nohighlight" id="equation-eq-harmonic-mean-expectation">
-<span class="eqno">(109)<a class="headerlink" href="#equation-eq-harmonic-mean-expectation" title="Permalink to this equation">¶</a></span>\[\mathbb{E} \left[\frac{1}{p(Y \mid \boldsymbol{\theta})}\right] = \int_{\boldsymbol{\Theta}} \frac{1}{p(Y \mid \boldsymbol{\theta)}} p(\boldsymbol{\theta} \mid Y) d\boldsymbol{\theta} \]</div>
+<span class="eqno">(109)<a class="headerlink" href="#equation-eq-harmonic-mean-expectation" title="Permalink to this equation">¶</a></span>\[\mathbb{E} \left[\frac{1}{p(Y \mid \boldsymbol{\theta})}\right] = \int_{\boldsymbol{\Theta}} \frac{1}{p(Y \mid \boldsymbol{\theta)}} p(\boldsymbol{\theta} \mid Y) d\boldsymbol{\theta}\]</div>
 <p>请注意，公式 <a class="reference internal" href="#equation-eq-harmonic-mean-expectation">(109)</a> 是公式 <a class="reference internal" href="chp_01.html#equation-eq-posterior-expectation">(4)</a> 的一个特定实例，这似乎表明我们通过非常贝叶斯来做正确的事情。
 如果我们扩展后项，我们可以写：</p>
 <div class="math notranslate nohighlight">
@@ -1597,13 +1603,13 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <p>其中 <span class="math notranslate nohighlight">\(Y\)</span> 代表数据，<span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> 代表模型 <span class="math notranslate nohighlight">\(M\)</span> 中的参数。</p>
 <p>如果我们有一组 <span class="math notranslate nohighlight">\(k\)</span> 模型并且我们的主要目标是只选择其中一个，我们可以选择<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code> <span class="math notranslate nohighlight">\(p(Y \mid M)\)</span> 的最大值的一个。在假设所比较的<span class="math notranslate nohighlight">\(k\)</span>模型的离散均匀先验分布的假设下，从贝叶斯定理中选择具有最大<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>的模型是完全合理的。</p>
 <div class="math notranslate nohighlight" id="equation-eq-posterior-model">
-<span class="eqno">(110)<a class="headerlink" href="#equation-eq-posterior-model" title="Permalink to this equation">¶</a></span>\[p(M \mid Y) \propto p(Y \mid M)\; p(M) \]</div>
+<span class="eqno">(110)<a class="headerlink" href="#equation-eq-posterior-model" title="Permalink to this equation">¶</a></span>\[p(M \mid Y) \propto p(Y \mid M)\; p(M)\]</div>
 <p>如果所有模型具有相同的先验概率，则计算 <span class="math notranslate nohighlight">\(p(Y \mid M)\)</span> 等价于计算 <span class="math notranslate nohighlight">\(p(M \mid Y)\)</span>。请注意，我们讨论的是我们分配给模型 <span class="math notranslate nohighlight">\(p(M)\)</span> 的先验概率，而不是我们分配给每个模型 <span class="math notranslate nohighlight">\(p(\theta \mid M)\)</span> 参数的先验概率。</p>
 <p>由于 <span class="math notranslate nohighlight">\(p(Y \mid M_k)\)</span> 的值本身并不能告诉我们任何事情，实际上人们通常会计算两个<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>的比率。</p>
 <p>这个比率称为贝叶斯因子：</p>
 <div class="math notranslate nohighlight">
 \[BF = \frac{p(Y \mid M_0)}{p(Y \mid M_1)}\]</div>
-<p><span class="math notranslate nohighlight">\(BF &gt; 1\)</span> 的值表明模型 <span class="math notranslate nohighlight">\(M_0\)</span> 与模型 <span class="math notranslate nohighlight">\(M_1\)</span> 相比更能解释数据。在实践中，通常使用经验法则来指示 BF 何时小、大、不是那么大等 <a class="footnote-reference brackets" href="#id126" id="id65">21</a>。</p>
+<p><span class="math notranslate nohighlight">\(BF &gt; 1\)</span> 的值表明模型 <span class="math notranslate nohighlight">\(M_0\)</span> 与模型 <span class="math notranslate nohighlight">\(M_1\)</span> 相比更能解释数据。在实践中，通常使用经验法则来指示 BF 何时小、大、不是那么大等 <a class="footnote-reference brackets" href="#id120" id="id65">21</a>。</p>
 <p>贝叶斯因子很有吸引力，因为它是贝叶斯定理的直接应用，正如我们从公式 <a class="reference internal" href="#equation-eq-posterior-model">(110)</a> 中看到的那样，但对于调和平均估计器也是如此（参见第 <a class="reference internal" href="#harmonic-mean"><span class="std std-ref">11.7.1 调和平均估计器</span></a> 节）和这不会自动使它成为一个好的估计器。贝叶斯因子也很有吸引力，因为与模型的似然性相反，<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>不一定会随着模型的复杂性而增加。直观的原因是，参数的数量越多，关于似然性的先验就越 * 散布 *。或者换句话说，一个更“分散”的先验是一个比一个更集中的数据集更合理的数据集。这将反映在<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>中，因为我们将在更广泛的先验比更集中的先验得到更小的值。</p>
 <p>除了计算问题之外，<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>还有一个特征，它通常被认为是一个错误。它对先验的选择<em>非常敏感</em>。 “非常敏感”是指虽然与推理无关，但对<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>值有实际影响的变化。为了举例说明这一点，假设我们有模型：</p>
 <div class="math notranslate nohighlight" id="equation-eq-normal-normal">
@@ -1629,7 +1635,7 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 是后验平均的对数似然</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">LOO</span></code> 是后验平均的对数似然</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>是先验平均的（对数）似然 <a class="footnote-reference brackets" href="#id127" id="id66">22</a>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>是先验平均的（对数）似然 <a class="footnote-reference brackets" href="#id121" id="id66">22</a>。</p></li>
 </ul>
 <p>这有助于理解三个量之间的异同。</p>
 <p>它们都使用对数分值作为不同计算方法拟合度的度量。 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 使用从后验方差计算的惩罚项。虽然 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 和<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>都避免了需要使用明确的惩罚项。 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 通过近似留一法交叉验证过程来实现这一点。也就是说，它使用一个数据集来拟合数据并使用不同的数据集来评估它的拟合度。<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>的惩罚来自对整个先验的平均，先验（相对地）到作为内置惩罚器工作的似然的传播。<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>中使用的惩罚似乎在某种程度上类似于 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 中的惩罚，尽管 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 使用后验方差，因此接近交叉验证中的惩罚。因为，如前所述，与更集中的数据集相比，更宽泛的先验承认更多的数据集是合理的，因此计算<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>就像对先验承认的所有数据集进行隐式平均。</p>
@@ -1638,7 +1644,7 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <p>我们可以看到，对于不同的后验，<code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 和 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 的值仅略有变化，而对数<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>对先验的选择很敏感。分析计算后验和对数<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>，<code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 和 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 是从后验样本计算的（有关详细信息，请参阅随附的代码）。</p>
 <div class="figure align-default" id="fig-posterior-ml">
 <a class="reference internal image-reference" href="../_images/ml_waic_loo.png"><img alt="../_images/ml_waic_loo.png" src="../_images/ml_waic_loo.png" style="width: 7.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 194 </span><span class="caption-text">公式 <a class="reference internal" href="#equation-eq-normal-normal">(111)</a> 中模型​​的先验（灰线）和后验（蓝线）。 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 和 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 反映了后验分布几乎相同，而<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>反映了先验不同。</span><a class="headerlink" href="#fig-posterior-ml" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 194 </span><span class="caption-text">公式 <a class="reference internal" href="#equation-eq-normal-normal">(111)</a> 中模型的先验（灰线）和后验（蓝线）。 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code> 和 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 反映了后验分布几乎相同，而<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>反映了先验不同。</span><a class="headerlink" href="#fig-posterior-ml" title="Permalink to this image">¶</a></p>
 </div>
 <p>上述讨论有助于解释为什么贝叶斯因子在某些领域被广泛使用而在其他领域不受欢迎。当先验更接近反映一些潜在的<em>真实</em>模型时，<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>对先验规范的敏感性就不那么令人担忧了。当先验主要用于它们的正则化属性并且可能提供一些背景知识时，这种敏感性可能会被视为有问题。</p>
 <p>因此，我们认为 <code class="docutils literal notranslate"><span class="pre">WAIC</span></code>，尤其是 <code class="docutils literal notranslate"><span class="pre">LOO</span></code>，具有更大的实用价值，因为它们的计算通常更健壮，并且不需要使用特殊的推理方法。在 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 的情况下，我们也有很好的诊断。</p>
@@ -1671,9 +1677,9 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 <p class="caption"><span class="caption-number">Fig. 195 </span><span class="caption-text">使用 Monte Carlo 采样估计 <span class="math notranslate nohighlight">\(\pi\)</span>，图例显示了估计和百分比误差。</span><a class="headerlink" href="#fig-monte-carlo" title="Permalink to this image">¶</a></p>
 </div>
 <p>由于采样是独立同分布的，我们可以在这里应用中心极限定理，然后我们知道误差以 <span class="math notranslate nohighlight">\(\frac{1}{\sqrt{N}}\)</span>) 的速度减少，这意味着每增加一个小数位精度，我们需要将抽奖次数 “N” 增加 <span class="math notranslate nohighlight">\(100\)</span> 倍。</p>
-<p>我们刚刚所做的是蒙特卡洛方法 <a class="footnote-reference brackets" href="#id128" id="id69">23</a> 的一个示例，基本上是任何使用（伪）随机样本来计算某些东西的方法。从技术上讲，我们所做的是蒙特卡洛积分，因为我们正在使用样本计算定积分（面积）的值。蒙特卡洛方法在统计学中无处不在。</p>
+<p>我们刚刚所做的是蒙特卡洛方法 <a class="footnote-reference brackets" href="#id122" id="id69">23</a> 的一个示例，基本上是任何使用（伪）随机样本来计算某些东西的方法。从技术上讲，我们所做的是蒙特卡洛积分，因为我们正在使用样本计算定积分（面积）的值。蒙特卡洛方法在统计学中无处不在。</p>
 <p>在贝叶斯统计中，我们需要计算积分以获得后验或计算期望。你可能会建议我们可以使用这个想法的变体来计算比 <span class="math notranslate nohighlight">\(\pi\)</span> 更有趣的数量。</p>
-<p>事实证明，随着我们增加问题的维度，这种方法通常不会很好地工作。在代码块 <a class="reference internal" href="#inside-out"><span class="std std-ref">inside_out</span></a> 中，我们计算从正方形采样时圆内点的数量，但从 <span class="math notranslate nohighlight">\(2\)</span> 到 <span class="math notranslate nohighlight">\(15\)</span> 维。结果在 <a class="reference internal" href="#fig-inside-out"><span class="std std-numref">Fig. 196</span></a> 中，奇怪的是，随着增加问题的维度，即使超球体 <em>接触</em> 超立方体的壁，内部点的比例也会迅速下降。从某种意义上说，在更高维度上，超立方体的所有体积都在角落 <a class="footnote-reference brackets" href="#id129" id="id70">24</a>。</p>
+<p>事实证明，随着我们增加问题的维度，这种方法通常不会很好地工作。在代码块 <a class="reference internal" href="#inside-out"><span class="std std-ref">inside_out</span></a> 中，我们计算从正方形采样时圆内点的数量，但从 <span class="math notranslate nohighlight">\(2\)</span> 到 <span class="math notranslate nohighlight">\(15\)</span> 维。结果在 <a class="reference internal" href="#fig-inside-out"><span class="std std-numref">Fig. 196</span></a> 中，奇怪的是，随着增加问题的维度，即使超球体 <em>接触</em> 超立方体的壁，内部点的比例也会迅速下降。从某种意义上说，在更高维度上，超立方体的所有体积都在角落 <a class="footnote-reference brackets" href="#id123" id="id70">24</a>。</p>
 <div class="literal-block-wrapper docutils container" id="inside-out">
 <div class="code-block-caption"><span class="caption-number">Listing 168 </span><span class="caption-text">inside_out</span><a class="headerlink" href="#inside-out" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">total</span> <span class="o">=</span> <span class="mi">100000</span>
@@ -1702,24 +1708,24 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 </div>
 <div class="section" id="inference-methods">
 <span id="id71"></span><h2>11.9 推断方法<a class="headerlink" href="#inference-methods" title="Permalink to this headline">¶</a></h2>
-<p>有无数种计算后验的方法。如果我们在讨论共轭先验时排除我们在第 [1]](chap1) 章中已经讨论过的精确解析解，我们可以将推理方法分为 3 大类：</p>
+<p>有无数种计算后验的方法。如果我们在讨论共轭先验时排除在 <a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref">第 1 章</span></a> 中已经讨论过的精确解析解，则可以将推断方法分为 3 大类：</p>
 <ol class="simple">
-<li><p>确定性集成方法，我们还没有在书中看到，但我们接下来会做</p></li>
-<li><p>模拟方法，也在第[1]章（第一章）中介绍，以及贯穿全书的选择方法，最后</p></li>
-<li><p>逼近方法，例如第[8]章（chap8）中讨论的ABC方法，在似然函数没有封闭形式表达式的情况下。</p></li>
+<li><p>确定性集成方法。我们在书中至今尚未看到，但接下来会做；</p></li>
+<li><p>模拟（采样）方法，在 <a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref">第 1 章</span></a> 中介绍，并贯穿全书的方法；</p></li>
+<li><p>逼近方法，例如 <a class="reference internal" href="chp_08.html#chap8"><span class="std std-ref">第 8 章</span></a> 中讨论的 ABC 方法，在似然函数没有封闭形式表达式的情况下使用。</p></li>
 </ol>
-<p>虽然某些方法可能是这些类别的组合，但我们仍然认为对过多的可用方法进行排序是有用的。</p>
-<p>对于过去两个半世纪的贝叶斯计算方法的一个很好的时间顺序之旅，特别强调那些改变贝叶斯推理的方法，我们建议你阅读计算贝叶斯：从 1763 年到 21 世纪的贝叶斯计算 <span id="id72">[<a class="reference internal" href="references.html#id116">144</a>]</span>。</p>
+<p>虽然某些方法可能是这些类别的组合，但对可用方法进行排序还是有用的。</p>
+<p>如果想对过去两个半世纪的贝叶斯计算方法做一个时间之旅，尤其是了解那些改变贝叶推断的方法，建议你阅读 《Computing Bayes: Bayesian Computation from 1763 to the 21st Century》 <span id="id72">[<a class="reference internal" href="references.html#id116">144</a>]</span>。</p>
 <div class="section" id="grid-method">
 <span id="id73"></span><h3>11.9.1 网格方法<a class="headerlink" href="#grid-method" title="Permalink to this headline">¶</a></h3>
-<p>The grid method is a simple brute-force approach. We want to know the value of posterior distribution over its domain to be able to use it (finding the maximum, computing expectation, etc). Even if you are not able to compute the whole posterior, you may be able to evaluate the prior and the likelihood density function point-wise; this is a pretty common scenario, if not the most common one. For a single parameter model, the grid approximation is:</p>
+<p>网格方法是一种简单的蛮力方法。我们想知道后验分布在其作用域上的值以便能够使用它（找到最大值、计算期望等）。即使您无法计算整个后验，也可以逐点评估先验和似然密度函数；这是很常见的场景，即便不是最常见的场景。对于单参数模型，网格近似为：</p>
 <ul class="simple">
-<li><p>Find a reasonable interval for the parameter (the prior should give   some hints).</p></li>
-<li><p>Define a grid of points (generally equidistant) on that interval.</p></li>
-<li><p>For each point in the grid, multiply the likelihood and the prior.</p></li>
+<li><p>为参数找到一个合理的区间（先验应该给出一些提示）。</p></li>
+<li><p>在该间隔上定义一个点的网格（通常等距）。</p></li>
+<li><p>对于网格中的每个点，将似然和先验相乘。</p></li>
 </ul>
-<p>Optionally, we may normalize the computed values so the posterior   sum to 1 by dividing the result at each point by the sum of all   points</p>
-<p>Code Block <a class="reference internal" href="#id74"><span class="std std-ref">grid_method</span></a> computes the posterior the Beta-Binomial model:</p>
+<p>可选地，可以通过将每个点的结果除以所有点的总和来对计算值进行归一化，以便后验总和为 <span class="math notranslate nohighlight">\(1\)</span>。</p>
+<p>代码 <a class="reference internal" href="#id74"><span class="std std-ref">grid_method</span></a> 计算了 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code> 的后验：</p>
 <div class="literal-block-wrapper docutils container" id="id74">
 <div class="code-block-caption"><span class="caption-number">Listing 169 </span><span class="caption-text">grid_method</span><a class="headerlink" href="#id74" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">posterior_grid</span><span class="p">(</span><span class="n">ngrid</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">α</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">β</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">heads</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">trials</span><span class="o">=</span><span class="mi">9</span><span class="p">):</span>
@@ -1734,103 +1740,112 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 </div>
 <div class="figure align-default" id="fig-grid-method">
 <a class="reference internal image-reference" href="../_images/grid_method.png"><img alt="../_images/grid_method.png" src="../_images/grid_method.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 198 </span><span class="caption-text">By evaluating the prior and the likelihood pointwise over a grid we can approximate the posterior.</span><a class="headerlink" href="#fig-grid-method" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 198 </span><span class="caption-text">通过在网格上逐点评估先验和似然，我们可以近似后验。</span><a class="headerlink" href="#fig-grid-method" title="Permalink to this image">¶</a></p>
 </div>
-<p>We can get a better approximation by increasing the number of points of the grid. In fact if we use infinite number of points we will get the exact posterior, at the cost of needing infinite computing resources.</p>
-<p>The biggest caveat of the grid approach is that this method scales poorly with the number of parameters as explained in <a class="reference internal" href="#high-dimensions"><span class="std std-ref">11.8 走出平地</span></a>.</p>
+<p>可以通过增加网格的点数来获得更好的近似值。事实上，如果使用无限数量的点，将得到精确后验，代价是需要无限的计算资源。网格方法的最大问题在于：如 {ref}high_dimensions 中所述，该方法的可扩展性随着参数数量增加会变得很差。</p>
 </div>
 <div class="section" id="metropolis-hastings">
 <span id="sec-metropolis-hastings"></span><h3>11.9.2 Metropolis-Hastings 采样器<a class="headerlink" href="#metropolis-hastings" title="Permalink to this headline">¶</a></h3>
-<p>We introduced Metropolis-Hastings algorithm <span id="id75">[<a class="reference internal" href="references.html#id106">7</a>, <a class="reference internal" href="references.html#id107">8</a>, <a class="reference internal" href="references.html#id108">9</a>]</span> very early in Section <a class="reference internal" href="chp_01.html#sampling-methods-intro"><span class="std std-ref">1.2 一个自制的采样器</span></a> and show a simple Python implementation in Code Block <a class="reference internal" href="chp_01.html#metropolis-hastings"><span class="std std-ref">metropolis_hastings</span></a>. We will now provide more detail about why this method works. We will do it using the language of Markov Chains introduced in Section <a class="reference internal" href="#markov-chains"><span class="std std-ref">11.1.11 马尔可夫链</span></a>.</p>
-<p>The Metropolis-Hastings algorithm is a general method that allow us to start with any irreducible Markov chain on the state space of interest and then modify it into a new Markov chain that has the stationary distribution that we really care. In other words we take samples from an easy to sample distribution like a Multivariate Normal and we turn those samples into samples from our target distribution. The way we modify the original chain is by being selective, we only accept some of the samples and reject the others. As we saw in Chapter <a class="reference internal" href="chp_01.html#chap1"><span class="std std-ref">1</span></a>. The probability of accepting a new proposal is:</p>
+<p>我们很早就在第 <a class="reference internal" href="chp_01.html#sampling-methods-intro"><span class="std std-ref">1.2 一个自制的采样器</span></a> 部分介绍了 Metropolis-Hastings 算法 <span id="id75">[]</span>，并在代码 <code class="docutils literal notranslate"><span class="pre">metropolis_hastings</span></code> 中展示了一个简单的 Python 实现。我们现在将提供有关此方法为何有效的更多详细信息。我们会使用第 <a class="reference internal" href="#markov-chains"><span class="std std-ref">11.1.11 马尔可夫链</span></a> 中介绍的马尔可夫链来完成。</p>
+<p>Metropolis-Hastings 算法是一类通用方法，它允许我们从感兴趣的状态空间上的任何不可约马尔可夫链开始，然后将其逐步修改为具有平稳分布的新马尔可夫链。换句话说，我们从易于采样的分布（如多元正态分布）中抽取样本，并将这些样本转换为来自目标分布的样本。修改原始链的方式是有选择性的，我们只接受部分样本并拒绝其他样本。正如在 <code class="docutils literal notranslate"><span class="pre">第</span> <span class="pre">1</span> <span class="pre">章</span></code> 中看到的，接受新提议的概率为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-acceptance-prob">
 <span class="eqno">(112)<a class="headerlink" href="#equation-eq-acceptance-prob" title="Permalink to this equation">¶</a></span>\[p_a (x_{i + 1} \mid x_i) = \min \left (1, \frac{p(x_{i + 1}) \;  q(x_i \mid x_{i + 1})} {p(x_i) \; q (x_{i + 1} \mid x_i)} \right)\]</div>
-<p>Let us rewrite this in a shorter form, for easier manipulation.</p>
+<p>让我们以更短的形式重写它，以便于操作：</p>
 <div class="math notranslate nohighlight">
 \[a_{ij} = \min \left (1, \frac{p_j q_{ji}}{{p_i q_{ij}}} \right)\]</div>
-<p>That is we propose with probability <span class="math notranslate nohighlight">\(q_{ij}\)</span> (read the subscript <span class="math notranslate nohighlight">\(ij\)</span> as from <span class="math notranslate nohighlight">\(i\)</span> to <span class="math notranslate nohighlight">\(j\)</span>) and accepts the proposal with probability <span class="math notranslate nohighlight">\(a_{ij}\)</span>. One of the nice feature of this method is that we do not need to know the normalizing constant of the distribution we want to sample, as it will be cancelled out when we compute <span class="math notranslate nohighlight">\(\frac{p_j}{p_i}\)</span>. This is very important because in may many problems, including Bayesian inference, computing that normalization constant (the marginal likelihood) is very difficult.</p>
-<p>We will now show that the Metropolis-Hastings chain is reversible with stationary distribution <span class="math notranslate nohighlight">\(p\)</span> as we mentioned in Section <a class="reference internal" href="#markov-chains"><span class="std std-ref">11.1.11 马尔可夫链</span></a>. We need to proof that the detailed balance condition i.e. the reversibility condition holds, that is:</p>
-<p>Let <span class="math notranslate nohighlight">\(\mathbf{T}\)</span> be the transition matrix, we just need to show that <span class="math notranslate nohighlight">\(p_i t_{ij} = p_j t_{ji}\)</span> for all <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>, this is trivial when <span class="math notranslate nohighlight">\(i = j\)</span> so we assume that <span class="math notranslate nohighlight">\(i \neq j\)</span>, we can write:</p>
+<p>即我们以概率 <span class="math notranslate nohighlight">\(q_{ij}\)</span> 提议从 <span class="math notranslate nohighlight">\(i\)</span> 到 <span class="math notranslate nohighlight">\(j\)</span> 的新状态，并以概率 <span class="math notranslate nohighlight">\(a_{ij}\)</span> 接受该提议。这种方法的一个好处是：不需要知道待采样分布的归一化常数，因为它会在计算 <span class="math notranslate nohighlight">\(\frac{p_j}{p_i}\)</span> 时被消掉。这个细节非常重要，因为在许多问题中（ 包括贝叶斯推断），计算归一化常数都非常困难。</p>
+<p>我们现在证明 <code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span> <span class="pre">链</span></code> 在平稳分布 <span class="math notranslate nohighlight">\(p\)</span> 下是可逆的，正如在 <a class="reference internal" href="#markov-chains"><span class="std std-ref">11.1.11 马尔可夫链</span></a> 节中提到的。我们需要证明细致平衡条件（即可逆性条件）成立，即：</p>
+<p>令 <span class="math notranslate nohighlight">\(\mathbf{T}\)</span> 为转移矩阵，我们只需要证明所有 <span class="math notranslate nohighlight">\(i\)</span> 和 <span class="math notranslate nohighlight">\(j\)</span> 的 <span class="math notranslate nohighlight">\(p_i t_{ij}=p_j t_{ji}\)</span>，当 <span class="math notranslate nohighlight">\(i=j\)</span> 时不用讨论，所以假设 <span class="math notranslate nohighlight">\(i \neq j\)</span>，我们可以令：</p>
 <div class="math notranslate nohighlight" id="equation-eq-transition">
-<span class="eqno">(113)<a class="headerlink" href="#equation-eq-transition" title="Permalink to this equation">¶</a></span>\[t_{ij} = q_{ij} a_{ij} \]</div>
-<p>Meaning that the probability to transition from <span class="math notranslate nohighlight">\(i\)</span> to <span class="math notranslate nohighlight">\(j\)</span> is the probability of proposing the move times the probability of accepting it.</p>
-<p>Let us first see the case where the probability of acceptance is less that 1, this happens when <span class="math notranslate nohighlight">\(p_j q_{ji} \le p_i q_{ij}\)</span>, then we have that</p>
+<span class="eqno">(113)<a class="headerlink" href="#equation-eq-transition" title="Permalink to this equation">¶</a></span>\[t_{ij} = q_{ij} a_{ij}\]</div>
+<p>这意味着从 <span class="math notranslate nohighlight">\(i\)</span> 过渡到 <span class="math notranslate nohighlight">\(j\)</span> 的概率等于 “提议概率” 乘以 “接受概率”。</p>
+<p>先看一下接受概率小于 <span class="math notranslate nohighlight">\(1\)</span> 的情况，此情况只发生在 <span class="math notranslate nohighlight">\(p_j q_{ji} \le p_i q_{ij}\)</span> 时，那么有：</p>
 <div class="math notranslate nohighlight" id="equation-eq-acceptance-ij">
-<span class="eqno">(114)<a class="headerlink" href="#equation-eq-acceptance-ij" title="Permalink to this equation">¶</a></span>\[a_{ij} = \frac{p_j q_{ji}}{p_i q_{ij}} \]</div>
-<p>and also</p>
+<span class="eqno">(114)<a class="headerlink" href="#equation-eq-acceptance-ij" title="Permalink to this equation">¶</a></span>\[a_{ij} = \frac{p_j q_{ji}}{p_i q_{ij}}\]</div>
+<p>而且</p>
 <div class="math notranslate nohighlight">
 \[a_{ji} = 1\]</div>
-<p>Using Equation <a class="reference internal" href="#equation-eq-transition">(113)</a>, we have</p>
+<p>使用公式 <a class="reference internal" href="#equation-eq-transition">(113)</a>，有：</p>
 <div class="math notranslate nohighlight">
 \[p_i t_{ij} = p_i q_{ij} a_{ij}\]</div>
-<p>replacing <span class="math notranslate nohighlight">\(a_{ij}\)</span> in Equation <a class="reference internal" href="#equation-eq-acceptance-ij">(114)</a></p>
+<p>用公式 <a class="reference internal" href="#equation-eq-acceptance-ij">(114)</a> 中的 <span class="math notranslate nohighlight">\(a_{ij}\)</span> 替换，则有：</p>
 <div class="math notranslate nohighlight">
 \[p_i t_{ij} = p_i q_{ij} \frac{p_j q_{ji}}{p_i q_{ij}}\]</div>
-<p>simplifying above we get:</p>
+<p>上述公式可简化为：</p>
 <div class="math notranslate nohighlight">
 \[p_i t_{ij} = p_j q_{ji}\]</div>
-<p>Because <span class="math notranslate nohighlight">\(a_{ji} = 1\)</span> we can include it without changing the validity of the equation.</p>
+<p>由于 <span class="math notranslate nohighlight">\(a_{ji} = 1\)</span> ， 我们可以在不改变公式有效性的情况下包含它：</p>
 <div class="math notranslate nohighlight">
 \[p_i t_{ij} = p_j q_{ji} a_{ji}\]</div>
-<p>which finally we get that</p>
+<p>最终得到：</p>
 <div class="math notranslate nohighlight">
 \[p_i t_{ij} = p_j t_{ji}\]</div>
-<p>By symmetry when <span class="math notranslate nohighlight">\(p_j q_{ji} &gt; p_i q_{ij}\)</span> we will arrive at the same result. As the reversibility condition holds, <span class="math notranslate nohighlight">\(p\)</span> is the stationary distribution of our Markov chain with transition matrix <span class="math notranslate nohighlight">\(\mathbf{T}\)</span>.</p>
-<p>The above proof gives us the theoretical confidence that we can use Metropolis-Hastings to sample from virtually any distribution we want.</p>
-<p>We can also see that while this is a very general result, it does not help us to choose a proposal distribution. In practice the proposal distribution is very important as the efficiency of the method depends heavily on this choice. In general it is observed that if the proposal makes large jumps the probability of acceptance is very low, and the method spend most of the time rejecting new states and thus stuck in one place. On the contrary if the proposal takes too small jumps the acceptance rate is high but the exploration is poor, as the new states are in a small neighborhood of the old state. A good proposal distribution is one that generates new putative states far away from the old state with high acceptance rate. This is generally difficult to do if we do not know the geometry of the posterior distribution, but that is precisely what we want to find out. In practice useful Metropolis-Hastings methods are those that are adaptive <span id="id76">[<a class="reference internal" href="references.html#id101">145</a>, <a class="reference internal" href="references.html#id104">146</a>, <a class="reference internal" href="references.html#id103">147</a>, <a class="reference internal" href="references.html#id102">148</a>]</span>. For example, we can use a Multivariate Gaussian distribution as proposal distribution. During tuning we can compute the empirical covariance from the posterior samples and use it as the covariance matrix of the proposal distribution. We can also scale the covariance matrix so that the average acceptance rate approach a predefined acceptance rate <span id="id77">[<a class="reference internal" href="references.html#id105">149</a>, <a class="reference internal" href="references.html#id109">150</a>, <a class="reference internal" href="references.html#id110">151</a>]</span>. In fact there is evidence that under certain circumstances and when the dimensionality of the posterior increases the optimal acceptance rate converges to the magic number 0.234 <span id="id78">[<a class="reference internal" href="references.html#id105">149</a>]</span>. In practice it seems that an acceptance rate around 0.234 or a little bit higher gives more or less the same performance but the general validity and useful of this result has also been disputed <span id="id79">[<a class="reference internal" href="references.html#id111">152</a>, <a class="reference internal" href="references.html#id112">153</a>]</span>.</p>
-<p>In the next section we will discuss a clever way to generate proposals that help to correct most of the problems with basic Metropolis-Hastings.</p>
+<p>根据对称性，当 <span class="math notranslate nohighlight">\(p_j q_{ji} &gt; p_i q_{ij}\)</span> 时，将得到相同的结果。因为可逆性条件成立，所以证明 <span class="math notranslate nohighlight">\(p\)</span> 是基于转移矩阵 <span class="math notranslate nohighlight">\(\mathbf{T}\)</span> 的马尔可夫链的平稳分布。</p>
+<p>上述证明给了我们理论上的信心，即：可以使用 Metropolis-Hastings 从几乎任何分布中进行采样。还可以看到，虽然这是一个普遍结果，但它并不能帮助我们选择提议分布。因此，在实践中，提议分布的构造非常重要，并且该方法的效率在很大程度上取决于此选择。</p>
+<p>此外，可以观察到一些普遍性规律：</p>
+<ul class="simple">
+<li><p>如果提议发生较大的跳跃，则接受概率非常低，且大部分时间里新状态都会被拒绝，因此可能会被卡在某个地方。</p></li>
+<li><p>如果提议的跳跃太小，则接受率很高，但探索性能变得很差，因为新状态始终位于旧状态的一个小邻域中。</p></li>
+</ul>
+<p>因此，好的提议分布应当能够产生远离旧状态的新状态，同时又能得到很高的接受概率。</p>
+<p>如果不知道后验分布的几何形态，通常很难做到这一点。在实践中，有用的 Metropolis-Hastings 方法通常是自适应的 <span id="id76">[]</span>。例如：</p>
+<ul class="simple">
+<li><p>使用多元高斯分布作为提议分布，但在调整期间，从后验样本中计算经验协方差，并将其用作提议分布的协方差矩阵；</p></li>
+<li><p>可以缩放协方差矩阵，使平均接受率接近预定义的接受率 <span id="id77">[]</span>等。</p></li>
+</ul>
+<p>有证据表明，在某些情况下，当后验维度增加时，最佳接受率会收敛到神奇的数字 <span class="math notranslate nohighlight">\(0.234\)</span> { cite:p}<code class="docutils literal notranslate"><span class="pre">Roberts1997</span></code>。在实践中，<span class="math notranslate nohighlight">\(0.234\)</span> 左右或稍高一点的接受率或多或少会提供类似的性能，但该结果的普遍有效性和有用性存在争议 <span id="id78">[]</span>。</p>
+<p>在下一节中，我们将讨论一种巧妙方法来生成有助于纠正基本 Metropolis-Hastings 方法大多数问题的提议。</p>
 </div>
 <div class="section" id="hmc">
-<span id="id80"></span><h3>11.9.3 汉密尔顿蒙特卡洛采样器（ HMC ）<a class="headerlink" href="#hmc" title="Permalink to this headline">¶</a></h3>
-<p>Hamiltonian Monte Carlo (HMC) <a class="footnote-reference brackets" href="#id130" id="id81">25</a> <span id="id82">[<a class="reference internal" href="references.html#id95">154</a>, <a class="reference internal" href="references.html#id96">155</a>, <a class="reference internal" href="references.html#id97">156</a>]</span> is a type of MCMC method that makes use of gradients to generate new proposed states. The gradients of the log-probability of the posterior evaluated at some state provides information of the geometry of the posterior density function. HMC attempts to avoid the random walk behavior typical of Metropolis-Hastings by using the gradient to propose new positions far from the current one with high acceptance probability. This allows HMC to better scale to higher dimensions and in principle more complex geometries, than alternatives.</p>
-<p>In simple terms, a Hamiltonian is a description of the total energy of a physical system. We can decompose the total energy into two terms, the kinetic and the potential energy. For a real system like rolling a ball down a hill, the potential energy is given by the position of the ball.</p>
-<p>The higher the ball the higher the potential energy. The kinetic energy is given by the velocity of the ball, or more correctly by its momentum (which takes into account both the velocity and the mass of the object).</p>
-<p>We will assume the total energy preserves, meaning that if the system gains kinetic energy then is because it has lost the same amount of potential energy. We can write the Hamiltonian of such a systems as:</p>
+<span id="id79"></span><h3>11.9.3 哈密顿蒙特卡洛采样器（ HMC ）<a class="headerlink" href="#hmc" title="Permalink to this headline">¶</a></h3>
+<p>Hamiltonian Monte Carlo (HMC) <span id="id80">[<a class="reference internal" href="references.html#id95">145</a>, <a class="reference internal" href="references.html#id96">146</a>, <a class="reference internal" href="references.html#id97">147</a>]</span> 是一种利用梯度生成新提议状态的 MCMC 方法。在某些状态下，后验对数概率的梯度能够提供关于后验密度函数的一些几何信息。 HMC 试图利用该梯度来提出远离当前位置且具有高接受概率的新位置，以避免典型的 Metropolis-Hastings 随机游走行为。这使得 HMC 能够更好地扩展到更高的维度，并且原则上可用于更复杂的几何形状。</p>
+<p>简单来说，哈密顿量是对物理系统总能量的描述。我们可以将总能量分解为两个项：动能和势能。对于像滚下山这样的真实系统，势能由球的位置给出，球越高，势能越高。动能由球的速度给出，或者更准确地说是由它的动量给出（物体的速度乘以质量）。我们将假设总能量保持不变，这意味着：如果系统获得了动能，那是因为它失去了相同数量的势能。我们可以写出这样一个系统的哈密顿量为：</p>
 <div class="math notranslate nohighlight">
 \[H(\mathbf{q}, \mathbf{p})  = K(\mathbf{p}, \mathbf{q}) + V(\mathbf{q})\]</div>
-<p>where <span class="math notranslate nohighlight">\(K(\mathbf{p}, \mathbf{q})\)</span> is called the kinetic energy, and <span class="math notranslate nohighlight">\(V(\mathbf{q})\)</span> is the potential energy. The probability of finding the ball at a particular position with a particular momentum is then given by:</p>
+<p>其中 <span class="math notranslate nohighlight">\(K(\mathbf{p}, \mathbf{q})\)</span> 被称为动能，<span class="math notranslate nohighlight">\(V(\mathbf{q})\)</span> 为势能。在具有特定动量的特定位置找到球的概率由下式给出：</p>
 <div class="math notranslate nohighlight" id="equation-eq-canonical">
-<span class="eqno">(115)<a class="headerlink" href="#equation-eq-canonical" title="Permalink to this equation">¶</a></span>\[p(\mathbf{q}, \mathbf{p}) = e^{-H(\mathbf{q}, \mathbf{p})} \]</div>
-<p>To simulate such a systems we need to solve the so called Hamiltonian equations:</p>
+<span class="eqno">(115)<a class="headerlink" href="#equation-eq-canonical" title="Permalink to this equation">¶</a></span>\[p(\mathbf{q}, \mathbf{p}) = e^{-H(\mathbf{q}, \mathbf{p})}\]</div>
+<p>为了模拟上述系统，需要求解哈密顿方程：</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
 \frac{d \mathbf{q}}{dt} =&amp; \quad \frac{\partial H}{\partial \mathbf{p}} = \frac{\partial K}{\partial \mathbf{p}} + \frac{\partial V}{\partial \mathbf{p}} \\
 \frac{d \mathbf{p}}{dt} =&amp; -\frac{\partial H}{\partial \mathbf{q}}= -\frac{\partial K}{\partial \mathbf{q}} - \frac{\partial V}{\partial \mathbf{q}}\end{aligned}\end{split}\]</div>
-<p>Note that <span class="math notranslate nohighlight">\(\frac{\partial V}{\partial \mathbf{p}} = \mathbf{0}\)</span>.</p>
-<p>Because we are not interested in modeling an idealized ball rolling down an idealized hill, but to model an idealized particle along the posterior distribution, we need to make a few adjustments. First the potential energy is given by the probability density we are trying to sample from <span class="math notranslate nohighlight">\(p(\mathbf{q})\)</span>. For the momentum we are just going to invoke an auxiliary variable. That is, a made up variable that will help us. If we choose <span class="math notranslate nohighlight">\(p(\mathbf{p} \mid \mathbf{q})\)</span> then we can write:</p>
+<p>注意：<span class="math notranslate nohighlight">\(\frac{\partial V}{\partial \mathbf{p}} = \mathbf{0}\)</span>.</p>
+<p>我们对从理想化的山坡上滚下理想化的球并不感兴趣，而是对沿着后验分布移动的理想化粒子建模感兴趣，为此需要进行一些调整。</p>
+<p>首先，势能由目标分布 <span class="math notranslate nohighlight">\(p(\mathbf{q})\)</span> 给出；对于动量，将人为增加一个辅助变量i<span class="math notranslate nohighlight">\(\mathbf{p}\)</span>，或者说，一个可以帮助我们的虚构变量。如果我们选择 <span class="math notranslate nohighlight">\(p(\mathbf{p} \mid \mathbf{q})\)</span> ，那么可以写成：</p>
 <div class="math notranslate nohighlight" id="equation-eq-auxiliary">
-<span class="eqno">(116)<a class="headerlink" href="#equation-eq-auxiliary" title="Permalink to this equation">¶</a></span>\[p(\mathbf{q}, \mathbf{p}) =  p(\mathbf{p} | \mathbf{q}) p(\mathbf{q}) \]</div>
+<span class="eqno">(116)<a class="headerlink" href="#equation-eq-auxiliary" title="Permalink to this equation">¶</a></span>\[p(\mathbf{q}, \mathbf{p}) =  p(\mathbf{p} | \mathbf{q}) p(\mathbf{q})\]</div>
 <p>This ensures us that we can recover our target distribution by marginalize out the momentum. By introducing the auxiliary variable, we can keep working with the physical analogy, and later remove the auxiliary variable and go back to our problem, sampling the posterior.</p>
-<p>If we replace Equation <a class="reference internal" href="#equation-eq-auxiliary">(116)</a> in Equation <a class="reference internal" href="#equation-eq-canonical">(115)</a> we got:</p>
+<p>这确保了我们可以通过边缘化动量来恢复目标分布。通过引入辅助变量，我们可以继续使用物理类比，然后删除辅助变量并回到我们的问题 — 对后验进行采样。如果我们将方程 <code class="xref eq docutils literal notranslate"><span class="pre">canonical</span></code> 替换方程 <code class="xref eq docutils literal notranslate"><span class="pre">auxiliary</span></code>，我们得到：</p>
 <div class="math notranslate nohighlight">
 \[H(\mathbf{q}, \mathbf{p}) = \overbrace{-\log p(\mathbf{p} \mid \mathbf{q})}^{K(\mathbf{p}, \mathbf{q})} \overbrace{- \log p(\mathbf{q})}^{ + V(\mathbf{q})}\]</div>
-<p>As explained previously, the potential energy <span class="math notranslate nohighlight">\(V(\mathbf{q})\)</span> is given by the <span class="math notranslate nohighlight">\(p(\mathbf{q})\)</span> the density function of the target posterior distribution, and we are free to choose the kinetic energy. If we choose it to be Gaussian, and drop the normalization constant, we have:</p>
+<p>如前所述，势能 <span class="math notranslate nohighlight">\(V(\mathbf{q})\)</span> 由目标后验分布的密度函数 <span class="math notranslate nohighlight">\(p(\mathbf{q})\)</span> 给出，动能可以自由选择。如果选择高斯，并去掉归一化常数，则有：</p>
 <div class="math notranslate nohighlight">
 \[K(\mathbf{p}, \mathbf{q}) = \frac{1}{2}\mathbf{p}^T M^{-1}\mathbf{p} + \log |M|\]</div>
-<p>where <span class="math notranslate nohighlight">\(M\)</span> is the <strong>precision matrix</strong> that parameterized the Gaussian distribution (also referred to as the mass matrix in Hamiltonian Monte Carlo literature). And if we choose <span class="math notranslate nohighlight">\(M = I\)</span>, i.e. the identity matrix which is <span class="math notranslate nohighlight">\(n \times n\)</span> square matrix with ones on the main diagonal and zeros elsewhere, we have:</p>
+<p>其中 <span class="math notranslate nohighlight">\(M\)</span> 为用于参数化高斯分布的 <strong>精度矩阵</strong> （ 在哈密顿蒙特卡洛领域，也被称为 <strong>质量矩阵</strong>）。 如果选择 <span class="math notranslate nohighlight">\(M = I\)</span>，也就是 <span class="math notranslate nohighlight">\(n \times n\)</span> 的单位方阵，则有：</p>
 <div class="math notranslate nohighlight">
 \[K(\mathbf{p}, \mathbf{q}) = \frac{1}{2}\mathbf{p}^T \mathbf{p}\]</div>
-<p>This makes calculations easier as now</p>
+<p>这使计算变得更为容易：</p>
 <div class="math notranslate nohighlight">
 \[\frac{\partial K}{\partial \mathbf{p}} = \mathbf{p}\]</div>
-<p>and</p>
+<p>并且</p>
 <div class="math notranslate nohighlight">
 \[\frac{\partial K}{\partial \mathbf{q}} = \mathbf{0}\]</div>
-<p>We can then simplify Hamilton’s equations to:</p>
+<p>进而，我们可以简化哈密顿方程为：</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
 \frac{d \mathbf{q}}{dt} =&amp; \mathbf{p} \\
 \frac{d \mathbf{p}}{dt} =&amp; - \frac{\partial V}{\partial \mathbf{q}}\end{aligned}\end{split}\]</div>
-<p>Summarizing,the HMC algorithm is then:</p>
+<p>总结起来，HMC 算法是：</p>
 <ol class="simple">
-<li><p>Sample a <span class="math notranslate nohighlight">\(\mathbf{p} \sim \mathcal{N}(0, I)\)</span></p></li>
-<li><p>Simulate <span class="math notranslate nohighlight">\(\mathbf{q}_t\)</span> and <span class="math notranslate nohighlight">\(\mathbf{p}_t\)</span> for some amount of time   <span class="math notranslate nohighlight">\(T\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(\mathbf{q}_T\)</span> is our new proposed state</p></li>
-<li><p>Use the Metropolis acceptance criterion to accept or reject   <span class="math notranslate nohighlight">\(\mathbf{q}_T\)</span>.</p></li>
+<li><p>获得一个 <span class="math notranslate nohighlight">\(\mathbf{p} \sim \mathcal{N}(0, I)\)</span> 样本</p></li>
+<li><p>为一定量时间 <span class="math notranslate nohighlight">\(T\)</span> 做 <span class="math notranslate nohighlight">\(\mathbf{q}_t\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{p}_t\)</span> 模拟</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{q}_T\)</span> 是提议的新状态值</p></li>
+<li><p>使用 Metropolis 接受准则接受或者拒绝  <span class="math notranslate nohighlight">\(\mathbf{q}_T\)</span>.</p></li>
 </ol>
-<p>Why we still need to use the Metropolis acceptance criterion? Intuitively because we can think of HMC as a Metropolis-Hasting algorithm with a better proposal distribution. But there is also a very good numerical justification, because this steps corrects for errors introduced by the numerical simulation of the Hamiltonian equations.</p>
-<p>To compute the Hamiltonian equations we have to compute a trajectory of the particle, i.e. all the intermediate points between one state and the next. In practice this involves computing a series of small <em>integration</em> steps using an integrator method. The most popular one is the leapfrog integrator. Leapfrog integration is equivalent to updating positions <span class="math notranslate nohighlight">\(q_t\)</span> momentum <span class="math notranslate nohighlight">\(q_t\)</span> at interleaved time points, staggered in such a way that they <em>leapfrog</em> over each other.</p>
-<p>Code Block <a class="reference internal" href="#leapfrog"><span class="std std-ref">leapfrog</span></a> shows a leapfrog integrator implemented in Python <a class="footnote-reference brackets" href="#id131" id="id83">26</a>. The arguments are: <code class="docutils literal notranslate"><span class="pre">q</span></code> and <code class="docutils literal notranslate"><span class="pre">p</span></code> the initial position and momentum respectively. <code class="docutils literal notranslate"><span class="pre">dVdq</span></code> is a Python function that returns the gradient of the position of some target density function at position <code class="docutils literal notranslate"><span class="pre">q</span></code> <span class="math notranslate nohighlight">\(\frac{\partial V}{\partial \mathbf{q}}\)</span>. We used JAX <span id="id84">[<a class="reference internal" href="references.html#id155">115</a>]</span> auto-differentiation ability to generate this function. <code class="docutils literal notranslate"><span class="pre">path_len</span></code> indicates how long to integrate for and <code class="docutils literal notranslate"><span class="pre">step_size</span></code> how large each integration step should be. As a result we obtain a new position and momentum as output of the function <code class="docutils literal notranslate"><span class="pre">leapfrog</span></code>.</p>
+<p>为什么我们仍然需要使用 Metropolis 验收标准？直观地说，因为我们可以将 HMC 视为具有更好提议分布的 Metropolis-Hasting 算法。但是也有一个很好的数值证明，可以表明该步骤能够纠正哈密顿方程数值模拟引入的误差。</p>
+<p>为了计算哈密顿方程，必须计算粒子的路径，即一个状态和下一个状态之间的所有中间点。在实践中，这涉及使用积分器方法计算一系列小的积分步骤。最受欢迎的一种方法是蛙跳积分器。 蛙跳积分相当于在交错的时间点更新位置 <span class="math notranslate nohighlight">\(q_t\)</span> 和动量 <span class="math notranslate nohighlight">\(q_t\)</span>，使两者交替跳过。</p>
+<p>代码 <a class="reference internal" href="#leapfrog"><span class="std std-ref">leapfrog</span></a> 展示了一个用 python 实现的蛙跳积分器 <a class="footnote-reference brackets" href="#id124" id="id81">26</a>。参数是：<code class="docutils literal notranslate"><span class="pre">q</span></code> 和 <code class="docutils literal notranslate"><span class="pre">p</span></code> 分别为初始位置和动量。 <code class="docutils literal notranslate"><span class="pre">dVdq</span></code> 是一个返回目标密度函数在位置 <code class="docutils literal notranslate"><span class="pre">q</span></code> 的梯度（ <span class="math notranslate nohighlight">\(\frac{\part V}{\part \mathbf{q} }\)</span> ）的 Python 函数。我们使用了 JAX  <span id="id82">[<a class="reference internal" href="references.html#id155">115</a>]</span> 的自动微分能力形成此函数。 <code class="docutils literal notranslate"><span class="pre">path_len</span></code> 表示积分步数，<code class="docutils literal notranslate"><span class="pre">step_size</span></code> 表示蛙跳步长。函数 <code class="docutils literal notranslate"><span class="pre">leapfrog</span></code> 输出的结果为新位置和新动量。</p>
 <div class="literal-block-wrapper docutils container" id="leapfrog">
 <div class="code-block-caption"><span class="caption-number">Listing 170 </span><span class="caption-text">leapfrog</span><a class="headerlink" href="#leapfrog" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">leapfrog</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">dVdq</span><span class="p">,</span> <span class="n">path_len</span><span class="p">,</span> <span class="n">step_size</span><span class="p">):</span>
@@ -1845,12 +1860,12 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 </pre></div>
 </div>
 </div>
-<p>Note that in function <code class="docutils literal notranslate"><span class="pre">leapfrog</span></code> we flip the sign of the output momentum. This is the simplest way to achieve a reversible Metropolis-Hastings proposal, as it augment the numerical integration with a negative step.</p>
-<p>We have now all the ingredients to implement a HMC method in Python, as in Code Block <a class="reference internal" href="#hamiltonian-mc"><span class="std std-ref">hamiltonian_mc</span></a>. Like our previous Metropolis-Hasting example in Code Block <a class="reference internal" href="chp_01.html#metropolis-hastings"><span class="std std-ref">metropolis_hastings</span></a> this is not meant to be use for serious model inference but instead a simple example to demonstrate the method. The arguments are <code class="docutils literal notranslate"><span class="pre">n_samples</span></code> the number of samples to return, <code class="docutils literal notranslate"><span class="pre">negative_log_prob</span></code> the negative log probability to sample from, <code class="docutils literal notranslate"><span class="pre">initial_position</span></code> the initial position to start sampling, <code class="docutils literal notranslate"><span class="pre">path_len</span></code>, <code class="docutils literal notranslate"><span class="pre">step_size</span></code>, as a result we obtain sample from the target distribution.</p>
+<p>请注意，在函数 <code class="docutils literal notranslate"><span class="pre">leapfrog</span></code> 中，我们翻转了输出动量的符号。这是实现可逆 Metropolis-Hastings 提议的最简单方法，因为它通过求负步骤增加了数值积分。</p>
+<p>我们现在拥有在 Python 中实现 HMC 方法的所有要素，如代码 <a class="reference internal" href="#hamiltonian-mc"><span class="std std-ref">hamiltonian_mc</span></a>，就像我们之前在代码 <a class="reference internal" href="chp_01.html#id23"><span class="std std-ref">metropolis_hastings</span></a> 中的 Metropolis-Hasting 示例一样，这并不意味着用于严格的模型推断，而是用于演示该方法的简单示例。参数是 <code class="docutils literal notranslate"><span class="pre">n_samples</span></code> 为要返回的样本数，<code class="docutils literal notranslate"><span class="pre">negative_log_prob</span></code> 是要从中采样的负对数概率，<code class="docutils literal notranslate"><span class="pre">initial_position</span></code> 是开始采样的初始位置，<code class="docutils literal notranslate"><span class="pre">path_len</span></code>、<code class="docutils literal notranslate"><span class="pre">step_size</span></code> 是蛙跳参数，最终结果是我们从目标分布中获取了样本。</p>
 <div class="literal-block-wrapper docutils container" id="hamiltonian-mc">
 <div class="code-block-caption"><span class="caption-number">Listing 171 </span><span class="caption-text">hamiltonian_mc</span><a class="headerlink" href="#hamiltonian-mc" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hamiltonian_monte_carlo</span><span class="p">(</span>
-    <span class="n">n_samples</span><span class="p">,</span> <span class="n">negative_log_prob</span><span class="p">,</span> <span class="n">initial_position</span><span class="p">,</span> 
+    <span class="n">n_samples</span><span class="p">,</span> <span class="n">negative_log_prob</span><span class="p">,</span> <span class="n">initial_position</span><span class="p">,</span>
     <span class="n">path_len</span><span class="p">,</span> <span class="n">step_size</span><span class="p">):</span>
     <span class="c1"># autograd magic</span>
     <span class="n">dVdq</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">negative_log_prob</span><span class="p">)</span>
@@ -1882,64 +1897,67 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 </pre></div>
 </div>
 </div>
-<p><a class="reference internal" href="#fig-normal-leapgrog"><span class="std std-numref">Fig. 199</span></a> shows 3 different trajectories around the same 2D normal distribution. For practical sampling we do not want the trajectories to be circular, because they will arrive at the same position that we started at. Instead we want to move as far as possible from our starting point, for example, by avoiding U-turns in the trajectory, and hence the name of one of the most popular dynamic HMC method No U-Turn Sampling (NUTS).</p>
+<p><a class="reference internal" href="#fig-normal-leapgrog"><span class="std std-numref">Fig. 199</span></a> 显示了围绕二维正态分布的三条不同的路径。对于实际采样，我们不希望路径是圆形的，因为它们会到达起始位置。相反，我们更希望从起点尽可能多地移动，例如，通过避免路径中的 <span class="math notranslate nohighlight">\(U\)</span> 形转弯来提高转移速度，这也就是最流行的动态 HMC 方法之一：不掉头采样 (No U-Turn Sampling, NUTS)。</p>
 <div class="figure align-default" id="fig-normal-leapgrog">
 <a class="reference internal image-reference" href="../_images/normal_leapfrog.png"><img alt="../_images/normal_leapfrog.png" src="../_images/normal_leapfrog.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 199 </span><span class="caption-text">Three HMC trajectories <em>around</em> a 2D multivariate normal. The momentum is indicated by the size and direction of the arrows, with small arrows indicating small kinetic energy. All these trajectories are computed in such a way that they end at their starting position, which completing an elliptical trajectory.</span><a class="headerlink" href="#fig-normal-leapgrog" title="Permalink to this image">¶</a></p>
 </div>
-<p>We show another example in <a class="reference internal" href="#fig-funnel-leapgrog"><span class="std std-numref">Fig. 200</span></a>, which contains 3 different trajectory around the same Neal’s funnel, a common geometry arising in (centered) hierarchical models as we showed in Section <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.2 分层模型的新问题 — 后验几何形态的复杂性带来的采样难题</span></a>.  This is an example of a trajectory failing to properly simulate following the correct distribution, we call such trajectories divergent trajectories, or simply divergences. They are useful diagnostics as explained in Section <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 散度</span></a>. Usually, Symplectic integrators like leapfrog integrator are highly accurate even for long trajectories, as they tend to be tolerant of small errors and <em>oscillate</em> around the correct trajectory. Moreover, these small errors can be corrected exactly by applying the metropolis criteria to accept or reject the Hamiltonian proposal. However, there is an importance exception to this ability to generate small, easy to fix errors: when the exact trajectories lie on regions of high curvature, the numerical trajectories generated by symplectic integrators can diverge, generating trajectory that rapidly get off towards the boundaries of the distribution we are trying to explore.</p>
+<p>我们在 <a class="reference internal" href="#fig-funnel-leapgrog"><span class="std std-numref">Fig. 200</span></a> 中展示了另一个示例，它包含三条围绕同一个 Neal 漏斗的不同路径，这是我们在 <a class="reference internal" href="chp_04.html#model-geometry"><span class="std std-ref">4.6.2 分层模型的新问题 — 后验几何形态的复杂性带来的采样难题</span></a> 部分展示的（居中）分层模型中经常出现的几何形状。这是未能正确模拟遵循正确分布的路径的示例，我们将此类路径称为 <strong>发散路径</strong>，或简称为 <strong>发散</strong>。如 <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 散度</span></a> 部分所述，它们是有用的诊断。通常，像蛙跳积分器这样的辛积分器，即使对于长路径也具有很高的精度，因为它们倾向于容忍小误差并围绕正确的路径振荡。此外，这些小误差可以通过应用 Metoropolis 准则来接受或拒绝哈密顿提议以进行准确纠正。</p>
+<p>然而，这种产生小的、易于修复的误差的能力有一个重要的例外：当精确的路径位于高曲率区域时，辛积分器生成的数值路径可能会发散，生成的路径会迅速接近目标分布的边界。</p>
 <div class="figure align-default" id="fig-funnel-leapgrog">
 <a class="reference internal image-reference" href="../_images/funnel_leapfrog.png"><img alt="../_images/funnel_leapfrog.png" src="../_images/funnel_leapfrog.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 200 </span><span class="caption-text">Three HMC trajectories <em>around</em> a 2D Neal’s funnel. This kind geometry turns up in centered hierarchical models. We can see that all these trajectories when wrong. We call this kind these divergences and we can used as diagnostics of the HMC samplers.</span><a class="headerlink" href="#fig-funnel-leapgrog" title="Permalink to this image">¶</a></p>
 </div>
-<p>Both Figures <a class="reference internal" href="#fig-normal-leapgrog"><span class="std std-numref">Fig. 199</span></a> and <a class="reference internal" href="#fig-funnel-leapgrog"><span class="std std-numref">Fig. 200</span></a> highlight the fact that an efficient HMC method requires proper tuning of its hyperparameters. HMC has three hyparameters:</p>
+<p>图 <a class="reference internal" href="#fig-normal-leapgrog"><span class="std std-numref">Fig. 199</span></a> 和 <a class="reference internal" href="#fig-funnel-leapgrog"><span class="std std-numref">Fig. 200</span></a> 都强调了一个事实，即有效的 HMC 方法需要适当调整其超参数。 HMC 具有三个超参数：</p>
 <ul class="simple">
-<li><p>the time discretization (step size of the leapfrog)</p></li>
-<li><p>the integration time (number of leapfrog steps)</p></li>
-<li><p>the precision matrix <span class="math notranslate nohighlight">\(M\)</span> that parameterized the kinetic energy</p></li>
+<li><p>时间离散化（跳跃的步长）</p></li>
+<li><p>积分时间（越级步数）</p></li>
+<li><p>将动能参数化的精度矩阵 <span class="math notranslate nohighlight">\(M\)</span></p></li>
 </ul>
-<p>For example, if the step size is too large, the leapfrog integrator will be inaccurate and too many proposals will be rejected. However, if it is too small we will waste computation resources. If the number of steps is too small, the simulated trajectory at each iteration will be too short and sampling will fall back to random walk. But if it is too large the trajectory might runs in circles and we again waste computation resources. If the estimated covariance (inverse of the precision matrix) is too different from the posterior covariance, the proposal momentum will be suboptimal and the movement in the position space will be too large or too small in some dimension.</p>
-<p>Adaptive dynamics Hamiltonian Monte Carlo methods, like those used by default in PyMC3, Stan and other PPLs can adapt these hyperparameters automatically during the warm-up or tuning phase. The step size can be learning automatically by adjusting it to match a predefined acceptance-rate target. For example, in PyMC3 you set the argument <code class="docutils literal notranslate"><span class="pre">target_accept</span></code> <a class="footnote-reference brackets" href="#id132" id="id85">27</a> The precision matrix <span class="math notranslate nohighlight">\(M\)</span> or its inverse can be estimated from the samples during warm-up phase and the number of steps can be dynamically adapted at each MCMC step using the NUTS algorithm <span id="id86">[<a class="reference internal" href="references.html#id98">157</a>]</span>. In order to avoid too long trajectory that could go near the initialization point, NUTS extends the trajectory backward and forwards until a U-turn criterion is met. Additionally, NUTS applies a multinomial sampling to choose from all the generated points from the trajectory, as this provides a better criteria for efficient exploration of the target distribution (sampling from the trajectory could be done with fixed integration time HMC as well).</p>
+<p>例如，如果步长太大，蛙跳积分器将不准确，并且会拒绝过多的提议。但如果它太小，将浪费计算资源。如果步数太少，每次迭代的模拟路径太短，采样会退回到随机游走。但是如果它太大，路径可能会循环运行，再次浪费计算资源。如果估计的协方差（精度矩阵的逆）与后验协方差相差太大，则提议动量将不是最优的，并且位置空间中的移动在某些维度上会太大或太小。</p>
+<p>自适应动力学 HMC 方法，如 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code>、<code class="docutils literal notranslate"><span class="pre">Stan</span></code> 和其他 PPL 中默认使用的方法，可以在预热或调整阶段自动优化这些超参数。步长可以通过调整以匹配预定义的接受率目标来自动学习。例如，在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 中，设置参数 <code class="docutils literal notranslate"><span class="pre">target_accept</span></code> 可以在预热阶段从样本中估计精度矩阵 <span class="math notranslate nohighlight">\(M\)</span> 或其逆矩阵，并且可以使用 <code class="docutils literal notranslate"><span class="pre">NUTS</span> <span class="pre">算法</span></code> 在每个 MCMC 步骤动态调整步数 {cite:p }<code class="docutils literal notranslate"><span class="pre">Hoffman2014</span></code>。为了避免太长的路径可能会靠近初始化点，<code class="docutils literal notranslate"><span class="pre">NUTS</span></code> 将路径向后和向前扩展，直到满足 U 形转弯标准。此外，NUTS 应用多项式采样从路径的所有生成点中进行选择，因为这为有效探索目标分布提供了更好的准则（路径采样也可以使用固定的积分时间 HMC 完成）。</p>
 </div>
 <div class="section" id="smc-details">
-<span id="id87"></span><h3>11.9.4 序贯蒙塔卡洛采样器<a class="headerlink" href="#smc-details" title="Permalink to this headline">¶</a></h3>
-<p>Sequential Monte Carlo is a family of Monte Carlo methods also known as particle filters. It has wide application to Bayesian inference for static models and dynamic models such as sequential time series inference and signal processing <span id="id88">[<a class="reference internal" href="references.html#id38">63</a>, <a class="reference internal" href="references.html#id37">158</a>, <a class="reference internal" href="references.html#id36">159</a>, <a class="reference internal" href="references.html#id35">160</a>]</span>. There are many variations and implementation under the same or similar name, with different application. Thus you might at times find the literature a bit confusing. We will give a brief description of the SMC/SMC-ABC method as implemented in PyMC3 and TFP. For a detailed discussion of SMC methods under a unified framework we recommend the book An Introduction to Sequential Monte Carlo <span id="id89">[<a class="reference internal" href="references.html#id38">63</a>]</span>.</p>
-<p>First note that we can write the posterior in the following way:</p>
+<span id="id83"></span><h3>11.9.4 序贯蒙塔卡洛采样器<a class="headerlink" href="#smc-details" title="Permalink to this headline">¶</a></h3>
+<p>序贯蒙特卡洛（Sequential Monte Carlo,SMC ）是一系列 Monte Carlo 方法，也被称为粒子滤波器。它广泛应用于静态模型和动态模型的贝叶斯推断，例如顺序时间序列推断和信号处理 <span id="id84">[]</span>。在相同或相似的名称下，有许多变体和实现，具有不同的应用。因此，您有时可能会发现文献有点混乱。</p>
+<p>我们将简要描述在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中实现的 <code class="docutils literal notranslate"><span class="pre">SMC/SMC-ABC</span></code> 方法。有关统一框架下 <code class="docutils literal notranslate"><span class="pre">SMC</span></code> 方法的详细讨论，我们推荐 《An Introduction to Sequential Monte Carlo》 <span id="id85">[<a class="reference internal" href="references.html#id38">63</a>]</span>。</p>
+<p>首先要注意，我们可以将后验写为以下形式：</p>
 <div class="math notranslate nohighlight">
 \[p(\boldsymbol{\theta} \mid Y)_{\beta}  \propto  p(Y \mid \boldsymbol{\theta})^{\beta} \; p(\boldsymbol{\theta})\]</div>
-<p>When <span class="math notranslate nohighlight">\(\beta = 0\)</span> we see that <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \mid Y)_{\beta}\)</span> is the prior and when <span class="math notranslate nohighlight">\(\beta = 1\)</span> we see that <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \mid Y)_{\beta}\)</span> is the <em>true</em> posterior <a class="footnote-reference brackets" href="#id133" id="id90">28</a>.</p>
-<p>SMC proceeds by increasing the value of <span class="math notranslate nohighlight">\(\beta\)</span> in <span class="math notranslate nohighlight">\(s\)</span> successive stages <span class="math notranslate nohighlight">\(\{\beta_0=0 &lt; \beta_1  &lt; ...  &lt; \beta_s=1\}\)</span>. Why is this a good idea? There are two related ways to justify it. First, the stepping stones analogy. Instead of directly trying to sample from the posterior we begin by sampling from the prior, which is generally easier to do. Then we add some intermediate distributions until we reach the posterior (see <a class="reference internal" href="chp_08.html#fig-smc-tempering"><span class="std std-numref">Fig. 133</span></a>). Second is the temperature analogy. The <span class="math notranslate nohighlight">\(\beta\)</span> parameters is analogue to the inverse temperature of a physical system, as we decrease its value (increase the temperature) the system is able to access to more states, and as we decrease its value (decrease the temperature) the system “freezes” into the posterior <a class="footnote-reference brackets" href="#id134" id="id91">29</a>. <a class="reference internal" href="chp_08.html#fig-smc-tempering"><span class="std std-numref">Fig. 133</span></a> shows an hypothetical sequence of tempered posteriors. The use of the temperature (or its inverse) as an auxiliary parameter is known as tempering, the term annealing is also common <a class="footnote-reference brackets" href="#id135" id="id92">30</a>.</p>
-<p>The SMC method, as implemented in PyMC3 and TFP, can be summarized as follows:</p>
-<ol class="simple">
-<li><p>Initialize <span class="math notranslate nohighlight">\(\beta\)</span> at zero.</p></li>
-<li><p>Generate <span class="math notranslate nohighlight">\(N\)</span> samples <span class="math notranslate nohighlight">\(s_{\beta}\)</span> from the tempered posterior.</p></li>
-<li><p>Increase <span class="math notranslate nohighlight">\(\beta\)</span> in order to keep the effective sample size <a class="footnote-reference brackets" href="#id136" id="id93">31</a> at   a predefined value.</p></li>
-<li><p>Compute a set of <span class="math notranslate nohighlight">\(N\)</span> importance weights <span class="math notranslate nohighlight">\(W\)</span>. The weights are   computed according to the new and old tempered posterior.</p></li>
-<li><p>Obtain <span class="math notranslate nohighlight">\(s_w\)</span> by resampling <span class="math notranslate nohighlight">\(s_{\beta}\)</span> according to <span class="math notranslate nohighlight">\(W\)</span>.</p></li>
-<li><p>Run <span class="math notranslate nohighlight">\(N\)</span> MCMC chains for <span class="math notranslate nohighlight">\(k\)</span> steps, starting each one from a   different sample in <span class="math notranslate nohighlight">\(s_w\)</span> and retaining only the samples in the last   step.</p></li>
-<li><p>Repeat from step 3 until <span class="math notranslate nohighlight">\(\beta=1\)</span></p></li>
-</ol>
-<p>The resampling step works by removing samples with a low probability and replacing them with samples with a higher probability. This step decreases the diversity of the samples. Then, the MCMC step perturbs the samples, hopefully increasing the diversity and therefore helping SMC to explore the parameter space. Any valid MCMC transition kernel could be used in SMC, and depending on your problem you might find some perform better than others. For example, with ABC methods we generally need to rely on gradient-free methods such as Random Walk Metropolis-Hasting as the simulators are generally not differentiable.</p>
-<p>The efficiency of the tempered method depends heavily on the intermediate values of <span class="math notranslate nohighlight">\(\beta\)</span>. The smaller the difference between two successive values of <span class="math notranslate nohighlight">\(\beta\)</span>, the closer the two successive tempered posteriors will be, and thus the easier the transition from one stage to the next. But if the steps are too small, we will need many intermediate stages, and beyond some point this will waste a lot of computational resources without really improving the accuracy of the results. Another important factor is the efficiency of the MCMC transitional kernel that adds diversity to the samples. To help improve the efficiency of the transition, PyMC3 and TFP uses the samples from the previous stage to tune the proposal distribution of the current stage and also the number of steps taken by the MCMC, with the number of steps being the same across all chains.</p>
+<p>当 <span class="math notranslate nohighlight">\(\beta = 0\)</span> 时，可以看到 <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \mid Y)_{\beta}\)</span> 是先验，而当 <span class="math notranslate nohighlight">\(\beta = 1\)</span> 时， <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \mid Y)_{\beta}\)</span> 是 <em>真实</em> 后验<a class="footnote-reference brackets" href="#id125" id="id86">28</a>。</p>
+<p>SMC 通过在 <span class="math notranslate nohighlight">\(s\)</span> 个连续阶段中增加 <span class="math notranslate nohighlight">\(\beta\)</span> 值来进行 <span class="math notranslate nohighlight">\(\{\beta_0=0 &lt; \beta_1  &lt; ...  &lt; \beta_s=1\}\)</span>。为什么这是个好主意？有两种相关的方法来证明其合理性。一是垫脚石类比。我们不是直接尝试从后验采样，而是从先验采样开始，这通常更容易做到。然后添加一些中间分布，直到到达后验（参见 <a class="reference internal" href="chp_08.html#fig-smc-tempering"><span class="std std-numref">Fig. 133</span></a>）。二是温度类比。 <span class="math notranslate nohighlight">\(\beta\)</span> 参数类似于物理系统的逆温度，当我们降低它的值（增加温度），系统能够访问更多状态，当我们降低它的值（降低温度）系统 “冻结” 进入后验。<a class="reference internal" href="chp_08.html#fig-smc-tempering"><span class="std std-numref">Fig. 133</span></a> 展示了一个假设的退火后验序列。使用温度（或其倒数）作为辅助参数被称为 <strong>回火（tempering）</strong>，术语 <strong>退火（annealing）</strong> 也很常见。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中实现的 SMC 方法可以总结如下：</p>
+<ul class="simple">
+<li><p>将 <span class="math notranslate nohighlight">\(β\)</span> 初始化为零</p></li>
+<li><p>从回火后的后验中生成 <span class="math notranslate nohighlight">\(N\)</span> 个样本 <span class="math notranslate nohighlight">\(s_β\)</span></p></li>
+<li><p>增加 <span class="math notranslate nohighlight">\(β\)</span> 以将有效样本大小保持在预定义值</p></li>
+<li><p>计算一组 <span class="math notranslate nohighlight">\(N\)</span> 个重要性权重 <span class="math notranslate nohighlight">\(W\)</span>。权重是根据新旧回火后验计算的</p></li>
+<li><p>根据 <span class="math notranslate nohighlight">\(W\)</span> 对 <span class="math notranslate nohighlight">\(s_β\)</span> 重新采样得到 <span class="math notranslate nohighlight">\(s_w\)</span></p></li>
+<li><p>运行 <span class="math notranslate nohighlight">\(N\)</span> 个 MCMC 链 <span class="math notranslate nohighlight">\(k\)</span> 步，从 <span class="math notranslate nohighlight">\(s_w\)</span> 中的不同样本开始每个链，并仅保留最后一步中的样本</p></li>
+<li><p>从步骤 3 重复直到 <span class="math notranslate nohighlight">\(\beta = 1\)</span></p></li>
+</ul>
+<p>重采样步骤通过删除概率低的样本并用概率较高的样本替换它们来进行。这一步降低了样本的多样性。MCMC 步骤扰动样本，希望增加多样性，从而帮助 SMC 探索参数空间。任何有效的 MCMC 转换核都可以在 SMC 中使用，并且根据问题，您可能会发现其中一些的性能优于其他核。例如，对于 ABC 方法，我们通常需要依赖无梯度方法，例如 <code class="docutils literal notranslate"><span class="pre">随机游走</span> <span class="pre">Metropolis-Hasting</span></code>，因为模拟器通常不可微分。</p>
+<p>回火方法的效率很大程度上取决于 <span class="math notranslate nohighlight">\(β\)</span> 的中间值。两个连续的 <span class="math notranslate nohighlight">\(β\)</span> 值之间的差异越小，两个连续的回火后验越接近，因此从一个阶段到下一个阶段的过渡越容易。但如果步骤太小，我们将需要很多中间阶段，超过某个阈值点，将浪费大量计算资源，而不能真正提高结果的准确性。另一个重要因素是增加样本多样性的 MCMC 转移核的效率。为了帮助提高转移效率，<code class="docutils literal notranslate"><span class="pre">PyMC3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 使用上一阶段的样本来调整当前阶段的提议分布以及 MCMC 采取的步骤数，并保持所有链的步数相同.</p>
 </div>
 <div class="section" id="vi-details">
-<span id="id94"></span><h3>11.9.5 变分推断<a class="headerlink" href="#vi-details" title="Permalink to this headline">¶</a></h3>
-<p>While we do not use variational inference in this book, it is a useful approach to know about. Compared to MCMC, VI tends to be easier to scale to large data and is faster to run computationally, but with less theoretical guarantees of convergence <span id="id95">[<a class="reference internal" href="references.html#id162">161</a>]</span>.</p>
-<p>As we previously mentioned in Section <a class="reference internal" href="#dkl"><span class="std std-ref">11.3 KL 散度</span></a>, we can use one distribution to approximate another and then use the Kullback-Leibler (KL) divergence to measure how good the approximation is. Turns out we can use this approach to do Bayesian inference as well! Such approach is called variational inference (VI) <span id="id96">[<a class="reference internal" href="references.html#id159">162</a>]</span>. The goal of VI is to approximate the target probability density, in our case the posterior distribution <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \mid Y)\)</span>, with a surrogate distribution <span class="math notranslate nohighlight">\(q(\boldsymbol{\theta})\)</span>. In practice we usually choose <span class="math notranslate nohighlight">\(q(\boldsymbol{\theta})\)</span> to be of simpler form than <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \mid Y)\)</span>, and we find the member of that family of distributions, which is the closest to the target in the KL divergence sense, using optimization. With small rewrite to Equation <a class="reference internal" href="#equation-eq-kl-divergence">(96)</a>, we have:</p>
+<span id="id87"></span><h3>11.9.5 变分推断<a class="headerlink" href="#vi-details" title="Permalink to this headline">¶</a></h3>
+<p>虽然我们在本书中没有使用变分推断，但它是一种有用的方法。与 MCMC 相比，VI 往往更容易扩展到大数据并且计算运行速度更快，但收敛的理论保证较少 <span id="id88">[<a class="reference internal" href="references.html#id162">148</a>]</span>。</p>
+<p>正如之前在 <a class="reference internal" href="#dkl"><span class="std std-ref">11.3 KL 散度</span></a> 部分中提到的，我们可以使用一种分布来近似另一种分布，然后使用 <code class="docutils literal notranslate"><span class="pre">Kullback-Leibler</span> <span class="pre">(KL)</span> <span class="pre">散度</span></code> 来衡量近似的好坏。</p>
+<p>事实证明，我们也可以使用这种方法进行贝叶斯推理！这种方法被称为变分推理 (VI) <span id="id89">[<a class="reference internal" href="references.html#id159">149</a>]</span>。 VI 的目标是用代理分布 <span class="math notranslate nohighlight">\(q(θ)\)</span> 来近似目标概率密度（在我们的例子中是后验分布 <span class="math notranslate nohighlight">\(p(θ \mid Y)\)</span>）。在实践中，我们通常选择 <span class="math notranslate nohighlight">\(q(θ)\)</span> 比 <span class="math notranslate nohighlight">\(p(θ \mid Y)\)</span> 具有更简单的形式，并且使用优化方法找到该分布族的具体成员，该成员在 <code class="docutils literal notranslate"><span class="pre">KL</span> <span class="pre">散度</span></code> 意义上应当最接近目标分布。通过对方程 <a class="reference internal" href="#equation-eq-kl-divergence">(96)</a> 的微小改动，我们有：</p>
 <div class="math notranslate nohighlight" id="equation-eq-kl-divergence2">
-<span class="eqno">(117)<a class="headerlink" href="#equation-eq-kl-divergence2" title="Permalink to this equation">¶</a></span>\[\mathbb{KL}(q(\boldsymbol{\theta}) \parallel p(\boldsymbol{\theta} \mid Y)) = \mathbb{E}_q[\log{q(\boldsymbol{\theta})}-\log{p(\boldsymbol{\theta} \mid Y)}]   \]</div>
-<p>However, this objective is hard to compute because it requires the marginal likelihood of <span class="math notranslate nohighlight">\(p(Y)\)</span>. To see that let us expand Equation <a class="reference internal" href="#equation-eq-kl-divergence2">(117)</a>:</p>
+<span class="eqno">(117)<a class="headerlink" href="#equation-eq-kl-divergence2" title="Permalink to this equation">¶</a></span>\[\mathbb{KL}(q(\boldsymbol{\theta}) \parallel p(\boldsymbol{\theta} \mid Y)) = \mathbb{E}_q[\log{q(\boldsymbol{\theta})}-\log{p(\boldsymbol{\theta} \mid Y)}]\]</div>
+<p>然而，这个目标很难计算，因为它需要 <span class="math notranslate nohighlight">\(p(Y)\)</span> 的边缘似然。为了看到这一点，让我们展开方程 <a class="reference internal" href="#equation-eq-kl-divergence2">(117)</a>：</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{split}
   \mathbb{KL}(q(\boldsymbol{\theta}) \parallel p(\boldsymbol{\theta} \mid Y)) &amp;= \mathbb{E}[\log{q(\boldsymbol{\theta})}] - \mathbb{E}[\log{p(\boldsymbol{\theta} \mid Y)}] \\
    &amp;= \mathbb{E}[\log{q(\boldsymbol{\theta})}] - \mathbb{E}[\log{p(\boldsymbol{\theta},  Y)}] + \log{p(Y)}
 \end{split}\end{split}\]</div>
-<p>Luckily, since <span class="math notranslate nohighlight">\(\log{p(Y)}\)</span> is a constant with respect to <span class="math notranslate nohighlight">\(q(\boldsymbol{\theta})\)</span>, we can omit it during optimization. Thus, in practice, we maximize the evidence lower bound (ELBO) as shown in Equation <a class="reference internal" href="#equation-eq-elbo-vi">(118)</a>, which is equivalent to minimizing the KL divergence:</p>
+<p>幸运的是，由于 <span class="math notranslate nohighlight">\(\log{p(Y)}\)</span>  是关于 <span class="math notranslate nohighlight">\(q(\boldsymbol{\theta})\)</span> 的常数，我们可以在优化期间省略它。因此，在实践中，我们最大化 <code class="docutils literal notranslate"><span class="pre">证据下界</span> <span class="pre">(ELBO)</span></code>，如方程 <a class="reference internal" href="#equation-eq-elbo-vi">(118)</a> 所示，这相当于最小化 <code class="docutils literal notranslate"><span class="pre">KL</span> <span class="pre">散度</span></code>：</p>
 <div class="math notranslate nohighlight" id="equation-eq-elbo-vi">
-<span class="eqno">(118)<a class="headerlink" href="#equation-eq-elbo-vi" title="Permalink to this equation">¶</a></span>\[\text{ELBO}(q) = \mathbb{E}[\log{p(\boldsymbol{\theta},  Y)}] - \mathbb{E}[\log{q(\boldsymbol{\theta})}]   \]</div>
-<p>The last piece of the puzzle is to figure out how to compute the expectation in Equation <a class="reference internal" href="#equation-eq-elbo-vi">(118)</a>. Instead of solving an expensive integration, we compute the average using Monte Carlo samples drawn from the surrogate distribution <span class="math notranslate nohighlight">\(q(\boldsymbol{\theta})\)</span> and plug them into <a class="reference internal" href="#equation-eq-elbo-vi">(118)</a>.</p>
-<p>The performance of VI depends on many factors. One of them being the family of surrogate distributions we choose from. For example, a more expressive surrogate distribution helps capture more complex, nonlinear dependencies among components of the target posterior distribution, and thus usually gives better result (see <a class="reference internal" href="#fig-vi-in-tfp"><span class="std std-numref">Fig. 201</span></a>).</p>
-<p>Automatically choosing a good surrogate family distribution and efficiently optimizing it is currently an active research area. Code Block <a class="reference internal" href="#vi-in-tfp"><span class="std std-ref">vi_in_tfp</span></a> shows a simple example of using VI in TFP, with two different types of surrogate posterior distributions. The result is shown in <a class="reference internal" href="#fig-vi-in-tfp"><span class="std std-numref">Fig. 201</span></a>.</p>
+<span class="eqno">(118)<a class="headerlink" href="#equation-eq-elbo-vi" title="Permalink to this equation">¶</a></span>\[\text{ELBO}(q) = \mathbb{E}[\log{p(\boldsymbol{\theta},  Y)}] - \mathbb{E}[\log{q(\boldsymbol{\theta})}]\]</div>
+<p>难题的最后一块是弄清楚如何计算方程 <a class="reference internal" href="#equation-eq-elbo-vi">(118)</a> 中的期望。我们没有解决昂贵的积分问题，而是使用从代理分布 <span class="math notranslate nohighlight">\(q(θ)\)</span> 中抽取的 Monte Carlo 样本计算均值，并将它们插入 <a class="reference internal" href="#equation-eq-elbo-vi">(118)</a>。</p>
+<p>变分推断的性能取决于许多因素。其中之一是选择的代理分布族。例如，更具表现力的代理分布有助于捕获目标后验分布组分之间更复杂的非线性依赖关系，因此通常会给出更好的结果（参见 <a class="reference internal" href="#fig-vi-in-tfp"><span class="std std-numref">Fig. 201</span></a>）。</p>
+<p>自动选择一个好的代理分布族并有效地优化它是一个活跃的研究领域。代码 <a class="reference internal" href="#vi-in-tfp"><span class="std std-ref">vi_in_tfp</span></a> 展示了在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中使用变分推断的简单示例，具有两种不同类型的代理后验分布。结果显示在 <a class="reference internal" href="#fig-vi-in-tfp"><span class="std std-numref">Fig. 201</span></a> 中。</p>
 <div class="literal-block-wrapper docutils container" id="vi-in-tfp">
 <div class="code-block-caption"><span class="caption-number">Listing 172 </span><span class="caption-text">vi_in_tfp</span><a class="headerlink" href="#vi-in-tfp" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tfpe</span> <span class="o">=</span> <span class="n">tfp</span><span class="o">.</span><span class="n">experimental</span>
@@ -1966,162 +1984,153 @@ p(\theta) \propto \theta^{-0.5} (1-\theta)^{-0.5}
 </pre></div>
 </div>
 </div>
-<p>seperator!</p>
 <div class="figure align-default" id="fig-vi-in-tfp">
 <a class="reference internal image-reference" href="../_images/vi_in_tfp.png"><img alt="../_images/vi_in_tfp.png" src="../_images/vi_in_tfp.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 201 </span><span class="caption-text">Using variational inference to approximate a target density function.</span><a class="headerlink" href="#fig-vi-in-tfp" title="Permalink to this image">¶</a></p>
 <div class="legend">
-<p>The target density is a 2D banana shaped function plotted using contour lines. Two types of surrogate posterior distributions are used for the approximation: on the left panel a mean-field Gaussian (one univariate Gaussian for each dimension with trainable location and scale) and on the right panel a full-rank Gaussian (a 2D multivariate Gaussian with trainable mean and covariance matrix) <span id="id97">[<a class="reference internal" href="references.html#id163">163</a>]</span>.</p>
+<p>The target density is a 2D banana shaped function plotted using contour lines. Two types of surrogate posterior distributions are used for the approximation: on the left panel a mean-field Gaussian (one univariate Gaussian for each dimension with trainable location and scale) and on the right panel a full-rank Gaussian (a 2D multivariate Gaussian with trainable mean and covariance matrix) <span id="id90">[<a class="reference internal" href="references.html#id163">150</a>]</span>.</p>
 <p>Samples from the approximation after optimization are plotted as dots overlay on top of the true density. Comparing the two, you can see that while both approximations does not fully capture the shape of the target density, full-rank Gaussian is a better approximation thanks to its more complex structure.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="section" id="programming-ref">
-<span id="id98"></span><h2>11.10 编程参考<a class="headerlink" href="#programming-ref" title="Permalink to this headline">¶</a></h2>
+<span id="id91"></span><h2>11.10 编程参考<a class="headerlink" href="#programming-ref" title="Permalink to this headline">¶</a></h2>
 <p>计算贝叶斯的一部分很好，计算机和软件工具现在可用。使用这些工具可以帮助现代贝叶斯从业者共享模型、减少错误并加快模型构建和推理过程。为了让计算机为我们工作，我们需要对其进行编程，但这通常说起来容易做起来难。要有效地使用它们仍然需要思考和理解。在最后一节中，我们将为主要概念提供一些高级指导。</p>
 <div class="section" id="which-programming-language">
-<span id="id99"></span><h3>11.10.1 哪种编程语言 ?<a class="headerlink" href="#which-programming-language" title="Permalink to this headline">¶</a></h3>
-<p>有许多编程语言。我们主要使用 Python，但其他流行的语言，如 Julia、R、C/C++ 也存在用于贝叶斯计算的专门应用程序。那么你应该使用哪种编程语言呢？这里没有普遍的正确或错误答案。相反，你应该始终考虑完整的生态系统。在本书中，我们使用 Python，因为像 ArviZ、Matplotlib 和 Pandas 这样的包可以使数据处理和显示变得容易。这不是 Python 独有的。对于贝叶斯主义者，请特别考虑该特定语言中可用的 PPL，因为如果不存在，那么你可能需要重新考虑你选择的编程语言。还要考虑你要与之合作的社区以及他们使用的语言。这本书的作者之一住在南加州，所以会英语和一点西班牙语很有意义，因为他可以在常见的情况下进行交流。编程语言也是如此，如果你未来的实验室组使用 R，那么学习 R 是一个好主意。</p>
-<p>计算纯粹主义者可能会惊呼某些语言在计算上比其他语言更快。这当然是正确的，但我们建议不要过于专注于“哪个是最快的 ppl\”的讨论。在现实生活场景中，不同的模型需要不同的时间来运行。</p>
-<p>此外，还有“人类时间”，即迭代并提出模型的时间，以及“模型运行时间”，即计算机返回有用结果所需的时间。这些是不一样的，在不同的情况下，一个比另一个更重要。这就是说，不要太担心选择“正确”的前门语言，如果你有效地学习一种，概念就会转移到另一种。</p>
+<span id="id92"></span><h3>11.10.1 哪种编程语言 ?<a class="headerlink" href="#which-programming-language" title="Permalink to this headline">¶</a></h3>
+<p>有许多编程语言。我们主要使用 Python，但其他流行的语言，如 Julia、R、C/C++ 也存在用于贝叶斯计算的专门应用程序。那么你应该使用哪种编程语言呢？</p>
+<p>这里没有普遍的正确或错误答案。相反，你应该始终考虑完整的生态系统。在本书中，我们使用 Python，因为像 ArviZ、Matplotlib 和 Pandas 这样的包可以使数据处理和显示变得容易。</p>
+<p>对于贝叶斯主义者，请特别考虑该特定语言中可用的 PPL，因为如果不存在，那么你可能需要重新考虑你选择的编程语言。还要考虑你要与之合作的社区以及他们使用的语言。</p>
+<p>这本书的作者之一住在南加州，所以会英语和一点西班牙语很有意义，因为他可以在常见的情况下进行交流。编程语言也是如此，如果你未来的实验室组使用 R，那么学习 R 是一个好主意。</p>
+<p>计算纯粹主义者可能会惊呼某些语言在计算上比其他语言更快。这当然是正确的，但我们建议不要过于专注于 “哪个是最快的 PPL” 的讨论。在现实生活场景中，不同模型需要不同的时间来运行。</p>
+<p>此外，还有 “人类时间”，即迭代并提出模型的时间，以及 “模型运行时间”，即计算机返回有用结果所需的时间。这些都是不一样的，在不同的情况下，一个可能比另一个更重要。</p>
+<p>这就是说，不要太担心选择 “正确” 的语言，如果你有效地学习了一种，概念就会转移到另一种。</p>
 </div>
 <div class="section" id="version-control">
-<span id="id100"></span><h3>11.10.2 版本控制<a class="headerlink" href="#version-control" title="Permalink to this headline">¶</a></h3>
+<span id="id93"></span><h3>11.10.2 版本控制<a class="headerlink" href="#version-control" title="Permalink to this headline">¶</a></h3>
 <p>版本控制不是必需的，但绝对推荐使用，如果使用会带来很大的好处。单独工作时，版本控制可让你迭代模型设计，而不必担心丢失代码或进行更改或试验会破坏模型。这本身就可以让你更快、更有信心地进行迭代，以及在不同模型定义之间来回切换的能力。</p>
 <p>与他人合作时，版本控制支持协作和代码共享，如果没有版本控制系统允许的快照或比较功能，这将是具有挑战性或不可能执行的。</p>
 <p>有许多不同的版本控制系统（Mercurial、SVN、Perforce），但 git 目前是最流行的。版本控制通常不依赖于特定的编程语言。</p>
 </div>
 <div class="section" id="dependency-management-and-package-repositories">
-<span id="id101"></span><h3>11.10.3 依赖管理和包仓库<a class="headerlink" href="#dependency-management-and-package-repositories" title="Permalink to this headline">¶</a></h3>
-<p>几乎所有代码都依赖于其他代码来运行（一直是海龟）。 PPL 尤其依赖于许多不同的库来运行。</p>
-<p>我们强烈建议你熟悉一个需求管理工具，它可以帮助你查看、列出和冻结你的分析所依赖的包。此外，包存储库是从中获取这些需求包的地方。这些通常特定于该语言，例如，Python 中的一个需求管理工具是 pip，而流行的云存储库是 pypi。在 Scala 中，sbt 是一种帮助解决依赖关系的工具，而 Maven 是一种流行的包存储库。</p>
-<p>所有成熟的语言都会有这种工具，但你必须有意识地选择使用它们。</p>
+<span id="id94"></span><h3>11.10.3 依赖管理和包仓库<a class="headerlink" href="#dependency-management-and-package-repositories" title="Permalink to this headline">¶</a></h3>
+<p>几乎所有代码都依赖于其他代码来运行。 PPL 尤其依赖于许多不同的库来运行。</p>
+<p>我们强烈建议你熟悉一个需求管理工具，它可以帮助你查看、列出和冻结你的分析所依赖的包。此外，包存储库是从中获取这些需求包的地方。这些通常特定于该语言，例如，Python 中的一个需求管理工具是 <code class="docutils literal notranslate"><span class="pre">pip</span></code>，云存储库是 <code class="docutils literal notranslate"><span class="pre">pypi</span></code>。在 Scala 中，<code class="docutils literal notranslate"><span class="pre">sbt</span></code> 是一种帮助解决依赖关系的工具，而 <code class="docutils literal notranslate"><span class="pre">Maven</span></code> 是一种流行的包存储库。</p>
+<p>所有成熟的语言都会有此种工具，但你必须有意识地选择使用它们。</p>
 </div>
 <div class="section" id="environment-management">
-<span id="id102"></span><h3>11.10.4 环境管理<a class="headerlink" href="#environment-management" title="Permalink to this headline">¶</a></h3>
+<span id="id95"></span><h3>11.10.4 环境管理<a class="headerlink" href="#environment-management" title="Permalink to this headline">¶</a></h3>
 <p>所有代码都在一个环境中执行。大多数人会忘记这一点，直到他们的代码突然停止工作，或者不能在另一台计算机上工作。</p>
 <p>环境管理是用于创建可重现计算环境的一组工具。这对于在模型中处理足够随机性并且不希望计算机添加额外的可变性的贝叶斯建模者来说尤其重要。</p>
-<p>不幸的是，环境管理也是编程中最令人困惑的部分之一。一般来说，有两种粗略的环境控制类型，语言特定的和语言不可知的。在 Python 中，virtualenv 是一个特定于 Python 的环境管理器，而容器化和虚拟化与语言无关。我们在这里没有具体建议，因为选择很大程度上取决于你对这些工具的舒适度，以及你计划在哪里运行代码。不过，我们绝对建议你在这里做出慎重的选择，因为它可以确保你获得可重复的结果。</p>
+<p>不幸的是，环境管理也是编程中最令人困惑的部分之一。一般来说，有两种粗略的环境控制类型，语言特定的和语言不可知的。在 Python 中，<code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> 是一个特定于 Python 的环境管理器，而容器化和虚拟化与语言无关。</p>
+<p>我们在这里没有具体建议，因为选择很大程度上取决于你对这些工具的舒适度，以及你计划在哪里运行代码。不过，我们绝对建议你在这里做出慎重的选择，因为它可以确保你获得可重复的结果。</p>
 </div>
 <div class="section" id="vs-vs-notebook">
 <span id="dev-environment"></span><h3>11.10.5 文本编辑器 vs 集成开发环境 vs Notebook<a class="headerlink" href="#vs-vs-notebook" title="Permalink to this headline">¶</a></h3>
 <p>编写代码时，你必须将其写在某个地方。对于有数据意识的人来说，通常有三个接口。</p>
-<p>第一个也是最简单的是文本编辑器。最基本的文本编辑器允许你惊喜地编辑文本并保存它。使用这些编辑器，你可以编写 python 程序，保存它，然后运行它。通常，文本编辑器非常“轻量级”，除了查找和替换等基本功能之外不包含太多额外功能。把文本编辑器想象成一辆自行车。它们很简单，它们的界面基本上是一个车把和一些踏板，它们会让你从这里到那里，但主要是由你来完成工作。</p>
-<p>与现代飞机相比，集成开发环境 (IDE)。它们具有大量的功能、大量的按钮和大量的自动化。 IDE 允许你在其核心编辑文本，但顾名思义，它们也集成了开发的许多其他方面。例如，运行代码、单元测试、linting 代码、版本控制、代码版本比较等功能。在编写跨多个模块的大量复杂代码时，IDE 通常最有用。
-虽然我们很乐意提供文本编辑器与 IDE 的简单定义，但如今这条线非常模糊。我们的建议是更多地从文本编辑器开始，一旦熟悉了代码的工作原理，就转向 IDE。否则，你将很难说出 IDE 在“幕后”为你做什么。</p>
-<p>笔记本是一个完全不同的界面。笔记本的特殊之处在于它们混合了代码、输出和文档，并允许非线性代码执行。对于本书，大部分代码和图形都以 Jupyter Notebook 文件的形式呈现。我们还提供了 Google Colab 的链接，这是一个云笔记本环境。笔记本通常最适合用于探索性数据分析和解释型情况，例如本书。它们不太适合运行生产代码。我们对笔记本的建议类似于 IDE。如果不熟悉统计计算，请先从文本编辑器开始。一旦你掌握了如何从单个文件运行代码，然后转移到笔记本环境，无论是云托管的 Google colab、Binder 实例还是本地 Jupyter Notebook 。</p>
+<p>第一个也是最简单的是文本编辑器。最基本的文本编辑器允许你惊喜地编辑文本并保存它。使用这些编辑器，你可以编写 python 程序，保存它，然后运行它。通常，文本编辑器非常 “轻量级”，除了查找和替换等基本功能之外不包含太多额外功能。把文本编辑器想象成一辆自行车。它们很简单，其界面基本上是一个车把和一些踏板，它们会让你从这里到那里，但主要是由你来完成工作。</p>
+<p>集成开发环境 (IDE) 具有大量的功能、大量的按钮和大量的自动化。 IDE 允许你在其核心编辑文本，但顾名思义，它们也集成了开发的许多其他方面。例如，运行代码、单元测试、linting 代码、版本控制、代码版本比较等功能。在编写跨多个模块的大量复杂代码时，IDE 通常最有用。</p>
+<p>虽然我们很乐意提供文本编辑器与 IDE 的简单定义，但如今这条线非常模糊。我们的建议是更多地从文本编辑器开始，一旦熟悉了代码的工作原理，就转向 IDE。否则，你将很难说出 IDE 在 “幕后” 为你做什么。</p>
+<p>NoteBook 是一个完全不同的界面。其特殊之处在于混合了代码、输出和文档，并允许非线性代码执行。对于本书，大部分代码和图形都以 Jupyter Notebook 文件的形式呈现。我们还提供了 Google Colab 的链接，这是一个云笔记本环境。Notebook 通常最适合用于探索性数据分析和解释型情况，例如本书。它们不太适合运行生产代码。我们对笔记本的建议类似于 IDE。如果不熟悉统计计算，请先从文本编辑器开始。一旦你掌握了如何从单个文件运行代码，然后转移到 NoteBook 环境，无论是云托管的 Google colab、Binder 还是本地 Jupyter Notebook 。</p>
 </div>
 <div class="section" id="the-specific-tools-used-for-this-book">
-<span id="id103"></span><h3>11.10.6 本书用到的特定工具<a class="headerlink" href="#the-specific-tools-used-for-this-book" title="Permalink to this headline">¶</a></h3>
+<span id="id96"></span><h3>11.10.6 本书用到的特定工具<a class="headerlink" href="#the-specific-tools-used-for-this-book" title="Permalink to this headline">¶</a></h3>
 <p>这是我们用于这本书的内容。这并不意味着这些是你可以使用的唯一工具，这些只是我们使用的工具。</p>
 <ul class="simple">
 <li><p><strong>编程语言</strong>: Python</p></li>
-<li><p><strong>概率编程语言</strong>: PyMC3, TensorFlow   Probability. Stan and Numpyro are displayed briefly as well.</p></li>
+<li><p><strong>概率编程语言</strong>: PyMC3, TensorFlow Probability. Stan and Numpyro are displayed briefly as well.</p></li>
 <li><p><strong>版本控制</strong>: git</p></li>
 <li><p><strong>依赖管理</strong>: pip and conda</p></li>
 <li><p><strong>包仓库</strong>: pypi, conda-forge</p></li>
 <li><p><strong>环境管理</strong>: conda</p></li>
-<li><p><strong>通用文档</strong>: LaTeX (for book writing), Markdown (for   code package), Jupyter Notebooks</p></li>
+<li><p><strong>通用文档</strong>: LaTeX (for book writing), Markdown (for code package), Jupyter Notebooks</p></li>
 </ul>
-<hr class="docutils"/>
+</div>
+</div>
+<div class="section" id="id97">
+<h2>参考文献<a class="headerlink" href="#id97" title="Permalink to this headline">¶</a></h2>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id104"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dt class="label" id="id98"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
 <dd><p>Most of the territory of what we now call Spain and Portugal was   part of Al-Andalus and Arabic state, this had a tremendous influence   in the Spanish/Portuguese culture, including food, music, language   and also in the genetic makeup.</p>
 </dd>
-<dt class="label" id="id105"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
-<dd><p>For those who are interested in delving further into the subject,   we recommend reading the book Introduction to Probability by Joseph   K. Blitzstein and Jessica Hwang <span id="id106">[<a class="reference internal" href="references.html#id10">5</a>]</span>.</p>
+<dt class="label" id="id99"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dd><p>For those who are interested in delving further into the subject,   we recommend reading the book Introduction to Probability by Joseph   K. Blitzstein and Jessica Hwang <span id="id100">[<a class="reference internal" href="references.html#id10">5</a>]</span>.</p>
 </dd>
-<dt class="label" id="id107"><span class="brackets"><a class="fn-backref" href="#id6">3</a></span></dt>
-<dd><p>From this definition John K. Kruschke wonderfully states that   Bayesian inference is reallocation of credibility (probability)   across possibilities <span id="id108">[<a class="reference internal" href="references.html#id93">164</a>]</span>.</p>
+<dt class="label" id="id101"><span class="brackets"><a class="fn-backref" href="#id6">3</a></span></dt>
+<dd><p>From this definition John K. Kruschke wonderfully states that   Bayesian inference is reallocation of credibility (probability)   across possibilities <span id="id102">[<a class="reference internal" href="references.html#id93">151</a>]</span>.</p>
 </dd>
-<dt class="label" id="id109"><span class="brackets"><a class="fn-backref" href="#id10">4</a></span></dt>
+<dt class="label" id="id103"><span class="brackets"><a class="fn-backref" href="#id10">4</a></span></dt>
 <dd><p>If we need to locate the circumference relative to other objects   in the plane, we would also need the coordinates of the center, but   let us omit that detail for now.</p>
 </dd>
-<dt class="label" id="id110"><span class="brackets"><a class="fn-backref" href="#id12">5</a></span></dt>
+<dt class="label" id="id104"><span class="brackets"><a class="fn-backref" href="#id12">5</a></span></dt>
 <dd><p>Increase or remain constant but never decrease.</p>
 </dd>
-<dt class="label" id="id111"><span class="brackets"><a class="fn-backref" href="#id13">6</a></span></dt>
+<dt class="label" id="id105"><span class="brackets"><a class="fn-backref" href="#id13">6</a></span></dt>
 <dd><p>Loosely speaking, a right-continuous function has no jump when the   limit point is approached from the right.</p>
 </dd>
-<dt class="label" id="id112"><span class="brackets"><a class="fn-backref" href="#id17">7</a></span></dt>
+<dt class="label" id="id106"><span class="brackets"><a class="fn-backref" href="#id17">7</a></span></dt>
 <dd><p>The result of one outcome does not affect the others.</p>
 </dd>
-<dt class="label" id="id113"><span class="brackets"><a class="fn-backref" href="#id19">8</a></span></dt>
+<dt class="label" id="id107"><span class="brackets"><a class="fn-backref" href="#id19">8</a></span></dt>
 <dd><p>Or more precisely if we take the limit of the Bin<span class="math notranslate nohighlight">\((n, p)\)</span>   distribution as <span class="math notranslate nohighlight">\(n \to \infty\)</span> and <span class="math notranslate nohighlight">\(p \to 0\)</span> with <span class="math notranslate nohighlight">\(np\)</span> fixed we get   a Poisson distribution.</p>
 </dd>
-<dt class="label" id="id114"><span class="brackets"><a class="fn-backref" href="#id21">9</a></span></dt>
+<dt class="label" id="id108"><span class="brackets"><a class="fn-backref" href="#id21">9</a></span></dt>
 <dd><p>A proper discussion that avoids non-sensical statements would   require a discussion of measure theory. But we will side-step this   requirement.</p>
 </dd>
-<dt class="label" id="id115"><span class="brackets"><a class="fn-backref" href="#id22">10</a></span></dt>
+<dt class="label" id="id109"><span class="brackets"><a class="fn-backref" href="#id22">10</a></span></dt>
 <dd><p>You can use check this statement yourself with the help of SciPy.</p>
 </dd>
-<dt class="label" id="id116"><span class="brackets"><a class="fn-backref" href="#id26">11</a></span></dt>
+<dt class="label" id="id110"><span class="brackets"><a class="fn-backref" href="#id26">11</a></span></dt>
 <dd><p>Not only on planet Earth, but even on other planets judging by   the Gaussian-shaped UFOs we have observed (just kidding, this is of   course a joke, just as ufology).</p>
 </dd>
-<dt class="label" id="id117"><span class="brackets"><a class="fn-backref" href="#id27">12</a></span></dt>
+<dt class="label" id="id111"><span class="brackets"><a class="fn-backref" href="#id27">12</a></span></dt>
 <dd><p>This distribution was discovered by William Gosset while trying   to improve the methods of quality control in a brewery. Employees of   that company were allow to publish scientific papers as long as they   did not use the word beer, the company name, and their own surname.Thus Gosset publish under the name Student.</p>
 </dd>
-<dt class="label" id="id118"><span class="brackets"><a class="fn-backref" href="#id28">13</a></span></dt>
+<dt class="label" id="id112"><span class="brackets"><a class="fn-backref" href="#id28">13</a></span></dt>
 <dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Gamma_function">https://en.wikipedia.org/wiki/Gamma_function</a></p>
 </dd>
-<dt class="label" id="id119"><span class="brackets"><a class="fn-backref" href="#id29">14</a></span></dt>
+<dt class="label" id="id113"><span class="brackets"><a class="fn-backref" href="#id29">14</a></span></dt>
 <dd><p><span class="math notranslate nohighlight">\(\nu\)</span> can take values below 1.</p>
 </dd>
-<dt class="label" id="id120"><span class="brackets"><a class="fn-backref" href="#id40">15</a></span></dt>
+<dt class="label" id="id114"><span class="brackets"><a class="fn-backref" href="#id40">15</a></span></dt>
 <dd><p>See, for example, <a class="reference external" href="https://www.youtube.com/watch?v=i5oND7rHtFs">https://www.youtube.com/watch?v=i5oND7rHtFs</a></p>
 </dd>
-<dt class="label" id="id121"><span class="brackets"><a class="fn-backref" href="#id41">16</a></span></dt>
+<dt class="label" id="id115"><span class="brackets"><a class="fn-backref" href="#id41">16</a></span></dt>
 <dd><p>For those familiar with eigenvectors and eigenvalues this should   ring a bell.</p>
 </dd>
-<dt class="label" id="id122"><span class="brackets"><a class="fn-backref" href="#id42">17</a></span></dt>
+<dt class="label" id="id116"><span class="brackets"><a class="fn-backref" href="#id42">17</a></span></dt>
 <dd><p>Another analogy comes from politics, when politicians/government   changes but pressing issues like inequality or climate change are   not properly addressed.</p>
 </dd>
-<dt class="label" id="id123"><span class="brackets"><a class="fn-backref" href="#id44">18</a></span></dt>
+<dt class="label" id="id117"><span class="brackets"><a class="fn-backref" href="#id44">18</a></span></dt>
 <dd><p>To be precise we should include the molecules of glass and the   molecules in the air, and… but let just focus on the water.</p>
 </dd>
-<dt class="label" id="id124"><span class="brackets"><a class="fn-backref" href="#id45">19</a></span></dt>
+<dt class="label" id="id118"><span class="brackets"><a class="fn-backref" href="#id45">19</a></span></dt>
 <dd><p>Do not let that Heisenberg guy and his uncertainty principle   spoil the party</p>
 </dd>
-<dt class="label" id="id125"><span class="brackets"><a class="fn-backref" href="#id49">20</a></span></dt>
+<dt class="label" id="id119"><span class="brackets"><a class="fn-backref" href="#id49">20</a></span></dt>
 <dd><p>Generally pronounced as W-A-I-C, even when something like   wæ[i]{.smallcaps}k is less of a mouthful</p>
 </dd>
-<dt class="label" id="id126"><span class="brackets"><a class="fn-backref" href="#id65">21</a></span></dt>
+<dt class="label" id="id120"><span class="brackets"><a class="fn-backref" href="#id65">21</a></span></dt>
 <dd><p>We do not like these rules of thumb, but you can check, for   example, here   <a class="reference external" href="https://en.wikipedia.org/wiki/Bayes_factor#Interpretation">https://en.wikipedia.org/wiki/Bayes_factor#Interpretation</a></p>
 </dd>
-<dt class="label" id="id127"><span class="brackets"><a class="fn-backref" href="#id66">22</a></span></dt>
+<dt class="label" id="id121"><span class="brackets"><a class="fn-backref" href="#id66">22</a></span></dt>
 <dd><p>In practice it is very common to actually compute the marginal   likelihood in log-scale for computational stability. In such a case   a Bayes factor becomes a difference of two log marginal likelihoods</p>
 </dd>
-<dt class="label" id="id128"><span class="brackets"><a class="fn-backref" href="#id69">23</a></span></dt>
+<dt class="label" id="id122"><span class="brackets"><a class="fn-backref" href="#id69">23</a></span></dt>
 <dd><p>The names derived from a famous casino with that name in the   Principality of Monaco.</p>
 </dd>
-<dt class="label" id="id129"><span class="brackets"><a class="fn-backref" href="#id70">24</a></span></dt>
+<dt class="label" id="id123"><span class="brackets"><a class="fn-backref" href="#id70">24</a></span></dt>
 <dd><p>This video shows a closely related example in a very calm and   clear way <a class="reference external" href="https://www.youtube.com/watch?v=zwAD6dRSVyI">https://www.youtube.com/watch?v=zwAD6dRSVyI</a></p>
 </dd>
-<dt class="label" id="id130"><span class="brackets"><a class="fn-backref" href="#id81">25</a></span></dt>
-<dd><p>The name Hybrid Monte Carlo is also used because is was   originally conceived as a hybrid method combining molecular   mechanics, a widely-used simulation technique for molecular systems,   and Metropolis-Hastings.</p>
-</dd>
-<dt class="label" id="id131"><span class="brackets"><a class="fn-backref" href="#id83">26</a></span></dt>
+<dt class="label" id="id124"><span class="brackets"><a class="fn-backref" href="#id81">26</a></span></dt>
 <dd><p>Code copied from our good friend Colin Carroll’s blogpost on HMC   <a class="reference external" href="https://colindcarroll.com/2019/04/11/hamiltonian-monte-carlo-from-scratch/">https://colindcarroll.com/2019/04/11/hamiltonian-monte-carlo-from-scratch/</a></p>
 </dd>
-<dt class="label" id="id132"><span class="brackets"><a class="fn-backref" href="#id85">27</a></span></dt>
-<dd><p>This value is in the interval <span class="math notranslate nohighlight">\([0, 1]\)</span>, and by default this value   is 0.8. See Section <a class="reference internal" href="chp_02.html#divergences"><span class="std std-ref">2.4.7 散度</span></a>.</p>
-</dd>
-<dt class="label" id="id133"><span class="brackets"><a class="fn-backref" href="#id90">28</a></span></dt>
+<dt class="label" id="id125"><span class="brackets"><a class="fn-backref" href="#id86">28</a></span></dt>
 <dd><p>We mean true purely from a mathematical point of view, without   any reference to how adequate is such posterior to any particular   practical problem.</p>
 </dd>
-<dt class="label" id="id134"><span class="brackets"><a class="fn-backref" href="#id91">29</a></span></dt>
-<dd><p>See <a class="reference internal" href="#entropy"><span class="std std-ref">11.2 熵</span></a> for more details on this analogy with physical   system.</p>
-</dd>
-<dt class="label" id="id135"><span class="brackets"><a class="fn-backref" href="#id92">30</a></span></dt>
-<dd><p>These terms are borrowed from metallurgy in particular describing   specific processes where alloyed metal is heated and cooled to   obtain a particular molecular structure.</p>
-</dd>
-<dt class="label" id="id136"><span class="brackets"><a class="fn-backref" href="#id93">31</a></span></dt>
-<dd><p>This effective sample size is computed from the importance   weights which is different from the ESS we have been computing to   diagnosing MCMC samplers, that is computed from the autocorrelation   of the samples.</p>
-</dd>
 </dl>
-</div>
 </div>
 </div>
 <script type="text/x-thebe-config">

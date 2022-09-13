@@ -92,12 +92,12 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_01.html">
-   第一章: 贝叶斯推断
+   第一章：贝叶斯推断
   </a>
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_02.html">
-   第二章: 贝叶斯模型的探索性分析
+   第二章：贝叶斯模型的探索性分析
   </a>
 </li>
 <li class="toctree-l1">
@@ -142,7 +142,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_11.html">
-   第十一章: 附加主题
+   第十一章：附加主题
   </a>
 </li>
 <li class="toctree-l1">
@@ -152,7 +152,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="references.html">
-   References
+   参考文献
   </a>
 </li>
 </ul>
@@ -382,7 +382,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises9">
-   9.12 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id55">
+   参考文献
   </a>
 </li>
 </ul>
@@ -594,7 +599,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises9">
-   9.12 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id55">
+   参考文献
   </a>
 </li>
 </ul>
@@ -764,7 +774,7 @@
 <li><p>先验在领域的上下文中是否有意义？</p></li>
 <li><p>我们的推断引擎能否产生具有所选先验的后验？</p></li>
 </ol>
-<p>我们在前面的部分中广泛地介绍了先验。在 <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 量化先验中信息的几种可选方法</span></a> 部分中，我们展示了先验选择的多个原则选项，例如 Jeffrey 的先验或弱信息先验。在 <a class="reference internal" href="chp_02.html#prior-predictive-checks"><span class="std std-ref">2.2 先验预测检查</span></a> 节中，我们展示了如何通过计算评估先验选择。作为快速复习，应根据可能性、模型目标（例如参数估计还是预测）来证明先前的选择是合理的。</p>
+<p>我们在前面的部分中广泛地介绍了先验。在 <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 先验分布的选择方法</span></a> 部分中，我们展示了先验选择的多个原则选项，例如 Jeffrey 的先验或弱信息先验。在 <a class="reference internal" href="chp_02.html#prior-predictive-checks"><span class="std std-ref">2.2 先验预测检查</span></a> 节中，我们展示了如何通过计算评估先验选择。作为快速复习，应根据可能性、模型目标（例如参数估计还是预测）来证明先前的选择是合理的。</p>
 <p>我们还可以使用先验分布来编码我们关于数据生成过程的先验领域知识。我们也可以使用先验作为工具来集中推断过程，以避免花费时间和计算来探索“明显错误”的参数空间，至少正如我们使用我们的领域专业知识所期望的那样。</p>
 <p>在工作流中，采样和绘制先验和先验预测分布为我们提供了两个关键信息。第一个是我们可以在我们选择的概率编程语言中表达我们的模型，第二个是了解我们选择的模型的特征，以及对我们先验的敏感性。如果我们的模型在先前的预测采样中失败，或者我们意识到在没有数据的情况下我们不了解模型的响应，我们可能需要在继续之前重复前面的步骤。幸运的是，使用概率编程语言，我们可以更改先验的参数化或模型的结构，以了解其影响并最终了解所选规范的信息性。</p>
 <p>不应该有先验分布或似然分布是预先确定的错觉，本书中印出的是无数试验和调整的结果，以找到提供合理的先验预测分布的参数。在编写自己的模型时，您还应该在进行下一步推断之前迭代先验和可能性。</p>
@@ -984,8 +994,8 @@
 <p><a class="reference internal" href="chp_07.html#fig-bart-bikes"><span class="std std-numref">Fig. 123</span></a>。如果我们对每天的收入感兴趣，我们可以使用奖励函数来计算每次租金的收入并将总计数相加，从而有效地将计数转换为收入。另一个例子是估计一个人在下雨和干燥时的幸福程度。如果我们有一个模型和对是否会下雨的估计（基于天气数据），并且我们有一个函数可以将一个人的衣服的干湿程度映射到幸福值，我们可以将天气估计映射到预期幸福估计。</p>
 <p>奖励函数变得特别有用的地方是存在决策。通过能够估计所有未来结果，并将这些结果映射到预期回报，您可以做出可能产生最大回报的选择。一个直观的例子是决定在早上收拾雨伞。带伞很烦人，这可以被认为是一种负面的奖励，但被雨淋湿是更糟糕的结果。是否带雨伞的选择取决于下雨的可能性。</p>
 <p>我们可以进一步扩展这个例子来揭示一个关键思想。假设您想建立一个模型，帮助您的家人决定何时收拾雨伞。你建立一个贝叶斯模型来估计下雨的概率，这是推断部分。然而，当你建立模型后，你发现你的兄弟非常讨厌带伞，除非已经下雨了，否则他永远不会带伞，而你的母亲非常讨厌被淋湿，即使没有云，她也会抢先带伞天空。在这种情况下，估计的数量，即下雨的概率，完全相同，但由于奖励不同，采取的行动也不同。更具体地说，模型的贝叶斯部分是一致的，但奖励的差异会产生不同的动作。</p>
-<p>奖励和行动都不需要是二元的，两者都可以是连续的。供应链中的一个典型例子是报刊供应商模型 <a class="footnote-reference brackets" href="#id55" id="id29">1</a>，其中报刊供应商必须在需求不确定时决定每天早上购买多少份报纸。如果他们买得太少，他们就有失去销售的风险，如果他们买太多，他们就会在未售出的库存上赔钱。</p>
-<p>因为贝叶斯统计提供了完整的分布，我们能够提供比提供点估计的方法更好的未来奖励估计 <a class="footnote-reference brackets" href="#id56" id="id30">2</a>。当我们考虑到贝叶斯定理包括尾部风险等特征时，我们可以直观地理解这一点，而点估计则不会。</p>
+<p>奖励和行动都不需要是二元的，两者都可以是连续的。供应链中的一个典型例子是报刊供应商模型 <a class="footnote-reference brackets" href="#id56" id="id29">1</a>，其中报刊供应商必须在需求不确定时决定每天早上购买多少份报纸。如果他们买得太少，他们就有失去销售的风险，如果他们买太多，他们就会在未售出的库存上赔钱。</p>
+<p>因为贝叶斯统计提供了完整的分布，我们能够提供比提供点估计的方法更好的未来奖励估计 <a class="footnote-reference brackets" href="#id57" id="id30">2</a>。当我们考虑到贝叶斯定理包括尾部风险等特征时，我们可以直观地理解这一点，而点估计则不会。</p>
 <p>使用生成贝叶斯模型，特别是计算模型，可以将模型参数的后验分布转换为观察单位域中的后验预测分布，转换为奖励的分布估计（以财务单位为单位），最可能结果的点估计。使用这个框架，我们可以测试各种可能决策的结果。</p>
 <div class="section" id="applied-example-making-decisions-based-on-flight-delays-modeling-result">
 <span id="id31"></span><h3>9.9.1 应用示例：基于航班延误建模结果做出决策<a class="headerlink" href="#applied-example-making-decisions-based-on-flight-delays-modeling-result" title="Permalink to this headline">¶</a></h3>
@@ -1099,14 +1109,14 @@
 <div class="section" id="animation">
 <span id="id37"></span><h4>动画<a class="headerlink" href="#animation" title="Permalink to this headline">¶</a></h4>
 <p>任何看过图片和电影之间区别的人，即使是无声电影，都知道运动在交流中的强大力量。</p>
-<p>通常情况下，动画比其他格式 <a class="footnote-reference brackets" href="#id57" id="id38">3</a> 更容易理解的想法，例如 MCMC 采样 <a class="footnote-reference brackets" href="#id58" id="id39">4</a>。现在可以在许多可视化包中生成动画，包括 ArviZ 用于动画后验预测检查的 Matplotlib。不确定性交流中使用动画的著名例子是纽约时报选举针<a class="footnote-reference brackets" href="#id59" id="id40">5</a>，它使用摇动的针规来突出显示。另一个选举例子是马修凯的总统普林科 <a class="footnote-reference brackets" href="#id60" id="id41">6</a>。这两种可视化都使用运动来显示各种美国选举结果的估计结果以及它是如何产生的。最重要的是，这两个使用的动画都给人一种不确定性的感觉，来自纽约时报可视化中的摇动针，或马蒂凯示例中的 plinko 下降的随机性。</p>
+<p>通常情况下，动画比其他格式 <a class="footnote-reference brackets" href="#id58" id="id38">3</a> 更容易理解的想法，例如 MCMC 采样 <a class="footnote-reference brackets" href="#id59" id="id39">4</a>。现在可以在许多可视化包中生成动画，包括 ArviZ 用于动画后验预测检查的 Matplotlib。不确定性交流中使用动画的著名例子是纽约时报选举针<a class="footnote-reference brackets" href="#id60" id="id40">5</a>，它使用摇动的针规来突出显示。另一个选举例子是马修凯的总统普林科 <a class="footnote-reference brackets" href="#id61" id="id41">6</a>。这两种可视化都使用运动来显示各种美国选举结果的估计结果以及它是如何产生的。最重要的是，这两个使用的动画都给人一种不确定性的感觉，来自纽约时报可视化中的摇动针，或马蒂凯示例中的 plinko 下降的随机性。</p>
 <p>动画能够显示许多图像以显示不断变化的状态，从而传达运动、进展和迭代的感觉。与静态图像一样，数字屏幕的广泛使用意味着它们可以更容易地观看，但它们需要观众更多的时间来暂停并观看完整的动画。它们还需要开发人员的更多工作，因为它们比简单的图片更难以生成和共享。</p>
 </div>
 <div class="section" id="interactive-aids">
 <span id="id42"></span><h4>交互式辅助<a class="headerlink" href="#interactive-aids" title="Permalink to this headline">¶</a></h4>
 <p>交互式辅助工具让观众可以控制正在显示的内容。</p>
 <p>在静态可视化和动画中，观众都被讲述了一个他们无法控制的故事。交互式辅助翻转脚本，用户可以创建自己的故事。一个简单的示例可能包括更改显示内容的滑块，例如轴的限制或数据点的不透明度。它还可能包括一个工具提示，向用户显示特定点的值。用户还可以控制计算。例如，在我们对企鹅的后验预测中，它选择了平均鳍状肢长度并绘制了 <a class="reference internal" href="chp_03.html#fig-flipper-length-mass-posterior-predictive"><span class="std std-numref">Fig. 42</span></a> 的结果。</p>
-<p>不同的人可能对不同值的后验预测分布感兴趣，因此具有交互性。示例包括各种 MCMC 技术的可视化 <a class="footnote-reference brackets" href="#id61" id="id43">7</a>，其中允许用户选择不同的采样器、分布和参数，允许用户进行他们想要的特定比较。</p>
+<p>不同的人可能对不同值的后验预测分布感兴趣，因此具有交互性。示例包括各种 MCMC 技术的可视化 <a class="footnote-reference brackets" href="#id62" id="id43">7</a>，其中允许用户选择不同的采样器、分布和参数，允许用户进行他们想要的特定比较。</p>
 <p>与静态绘图和动画类似，许多软件库都支持动画，例如 Matplotlib 或 Bokeh，另一个 Python 可视化库是专门为这种类型的交互而设计的。交互性的缺点是它们通常需要实时计算环境和某种软件部署。它不像共享静态图像或视频那么容易。</p>
 </div>
 </div>
@@ -1118,7 +1128,7 @@
 <span id="id45"></span><h3>9.10.5 应用示例：展示航班延误模型和结论<a class="headerlink" href="#applied-example-presenting-the-flight-delay-model-and-conclusions" title="Permalink to this headline">¶</a></h3>
 <p>对您在模型构建、推断运行和成本函数正确性方面的严谨性充满信心，您现在需要将结果传达给组织中的其他人，以向数据同行证明您的分析方法的合理性，并帮助您的老板在当前费用结构之间做出决定，以及拟议的费用结构。你意识到你有两组不同的观众，并为每一组准备不同的内容。</p>
 <p>在接近你的老板之前，你需要与你的同事完成一次同行评审。由于您的同行精通统计和计算，您可以为他们提供 Jupyter Notebook 的分析，其中混合了叙述、代码和结果。这本笔记本包含了你以前为老板推荐的所有模型、假设和情节。由于笔记本包含所有细节并且可重现，因此您的同事能够自信地评估您的工作是否正确。</p>
-<p>您的一些同事询问他们是否可以使用不同的先验运行模型来检查先验敏感性。您提供 Dockerfile<a class="footnote-reference brackets" href="#id62" id="id46">8</a>，它完全指定了环境。这样他们就可以运行 Jupyter notebook 并重新创建部分工作流程。</p>
+<p>您的一些同事询问他们是否可以使用不同的先验运行模型来检查先验敏感性。您提供 Dockerfile<a class="footnote-reference brackets" href="#id63" id="id46">8</a>，它完全指定了环境。这样他们就可以运行 Jupyter notebook 并重新创建部分工作流程。</p>
 <p>现在专注于通知老板的初始任务，您开始思考如何与她沟通的策略。你知道你最多有 30 分钟，而且会在她的办公室。您将使用笔记本电脑来展示视觉辅助工具，但您知道您的老板也需要能够在她没有视觉辅助工具的情况下将这个想法传达给她的同事。您还知道您的老板可能想测试不同的收费结构，以了解她可以安全谈判的地方。</p>
 <p>换句话说，她想看看不同奖励函数的效果。您设置了一个简单的笔记本，将奖励函数作为输入并生成收入直方图和表格。你与你的老板开会并迅速解释说“我花了一些时间利用过去的晚班航班延误来创建一个未来航班延误的模型。使用我估计在当前费用结构中的模型，我们每次晚班可以赚 3930 美元平均航班，在航空公司提议的费用结构中，我们将平均每晚航班赚 2921 美元。”您向老板展示底部图 <a class="reference internal" href="#fig-delays-model-posterior-predictive"><span class="std std-numref">Fig. 157</span></a>，解释这是预期和建模的晚班航班的分布，<a class="reference internal" href="#fig-late-fee-current-structure-hist"><span class="std std-numref">Fig. 162</span></a> 显示预计将在未来产生的收入.然后，您向老板展示 <a class="reference internal" href="#table-late-flight-revenue"><span class="std std-numref">Table 18</span></a>，显示新范式下的预期收入。您选择了一个表格而不是一个数字，因为 100 分钟以上延迟类别中的航班比例在图中并不明显。您使用该表来解释可能晚点超过 100 分钟的航班非常少，从收入的角度来看，该类别在您的模拟中可以忽略不计。您建议您的老板要么拒绝该提议，要么就 0 到 100 分钟范围内的延误协商更高的滞纳金。然后你的老板问你是否可以测试她选择的几种不同的费用结构，以便她看到效果。随着你老板的理解，推断的目标已经实现，你的老板拥有在她的谈判中做出明智决定所需的所有信息。</p>
 <table class="table" id="table-late-flight-revenue">
@@ -1149,8 +1159,8 @@
 <p>对于我们的第二个应用示例，将展示贝叶斯统计在更具实验性的环境中的使用，其中两组之间的差异很重要。在处理统计数据之前，我们将解释动机。</p>
 <p>机械工程师在设计产品时，首要考虑的是所使用材料的特性。毕竟，没有人希望他们的飞机在飞行途中分崩离析。机械工程师有关于陶瓷、金属、木材等材料的重量、强度和刚度的参考书，这些材料已经存在了很长时间。</p>
 <p>最近，塑料和纤维增强复合材料变得可用并且更常用。纤维增强复合材料通常由塑料和编织布的组合制成，赋予它们独特的性能。</p>
-<p>为了量化材料的强度特性，物理测试机械工程师运行称为拉伸测试的程序，其中将材料试样固定在两个夹具中，拉伸试验机拉动试样直至其断裂。许多数据点和物理特性可以从这一测试中估计出来。在这个实验中，重点是极限强度，或者换句话说，是材料完全失效前的最大载荷。作为研究项目的一部分 <a class="footnote-reference brackets" href="#id63" id="id48">9</a>，其中一位作者制造了 2 套，每套 8 个样品，除了增强纤维的编织外，其他所有方面都是相同的。其中一种纤维是平铺在彼此顶部的，称为单向编织。在另一种中，纤维被编织在一起形成称为双向编织的互锁图案。
-对每个样品独立进行一系列拉伸试验，结果以磅力 <a class="footnote-reference brackets" href="#id64" id="id49">10</a> 记录。对于机械工程来说，力除以面积来量化每单位面积的力，在这种情况下是磅力/平方英寸。例如，第一个双向试样在 3774 lbf (1532 kg) 的截面面积为 0.504 英寸 (12.8 mm) x 0.057 英寸 (1.27 mm) 时失效，产生的极限强度为 131.393 ksi（千磅每平方英寸） .作为参考，这意味着横截面积为 USB A 连接器 1/3 的试样理论上能够提升小型汽车的重量 <a class="footnote-reference brackets" href="#id65" id="id50">11</a>。</p>
+<p>为了量化材料的强度特性，物理测试机械工程师运行称为拉伸测试的程序，其中将材料试样固定在两个夹具中，拉伸试验机拉动试样直至其断裂。许多数据点和物理特性可以从这一测试中估计出来。在这个实验中，重点是极限强度，或者换句话说，是材料完全失效前的最大载荷。作为研究项目的一部分 <a class="footnote-reference brackets" href="#id64" id="id48">9</a>，其中一位作者制造了 2 套，每套 8 个样品，除了增强纤维的编织外，其他所有方面都是相同的。其中一种纤维是平铺在彼此顶部的，称为单向编织。在另一种中，纤维被编织在一起形成称为双向编织的互锁图案。
+对每个样品独立进行一系列拉伸试验，结果以磅力 <a class="footnote-reference brackets" href="#id65" id="id49">10</a> 记录。对于机械工程来说，力除以面积来量化每单位面积的力，在这种情况下是磅力/平方英寸。例如，第一个双向试样在 3774 lbf (1532 kg) 的截面面积为 0.504 英寸 (12.8 mm) x 0.057 英寸 (1.27 mm) 时失效，产生的极限强度为 131.393 ksi（千磅每平方英寸） .作为参考，这意味着横截面积为 USB A 连接器 1/3 的试样理论上能够提升小型汽车的重量 <a class="footnote-reference brackets" href="#id66" id="id50">11</a>。</p>
 <table class="colwidths-auto table">
 <thead>
 <tr class="row-odd"><th class="text-align:left head"><p><strong>Bidirectional Ultimate Strength (ksi)</strong></p></th>
@@ -1333,7 +1343,7 @@
 <p>从这些数字总结和后验图中，我们可以更确定两种复合材料的平均强度存在差异，这有助于在两种材料类型之间进行选择。我们还获得了强度的具体估计值及其分散性，帮助工程师了解材料在现实世界应用中的安全使用位置和方式。一个模型可以帮助我们得出多个结论是非常方便的。</p>
 </div>
 <div class="section" id="exercises9">
-<span id="id51"></span><h2>9.12 练习<a class="headerlink" href="#exercises9" title="Permalink to this headline">¶</a></h2>
+<span id="id51"></span><h2>习题<a class="headerlink" href="#exercises9" title="Permalink to this headline">¶</a></h2>
 <p><strong>9E1.</strong> What kind of data collection scheme would be most appropriate for these situations scenarios. Justify your choices by asking questions such as “How important is it that the information is reliable?” or “Can we collect the data in a reason time?” Explain how you would collect the data</p>
 <ol class="simple">
 <li><p>A medical trial for for a new drug treatment for cancer patients</p></li>
@@ -1388,40 +1398,42 @@
 <li><p>Craft a 1 minute explanation posterior for general audience that   isn’t familiar statistics using Matplotlib static visualization.</p></li>
 <li><p>Craft a 1 minute explanation to the same audience using the Bokeh   plot, incorporating the additional interactivity allowed by Bokeh.</p></li>
 </ol>
-<hr class="docutils"/>
+</div>
+<div class="section" id="id55">
+<h2>参考文献<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h2>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id55"><span class="brackets"><a class="fn-backref" href="#id29">1</a></span></dt>
+<dt class="label" id="id56"><span class="brackets"><a class="fn-backref" href="#id29">1</a></span></dt>
 <dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Newsvendor_model">https://en.wikipedia.org/wiki/Newsvendor_model</a></p>
 </dd>
-<dt class="label" id="id56"><span class="brackets"><a class="fn-backref" href="#id30">2</a></span></dt>
+<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id30">2</a></span></dt>
 <dd><p>&lt;<a class="reference external" href="http://www.ee.columbia.edu/~vittorio/BayesProof.pdf">www.ee.columbia.edu/~vittorio/BayesProof.pdf</a>&gt;</p>
 </dd>
-<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id38">3</a></span></dt>
+<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id38">3</a></span></dt>
 <dd><p>See <a class="reference external" href="https://bost.ocks.org/mike/algorithms/">https://bost.ocks.org/mike/algorithms/</a></p>
 </dd>
-<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id39">4</a></span></dt>
+<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id39">4</a></span></dt>
 <dd><p>See   <a class="reference external" href="https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/">https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/</a></p>
 </dd>
-<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id40">5</a></span></dt>
+<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id40">5</a></span></dt>
 <dd><p>See   <a class="reference external" href="https://www.nytimes.com/interactive/2020/11/03/us/elections/forecast-president.html">https://www.nytimes.com/interactive/2020/11/03/us/elections/forecast-president.html</a></p>
 </dd>
-<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id41">6</a></span></dt>
+<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id41">6</a></span></dt>
 <dd><p>See <a class="reference external" href="http://presidential-plinko.com/">http://presidential-plinko.com/</a></p>
 </dd>
-<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id43">7</a></span></dt>
+<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id43">7</a></span></dt>
 <dd><p><a class="reference external" href="https://chi-feng.github.io/mcmc-demo/app.html">https://chi-feng.github.io/mcmc-demo/app.html</a></p>
 </dd>
-<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id46">8</a></span></dt>
+<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id46">8</a></span></dt>
 <dd><p>Docker is one method to create fully reproducible environments   that has become quite popular</p>
 </dd>
-<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id48">9</a></span></dt>
+<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id48">9</a></span></dt>
 <dd><p>Much gratitude to Dr. Mehrdad Haghi and Dr. Winny Dong for funding   and facilitating this research</p>
 </dd>
-<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id49">10</a></span></dt>
+<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id49">10</a></span></dt>
 <dd><p>A recordings of the tests are available   <a class="reference external" href="https://www.youtube.com/watch?v=u_XDUWgzs_Y">https://www.youtube.com/watch?v=u_XDUWgzs_Y</a></p>
 </dd>
-<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id50">11</a></span></dt>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id50">11</a></span></dt>
 <dd><p>This is in an ideal situation. Factors other than ultimate   strength can limit the true load bearing capacity in real world   situations.</p>
 </dd>
 </dl>

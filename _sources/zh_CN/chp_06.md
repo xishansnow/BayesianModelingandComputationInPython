@@ -1624,7 +1624,7 @@ MAPE = \frac{1}{n} \sum_{i=1}^{n} \frac{|\text{forecast}_i - \text{observed}_i|}
 
 (exercises6)= 
 
-## 6.7 练习 
+## 习题 
 
 **6E1.** As we explained in Box *Parsing timestamp to design matrix* above, date information could be formatted into a design matrix for regression model to account for the periodic pattern in a time series. Try generating the following design matrix for the year 2021.
 
@@ -1762,8 +1762,7 @@ Which model contains problematic chains (divergence, low ESS, large $\hat R$)? C
 
 -   How is the model fit different between the two SSMs? Validate your  reasoning with simulations.
 
-
----
+## 参考文献
 
 [^1]: <https://quoteinvestigator.com/2013/10/20/no-predict/> 
 

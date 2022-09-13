@@ -14,7 +14,7 @@ kernelspec:
 
 (References)=
 
-# References
+# 参考文献
 
 ```{bibliography}
 :style: unsrt

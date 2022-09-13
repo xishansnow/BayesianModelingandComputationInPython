@@ -92,12 +92,12 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_01.html">
-   第一章: 贝叶斯推断
+   第一章：贝叶斯推断
   </a>
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_02.html">
-   第二章: 贝叶斯模型的探索性分析
+   第二章：贝叶斯模型的探索性分析
   </a>
 </li>
 <li class="toctree-l1">
@@ -142,7 +142,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_11.html">
-   第十一章: 附加主题
+   第十一章：附加主题
   </a>
 </li>
 <li class="toctree-l1">
@@ -152,7 +152,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="references.html">
-   References
+   参考文献
   </a>
 </li>
 </ul>
@@ -212,20 +212,21 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#choosing-the-distance">
-     8.4.1 选择距离函数
+     8.4.1 距离函数的选择
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#choosing-epsilon">
-     8.4.2 选择阈值
+     8.4.2 阈值
      <span class="math notranslate nohighlight">
       \(\epsilon\)
      </span>
-</a>
+     的选择
+    </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#choosing-summary-statistics">
-     8.4.3 选择统计量
+     8.4.3 统计量的选择
     </a>
 </li>
 </ul>
@@ -275,7 +276,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises8">
-   8.9 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id54">
+   参考文献
   </a>
 </li>
 </ul>
@@ -317,20 +323,21 @@
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#choosing-the-distance">
-     8.4.1 选择距离函数
+     8.4.1 距离函数的选择
     </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#choosing-epsilon">
-     8.4.2 选择阈值
+     8.4.2 阈值
      <span class="math notranslate nohighlight">
       \(\epsilon\)
      </span>
-</a>
+     的选择
+    </a>
 </li>
 <li class="toc-h3 nav-item toc-entry">
 <a class="reference internal nav-link" href="#choosing-summary-statistics">
-     8.4.3 选择统计量
+     8.4.3 统计量的选择
     </a>
 </li>
 </ul>
@@ -380,7 +387,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises8">
-   8.9 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id54">
+   参考文献
   </a>
 </li>
 </ul>
@@ -392,15 +404,15 @@
 <div class="tex2jax_ignore mathjax_ignore section" id="chap8">
 <span id="id1"></span><h1>第八章：近似贝叶斯计算<a class="headerlink" href="#chap8" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
-<p>在本章中，我们讨论近似贝叶斯计算（ Approximate Bayesian Computation ， ABC ）。近似贝叶斯计算中的 “近似” 指缺乏显式的似然函数，而非 MCMC 或变分推理等后验近似推断方法。近似贝叶斯计算方法的另一个常见并且更明确的名称是无似然方法。尽管有很多学者认为这两个术语之间存在区别，不能作为可以互换的概念，但无似然方法这个名称还是更容易让初识的人理解。</p>
-<p>当我们没有明确的似然表达式时，近似贝叶斯计算方法可能很有用，但需要有一个能够生成合成数据的参数化<em>模拟器</em>。这个模拟器有一个或多个未知参数，我们想知道哪一组参数生成的合成数据<em>足够接近</em>观测数据。然后我们再计算这组参数的后验分布。</p>
-<p>近似贝叶斯计算方法在生物科学中变得越来越普遍，特别是在系统生物学、流行病学、生态学和群体遗传学等子领域<span id="id2">[<a class="reference internal" href="references.html#id77">84</a>]</span>。但其也可用于其他领域，因为它们提供了一种解决许多实际问题的灵活方式。</p>
-<p>应用的多样性也反映在近似贝叶斯计算的 Python 软件包中 <span id="id3">[<a class="reference internal" href="references.html#id56">85</a>, <a class="reference internal" href="references.html#id55">86</a>, <a class="reference internal" href="references.html#id57">87</a>]</span> 。不过，额外的近似层也带来了一系列困难，主要是：在缺乏似然的情况下，<em>足够接近</em>到底指什么？如何能够实际计算一个近似的后验？</p>
-<p>我们将在本章中从一般性角度讨论这些挑战。我们强烈建议有兴趣将近似贝叶斯计算方法应用于自身问题的读者，用自己领域知识中的例子来补充本章内容。</p>
+<p>在本章中，我们讨论 <strong>近似贝叶斯计算（ Approximate Bayesian Computation ， ABC ）</strong>。近似贝叶斯计算中的 “近似” 指缺乏显式的似然函数，而非 MCMC 或变分推理等后验近似推断方法。近似贝叶斯计算方法的另一个常见并且更明确的名称是 <strong>无似然方法</strong>。尽管有很多学者认为这两个术语之间存在区别，不能作为可以互换的概念，但无似然方法这个名称还是更容易让初识的人理解。</p>
+<p>当没有明确的似然表达式时，近似贝叶斯计算方法可能会非常有用，但需要有一个能够生成合成数据的参数化 <em>模拟器</em>。这个模拟器有一个或多个未知参数，我们想知道哪一组参数生成的合成数据 <em>足够接近</em> 观测数据，然后再计算这组参数的后验分布。</p>
+<p>近似贝叶斯计算方法在生物科学中变得越来越普遍，特别是在系统生物学、流行病学、生态学和群体遗传学等子领域<span id="id2">[<a class="reference internal" href="references.html#id77">84</a>]</span>。但其也可用于其他领域，因为近似贝叶斯计算能够提供一种解决许多实际问题的灵活方式。</p>
+<p>应用的多样性也反映在近似贝叶斯计算的 Python 软件包中 <span id="id3">[<a class="reference internal" href="references.html#id56">85</a>, <a class="reference internal" href="references.html#id55">86</a>, <a class="reference internal" href="references.html#id57">87</a>]</span> 。不过，额外的近似层也带来了一系列困难，主要是：<strong>在缺乏似然的情况下，足够接近到底指什么？如何能够实际计算一个近似的后验？</strong></p>
+<p>我们将在本章中从一般性角度讨论这些挑战。强烈建议有兴趣将近似贝叶斯计算方法应用于自身问题的读者，用自己领域知识中的例子来补充本章内容。</p>
 <div class="section" id="life-beyond-likelihood">
 <span id="id4"></span><h2>8.1 超越似然<a class="headerlink" href="#life-beyond-likelihood" title="Permalink to this headline">¶</a></h2>
-<p>根据贝叶斯定理（ 公式 <a class="reference internal" href="chp_01.html#equation-eq-posterior-dist">(1)</a> ），要计算后验，需要两个基本成分：先验和似然。但是，对于某些特定问题，可能无法以封闭形式表达似然，或者计算似然的成本过高。这对于贝叶斯热爱者来说，似乎进入了一条死胡同。但是，如果能够以某种方式生成合成数据，情况可能就会有所不同，特别是当这种合成数据能够与真实的观测数据足够相似时，似乎能够用该生成过程来近似真实数据的似然。这种合成数据生成器通常被称为<strong>模拟器</strong>。从近似贝叶斯计算方法角度来看，模拟器就是一个黑盒子，我们在一侧输入参数值，并从另一侧获取模拟数据。这里的复杂性在于：不确定哪些输入参数足以生成与观测数据相似的合成数据。</p>
-<p>所有近似贝叶斯计算方法共有的基本概念是用 <span class="math notranslate nohighlight">\(\delta\)</span> 函数替换似然，该函数计算某种距离，或者更一般地说， 观测数据 <span class="math notranslate nohighlight">\(Y\)</span> 与（参数化模拟器 <span class="math notranslate nohighlight">\(Sim\)</span> 生成的）合成数据 <span class="math notranslate nohighlight">\(\hat Y\)</span> 之间的某种差异。</p>
+<p>根据贝叶斯定理（ 公式 <a class="reference internal" href="chp_01.html#equation-eq-posterior-dist">(1)</a> ），要计算后验，需要两个基本成分：先验和似然。但是，对于某些特定问题，可能无法以封闭形式表达似然，或者计算似然的成本过高。这对于贝叶斯热爱者来说，似乎进入了一条死胡同。但如果能够以某种方式生成合成数据，情况可能就会有所不同。特别是当此类合成数据能够与真实观测数据足够相似时，似乎就能够用该数据生成过程来近似真实数据的似然。这种合成数据生成器通常被称为 <strong>模拟器</strong>。从近似贝叶斯计算方法角度来看，模拟器就是一个黑盒子，我们在一侧输入参数值，并从另一侧获取模拟数据。这里的复杂性在于：<strong>不确定哪些输入参数足以生成与观测数据相似的合成数据</strong>。</p>
+<p>所有近似贝叶斯计算方法共有的基本概念是：<strong>用能够计算某种距离的 <span class="math notranslate nohighlight">\(\delta\)</span> 函数替换似然，或者更一般地说， 计算观测数据 <span class="math notranslate nohighlight">\(Y\)</span> 与合成数据 <span class="math notranslate nohighlight">\(\hat Y\)</span> （由参数化模拟器 <span class="math notranslate nohighlight">\(Sim\)</span> 生成）之间的某种差异</strong>。</p>
 <div class="math notranslate nohighlight">
 \[\hat Y \sim Sim(\theta)\]</div>
 <div class="math notranslate nohighlight">
@@ -410,50 +422,52 @@
 <p>我们的目标是使用函数 <span class="math notranslate nohighlight">\(\delta\)</span> 来获得足够好的近似似然：</p>
 <div class="math notranslate nohighlight">
 \[\lim_{\epsilon \to 0} \delta(Y, \hat Y \mid \epsilon) = p(Y \mid \boldsymbol{\theta})\]</div>
-<p>我们引入了一个容差参数 <span class="math notranslate nohighlight">\(\epsilon\)</span>，因为对于大多数问题，生成与观测数据 <span class="math notranslate nohighlight">\(Y\)</span> 相等的合成数据集 <span class="math notranslate nohighlight">\(\hat Y\)</span> 几乎不可能 <a class="footnote-reference brackets" href="#id54" id="id5">1</a> 。 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的值越大，我们就越能容忍 <span class="math notranslate nohighlight">\(Y\)</span> 和 <span class="math notranslate nohighlight">\(\hat Y\)</span> 之间的接近程度。一般来说，对于一个给定问题，较大的 <span class="math notranslate nohighlight">\(\epsilon\)</span> 值意味着对后验更粗略的近似，我们将在后面看到这方面的例子。</p>
-<p>在实践中，随着数据样本大小（或维度）的增加，我们找到足够小的 <span class="math notranslate nohighlight">\(\delta\)</span> 值将越来越困难 <a class="footnote-reference brackets" href="#id55" id="id6">2</a> 。一个简单的解决方案是增加 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的值，但这意味着增加了近似误差。更好的解决方案可能是计算一个或多个统计量 <span class="math notranslate nohighlight">\(S\)</span> 之间的距离，而不是模拟数据集和真实数据集之间的距离。</p>
+<p>我们需要引入了一个容差参数 <span class="math notranslate nohighlight">\(\epsilon\)</span>，因为对于大多数问题，生成与观测数据 <span class="math notranslate nohighlight">\(Y\)</span> 相等的合成数据集 <span class="math notranslate nohighlight">\(\hat Y\)</span> 几乎不可能 <a class="footnote-reference brackets" href="#id55" id="id5">1</a> 。 <span class="math notranslate nohighlight">\(\epsilon\)</span> 值越大，我们对 <span class="math notranslate nohighlight">\(Y\)</span> 和 <span class="math notranslate nohighlight">\(\hat Y\)</span> 之间的近似程度就越能容忍。一般来说，对于给定问题，较大的 <span class="math notranslate nohighlight">\(\epsilon\)</span> 值意味着对后验更粗略的近似。</p>
+<p>在实践中，随着数据样本量或维度的增加，找到足够小的 <span class="math notranslate nohighlight">\(\delta\)</span> 值将越来越困难 <a class="footnote-reference brackets" href="#id56" id="id6">2</a> 。一个简单的解决方案是增加 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的值，但这意味着增加了近似误差。因此，更好的解决方案可能是计算一个或多个统计量 <span class="math notranslate nohighlight">\(S\)</span> 之间的距离，而不是合成数据集和真实数据集之间的距离。</p>
 <div class="math notranslate nohighlight">
 \[\delta\left(S(Y), S(\hat Y) \mid \epsilon\right)\]</div>
-<p>我们必须知道，使用统计量会给近似贝叶斯计算带来额外的误差源，除非该统计量对于模型参数 <span class="math notranslate nohighlight">\(\theta\)</span> 来说是充分统计量。不幸的是，并非所有情况都能满足这种要求。但不充分的统计量在实践中仍然非常有用，并且经常被从业者使用。</p>
-<p>在本章中，我们将探讨一些不同的距离和统计量，重点关注一些经过验证的方法。但一定要清楚，近似贝叶斯计算设计许多不同领域、不同类型的模拟数据，因此这些方法很难一概而论。此外，文献进展非常迅速，因此本书将专注于构建必要的知识、技能和工具。</p>
+<p>当然，使用统计量会给近似贝叶斯计算带来额外的误差源，除非该统计量对于模型参数 <span class="math notranslate nohighlight">\(\theta\)</span> 来说是充分统计量。不幸的是，并非所有情况都能满足这种要求。尽管如此，不充分统计量在实践中仍然非常有用。</p>
+<p>在本章中，我们将探讨一些不同的距离和统计量，重点关注经过验证的一些方法。但一定要清楚，近似贝叶斯计算涉及许多不同领域、不同类型的模拟数据，因此此类方法很难一概而论。此外，文献进展非常迅速，因此本书将专注于构建必要的知识、技能和工具。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">充分统计量</p>
 <p>如果除了某个统计量之外，从同一样本计算的其他统计量无法提供有关该样本的更多信息，则该统计量对于模型参数而言是充分的，被称为充分统计量。换句话说，该统计量 <em>足以</em> 总结你的样本而不会丢失信息。</p>
-<p>例如，给定来自具有期望值 <span class="math notranslate nohighlight">\(\mu\)</span> 和已知有限方差的高斯分布的独立同分布样本，样本的均值对于参数 <span class="math notranslate nohighlight">\(\mu\)</span> 来说是一个<strong>充分统计量</strong>。请注意，均值无法说明离散度，因此其仅对参数 <span class="math notranslate nohighlight">\(\mu\)</span> 是充分的。</p>
-<p>众所周知，对于独立同分布数据，具有充分统计量且维度与 <span class="math notranslate nohighlight">\(\theta\)</span> 相同的唯一分布来自于<strong>指数族分布</strong> <span id="id7">[<a class="reference internal" href="references.html#id153">88</a>, <a class="reference internal" href="references.html#id152">89</a>, <a class="reference internal" href="references.html#id151">90</a>, <a class="reference internal" href="references.html#id150">91</a>]</span> 。对于其他类型的分布，充分统计量的维度会随着样本量的增加而增加。</p>
+<p>例如，给定来自具有期望值 <span class="math notranslate nohighlight">\(\mu\)</span> 和已知有限方差的高斯分布的独立同分布样本，样本的均值对于参数 <span class="math notranslate nohighlight">\(\mu\)</span> 来说是一个 <strong>充分统计量</strong>。请注意，均值无法说明离散度，因此其仅对参数 <span class="math notranslate nohighlight">\(\mu\)</span> 是充分的。</p>
+<p>众所周知，对于独立同分布数据，具有充分统计量且维度与 <span class="math notranslate nohighlight">\(\theta\)</span> 相同的唯一分布来自于 <strong>指数族分布</strong> <span id="id7">[<a class="reference internal" href="references.html#id153">88</a>, <a class="reference internal" href="references.html#id152">89</a>, <a class="reference internal" href="references.html#id151">90</a>, <a class="reference internal" href="references.html#id150">91</a>]</span> 。对于其他类型的分布，充分统计量的维度会随着样本量的增加而增加。</p>
 </div>
-<p id="approximating-the-approximated-posterior">ABC_行近似贝叶斯计算的最基础方法。我们将用 <a class="reference internal" href="#fig-abc-rejection"><span class="std std-numref">Fig. 132</span></a> 以及对算法抽象描述来逐步解释，如下所示。</p>
+<p id="approximating-the-approximated-posterior">近似近似的后验</p>
+<p>执行 ABC 计算的大多数基础方法是按照一定概率做拒绝采样。我们将用 <a class="reference internal" href="#fig-abc-rejection"><span class="std std-numref">Fig. 132</span></a> 以及对算法的抽象描述来逐步解释，如下所示。</p>
 <ol class="simple">
-<li><p>从先验分布中采样 <span class="math notranslate nohighlight">\(\theta\)</span> 的值。</p></li>
+<li><p>从先验分布中抽取 <span class="math notranslate nohighlight">\(\theta\)</span> 的值作为提议。</p></li>
 <li><p>将该值传递给模拟器并生成合成数据。</p></li>
-<li><p>如果合成数据的<em>距离</em> <span class="math notranslate nohighlight">\(\delta\)</span> 比 <span class="math notranslate nohighlight">\(\epsilon\)</span> 更近，则保存建议的 <span class="math notranslate nohighlight">\(\theta\)</span>，否则拒绝它。</p></li>
+<li><p>如果合成数据的距离 <span class="math notranslate nohighlight">\(\delta\)</span> 较阈值 <span class="math notranslate nohighlight">\(\epsilon\)</span> 更近，则保存提议的 <span class="math notranslate nohighlight">\(\theta\)</span>，否则拒绝它。</p></li>
 <li><p>重复直到获得所需数量的样本。</p></li>
 </ol>
 <div class="figure align-default" id="fig-abc-rejection">
 <a class="reference internal image-reference" href="../_images/ABC_rejection.png"><img alt="../_images/ABC_rejection.png" src="../_images/ABC_rejection.png" style="width: 4.5in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 132 </span><span class="caption-text">近似贝叶斯计算拒绝采样器的一个步骤。</span><a class="headerlink" href="#fig-abc-rejection" title="Permalink to this image">¶</a></p>
 <div class="legend">
-<p>我们从先验分布（顶部）中采样一组 <span class="math notranslate nohighlight">\(\theta\)</span> 值。每个值都被传递给模拟器，模拟器生成合成数据集（虚线分布），我们对合成数据与观测数据（底部）的分布进行比较。在这个例子中，只有 <span class="math notranslate nohighlight">\(\theta_1\)</span> 能够生成一个与观测数据足够接近的合成数据集，因此 <span class="math notranslate nohighlight">\(\theta_0\)</span> 和 <span class="math notranslate nohighlight">\(\theta_2\)</span> 被拒绝。请注意，如果仅使用统计量，我们需要在第 <span class="math notranslate nohighlight">\(2\)</span> 步之后和第 <span class="math notranslate nohighlight">\(3\)</span> 步之前计算合成数据和观测数据的统计量信息。</p>
+<p>从先验分布（顶部）中抽取一组 <span class="math notranslate nohighlight">\(\theta\)</span> 值。将每个值都被传递给模拟器，模拟器生成合成数据集（虚线分布），然后比较合成数据与观测数据（底部）的分布。在这个例子中，只有 <span class="math notranslate nohighlight">\(\theta_1\)</span> 能够生成一个与观测数据足够接近的合成数据集，因此 <span class="math notranslate nohighlight">\(\theta_0\)</span> 和 <span class="math notranslate nohighlight">\(\theta_2\)</span> 被拒绝。请注意，如果仅使用统计量，则需要在第 <span class="math notranslate nohighlight">\(2\)</span> 步之后和第 <span class="math notranslate nohighlight">\(3\)</span> 步之前计算合成数据和观测数据的统计量信息。</p>
 </div>
 </div>
-<p>近似贝叶斯计算拒绝采样器的主要缺点是，如果先验分布与后验分布相差太大，我们会花费大部分时间提出将被拒绝的值，因此，更好的办法是从更接近真实后验的分布中提出建议值。但通常，我们对后验的了解不够，无法手动执行此操作，但可以使用 <strong>序贯蒙特卡洛 (SMC)</strong> 方法来实现。</p>
-<p>序贯蒙特卡洛是一种通用采样方法，就像 MCMC 方法一样。 但序贯蒙特卡洛也适用于执行近似贝叶斯计算，并被称为 “序贯蒙特卡洛-ABC（ SMC-ABC ）” 。如果你想了解更多关于序贯蒙特卡洛方法的细节，可以参阅章节 <a class="reference internal" href="chp_11.html#inference-methods"><span class="std std-ref">11.9 推断方法</span></a>，但要理解本章，暂时只需要知道贯序蒙特卡洛是通过在 <span class="math notranslate nohighlight">\(s\)</span> 个连续阶段中逐步增加辅助参数 <span class="math notranslate nohighlight">\(\beta\)</span> 的值 <span class="math notranslate nohighlight">\(\{\beta_0=0 &lt; \beta_1 &lt; ... &lt; \beta_s=1\}\)</span> 实现的。其作法是：从先验（ <span class="math notranslate nohighlight">\(\beta = 0\)</span> ）开始采样，直到到达后验（ <span class="math notranslate nohighlight">\(\beta = 1\)</span> ）。因此，可以将 <span class="math notranslate nohighlight">\(\beta\)</span> 视为一个 <em>逐渐开启似然</em> 的参数。 <span class="math notranslate nohighlight">\(\beta\)</span> 的中间值序列由序贯蒙特卡洛方法自动计算。数据相对于先验的信息越多和（/或）后验几何形态越复杂，则序贯蒙特卡洛采取的中间步骤就会越多。</p>
+<p>ABC 拒绝采样器的主要缺点是：</p>
+<p>如果先验分布与后验分布相差太大，我们会花费大部分时间提出将被拒绝的值。因此，更好的办法是从接近真实后验的分布中提出建议值。但通常来说，我们对后验的了解不够，无法手动执行此操作，但可以使用 <strong>序贯蒙特卡洛 (SMC)</strong> 方法来实现。</p>
+<p>序贯蒙特卡洛是一种通用采样方法，就像 MCMC 方法一样。 但序贯蒙特卡洛也适用于执行近似贝叶斯计算，并被称为 “序贯蒙特卡洛-近似贝叶斯计算（ SMC-ABC ）” 。如果你想了解更多关于序贯蒙特卡洛方法的细节，可以参阅章节 <a class="reference internal" href="chp_11.html#inference-methods"><span class="std std-ref">11.9 推断方法</span></a>，但要理解本章，暂时只需要知道序贯蒙特卡洛是通过在 <span class="math notranslate nohighlight">\(s\)</span> 个连续阶段中逐步增加辅助参数 <span class="math notranslate nohighlight">\(\beta\)</span> 的值 <span class="math notranslate nohighlight">\(\{\beta_0=0 &lt; \beta_1 &lt; ... &lt; \beta_s=1\}\)</span> 实现的。其作法是：从先验（ <span class="math notranslate nohighlight">\(\beta = 0\)</span> ）开始采样，直到到达后验（ <span class="math notranslate nohighlight">\(\beta = 1\)</span> ）。因此，可以将 <span class="math notranslate nohighlight">\(\beta\)</span> 视为一个逐渐开启似然的参数。 <span class="math notranslate nohighlight">\(\beta\)</span> 的中间值序列由序贯蒙特卡洛方法自动计算。数据相对于先验的信息越多和（/或）后验几何形态越复杂，则序贯蒙特卡洛所采取的中间步骤就会越多。</p>
 <p><a class="reference internal" href="#fig-smc-tempering"><span class="std std-numref">Fig. 133</span></a> 显示了一个假设的中间分布序列，从浅灰色的先验到蓝色的后验。</p>
 <div class="figure align-default" id="fig-smc-tempering">
 <a class="reference internal image-reference" href="../_images/smc_tempering.png"><img alt="../_images/smc_tempering.png" src="../_images/smc_tempering.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 133 </span><span class="caption-text">序贯蒙特卡洛采样器探索的褪火后验假设序列，从浅灰色的先验 ( <span class="math notranslate nohighlight">\(\beta = 0\)</span> ) 到蓝色的真实后验 ( <span class="math notranslate nohighlight">\(\beta = 1\)</span> )。开始时较低的 <span class="math notranslate nohighlight">\(\beta\)</span> 值有助于防止采样器卡在单一最值中。</span><a class="headerlink" href="#fig-smc-tempering" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 133 </span><span class="caption-text">序贯蒙特卡洛采样器探索的退火后验序列，从浅灰色的先验 ( <span class="math notranslate nohighlight">\(\beta = 0\)</span> ) 到蓝色的真实后验 ( <span class="math notranslate nohighlight">\(\beta = 1\)</span> )。开始时较低的 <span class="math notranslate nohighlight">\(\beta\)</span> 值有助于防止采样器卡在单一最值中。</span><a class="headerlink" href="#fig-smc-tempering" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="fitting-a-gaussian-the-abc-way">
 <span id="id8"></span><h2>8.3 用近似贝叶斯计算拟合一个高斯<a class="headerlink" href="#fitting-a-gaussian-the-abc-way" title="Permalink to this headline">¶</a></h2>
-<p>让我们用一个简单的例子来热热身，从均值为 <span class="math notranslate nohighlight">\(0\)</span> 和标准差为 <span class="math notranslate nohighlight">\(1\)</span> 的高斯分布数据中估计均值和标准差。对于这个问题，我们可以拟合模型：</p>
+<p>让我们用一个简单的例子先热热身，从均值为 <span class="math notranslate nohighlight">\(0\)</span> 、标准差为 <span class="math notranslate nohighlight">\(1\)</span> 的高斯分布数据中估计均值和标准差。对于这个问题，我们可以拟合模型：</p>
 <div class="math notranslate nohighlight" id="equation-eq-gauss-model">
 <span class="eqno">(73)<a class="headerlink" href="#equation-eq-gauss-model" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
   \boldsymbol{\mu} \sim &amp;\; \mathcal{N}(0, 1) \\
   \boldsymbol{\sigma} \sim &amp;\; \mathcal{HN}(1) \\
   \boldsymbol{s} \sim &amp;\; \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\sigma})
 \end{split}\end{split}\]</div>
-<p>在 PYMC3 中编写此模型的方法见代码 <a class="reference internal" href="#gauss-nuts"><span class="std std-ref">gauss_nuts</span></a> 。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 中编写此模型的方法见代码 <a class="reference internal" href="#gauss-nuts"><span class="std std-ref">gauss_nuts</span></a> 。</p>
 <div class="literal-block-wrapper docutils container" id="gauss-nuts">
 <div class="code-block-caption"><span class="caption-number">Listing 104 </span><span class="caption-text">gauss_nuts</span><a class="headerlink" href="#gauss-nuts" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">gauss</span><span class="p">:</span>     
@@ -471,18 +485,18 @@
   <span class="n">μ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">"μ"</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>     
   <span class="n">σ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">"σ"</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>     
   <span class="n">s</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Simulator</span><span class="p">(</span><span class="s2">"s"</span><span class="p">,</span> <span class="n">normal_simulator</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[</span><span class="n">μ</span><span class="p">,</span> <span class="n">σ</span><span class="p">],</span>
-                        <span class="n">distance</span><span class="o">=</span><span class="s2">"gaussian"</span><span class="p">,</span>                      <span class="n">sum_stat</span><span class="o">=</span><span class="s2">"sort"</span><span class="p">,</span>                        <span class="n">epsilon</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                      
-                        <span class="n">observed</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+                   <span class="n">distance</span><span class="o">=</span><span class="s2">"gaussian"</span><span class="p">,</span> <span class="n">sum_stat</span><span class="o">=</span><span class="s2">"sort"</span><span class="p">,</span>
+                   <span class="n">epsilon</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
   <span class="n">trace_g</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample_smc</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">"ABC"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<p>我们可以看到代码 <a class="reference internal" href="#gauss-nuts"><span class="std std-ref">gauss_nuts</span></a> 和代码 <a class="reference internal" href="#gauss-abc"><span class="std std-ref">gauss_abc</span></a> 之间有两个重要的区别：</p>
+<p>可以看到代码 <a class="reference internal" href="#gauss-nuts"><span class="std std-ref">gauss_nuts</span></a> 和代码 <a class="reference internal" href="#gauss-abc"><span class="std std-ref">gauss_abc</span></a> 之间有两个重要的区别：</p>
 <ul class="simple">
 <li><p>使用了 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 分布</p></li>
 <li><p>使用 <code class="docutils literal notranslate"><span class="pre">pm.sample_smc(kernel="ABC")</span></code> 代替了 <code class="docutils literal notranslate"><span class="pre">pm.sample()</span></code>。</p></li>
 </ul>
-<p>通过使用 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> ，我们告诉 PyMC3，不会对似然使用封闭形式表达式，而是定义一个伪似然。此时需要传递一个生成合成数据的 Python 函数，本例中该函数为 <code class="docutils literal notranslate"><span class="pre">normal_simulator</span></code> 以及其参数 <code class="docutils literal notranslate"> <span class="pre">params=[μ,</span> <span class="pre">σ]</span></code> 。代码 <a class="reference internal" href="#normal-simulator"><span class="std std-ref">normal_simulator</span></a> 给出了此函数的定义，样本大小为 <span class="math notranslate nohighlight">\(1000\)</span> ，未知参数为 <span class="math notranslate nohighlight">\(\mu\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 。</p>
+<p>通过使用 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> ，我们告诉 PyMC3，不会对似然使用封闭形式表达式，而是定义一个伪似然。此时需要传递一个生成合成数据的 Python 函数，本例中该函数为 <code class="docutils literal notranslate"><span class="pre">normal_simulator</span></code> 以及其参数 <code class="docutils literal notranslate"><span class="pre">params=[μ,</span> <span class="pre">σ]</span></code> 。代码 <a class="reference internal" href="#normal-simulator"><span class="std std-ref">normal_simulator</span></a> 给出了此函数的定义，样本大小为 <span class="math notranslate nohighlight">\(1000\)</span> ，未知参数为 <span class="math notranslate nohighlight">\(\mu\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 。</p>
 <div class="literal-block-wrapper docutils container" id="normal-simulator">
 <div class="code-block-caption"><span class="caption-number">Listing 106 </span><span class="caption-text">normal_simulator</span><a class="headerlink" href="#normal-simulator" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">normal_simulator</span><span class="p">(</span><span class="n">μ</span><span class="p">,</span> <span class="n">σ</span><span class="p">):</span>
@@ -490,8 +504,8 @@
 </pre></div>
 </div>
 </div>
-<p>我们还需要向 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 传递其他可选参数，包括距离函数 <code class="docutils literal notranslate"><span class="pre">distance</span></code>、统计量信息 <code class="docutils literal notranslate"><span class="pre">sum_stat</span></code> 和阈值 <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> 的值。此外，我们还要将观测数据以常规似然形式传递给 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 。</p>
-<p>通过使用 <code class="docutils literal notranslate"><span class="pre">pm.sample_smc(kernel="ABC")</span></code><a class="footnote-reference brackets" href="#id56" id="id9">3</a> ， 我们告诉 PYMC3 在模型中寻找 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 并使用它来定义伪似然，其余的采样过程与序贯蒙特卡洛算法中描述的相同。当 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 存在时，其他采样器将无法运行。</p>
+<p>我们还需要向 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 传递其他可选参数，包括距离函数 <code class="docutils literal notranslate"><span class="pre">distance</span></code>、统计量信息 <code class="docutils literal notranslate"><span class="pre">sum_stat</span></code> 和阈值 <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> 的值。此外，还要将观测数据以常规似然形式传递给 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 。</p>
+<p>通过使用 <code class="docutils literal notranslate"><span class="pre">pm.sample_smc(kernel="ABC")</span></code><a class="footnote-reference brackets" href="#id57" id="id9">3</a> ， 我们告诉 PYMC3 在模型中寻找 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 并使用它来定义伪似然，其余的采样过程与序贯蒙特卡洛算法中描述的相同。当 <code class="docutils literal notranslate"><span class="pre">pm.Simulator</span></code> 存在时，其他采样器将无法运行。</p>
 <p>本例中的 <code class="docutils literal notranslate"><span class="pre">normal_simulator</span></code> 函数原则上可以是任何我们想要的 Python 函数，实际上甚至可以是经过封装的非 Python 代码，例如 Fortran 或 C 代码。这就是近似贝叶斯计算方法的灵活性所在。在本例中，模拟器只是一个 <code class="docutils literal notranslate"><span class="pre">NumPy</span></code> 随机生成器函数的包装器。</p>
 <p>与其他采样器一样，建议运行多个链，以便诊断采样器是否无法正常工作，PyMC3 将尝试自动执行此操作。 <a class="reference internal" href="#fig-trace-g"><span class="std std-numref">Fig. 134</span></a> 显示了使用两条链运行代码 <a class="reference internal" href="#gauss-abc"><span class="std std-ref">gauss_abc</span></a> 的结果。</p>
 <p>可以看到，我们能够恢复真实参数，并且采样器没有出现任何明显的采样问题。</p>
@@ -502,15 +516,16 @@
 </div>
 <div class="section" id="epsilon">
 <span id="choosing-the-distance-function-epsilon-and-the-summary-statistics"></span><h2>8.4 选择距离函数、 阈值 <span class="math notranslate nohighlight">\(\epsilon\)</span> 和统计量<a class="headerlink" href="#epsilon" title="Permalink to this headline">¶</a></h2>
-<p>如何定义有效的距离度量、统计量和阈值 <span class="math notranslate nohighlight">\(\epsilon\)</span> 取决于待解决的问题。这意味着我们应该在获得结果之前进行一些试验和尝试，尤其是在遇到新问题时。像往常一样，事先对选择做充分的思考有助于减少备选的数量；不过我们也应该习惯于运行实验，因为它总是有助于更好地理解问题，并对超参数做出更明智的抉择。在接下来的部分中，我们将讨论一些比较通用的指南。</p>
+<p>如何定义有效的距离度量、统计量和阈值 <span class="math notranslate nohighlight">\(\epsilon\)</span> 取决于待解决的问题。这意味着我们应该在获得结果之前进行一些试验和尝试，尤其是在遇到新问题时。像往常一样，事先对方案做充分思考有助于减少备选的数量；不过我们也应该习惯于运行实验，因为它总是有助于更好地理解问题，并对超参数做出更明智的抉择。</p>
+<p>在接下来的部分中，我们将讨论一些比较通用的指南。</p>
 <div class="section" id="choosing-the-distance">
-<span id="id10"></span><h3>8.4.1 选择距离函数<a class="headerlink" href="#choosing-the-distance" title="Permalink to this headline">¶</a></h3>
+<span id="id10"></span><h3>8.4.1 距离函数的选择<a class="headerlink" href="#choosing-the-distance" title="Permalink to this headline">¶</a></h3>
 <p>上例中，我们使用了默认距离函数 <code class="docutils literal notranslate"><span class="pre">distance="gaussian"</span></code> 来运行代码 <a class="reference internal" href="#gauss-abc"><span class="std std-ref">gauss_abc</span></a>，其定义为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-euclidean-abc">
 <span class="eqno">(74)<a class="headerlink" href="#equation-eq-euclidean-abc" title="Permalink to this equation">¶</a></span>\[\sum_i - \frac{||X_{oi} - X_{si}||^2}{2 \epsilon_i^2}\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(X_{o}\)</span> 是观测数据，<span class="math notranslate nohighlight">\(X_{s}\)</span> 是模拟数据，<span class="math notranslate nohighlight">\(\epsilon\)</span> 是其缩放参数。我们称 <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a> 为高斯的，因为它在对数尺度上是高斯核 <a class="footnote-reference brackets" href="#id57" id="id11">4</a>。我们使用对数尺度来计算伪似然，就和在实际似然（和先验）中一样 <a class="footnote-reference brackets" href="#id58" id="id12">5</a>。 <span class="math notranslate nohighlight">\(||X_{oi} - X_{si}||^2\)</span> 是欧几里得距离（也称为 <span class="math notranslate nohighlight">\(L2\)</span> 范数），因此也可以将公式 <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a> 描述为加权欧几里得距离。这是目前比较流行的选择，其他选项还有：在 PYMC3 中被称为拉普拉斯距离的 <span class="math notranslate nohighlight">\(L1\)</span> 范数（绝对差的和）； <span class="math notranslate nohighlight">\(L-\infty\)</span> 范数（差的最大绝对值）；马氏距离：<span class="math notranslate nohighlight">\(\sqrt{(xo - xs )^{T}\Sigma(xo - xs)}\)</span>， <span class="math notranslate nohighlight">\(\Sigma\)</span> 为协方差矩阵。</p>
+<p>其中 <span class="math notranslate nohighlight">\(X_{o}\)</span> 是观测数据，<span class="math notranslate nohighlight">\(X_{s}\)</span> 是模拟数据，<span class="math notranslate nohighlight">\(\epsilon\)</span> 是其缩放参数。我们称 <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a> 为高斯的，因为它在对数尺度上是高斯核 <a class="footnote-reference brackets" href="#id58" id="id11">4</a>。我们使用对数尺度来计算伪似然，就和在实际似然（和先验）中一样 <a class="footnote-reference brackets" href="#id59" id="id12">5</a>。 <span class="math notranslate nohighlight">\(||X_{oi} - X_{si}||^2\)</span> 是欧几里得距离（也称为 <span class="math notranslate nohighlight">\(L2\)</span> 范数），因此也可以将公式 <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a> 描述为加权欧几里得距离。这是目前比较流行的选择，其他选项还有：在 PYMC3 中被称为拉普拉斯距离的 <span class="math notranslate nohighlight">\(L1\)</span> 范数（绝对差的和）； <span class="math notranslate nohighlight">\(L-\infty\)</span> 范数（差的最大绝对值）；马氏距离：<span class="math notranslate nohighlight">\(\sqrt{(xo - xs )^{T}\Sigma(xo - xs)}\)</span>， <span class="math notranslate nohighlight">\(\Sigma\)</span> 为协方差矩阵。</p>
 <p>高斯距离、拉普拉斯等可以应用于整个数据，或者应用于统计量。此外，还专门引入了一些能够避免统计量计算、但效果也很好的距离函数 <span id="id13">[<a class="reference internal" href="references.html#id48">92</a>, <a class="reference internal" href="references.html#id47">93</a>, <a class="reference internal" href="references.html#id46">94</a>]</span>。我们将介绍其中的 <code class="docutils literal notranslate"><span class="pre">Wasserstein</span> <span class="pre">距离</span></code> 和 <code class="docutils literal notranslate"><span class="pre">KL</span> <span class="pre">散度</span></code>。</p>
-<p>在代码 <a class="reference internal" href="#gauss-abc"><span class="std std-ref">gauss_abc</span></a> 中，我们使用了 <code class="docutils literal notranslate"><span class="pre">sum_stat="sort"</span></code> <a class="footnote-reference brackets" href="#id59" id="id14">6</a>，这告诉 PYMC3 在计算公式 <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a> 之前对数据进行排序。这相当于计算 <code class="docutils literal notranslate"><span class="pre">一维</span> <span class="pre">2-Wasserstein</span> <span class="pre">距离</span></code>，如果使用 <span class="math notranslate nohighlight">\(L1\)</span> 范数，则将得到 <code class="docutils literal notranslate"><span class="pre">一维</span> <span class="pre">1-Wasserstein</span> <span class="pre">距离</span></code>。当然，也可以为大于 <span class="math notranslate nohighlight">\(1\)</span> 的维度定义 <code class="docutils literal notranslate"><span class="pre">Wasserstein</span> <span class="pre">距离</span></code>（ <span id="id15">[<a class="reference internal" href="references.html#id46">94</a>]</span>  ）。</p>
+<p>在代码 <a class="reference internal" href="#gauss-abc"><span class="std std-ref">gauss_abc</span></a> 中，我们使用了 <code class="docutils literal notranslate"><span class="pre">sum_stat="sort"</span></code> <a class="footnote-reference brackets" href="#id60" id="id14">6</a>，这告诉 PYMC3 在计算公式 <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a> 之前对数据进行排序。这相当于计算 <code class="docutils literal notranslate"><span class="pre">一维</span> <span class="pre">2-Wasserstein</span> <span class="pre">距离</span></code>，如果使用 <span class="math notranslate nohighlight">\(L1\)</span> 范数，则将得到 <code class="docutils literal notranslate"><span class="pre">一维</span> <span class="pre">1-Wasserstein</span> <span class="pre">距离</span></code>。当然，也可以为大于 <span class="math notranslate nohighlight">\(1\)</span> 的维度定义 <code class="docutils literal notranslate"><span class="pre">Wasserstein</span> <span class="pre">距离</span></code>（ <span id="id15">[<a class="reference internal" href="references.html#id46">94</a>]</span>  ）。</p>
 <p>在计算距离之前对数据排序，会使分布之间的比较更加公平。想象一下，如果有两个完全相等的样本，但是一个从低到高排序，另一个是高到低排序。此时应用公式 <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a> 这样的度量，会得出“两个样本不同”的结论。但如果先排序而后计算距离，会得出“两个样本相同”结论。这是一个非常极端的场景，但有助于阐明数据排序背后的直觉。此外，对数据进行排序的前提，是假设我们只关心数据分布，不关心数据顺序；否则的话，做排序处理会破坏数据中本来存在的结构。最典型的例子 <a class="reference internal" href="chp_06.html#chap4"><span class="std std-ref"> 第 6 章 </span></a> 中的<strong>时间序列</strong>。</p>
 <p>为了避免定义和计算统计量而引入的另一个距离是使用 KL 散度（ 参见第 <a class="reference internal" href="chp_11.html#dkl"><span class="std std-ref">11.3 KL 散度</span></a> 部分 ）。通常使用以下表达式来近似计算 KL 散度 （ <span id="id16">[<a class="reference internal" href="references.html#id48">92</a>, <a class="reference internal" href="references.html#id47">93</a>]</span> ）：</p>
 <div class="math notranslate nohighlight" id="equation-eq-kl-abc">
@@ -518,8 +533,8 @@
 <p>其中 <span class="math notranslate nohighlight">\(d\)</span> 是数据集的维度（变量或特征的数量），<span class="math notranslate nohighlight">\(n\)</span> 是观测数据点的数量。 <span class="math notranslate nohighlight">\(\nu_d\)</span> 包含观测数据到模拟数据的 <code class="docutils literal notranslate"><span class="pre">1-最近邻距离</span></code>，<span class="math notranslate nohighlight">\(\rho_d\)</span> 包含观测数据到自身的 <code class="docutils literal notranslate"><span class="pre">2-最近邻距离</span></code>（ 注意，如果你将数据集与其自身进行比较，则 <code class="docutils literal notranslate"><span class="pre">1-最近邻距离</span></code> 永远为零 ）。由于该方法涉及最近邻搜索的 <span class="math notranslate nohighlight">\(2n\)</span> 次操作，因此通常使用 <code class="docutils literal notranslate"><span class="pre">k-d</span> <span class="pre">树</span></code> 来实现 <span id="id17">[<a class="reference internal" href="references.html#id49">95</a>]</span> 。</p>
 </div>
 <div class="section" id="choosing-epsilon">
-<span id="id18"></span><h3>8.4.2 选择阈值 <span class="math notranslate nohighlight">\(\epsilon\)</span><a class="headerlink" href="#choosing-epsilon" title="Permalink to this headline">¶</a></h3>
-<p>在许多近似贝叶斯计算方法中，<span class="math notranslate nohighlight">\(\epsilon\)</span> 参数用作硬阈值，生成距离大于 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的样本的参数 <span class="math notranslate nohighlight">\(\theta\)</span> 值将被拒绝。此外，<span class="math notranslate nohighlight">\(\epsilon\)</span> 可以是用户必须设置的递减值列表，或者算法自适应找到的结果 <a class="footnote-reference brackets" href="#id60" id="id19">7</a>。</p>
+<span id="id18"></span><h3>8.4.2 阈值 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的选择<a class="headerlink" href="#choosing-epsilon" title="Permalink to this headline">¶</a></h3>
+<p>在许多近似贝叶斯计算方法中，<span class="math notranslate nohighlight">\(\epsilon\)</span> 参数用作硬阈值，生成距离大于 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的样本的参数 <span class="math notranslate nohighlight">\(\theta\)</span> 值将被拒绝。此外，<span class="math notranslate nohighlight">\(\epsilon\)</span> 可以是用户必须设置的递减值列表，或者算法自适应找到的结果 <a class="footnote-reference brackets" href="#id61" id="id19">7</a>。</p>
 <p>在 PYMC3 中，<span class="math notranslate nohighlight">\(\epsilon\)</span> 采用的是距离函数的尺度，就像在公式 <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a> 中一样，所以不能用作硬阈值。我们可以根据需要设置 <span class="math notranslate nohighlight">\(\epsilon\)</span> 。我们可以选择一个标量值（ 相当于将所有 <span class="math notranslate nohighlight">\(i\)</span> 的 <span class="math notranslate nohighlight">\(\epsilon_i\)</span> 设置为相等 ）。这在评估数据上的距离而不是统计量上的距离时非常有用。在此情况下，合理猜测可能是数据的经验标准差。</p>
 <p>如果我们改为使用统计量，那么可以将 <span class="math notranslate nohighlight">\(\epsilon\)</span> 设置为值列表。这通常是必要的，因为每个统计量可能具有不同的尺度。如果尺度差异太大，那么每个统计量的贡献将是不均衡的，甚至可能出现单个统计量主导距离计算的情况。在此情况下，<span class="math notranslate nohighlight">\(\epsilon\)</span> 的一个常用选择是在先验预测分布下的 <span class="math notranslate nohighlight">\(i^{\text{th}}\)</span> 个统计量的经验标准差，或中值绝对差，因为这样选择相对于异常值来说更为稳健。使用先验预测分布的问题之一是其可能比后验预测分布更宽，因此，为了找到一个合适的 <span class="math notranslate nohighlight">\(\epsilon\)</span> 值，我们可能希望将上述有依据的猜测作为上限，然后从这些值中尝试一些较低的值。然后我们可以根据计算成本、所需的精度/误差水平和采样器的效率等几个因素来选择 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的最终值。一般来说，<span class="math notranslate nohighlight">\(\epsilon\)</span> 的值越低，近似值就越好。</p>
 <p><a class="reference internal" href="#fig-trace-g-many-eps"><span class="std std-numref">Fig. 135</span></a> 显示了 <span class="math notranslate nohighlight">\(\mu\)</span> 和 <span class="math notranslate nohighlight">\(\sigma\)</span> 的几个 <span class="math notranslate nohighlight">\(\epsilon\)</span> 阈值设置以及 NUTS 采样的森林图（ 使用正常似然而不是模拟器 ）。</p>
@@ -547,7 +562,7 @@
 </div>
 </div>
 <div class="section" id="choosing-summary-statistics">
-<span id="id20"></span><h3>8.4.3 选择统计量<a class="headerlink" href="#choosing-summary-statistics" title="Permalink to this headline">¶</a></h3>
+<span id="id20"></span><h3>8.4.3 统计量的选择<a class="headerlink" href="#choosing-summary-statistics" title="Permalink to this headline">¶</a></h3>
 <p>统计量的选择可能比距离函数的选择更难，并且会产生更大的影响。</p>
 <p>出于此原因，许多研究都集中在这个主题上，从使用不需要统计量的距离 <span id="id21">[<a class="reference internal" href="references.html#id47">93</a>, <a class="reference internal" href="references.html#id46">94</a>]</span> 到选择统计量的策略 <span id="id22">[<a class="reference internal" href="references.html#id50">96</a>]</span>。</p>
 <p>一个好的统计量提供了低维度和信息量之间的平衡。当我们没有足够统计量数据时，很容易通过添加大量统计量数据来进行过度补偿。直觉是信息越多越好。然而，增加统计量的数量实际上会降低近似后验 <span id="id23">[<a class="reference internal" href="references.html#id50">96</a>]</span> 的质量。对此的一种解释是，我们从计算数据上的距离转移到计算摘要上的距离以减少维度，通过增加我们正在违背该目的的摘要统计数据的数量。</p>
@@ -573,7 +588,7 @@
 <p>（3）<span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(g\)</span> 可以取任何实数值。通常将 <span class="math notranslate nohighlight">\(b\)</span> 限制为正数并且 <span class="math notranslate nohighlight">\(k \geqslant -0.5\)</span> 或有时 <span class="math notranslate nohighlight">\(k \geqslant 0\)</span> （即尾部与高斯分布中的尾部一样重或更重）。</p>
 <p>（4）此外，通常固定 <span class="math notranslate nohighlight">\(c=0.8\)</span>。</p>
 <p>有了所有这些限制，我们可以保证得到一个严格递增的分位数函数 <span id="id26">[<a class="reference internal" href="references.html#id41">101</a>]</span>，而这正是连续分布函数的标志。</p>
-<p>代码 <a class="reference internal" href="#gk-quantile"><span class="std std-ref">gk_quantile</span></a> 定义了 <code class="docutils literal notranslate"><span class="pre">g-and-k</span> <span class="pre">分位数分布</span></code>。我们省略了 <code class="docutils literal notranslate"><span class="pre">cdf</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pdf</span></code> 的计算，因为涉及太多额外内容，而且在我们的例子中暂时用不到 <a class="footnote-reference brackets" href="#id61" id="id27">8</a>。</p>
+<p>代码 <a class="reference internal" href="#gk-quantile"><span class="std std-ref">gk_quantile</span></a> 定义了 <code class="docutils literal notranslate"><span class="pre">g-and-k</span> <span class="pre">分位数分布</span></code>。我们省略了 <code class="docutils literal notranslate"><span class="pre">cdf</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pdf</span></code> 的计算，因为涉及太多额外内容，而且在我们的例子中暂时用不到 <a class="footnote-reference brackets" href="#id62" id="id27">8</a>。</p>
 <p>虽然 <code class="docutils literal notranslate"><span class="pre">g-and-k</span> <span class="pre">分布</span></code> 的概率密度函数可以用数值方法推算 <span id="id28">[<a class="reference internal" href="references.html#id41">101</a>, <a class="reference internal" href="references.html#id45">102</a>]</span>，但使用反演方法从 <code class="docutils literal notranslate"><span class="pre">g-and-k</span> <span class="pre">模型</span></code> 中进行模拟更直接和快捷 <span id="id29">[<a class="reference internal" href="references.html#id45">102</a>, <a class="reference internal" href="references.html#id42">103</a>]</span>。</p>
 <p>为了实现反演方法，我们对 <span class="math notranslate nohighlight">\(x \sim \mathcal{U}(0, 1)\)</span> 进行采样并替换公式 <a class="reference internal" href="#equation-eq-g-and-k">(76)</a>。代码 <a class="reference internal" href="#gk-quantile"><span class="std std-ref">gk_quantile</span></a> 展示了如何在 Python 中执行此操作，<a class="reference internal" href="#fig-gk-quantile"><span class="std std-numref">Fig. 141</span></a> 展示了 <code class="docutils literal notranslate"><span class="pre">g-and-k</span> <span class="pre">分布</span></code> 的示例。</p>
 <div class="literal-block-wrapper docutils container" id="gk-quantile">
@@ -654,7 +669,7 @@ sk &amp;= (e7 - e5 + e3 - e1)/sb \\
 <p>移动平均 (MA) 模型是建模单变量时间序列的常用方法（参见 <a class="reference internal" href="chp_06.html#chap4"><span class="std std-ref"> 第 6 章 </span></a> ）。 <span class="math notranslate nohighlight">\(MA(q)\)</span> 模型指定输出变量线性依赖于随机项 <span class="math notranslate nohighlight">\(\lambda\)</span> 的当前值和 <span class="math notranslate nohighlight">\(q\)</span> 个历史值， <span class="math notranslate nohighlight">\(q\)</span> 被称为 <code class="docutils literal notranslate"><span class="pre">MA</span> <span class="pre">模型</span></code> 的阶数。</p>
 <div class="math notranslate nohighlight">
 \[y_t = \mu + \lambda_t + \theta_1 \lambda_{t-1} + \cdots + \theta_q \lambda_{t-q}\]</div>
-<p>其中 <span class="math notranslate nohighlight">\(\lambda\)</span> 是高斯白噪声误差项 <a class="footnote-reference brackets" href="#id63" id="id34">9</a>。</p>
+<p>其中 <span class="math notranslate nohighlight">\(\lambda\)</span> 是高斯白噪声误差项 <a class="footnote-reference brackets" href="#id64" id="id34">9</a>。</p>
 <p>这里将使用 <span id="id35">Marin <em>et al.</em> [<a class="reference internal" href="references.html#id39">106</a>]</span> 中的玩具模型。在该例中，使用均值为 <span class="math notranslate nohighlight">\(0\)</span> 的 <span class="math notranslate nohighlight">\(MA(2)\)</span> 模型（ 即 <span class="math notranslate nohighlight">\(\mu =0\)</span> )，模型如下所示：</p>
 <div class="math notranslate nohighlight">
 \[y_t = \lambda_t + \theta_1 \lambda_{t-1} +  \theta_2 \lambda_{t-2}\]</div>
@@ -709,7 +724,7 @@ sk &amp;= (e7 - e5 + e3 - e1)/sb \\
 </div>
 <div class="section" id="model-comparison-in-the-abc-context">
 <span id="id36"></span><h2>8.7 在近似贝叶斯计算的场景中做模型比较<a class="headerlink" href="#model-comparison-in-the-abc-context" title="Permalink to this headline">¶</a></h2>
-<p>近似贝叶斯计算方法经常用于模型选择。虽然已经提出了许多模型比较方法 <span id="id37">[<a class="reference internal" href="references.html#id50">96</a>, <a class="reference internal" href="references.html#id52">107</a>]</span>，但此处将重点讨论两种方法：<strong>贝叶斯因子法</strong>（包括与 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 的比较）和<strong>随机森林法</strong> <span id="id38">[<a class="reference internal" href="references.html#id51">99</a>]</span>。</p>
+<p>近似贝叶斯计算方法经常用于模型选择。虽然已经提出了许多模型比较方法 <span id="id37">[<a class="reference internal" href="references.html#id50">96</a>, <a class="reference internal" href="references.html#id52">107</a>]</span>，但此处将重点讨论两种方法：<strong>贝叶斯因子法</strong>（包括与 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 的比较）和 <strong>随机森林法</strong> <span id="id38">[<a class="reference internal" href="references.html#id51">99</a>]</span>。</p>
 <p>与参数推断一样，在模型比较中统计量的选择至关重要。当使用模型的预测结果来评估多个模型时，如果它们都做出了大致相同的预测，则我们无法偏爱其中任何一个模型。相同的思想可以应用于（含统计量的）近似贝叶斯计算场景下的模型比较和选择。如果使用均值作为统计量，而模型预测的均值相同，那么此统计量将不足以区分模型的优劣。</p>
 <p>我们应该花更多时间来思考是什么让模型与众不同。</p>
 <div class="section" id="marginal-likelihood-and-loo">
@@ -720,7 +735,7 @@ sk &amp;= (e7 - e5 + e3 - e1)/sb \\
 <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="numpy.exp"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="n">ml1</span> <span class="o">-</span> <span class="n">ml2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>当使用统计量时，通常不能用近似贝叶斯计算方法得出的边缘似然来比较竞争中的模型 <span id="id40">[<a class="reference internal" href="references.html#id61">108</a>]</span>，除非统计量对于模型比较来说是充分的。这一点非常令人沮丧，因为除了一些形式化示例或特定模型之外，没有通用的指南来确保模型的充分性 <span id="id41">[<a class="reference internal" href="references.html#id61">108</a>]</span> 。如果使用所有数据（ 即不依赖统计量 ）则不存在问题 <a class="footnote-reference brackets" href="#id64" id="id42">10</a>。这类似于 <a class="reference internal" href="chp_11.html#bayes-factors"><span class="std std-ref">11.7.2 边缘似然与模型比较</span></a> 中的讨论，即计算边缘似然通常是比计算后验困难得多的问题。即便我们设法找到了足以计算后验的统计量，也不能保证它对模型比较也有效。</p>
+<p>当使用统计量时，通常不能用近似贝叶斯计算方法得出的边缘似然来比较竞争中的模型 <span id="id40">[<a class="reference internal" href="references.html#id61">108</a>]</span>，除非统计量对于模型比较来说是充分的。这一点非常令人沮丧，因为除了一些形式化示例或特定模型之外，没有通用的指南来确保模型的充分性 <span id="id41">[<a class="reference internal" href="references.html#id61">108</a>]</span> 。如果使用所有数据（ 即不依赖统计量 ）则不存在问题 <a class="footnote-reference brackets" href="#id65" id="id42">10</a>。这类似于 <a class="reference internal" href="chp_11.html#bayes-factors"><span class="std std-ref">11.7.2 边缘似然与模型比较</span></a> 中的讨论，即计算边缘似然通常是比计算后验困难得多的问题。即便我们设法找到了足以计算后验的统计量，也不能保证它对模型比较也有效。</p>
 <p>为了更好地理解边缘似然在近似贝叶斯计算中的表现，现在将分析一个简短的实验。该实验中还包含 <code class="docutils literal notranslate"><span class="pre">LOO</span></code>，因为我们认为 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 是比<code class="docutils literal notranslate"><span class="pre">边缘似然</span></code>和<code class="docutils literal notranslate"><span class="pre">贝叶斯因子</span></code>更好的整体指标。</p>
 <p>实验的基本方法是将具有显式似然的模型的对数边缘似然值、使用 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 计算的值、近似贝叶斯计算模型（采用含统计量和不含统计量的模拟器）的值进行比较。结果显示在图 <a class="reference internal" href="#fig-model-comp-normal-0"><span class="std std-numref">Fig. 146</span></a> 中，和代码 <a class="reference internal" href="#gauss-nuts"><span class="std std-ref">gauss_nuts</span></a> 以及代码 <a class="reference internal" href="#gauss-abc"><span class="std std-ref">gauss_abc</span></a> 中的。边缘（伪）似然值由 <code class="docutils literal notranslate"><span class="pre">SMC</span></code> 和 <code class="docutils literal notranslate"><span class="pre">LOO</span> <span class="pre">值</span></code>（ 调用 <code class="docutils literal notranslate"><span class="pre">az.loo()</span></code> 函数 ）的乘积计算得出。请注意，<code class="docutils literal notranslate"><span class="pre">LOO</span></code> 是在逐点的对数似然值上定义的，而在近似贝叶斯计算中，我们只能访问逐点的对数伪似然值。</p>
 <p>从 <a class="reference internal" href="#fig-model-comp-normal-0"><span class="std std-numref">Fig. 146</span></a> 中可以看到，通常 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 和对数边缘似然的表现相似。从第一列中可以看到，<code class="docutils literal notranslate"><span class="pre">model_1</span></code> 始终被选为比 <code class="docutils literal notranslate"><span class="pre">model_0</span></code> 更好（这里越高越好）。模型之间的对数边缘似然的差（斜率）较 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 更大，这可以解释为 “边缘似然的计算明确考虑了先验，而 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 仅通过后验间接进行”，参见 <a class="reference internal" href="chp_11.html#bayes-factors"><span class="std std-ref">11.7.2 边缘似然与模型比较</span></a>  以了解详情。即使 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 值和边缘似然值因样本而异，它们也会存在比较一致的表现。我们可以从 <code class="docutils literal notranslate"><span class="pre">model_0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">model_1</span></code> 之间线的斜率看到这一点。虽然线的斜率并不完全相同，但非常相似。这是模型选择方法的理想表现。如果我们比较<code class="docutils literal notranslate"><span class="pre">model_1</span></code>和<code class="docutils literal notranslate"><span class="pre">model_2</span></code>，可以得出类似结论。另外，注意两种模型对于 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 基本上无法区分，而边缘似然反映了更大的差异。再一次，原因是 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 仅从后验计算，而边缘似然直接考虑了先验。</p>
@@ -771,7 +786,7 @@ sk &amp;= (e7 - e5 + e3 - e1)/sb \\
 </div>
 <div class="section" id="model-choice-via-random-forest">
 <span id="id43"></span><h3>8.7.2 随机森林法<a class="headerlink" href="#model-choice-via-random-forest" title="Permalink to this headline">¶</a></h3>
-<p>我们在上一节中讨论的一些注意事项促进了近似贝叶斯计算框架下模型选择新方法的研究。其中一种替代方法是<strong>将模型选择问题定义为随机森林分类问题</strong> <span id="id44">[<a class="reference internal" href="references.html#id51">99</a>]</span> <a class="footnote-reference brackets" href="#id65" id="id45">11</a>。随机森林是一种基于许多决策树的组合分类和回归方法，它与 <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref"> 第 7 章 </span></a> 中的 BART 密切相关。</p>
+<p>我们在上一节中讨论的一些注意事项促进了近似贝叶斯计算框架下模型选择新方法的研究。其中一种替代方法是<strong>将模型选择问题定义为随机森林分类问题</strong> <span id="id44">[<a class="reference internal" href="references.html#id51">99</a>]</span> <a class="footnote-reference brackets" href="#id66" id="id45">11</a>。随机森林是一种基于许多决策树的组合分类和回归方法，它与 <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref"> 第 7 章 </span></a> 中的 BART 密切相关。</p>
 <p>该方法的主要思想是：最可能的模型可以从先验或后验预测分布的模拟样本中通过构建随机森林分类器获得。在原始论文中，作者使用了先验预测分布，但也提到对于更高级的近似贝叶斯计算方法，可以使用其他分布。在这里，我们将使用后验预测分布。对于 <span class="math notranslate nohighlight">\(m\)</span> 个模型，模拟数据在参考表中进行了排序，参见 <a class="reference internal" href="#table-abc-random-forest-ref-table"><span class="std std-numref">Table 15</span></a> 。</p>
 <p>其中每一行是来自后验预测分布的一个样本，每一列是 <span class="math notranslate nohighlight">\(n\)</span> 个统计量之一。我们使用这个参考表来训练分类器，其任务是在给定统计量值的情况下，正确分类模型。重要的是要注意，用于模型选择的统计量和用于计算后验的统计量不一定相同。事实上，建议包括更多的统计量信息。一旦分类器训练完成，我们就使用和参考表中相同的 <span class="math notranslate nohighlight">\(n\)</span> 个统计量作为其输入，不过这次统计量的值来自于观测数据。分类器预测的模型将是最佳模型。</p>
 <table class="table" id="table-abc-random-forest-ref-table">
@@ -843,7 +858,7 @@ sk &amp;= (e7 - e5 + e3 - e1)/sb \\
 </pre></div>
 </div>
 </div>
-<p>为了比较使用 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 的近似贝叶斯计算模型，不能直接使用 <code class="docutils literal notranslate"><span class="pre">az.compare</span></code> 函数。我们需要首先创建一个带有 <code class="docutils literal notranslate"><span class="pre">log_likelihood</span></code> 组的 <code class="docutils literal notranslate"><span class="pre">InferenceData</span></code> 对象，详见代码 <a class="reference internal" href="#idata-pseudo"><span class="std std-ref">idata_pseudo</span></a> <a class="footnote-reference brackets" href="#id66" id="id48">12</a>。此比较的结果汇总在 <a class="reference internal" href="#table-abc-loo"><span class="std std-numref">Table 16</span></a> 中，可以看到 <span class="math notranslate nohighlight">\(MA(2)\)</span> 模型是首选。</p>
+<p>为了比较使用 <code class="docutils literal notranslate"><span class="pre">LOO</span></code> 的近似贝叶斯计算模型，不能直接使用 <code class="docutils literal notranslate"><span class="pre">az.compare</span></code> 函数。我们需要首先创建一个带有 <code class="docutils literal notranslate"><span class="pre">log_likelihood</span></code> 组的 <code class="docutils literal notranslate"><span class="pre">InferenceData</span></code> 对象，详见代码 <a class="reference internal" href="#idata-pseudo"><span class="std std-ref">idata_pseudo</span></a> <a class="footnote-reference brackets" href="#id67" id="id48">12</a>。此比较的结果汇总在 <a class="reference internal" href="#table-abc-loo"><span class="std std-numref">Table 16</span></a> 中，可以看到 <span class="math notranslate nohighlight">\(MA(2)\)</span> 模型是首选。</p>
 <div class="literal-block-wrapper docutils container" id="idata-pseudo">
 <div class="code-block-caption"><span class="caption-number">Listing 111 </span><span class="caption-text">idata_pseudo</span><a class="headerlink" href="#idata-pseudo" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_ma1</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.from_pymc3.html#arviz.from_pymc3" title="arviz.from_pymc3"><span class="n">az</span><span class="o">.</span><span class="n">from_pymc3</span></a><span class="p">(</span><span class="n">trace_ma1</span><span class="p">)</span>
@@ -859,7 +874,7 @@ sk &amp;= (e7 - e5 + e3 - e1)/sb \\
 </div>
 </div>
 <table class="table" id="table-abc-loo">
-<caption><span class="caption-number">Table 16 </span><span class="caption-text">Summary ABC-model comparison using LOO</span><a class="headerlink" href="#table-abc-loo" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-number">Table 16 </span><span class="caption-text">使用 LOO 对 ABC-模型的比较进行总结</span><a class="headerlink" href="#table-abc-loo" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 10%"/>
 <col style="width: 10%"/>
@@ -926,7 +941,7 @@ sk &amp;= (e7 - e5 + e3 - e1)/sb \\
 <p>良好的先验可以降低计算成本，从而在一定程度上允许我们使用 <code class="docutils literal notranslate"><span class="pre">SMC</span></code> 和  <code class="docutils literal notranslate"><span class="pre">SMC-ABC</span></code> 拟合更复杂的模型。除了提供信息性更强的先验和在本书中讨论过的有关先验选择/评估的内容之外，我们暂时没有针对近似贝叶斯计算方法的进一步推荐。</p>
 </div>
 <div class="section" id="exercises8">
-<span id="id52"></span><h2>8.9 练习<a class="headerlink" href="#exercises8" title="Permalink to this headline">¶</a></h2>
+<span id="id52"></span><h2>习题<a class="headerlink" href="#exercises8" title="Permalink to this headline">¶</a></h2>
 <p><strong>8E1.</strong> In your words explain how 近似贝叶斯计算 is approximate? What object or quantity is approximated and how.</p>
 <p><strong>8E2.</strong> In the context of 近似贝叶斯计算，what is the problem that SMC is trying to solve compared to rejection sampling?</p>
 <p><strong>8E3.</strong> Write a Python function to compute the Gaussian kernel as in Equation <a class="reference internal" href="#equation-eq-euclidean-abc">(74)</a>, but without the summation.</p>
@@ -955,43 +970,45 @@ sk &amp;= (e7 - e5 + e3 - e1)/sb \\
 <p><strong>8H12.</strong> This exercise is based in the sock problem formulated by Rasmus Bååth. The problem goes like this. We get 11 socks out of the laundry and to our surprise we find that they are all unique, that is we can not pair them. What is the total number of socks that we laundry? Let assume that the laundry contains both paired and unpaired socks, we do not have more than two socks of the same kind. That is we either have 1 or 2 socks of each kind.</p>
 <p>Assume the number of socks follows a <span class="math notranslate nohighlight">\(\text{NB}(30, 4.5)\)</span>. And that the proportion of unpaired socks follows a <span class="math notranslate nohighlight">\(\text{Beta}(15, 2)\)</span></p>
 <p>Generate a simulator suitable for this problem and create a  SMC-ABC model to compute the posterior distribution of the number of socks, the proportion of unpaired socks, and the number of pairs.</p>
-<hr class="docutils"/>
+</div>
+<div class="section" id="id54">
+<h2>参考文献<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h2>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id54"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
+<dt class="label" id="id55"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
 <dd><p>It can work for discrete variables, especially if they take only a   few possible values.</p>
 </dd>
-<dt class="label" id="id55"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
+<dt class="label" id="id56"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
 <dd><p>This is another manifestation of the curse of dimensionality. See   Section <a class="reference internal" href="chp_11.html#high-dimensions"><span class="std std-ref">11.8 走出平地</span></a> for a full explanation.</p>
 </dd>
-<dt class="label" id="id56"><span class="brackets"><a class="fn-backref" href="#id9">3</a></span></dt>
+<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id9">3</a></span></dt>
 <dd><p>The default SMC <code class="docutils literal notranslate"><span class="pre">kernel</span></code> is <code class="docutils literal notranslate"><span class="pre">"metropolis"</span></code>. See <a class="reference internal" href="chp_11.html#inference-methods"><span class="std std-ref">11.9 推断方法</span></a> for details.</p>
 </dd>
-<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id11">4</a></span></dt>
+<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id11">4</a></span></dt>
 <dd><p>Is similar to the Gaussian distribution but without the   normalization term <span class="math notranslate nohighlight">\(\frac{1}{\sigma\sqrt{2\pi}}\)</span>.</p>
 </dd>
-<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id12">5</a></span></dt>
+<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id12">5</a></span></dt>
 <dd><p>This is something PyMC3 does, other packages could be different</p>
 </dd>
-<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id14">6</a></span></dt>
+<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id14">6</a></span></dt>
 <dd><p>Even when PyMC3 uses <code class="docutils literal notranslate"><span class="pre">sum_stat="sort"</span></code> as summary statistic,   sorting is not a true summary as we are still using the whole data</p>
 </dd>
-<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id19">7</a></span></dt>
+<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id19">7</a></span></dt>
 <dd><p>In a similar fashion as the <span class="math notranslate nohighlight">\(\beta\)</span> parameters in the description   of the SMC/ SMC-ABC algorithm explained before</p>
 </dd>
-<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id27">8</a></span></dt>
-<dd><p>In Prangle <span id="id62">[<a class="reference internal" href="references.html#id45">102</a>]</span> you will find a description of an R   package with a lot of functions to work with g-and-k distributions.</p>
+<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id27">8</a></span></dt>
+<dd><p>In Prangle <span id="id63">[<a class="reference internal" href="references.html#id45">102</a>]</span> you will find a description of an R   package with a lot of functions to work with g-and-k distributions.</p>
 </dd>
-<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id34">9</a></span></dt>
+<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id34">9</a></span></dt>
 <dd><p>In the literature is common to use <span class="math notranslate nohighlight">\(\varepsilon\)</span> to denote these   terms, but we want to avoid confusion with the <span class="math notranslate nohighlight">\(\epsilon\)</span> parameter   in the  SMC-ABC sampler</p>
 </dd>
-<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id42">10</a></span></dt>
+<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id42">10</a></span></dt>
 <dd><p>Good moment to remember that <code class="docutils literal notranslate"><span class="pre">sum_stat="sort"</span></code> is not actually a   summary statistic as we are using the entire dataset</p>
 </dd>
-<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id45">11</a></span></dt>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id45">11</a></span></dt>
 <dd><p>Other classifiers could have been chosen, but the authors decided   to use a random forest.</p>
 </dd>
-<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id48">12</a></span></dt>
+<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id48">12</a></span></dt>
 <dd><p>In future versions of PyMC <code class="docutils literal notranslate"><span class="pre">pm.sample_smc</span></code> will return and   InferenceData object with the proper groups.</p>
 </dd>
 </dl>

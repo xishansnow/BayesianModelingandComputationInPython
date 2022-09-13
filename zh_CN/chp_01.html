@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>第一章: 贝叶斯推断 — Bayesian Modeling and Computation in Python</title>
+<title>第一章：贝叶斯推断 — Bayesian Modeling and Computation in Python</title>
 <link href="../_static/css/theme.css" rel="stylesheet"/>
 <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet"/>
 <link href="../_static/vendor/fontawesome/5.13.0/css/all.min.css" rel="stylesheet"/>
@@ -42,7 +42,7 @@
 <link href="../_static/favicon.ico" rel="shortcut icon">
 <link href="../genindex.html" rel="index" title="Index"/>
 <link href="../search.html" rel="search" title="Search"/>
-<link href="chp_02.html" rel="next" title="第二章: 贝叶斯模型的探索性分析"/>
+<link href="chp_02.html" rel="next" title="第二章：贝叶斯模型的探索性分析"/>
 <link href="symbollist.html" rel="prev" title="符号表"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="None" name="docsearch:language"/>
@@ -92,12 +92,12 @@
 </li>
 <li class="toctree-l1 current active">
 <a class="current reference internal" href="#">
-   第一章: 贝叶斯推断
+   第一章：贝叶斯推断
   </a>
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_02.html">
-   第二章: 贝叶斯模型的探索性分析
+   第二章：贝叶斯模型的探索性分析
   </a>
 </li>
 <li class="toctree-l1">
@@ -142,7 +142,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_11.html">
-   第十一章: 附加主题
+   第十一章：附加主题
   </a>
 </li>
 <li class="toctree-l1">
@@ -152,7 +152,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="references.html">
-   References
+   参考文献
   </a>
 </li>
 </ul>
@@ -206,12 +206,51 @@
      1.1.2 贝叶斯推断 （ Bayesian Inference ）
     </a>
 </li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id12">
+     1.1.3 三种类型的预测
+    </a>
+<ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id13">
+       （1）后验用于计算积分
+      </a>
+</li>
+<li class="toc-h4 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id15">
+       （2）先验用于计算预期分布
+      </a>
+</li>
+<li class="toc-h4 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id17">
+       （3）后验用于预测
+      </a>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#sampling-methods-intro">
    1.2 一个自制的采样器
   </a>
+<ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#metropolis-hastings">
+     （1）Metropolis-Hastings 采样器
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#beta-binomial">
+     （2）基础的 Beta-Binomial 模型
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id24">
+     （3）推断结果的诊断
+    </a>
+</li>
+</ul>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#automating-inference">
@@ -220,7 +259,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#make-prior-count">
-   1.4 量化先验中信息的几种可选方法
+   1.4 先验分布的选择方法
   </a>
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
@@ -264,7 +303,7 @@
 <div class="col-12 col-md-9 pl-md-3 pr-md-0">
 <!-- Table of contents that is only displayed when printing the page -->
 <div class="onlyprint" id="jb-print-docs-body">
-<h1>第一章: 贝叶斯推断</h1>
+<h1>第一章：贝叶斯推断</h1>
 <!-- Table of contents -->
 <div id="print-main-content">
 <div id="jb-print-toc">
@@ -288,12 +327,51 @@
      1.1.2 贝叶斯推断 （ Bayesian Inference ）
     </a>
 </li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id12">
+     1.1.3 三种类型的预测
+    </a>
+<ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id13">
+       （1）后验用于计算积分
+      </a>
+</li>
+<li class="toc-h4 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id15">
+       （2）先验用于计算预期分布
+      </a>
+</li>
+<li class="toc-h4 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id17">
+       （3）后验用于预测
+      </a>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#sampling-methods-intro">
    1.2 一个自制的采样器
   </a>
+<ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#metropolis-hastings">
+     （1）Metropolis-Hastings 采样器
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#beta-binomial">
+     （2）基础的 Beta-Binomial 模型
+    </a>
+</li>
+<li class="toc-h3 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id24">
+     （3）推断结果的诊断
+    </a>
+</li>
+</ul>
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#automating-inference">
@@ -302,7 +380,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#make-prior-count">
-   1.4 量化先验中信息的几种可选方法
+   1.4 先验分布的选择方法
   </a>
 <ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry">
@@ -344,7 +422,7 @@
 </div>
 <div>
 <div class="tex2jax_ignore mathjax_ignore section" id="chap1">
-<span id="id1"></span><h1>第一章: 贝叶斯推断<a class="headerlink" href="#chap1" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>第一章：贝叶斯推断<a class="headerlink" href="#chap1" title="Permalink to this headline">¶</a></h1>
 <style>p{text-indent:2em;2}</style>
 <p>现代贝叶斯统计主要使用计算机代码来运行，这极大地改变了贝叶斯统计的执行方式。我们能够建立的模型的复杂性越来越大，必要的数学和计算技能障碍逐步降低。而且 <em>迭代式建模过程</em> 也变得比以往更容易实施和更有价值。计算机方法的普及和流行确实很棒，但也需要更大的责任心。现在表达统计方法比以往任何时候都容易，但统计是一个微妙的领域，强大的计算方法并不会使统计神奇地消失。因此，具有良好理论知识背景（尤其是与实践相关的知识），对于有效应用统计方法非常重要。在本章中，我们会介绍了其中一些基础概念和方法，还有很多内容将在本书其余部分进一步探索和扩展。</p>
 <div class="section" id="bayesian-modeling">
@@ -358,7 +436,7 @@
 <span id="id4"></span><h3>1.1.1 贝叶斯模型及其工作流程<a class="headerlink" href="#bayesian-models" title="Permalink to this headline">¶</a></h3>
 <p>贝叶斯模型，无论其是否可计算，都有两个基本概念特征：</p>
 <ul class="simple">
-<li><p>一是使用概率分布来描述未知量 <a class="footnote-reference brackets" href="#id43" id="id5">1</a> ，通常我们称这些未知量为参数 <a class="footnote-reference brackets" href="#id44" id="id6">2</a>。</p></li>
+<li><p>一是使用概率分布来描述未知量 <a class="footnote-reference brackets" href="#id49" id="id5">1</a> ，通常我们称这些未知量为参数 <a class="footnote-reference brackets" href="#id50" id="id6">2</a>。</p></li>
 <li><p>二是采用贝叶斯定理，以数据为已知条件来更新参数的值，此过程也可以被视为概率的重新分配。</p></li>
 </ul>
 <p>在高层次上，可以将贝叶斯模型的构建过程分为三个步骤：</p>
@@ -372,78 +450,91 @@
 </div>
 <div class="section" id="bayesian-inference">
 <span id="id7"></span><h3>1.1.2 贝叶斯推断 （ Bayesian Inference ）<a class="headerlink" href="#bayesian-inference" title="Permalink to this headline">¶</a></h3>
-<p>通俗地说，<em>推断</em> 与 “根据证据和推理得出结论” 有关。贝叶斯推断是一种特殊形式的统计推断，它通过组合概率分布来获得其他概率分布。当我们已经观测到一些数据 <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> 时，贝叶斯定理提供了用于估计参数 <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> 的通用方法：</p>
+<p>通俗地说，<code class="docutils literal notranslate"><span class="pre">推断</span></code> 与 “根据证据和推理得出结论” 有关。贝叶斯推断是一种特殊形式的统计推断，它通过组合概率分布来获得其他概率分布。当我们已经观测到一些数据 <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> 时，贝叶斯定理提供了用于估计参数 <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> 的通用方法：</p>
 <div class="math notranslate nohighlight" id="equation-eq-posterior-dist">
 <span class="eqno">(1)<a class="headerlink" href="#equation-eq-posterior-dist" title="Permalink to this equation">¶</a></span>\[\underbrace{p(\boldsymbol{\theta} \mid \boldsymbol{Y})}_{\text{posterior}} = \frac{\overbrace{p(\boldsymbol{Y} \mid \boldsymbol{\theta})}^{\text{likelihood}}\; \overbrace{p(\boldsymbol{\theta})}^{\text{prior}}}{\underbrace{{p(\boldsymbol{Y})}}_{\text{marginal likelihood}}}\]</div>
-<p>上式中，**似然函数（ 简称似然， likelihood ）**将观测数据（ <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> ）与未知参数（ <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> ）连接起来；<strong>先验分布（ 简称先验，prior ）<strong>表示在观测到数据之前的参数不确定性 <a class="footnote-reference brackets" href="#id45" id="id8">3</a>；通过将两者相乘，可以得到</strong>后验分布（ 简称后验， posterior ）</strong>，即给定观测数据的条件下，模型中所有未知参数的联合分布。</p>
-<p><a class="reference internal" href="#fig-bayesian-triad"><span class="std std-numref">Fig. 1</span></a> 展示了一个任意的先验分布、似然函数，以及两者产生的后验分布 <a class="footnote-reference brackets" href="#id46" id="id9">4</a> 。</p>
+<p>上式中，<strong>似然函数（ 简称似然， likelihood ）</strong> 将观测数据（ <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> ）与未知参数（ <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> ）连接起来；<strong>先验分布（ 简称先验，prior ）</strong> 表示在观测到数据之前参数的不确定性 <a class="footnote-reference brackets" href="#id51" id="id8">3</a>；通过将两者相乘，可以得到 <strong>后验分布（ 简称后验， posterior ）</strong>，即给定观测数据的条件下，模型中所有未知参数的联合分布。</p>
+<p><a class="reference internal" href="#fig-bayesian-triad"><span class="std std-numref">Fig. 1</span></a> 展示了一个任意的先验分布、似然函数，以及两者产生的后验分布 <a class="footnote-reference brackets" href="#id52" id="id9">4</a> 。</p>
 <div class="figure align-default" id="fig-bayesian-triad">
 <a class="reference internal image-reference" href="../_images/bayesian_triad.png"><img alt="../_images/bayesian_triad.png" src="../_images/bayesian_triad.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">左图为一个假想的先验分布（黑色曲线），其中 <span class="math notranslate nohighlight">\(\theta = 0.5\)</span> 的可能性更大，而其余值则呈现出线性对称的下降趋势；似然函数（灰色曲线）则表明， <span class="math notranslate nohighlight">\(\theta = 0.2\)</span> 的值能更好地解释数据；而两者相乘后的后验分布（蓝色曲线），则是先验和似然之间的折衷。图中省略了 <span class="math notranslate nohighlight">\(y\)</span> 轴值和刻度，因为我们只关心相对值。右图的功能与左图相同，但 <span class="math notranslate nohighlight">\(y\)</span> 轴采用了对数尺度。可以发现对数尺度能够保留概率的相对性质，例如，两个图中最大值和最小值所在位置并没有改变。正是由于对数尺度具备此优点且计算稳定，很多贝叶斯软件包都将其作为首选。</span><a class="headerlink" href="#fig-bayesian-triad" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">左图为一个假想的先验分布（黑色曲线），其中 <span class="math notranslate nohighlight">\(\theta = 0.5\)</span> 的可能性更大，而其余值则呈现出线性对称的下降趋势；似然函数（灰色曲线）则表明， <span class="math notranslate nohighlight">\(\theta = 0.2\)</span> 的值能更好地解释数据；而两者相乘后的后验分布（蓝色曲线），则是先验和似然之间的折衷。图中省略了 <span class="math notranslate nohighlight">\(y\)</span> 轴的值和刻度，因为我们只关心相对值。右图的功能与左图相同，但 <span class="math notranslate nohighlight">\(y\)</span> 轴采用了对数尺度。可以发现对数尺度能够保留概率的相对性质，例如，两个图中最大值和最小值所在位置并没有改变。正是由于对数尺度具备此优点而且计算稳定，很多贝叶斯软件包都将其作为首选。</span><a class="headerlink" href="#fig-bayesian-triad" title="Permalink to this image">¶</a></p>
 </div>
-<p>注意：虽然 <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> 是观测数据，但会被视为一个随机向量，因为其值取决于包含不确定性的特定生成过程或实验结果 <a class="footnote-reference brackets" href="#id47" id="id10">5</a>。为了获得后验分布，我们会将随机向量 <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> 的值固定在实际观测值上不变，因此一个常见的替代表示符号是 <span class="math notranslate nohighlight">\(y_{obs}\)</span> 。</p>
-<p>正如公式和图中所示，在某个特定点上计算后验的值，从概念层面来说非常简单，只需将 <em>一个先验值</em> 乘以 <em>一个似然值</em> 即可。但这不足以告诉我们后验概率的全部，因为我们不仅想要特定点处的绝对后验值，还想要其与周围点的相对后验值。后验分布的这种全局信息由<strong>边缘似然（ marginal likelihood ）</strong> (或者 <strong>归一化常数</strong>) <span class="math notranslate nohighlight">\(p(\boldsymbol{Y})\)</span> 来表示。贝叶斯定理中最不幸的事情就在于，计算此全局信息异常困难。把边缘似然写成如下形式可能更容易理解这一点：</p>
+<p>注意：虽然 <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> 是观测数据，但会被视为一个随机向量，因为其值取决于包含不确定性的特定生成过程或实验结果 <a class="footnote-reference brackets" href="#id53" id="id10">5</a>。为了获得后验分布，我们会将随机向量 <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> 的值固定在实际观测值上不变，因此一个常见的替代表示符号是 <span class="math notranslate nohighlight">\(y_{obs}\)</span> 。</p>
+<p>正如公式和图中所示，在某个特定点上计算后验的值，从概念层面来说非常简单，只需将 <em>一个先验值</em> 乘以 <em>一个似然值</em> 即可。但这不足以告诉我们后验概率的全部，因为我们不仅想要特定点处的绝对后验值，还想要其与周围点的相对后验值。后验分布的这种全局信息由 <strong>边缘似然（ marginal likelihood ）</strong>  （或者 <strong>归一化常数</strong>） <span class="math notranslate nohighlight">\(p(\boldsymbol{Y})\)</span> 来表示。贝叶斯定理中最不幸的事情就在于，计算这个全局信息异常困难。把边缘似然写成如下形式可能更容易理解这一点：</p>
 <div class="math notranslate nohighlight" id="equation-eq-marginal-likelihood">
-<span class="eqno">(2)<a class="headerlink" href="#equation-eq-marginal-likelihood" title="Permalink to this equation">¶</a></span>\[{p(\boldsymbol{Y}) = \int_{\boldsymbol{\Theta}} p(\boldsymbol{Y} \mid \boldsymbol{\theta})p(\boldsymbol{\theta}) d\boldsymbol{\theta}} \]</div>
-<p>其中 <span class="math notranslate nohighlight">\(\Theta\)</span> 表示我们需要积分 <span class="math notranslate nohighlight">\(\theta\)</span> 的所有可能值。</p>
-<p>计算这样积分非常困难（ 参见 <a class="reference internal" href="chp_11.html#marginal-likelihood"><span class="std std-ref">11.7 边缘似然</span></a> 和一个有趣的 XKCD 漫画 <a class="footnote-reference brackets" href="#id48" id="id11">6</a> ）。对于大多数问题而言，可能压根儿无法给出边缘似然的封闭形式解，进而更难得到积分结果了。好在有一些数值方法可以应对这一挑战，我们会在后面章节中做一些介绍。</p>
-<p>此外在实践中，很多问题的解决并不需要计算边缘似然，此时将贝叶斯定理表示为比率形式比较常见：</p>
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-marginal-likelihood" title="Permalink to this equation">¶</a></span>\[{p(\boldsymbol{Y}) = \int_{\boldsymbol{\Theta}} p(\boldsymbol{Y} \mid \boldsymbol{\theta})p(\boldsymbol{\theta}) d\boldsymbol{\theta}}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\Theta\)</span> 表示我们需要对 <span class="math notranslate nohighlight">\(\theta\)</span> 的所有可能值做积分。</p>
+<p>计算这样的积分非常难（ 参见 <a class="reference internal" href="chp_11.html#marginal-likelihood"><span class="std std-ref">11.7 边缘似然</span></a> 和一个有趣的 XKCD 漫画 <a class="footnote-reference brackets" href="#id54" id="id11">6</a> ）。对于大多数问题而言，可能压根儿无法给出边缘似然的封闭形式解，进而更难得到积分结果了。好在有一些数值方法可以应对这一挑战，我们会在后面章节中做一些介绍。</p>
+<p>另外，实践中的很多问题并不需要计算边缘似然，此时将贝叶斯定理表示为比率形式比较常见：</p>
 <div class="math notranslate nohighlight" id="equation-eq-proportional-bayes">
 <span class="eqno">(3)<a class="headerlink" href="#equation-eq-proportional-bayes" title="Permalink to this equation">¶</a></span>\[\underbrace{p(\boldsymbol{\theta} \mid \boldsymbol{Y})}_{\text{posterior}} \propto \overbrace{p(\boldsymbol{Y} \mid \boldsymbol{\theta})}^{\text{likelihood}}\; \overbrace{p(\boldsymbol{\theta})}^{\text{prior}}\]</div>
 <div class="admonition- admonition">
 <p class="admonition-title">关于符号的说明</p>
-<p>在本书中，我们使用相同的符号 <span class="math notranslate nohighlight">\(p(\cdot)\)</span> 来表示不同的量，例如：似然函数和先验分布。这其实是对符号的轻微滥用，因为似然函数并非一定是某种概率分布。不过这样做有一些好处：一是为贝叶斯公式中的所有量都提供了相同的认识论地位；二是反映出：即便似然函数不是严格意义上的概率密度函数，我们也不在乎，我们只关心先验背景下的似然，反之亦然。</p>
+<p>在本书中，我们使用相同的符号 <span class="math notranslate nohighlight">\(p(\cdot)\)</span> 来表示不同的量，例如：似然函数和先验分布。这其实是对符号的轻微滥用，因为似然函数并非一定是某种概率分布。不过这样做有一些好处：一是为贝叶斯公式中的所有量都提供了相同的认识论地位；二是反映出：即便似然函数不是严格意义上的概率密度函数，我们也能接受，因为我们只关心先验背景下的似然，反之亦然。</p>
 <p>换句话说，为了计算后验分布，我们将这似然函数和先验分布视为模型中同等必要的元素。</p>
 </div>
-<p>贝叶斯统计的特点之一是：<strong>后验总是一个概率分布</strong>，这使我们能够给参数做出概率性的表述。例如参数 <span class="math notranslate nohighlight">\(\boldsymbol{\tau}\)</span> 为正的概率是 <span class="math notranslate nohighlight">\(0.35\)</span> 。或者 <span class="math notranslate nohighlight">\(\boldsymbol{\phi}\)</span> 最可能的值是 <span class="math notranslate nohighlight">\(12\)</span>，而且有 <span class="math notranslate nohighlight">\(50\%\)</span> 的机会介于 <span class="math notranslate nohighlight">\(10\)</span> 和 <span class="math notranslate nohighlight">\(15\)</span> 之间。</p>
-<p>此外，可以将后验分布视为将模型与数据相结合的逻辑结果，因此由其得出的概率陈述保证了在数学上的一致性。我们只需记住，所有这些好的数学性质只在柏拉图式的内在理想世界中有效。当我们从“理想世界中数学的纯粹性”转向“现实世界中应用数学的混杂性”时，必须始终牢记：<strong>结果不仅取决于数据，还取决于模型</strong>。在实际问题中，有时候即便在数学上具有一致性，不良数据和/或不良模型也有可能导致毫无意义的结果。因此，我们必须始终对数据、模型和结果保持健康的怀疑精神。</p>
+<p>贝叶斯统计的特点之一是：<strong>后验总是一个概率分布</strong>，这使我们能够给参数做出概率性的表述。例如参数 <span class="math notranslate nohighlight">\(\boldsymbol{\tau}\)</span> 为正的概率是 <span class="math notranslate nohighlight">\(0.35\)</span> 。或者 <span class="math notranslate nohighlight">\(\boldsymbol{\phi}\)</span> 最可能的值是 <span class="math notranslate nohighlight">\(12\)</span>，而且有 <span class="math notranslate nohighlight">\(50\%\)</span> 的机会介于 <span class="math notranslate nohighlight">\(10\)</span> 和 <span class="math notranslate nohighlight">\(15\)</span> 之间等。</p>
+<p>此外，还可以将后验分布视为将模型与数据相结合的逻辑结果，因此由其得出的概率陈述保证了在数学上的一致性。我们只需记住，所有这些好的数学性质只在柏拉图式的内在理想世界中有效。当我们从 “理想世界中数学的纯粹性” 转向 “现实世界中应用数学的混杂性” 时，必须始终牢记：<strong>结果不仅取决于数据，还取决于模型</strong>。在实际问题中，有时候即便在数学上具有一致性，不良数据和/或不良模型也有可能导致毫无意义的结果。因此，必须始终对数据、模型和结果保持健康的怀疑精神。</p>
 <p>为了使这一点更明确，可以更准确地表示贝叶斯定理如下：</p>
 <div class="math notranslate nohighlight">
 \[p(\boldsymbol{\theta} \mid  \boldsymbol{Y}, M) \propto  p(\boldsymbol{Y} \mid \boldsymbol{\theta}, M) \; p(\boldsymbol{\theta}, M)\]</div>
 <p>式中显式地强调了：推断总是依赖于对问题的某个模型假设 <span class="math notranslate nohighlight">\(M\)</span> 。</p>
+</div>
+<div class="section" id="id12">
+<h3>1.1.3 三种类型的预测<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h4>（1）后验用于计算积分<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
 <p>一旦有了后验分布，就可以基于它推导出有关参数的其他感兴趣量。而这通常以计算期望的方式实现，例如：</p>
 <div class="math notranslate nohighlight" id="equation-eq-posterior-expectation">
-<span class="eqno">(4)<a class="headerlink" href="#equation-eq-posterior-expectation" title="Permalink to this equation">¶</a></span>\[J = \int f(\boldsymbol{\theta}) \; 
-p(\boldsymbol{\theta} \mid \boldsymbol{Y}) \; 
-d\boldsymbol{\theta} \]</div>
-<p>其中一个比较常见的量是：当 <span class="math notranslate nohighlight">\(f\)</span> 为恒等函数时， <span class="math notranslate nohighlight">\(J\)</span> 就是参数 <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> 的均值 <a class="footnote-reference brackets" href="#id49" id="id12">7</a>：</p>
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-posterior-expectation" title="Permalink to this equation">¶</a></span>\[J = \int f(\boldsymbol{\theta}) \;
+p(\boldsymbol{\theta} \mid \boldsymbol{Y}) \;
+d\boldsymbol{\theta}\]</div>
+<p>该公式中最为常见的一个量是：当 <span class="math notranslate nohighlight">\(f\)</span> 为恒等函数时， 积分 <span class="math notranslate nohighlight">\(J\)</span> 就是参数 <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> 的期望（均值） <a class="footnote-reference brackets" href="#id55" id="id14">7</a>：</p>
 <div class="math notranslate nohighlight">
 \[\bar{\boldsymbol{\theta}} = \int_{\boldsymbol{\Theta}} \boldsymbol{\theta}  p(\boldsymbol{\theta} \mid \boldsymbol{Y})  d\boldsymbol{\theta}\]</div>
-<p>后验分布是贝叶斯统计的核心对象，但不是唯一重要的。在大部分场景中，除了可以对参数值进行推断外，我们更需要对数据做出推断。这可以通过计算<strong>先验预测分布</strong>来完成：</p>
+</div>
+<div class="section" id="id15">
+<h4>（2）先验用于计算预期分布<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
+<p>后验分布是贝叶斯统计的核心对象，但不是唯一重要的。在大部分场景中，除了可以对参数值进行推断外，我们更需要对数据做出推断。这可以通过计算 <strong>先验预测分布</strong> 来完成：</p>
 <div class="math notranslate nohighlight" id="equation-eq-prior-pred-dist">
-<span class="eqno">(5)<a class="headerlink" href="#equation-eq-prior-pred-dist" title="Permalink to this equation">¶</a></span>\[p(\boldsymbol{Y}^\ast) =  \int_{\boldsymbol{\Theta}} p(\boldsymbol{Y^\ast} \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta}) \; d\boldsymbol{\theta} \]</div>
-<p>上式根据模型（即先验和似然）得出了预期数据的概率分布。但要注意：这是在看到任何实际观测数据 <span class="math notranslate nohighlight">\(\boldsymbol{Y}^\ast\)</span> 之前的预期数据。</p>
-<p>公式 <a class="reference internal" href="#equation-eq-marginal-likelihood">(2)</a>（边缘似然）和公式 <a class="reference internal" href="#equation-eq-prior-pred-dist">(5)</a>（先验预测分布）看起来有些相似，但其含义截然不同。在边缘似然公式中，我们有已知的观测数据 <span class="math notranslate nohighlight">\(Y\)</span> 作为前提条件；而在先验预测分布的公式中，我们没有观测数据作为已知前提，而是求结果为 <span class="math notranslate nohighlight">\(\boldsymbol{Y}^\ast\)</span> 的可能性。所以，边缘似然最终表现为一个积分后的数字，而先验预测分布最终表现为一个表达不确定性的概率分布。</p>
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-prior-pred-dist" title="Permalink to this equation">¶</a></span>\[p(\boldsymbol{Y}^\ast) =  \int_{\boldsymbol{\Theta}} p(\boldsymbol{Y^\ast} \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta}) \; d\boldsymbol{\theta}\]</div>
+<p>上式根据模型（即先验和似然）得出了预期的数据概率分布。但要注意：这是在看到任何实际观测数据 <span class="math notranslate nohighlight">\(\boldsymbol{Y}^\ast\)</span> 之前的预期数据。</p>
+<p>公式 <a class="reference internal" href="#equation-eq-marginal-likelihood">(2)</a>（边缘似然）和公式 <a class="reference internal" href="#equation-eq-prior-pred-dist">(5)</a>（先验预测分布）看起来有些相似，但两者的含义截然不同。在边缘似然公式中，我们有已知的观测数据 <span class="math notranslate nohighlight">\(Y\)</span> 作为前提条件，最终积分结果一个数字；而在先验预测分布的公式中，并没有观测数据作为已知前提，只是求结果为 <span class="math notranslate nohighlight">\(\boldsymbol{Y}^\ast\)</span> 的可能性有多大，最终表现为一个表达不确定性的概率分布。</p>
 <p>我们可以使用先验预测分布的样本作为评估和校准模型的一种手段。例如，我们可能会问 “人类身高的模型能否将人类身高预测为 <span class="math notranslate nohighlight">\(-1.5\)</span> 米？” 之类的问题。而此类问题通常在实施身高测量这个实验之前，我们就能认识到其荒谬性。在本书后面章节中，会看到许多 “使用先验预测分布进行模型评估” 或者 “使用先验预测分布为后续建模选择提供有效或无效信息” 的案例。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">作为生成式模型的贝叶斯模型</p>
-<p>采用概率视角建模导致了一个常见表述：<strong>模型生成数据</strong> <span id="id13">[<a class="reference internal" href="references.html#id28">4</a>]</span>。我们认为此概念至关重要。一旦你将它内化，所有统计模型都会变得更加清晰，甚至包括非贝叶斯模型。</p>
+<p>采用概率视角建模导致了一个常见表述：<strong>模型生成数据</strong> <span id="id16">[<a class="reference internal" href="references.html#id28">4</a>]</span>。我们认为此概念至关重要。一旦你将它内化，所有统计模型都会变得更加清晰，甚至包括非贝叶斯模型。</p>
 <p>此表述可以指导我们创建新的模型。如果我们认可数据是由模型生成的，那么通过思考如何生成数据，就有可能为数据创建适合的模型！</p>
 <p>此外，此表述并非一个抽象概念，我们可以用先验预测分布作为其具体表现形式。</p>
 <p>如果重新审视贝叶斯建模的三个步骤，我们可以将它们重新调整为：编写先验预测分布 –&gt; 添加数据以对其进行约束 —&gt; 检查结果是否有意义。当然，必要时同样需要进行迭代。</p>
 </div>
-<p>另一个需要计算的量是<strong>后验预测分布</strong>：</p>
+</div>
+<div class="section" id="id17">
+<h4>（3）后验用于预测<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h4>
+<p>另一个需要计算的量是 <strong>后验预测分布</strong>：</p>
 <div class="math notranslate nohighlight" id="equation-eq-post-pred-dist">
-<span class="eqno">(6)<a class="headerlink" href="#equation-eq-post-pred-dist" title="Permalink to this equation">¶</a></span>\[p(\tilde{\boldsymbol{Y}} \mid \boldsymbol{Y}) = \int_{\boldsymbol{\Theta}} p(\tilde{\boldsymbol{Y}} \mid \boldsymbol{\theta}) \, p(\boldsymbol{\theta} \mid \boldsymbol{Y}) \, d\boldsymbol{\theta} \]</div>
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-post-pred-dist" title="Permalink to this equation">¶</a></span>\[p(\tilde{\boldsymbol{Y}} \mid \boldsymbol{Y}) = \int_{\boldsymbol{\Theta}} p(\tilde{\boldsymbol{Y}} \mid \boldsymbol{\theta}) \, p(\boldsymbol{\theta} \mid \boldsymbol{Y}) \, d\boldsymbol{\theta}\]</div>
 <p>这是根据后验 <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \mid \boldsymbol{Y})\)</span> 预测的未来数据 <span class="math notranslate nohighlight">\(\tilde{\boldsymbol{Y}}\)</span> 的分布，而后验是模型（先验和似然）和观测数据的结果。因此，后验预测分布是模型在看到数据集 <span class="math notranslate nohighlight">\(\boldsymbol{Y}\)</span> 后预期看到的未来数据，即该分布是模型的预测结果。从公式 <a class="reference internal" href="#equation-eq-post-pred-dist">(6)</a> 可以看到，预测是通过对参数的后验分布进行积分（边缘化）来计算的。因此，该预测包含了不确定性估计。</p>
 <div class="admonition- admonition">
 <p class="admonition-title">频率主义者眼中的贝叶斯后验</p>
-<p>因为后验仅来自于模型和观测数据，所以我们并不是基于未观测到的事情做出陈述，而是对“基于内蕴数据生成过程得到潜在观测”做出陈述。对未观测的事物做出推断通常是频率主义者常用的方法。但在使用后验预测样本来检查模型这方面，贝叶斯主义者其实（部分）接受了频率主义者关于“未观测但潜在可观测的数据”的思想。</p>
+<p>因为后验仅来自于模型和观测数据，所以我们并不是基于未观测到的事情做出陈述，而是对 “基于内蕴数据生成过程得到潜在观测” 做出陈述。对未观测的事物做出推断通常是频率主义者常用的方法。但在使用后验预测样本来检查模型这方面，贝叶斯主义者其实（部分）接受了频率主义者关于 “未观测但潜在可观测的数据” 的思想。</p>
 <p>我们不仅对该想法满意，而且将在本书中看到此过程的多处示例。这真是一个很棒的主意！</p>
 </div>
 </div>
 </div>
+</div>
 <div class="section" id="sampling-methods-intro">
-<span id="id14"></span><h2>1.2 一个自制的采样器<a class="headerlink" href="#sampling-methods-intro" title="Permalink to this headline">¶</a></h2>
-<p>公式 <a class="reference internal" href="#equation-eq-marginal-likelihood">(2)</a> 中的积分很多情况下都没有封闭形式的解，因此现代贝叶斯推断大多使用被称为 <strong>通用推断引擎（ Universal Inference Engines ）</strong> 的数值方法来实现推断（ 参见 <a class="reference internal" href="chp_11.html#inference-methods"><span class="std std-ref">11.9 推断方法</span></a> ) 。有许多经过良好测试的 Python 软件包能够提供此类数值方法，因此一般来说，贝叶斯实践者不太可能需要编写自己的通用推断引擎。</p>
+<span id="id18"></span><h2>1.2 一个自制的采样器<a class="headerlink" href="#sampling-methods-intro" title="Permalink to this headline">¶</a></h2>
+<p>公式 <a class="reference internal" href="#equation-eq-marginal-likelihood">(2)</a> 中的积分很多情况下没有封闭形式的解析解，因此现代贝叶斯推断大多使用被称为 <strong>通用推断引擎（ Universal Inference Engines ）</strong> 的数值方法来实现推断（ 参见 <a class="reference internal" href="chp_11.html#inference-methods"><span class="std std-ref">11.9 推断方法</span></a> ) 。有许多经过良好测试的 Python 软件包能够提供此类数值方法，因此一般来说，贝叶斯实践者不太可能需要编写自己的通用推断引擎。</p>
 <p>当前编写自己的推断引擎通常只有两个理由：一是为了设计一个能够改进旧引擎的新引擎；二是为了学习某个引擎的工作原理。本章出于学习目的，将编写一个简易的引擎代码，但本书其余部分会主要使用 Python 库中的可用推断引擎。</p>
-<p><strong>（1）MCMC 方法与 Metropolis-Hastings 采样器</strong></p>
-<p>可以用于通用推断引擎的算法很多，其中使用最广泛、功能最强的算法是<code class="docutils literal notranslate"><span class="pre">马尔可夫链蒙特卡洛方法（</span> <span class="pre">MCMC</span> <span class="pre">）</span></code> 。所有 <code class="docutils literal notranslate"><span class="pre">MCMC</span> <span class="pre">方法</span></code> 几乎都使用样本来近似后验分布，而这些样本大多通过接受或拒绝来自某个提议分布的样本来生成。我们有理论上的保证，即通过遵循某些规则和假设能够获得非常近似后验分布的样本 <a class="footnote-reference brackets" href="#id50" id="id15">8</a> 。因此，MCMC 方法也称为<strong>采样器 （ Sampler ）</strong>。所有这些 MCMC 方法都需要具备在给定参数值时计算先验和似然的能力。也就是说，即使不知道完整的后验形态，通过逐点计算，我们也能够获取其概率密度。</p>
-<p>此类算法之一是 <code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span></code> <span id="id16">[<a class="reference internal" href="references.html#id106">7</a>, <a class="reference internal" href="references.html#id107">8</a>, <a class="reference internal" href="references.html#id108">9</a>]</span>。这并不是一个非常现代且有效的算法，但很容易被理解，因此为理解更复杂、更强大的其他方法奠定了基础 <a class="footnote-reference brackets" href="#id51" id="id17">9</a> 。</p>
+<div class="section" id="metropolis-hastings">
+<h3>（1）Metropolis-Hastings 采样器<a class="headerlink" href="#metropolis-hastings" title="Permalink to this headline">¶</a></h3>
+<p>可用于通用推断引擎的算法很多，其中使用最广泛、功能最强的算法是<code class="docutils literal notranslate"><span class="pre">马尔可夫链蒙特卡洛方法（</span> <span class="pre">MCMC</span> <span class="pre">）</span></code> 。所有 <code class="docutils literal notranslate"><span class="pre">MCMC</span> <span class="pre">方法</span></code> 几乎都使用样本来近似后验分布，而这些样本大多通过接受或拒绝来自某个 <strong>提议分布</strong> （部分数据称之为 <strong>状态转移矩阵</strong> ） 的样本来生成。我们有理论上的保证，即通过遵循某些规则和假设能够获得非常近似后验分布的样本 <a class="footnote-reference brackets" href="#id56" id="id19">8</a> 。因此，MCMC 方法也称为 <strong>采样器 （ Sampler ）</strong>。所有这些 MCMC 方法都需要具备在给定参数值时计算先验和似然的能力。也就是说，即使不知道完整的后验形态，通过逐点计算，我们也能够获取其概率密度。</p>
+<p>此类算法之一是 <code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span></code> <span id="id20">[<a class="reference internal" href="references.html#id106">7</a>, <a class="reference internal" href="references.html#id107">8</a>, <a class="reference internal" href="references.html#id108">9</a>]</span>。这并不是一个非常现代且有效的算法，但很容易被理解，因此为理解更复杂、更强大的其他方法奠定了基础 <a class="footnote-reference brackets" href="#id57" id="id21">9</a> 。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Metropolis-Hasting</span></code> 算法定义如下：</p>
 <ol>
 <li><p>在 <span class="math notranslate nohighlight">\(x_i\)</span> 处初始化参数 <span class="math notranslate nohighlight">\(\boldsymbol{X}\)</span> 的值</p></li>
-<li><p>使用提议分布 <span class="math notranslate nohighlight">\(q(x_{i + 1} \mid x_i)\)</span> 从旧值 <span class="math notranslate nohighlight">\(x_i\)</span> 生成新值 <span class="math notranslate nohighlight">\(x_{i + 1}\)</span> <a class="footnote-reference brackets" href="#id52" id="id18">10</a>。</p></li>
+<li><p>使用提议分布 <span class="math notranslate nohighlight">\(q(x_{i + 1} \mid x_i)\)</span> 从旧值 <span class="math notranslate nohighlight">\(x_i\)</span> 生成新值 <span class="math notranslate nohighlight">\(x_{i + 1}\)</span> <a class="footnote-reference brackets" href="#id58" id="id22">10</a>。</p></li>
 <li><p>计算新值被接受的概率：</p>
 <div class="math notranslate nohighlight" id="equation-acceptance-prob">
 <span class="eqno">(7)<a class="headerlink" href="#equation-acceptance-prob" title="Permalink to this equation">¶</a></span>\[p_a (x_{i + 1} \mid x_i) = \min \left (1, \frac{p(x_{i + 1}) \; q(x_i \mid x_{i + 1})} {p(x_i) \; q (x_{i + 1} \mid x_i)} \right)\]</div>
@@ -451,14 +542,19 @@ d\boldsymbol{\theta} \]</div>
 <li><p>如果 <span class="math notranslate nohighlight">\(p_a &gt; R\)</span> 其中 <span class="math notranslate nohighlight">\(R \sim \mathcal{U}(0, 1)\)</span> ，则保留新值，否则保留旧值。</p></li>
 <li><p>迭代 <span class="math notranslate nohighlight">\(2\)</span> 到 <span class="math notranslate nohighlight">\(4\)</span> 直到生成 <em>足够多</em> 的样本点。</p></li>
 </ol>
-<p><code class="docutils literal notranslate"><span class="pre">Metropolis</span> <span class="pre">算法</span></code> 非常通用，可以在非贝叶斯应用中使用，但对于本书的内容，<span class="math notranslate nohighlight">\(p(x_i)\)</span> 是参数在 <span class="math notranslate nohighlight">\(x_i\)</span> 处的后验密度。如果提议分布 <span class="math notranslate nohighlight">\(q\)</span> 是一个对称分布，则公式中的 <span class="math notranslate nohighlight">\(q(x_i \mid x_{i + 1})\)</span> 和 <span class="math notranslate nohighlight">\(q(x_{i + 1} \mid x_i)\)</span> 将被消掉（这在概念上意味着从 <span class="math notranslate nohighlight">\(x_{i+1}\)</span> 转移到 <span class="math notranslate nohighlight">\(x_i\)</span> 与从 <span class="math notranslate nohighlight">\(x_{i}\)</span> 转移到 <span class="math notranslate nohighlight">\(x_{i+1}\)</span> 具有相同的可能性)，只留下在两个点处估计的概率密度之比。从公式 <a class="reference internal" href="#equation-acceptance-prob">(7)</a> 可以看到，该算法始终接受从低概率区到较高概率区的转移，并按照概率接受从高概率区到低概率区的转移。</p>
-<p>另外需要说明的是: <code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span> <span class="pre">算法</span></code>不是一种优化方法！我们不关心概率密度最大的点在哪儿，而是想探索整个 <span class="math notranslate nohighlight">\(p\)</span> 分布（ 贝叶斯统计中主要指后验分布 ）。如果你深入分析，就会发现此方法在达到最大概率区后并不会停止，而是在后续步骤中继续转移到概率较低的区域。</p>
-<p><strong>（2）基础的 Beta-Binomial 模型</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">Metropolis</span> <span class="pre">算法</span></code> 非常通用，而且可以在非贝叶斯应用中使用，但对于本书内容，<span class="math notranslate nohighlight">\(p(x_i)\)</span> 是参数在 <span class="math notranslate nohighlight">\(x_i\)</span> 处的后验密度。如果提议分布 <span class="math notranslate nohighlight">\(q\)</span> 是一个对称分布 （或矩阵），则公式中的 <span class="math notranslate nohighlight">\(q(x_i \mid x_{i + 1})\)</span> 和 <span class="math notranslate nohighlight">\(q(x_{i + 1} \mid x_i)\)</span> 将被消掉（这在概念上意味着从 <span class="math notranslate nohighlight">\(x_{i+1}\)</span> 转移到 <span class="math notranslate nohighlight">\(x_i\)</span> 与从 <span class="math notranslate nohighlight">\(x_{i}\)</span> 转移到 <span class="math notranslate nohighlight">\(x_{i+1}\)</span> 具有相同的可能性），只留下在两个点处估计的概率密度之比。从公式 <a class="reference internal" href="#equation-acceptance-prob">(7)</a> 可以看到，该算法始终接受从低概率区到较高概率区的转移，并按照一定概率接受从高概率区到低概率区的转移。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">采样方法不同于最优化方法</p>
+<p>需要说明的是：<code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span> <span class="pre">算法</span></code> 并不是一种优化方法！我们不关心概率密度最大的点在哪儿，而是想探索整个 <span class="math notranslate nohighlight">\(p\)</span> 分布（ 在贝叶斯统计中主要指后验分布 ）。如果你深入洞察和分析，就会发现此方法在达到最大概率区域后并不会停止，而是在后续步骤中继续转移到概率较低的区域。</p>
+</div>
+</div>
+<div class="section" id="beta-binomial">
+<h3>（2）基础的 Beta-Binomial 模型<a class="headerlink" href="#beta-binomial" title="Permalink to this headline">¶</a></h3>
 <p>为了使事情更具象，让我们尝试求解一个 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>。这可能是贝叶斯统计中最常见的示例，它用于对二值的、互斥的事件进行建模，例如 <code class="docutils literal notranslate"><span class="pre">0</span></code> 或 <code class="docutils literal notranslate"><span class="pre">1</span></code>、<code class="docutils literal notranslate"><span class="pre">正</span></code>或<code class="docutils literal notranslate"><span class="pre">负</span></code>、<code class="docutils literal notranslate"><span class="pre">正面</span></code>或<code class="docutils literal notranslate"><span class="pre">反面</span></code>、<code class="docutils literal notranslate"><span class="pre">垃圾邮件</span></code>或<code class="docutils literal notranslate"><span class="pre">正常邮件</span></code>、<code class="docutils literal notranslate"><span class="pre">热狗</span></code>或<code class="docutils literal notranslate"><span class="pre">非热狗</span></code>、<code class="docutils literal notranslate"><span class="pre">健康</span></code>或<code class="docutils literal notranslate"><span class="pre">不健康</span></code>等。 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code> 经常被用作介绍贝叶斯统计基础知识的第一个示例，因为它足够简单，而且可以轻松求解和计算。在统计符号系统中， <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code> 记为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-beta-binomial">
 <span class="eqno">(8)<a class="headerlink" href="#equation-eq-beta-binomial" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \theta \sim &amp;\; \text{Beta}(\alpha, \beta) \\
-Y \sim &amp;\; \text{Bin}(n=1, p=\theta) 
+Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 \end{split}\end{split}\]</div>
 <p>在公式 <a class="reference internal" href="#equation-eq-beta-binomial">(8)</a> 中，未知参数为 <span class="math notranslate nohighlight">\(\theta\)</span> ，其先验为<code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code> <span class="math notranslate nohighlight">\(\text{Beta}(\alpha, \beta)\)</span> ；我们假设数据的似然函数为二项分布 <span class="math notranslate nohighlight">\(\text{Bin}(n=1, p=\theta)\)</span> 。在此模型中，成功的次数 <span class="math notranslate nohighlight">\(\theta\)</span> 可以代表抛硬币时的正面比例、病亡率等量。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>实际上存在封闭形式的解（ 参见 <a class="reference internal" href="#conjugate-priors"><span class="std std-ref">1.4.1 共轭先验</span></a> 了解详细信息 ），但这里为了方便讲解，我们假设不知道如何计算该模型的后验。因此需要在 Python 代码中实现 <code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span> <span class="pre">算法</span></code>来以获得近似的数值解。在 SciPy 软件包的统计函数支持下，可以实现为：</p>
@@ -483,8 +579,8 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 </div>
 </div>
 <p>运行 <code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span> <span class="pre">算法</span></code>的代码：</p>
-<div class="literal-block-wrapper docutils container" id="metropolis-hastings">
-<div class="code-block-caption"><span class="caption-number">Listing 3 </span><span class="caption-text">metropolis_hastings 的采样过程</span><a class="headerlink" href="#metropolis-hastings" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id23">
+<div class="code-block-caption"><span class="caption-number">Listing 3 </span><span class="caption-text">metropolis_hastings 的采样过程</span><a class="headerlink" href="#id23" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">n_iters</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="linenos"> 2</span><span class="n">can_sd</span> <span class="o">=</span> <span class="mf">0.05</span>
 <span class="linenos"> 3</span><span class="n">α</span> <span class="o">=</span> <span class="n">β</span> <span class="o">=</span>  <span class="mi">1</span>
@@ -505,20 +601,22 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 </pre></div>
 </div>
 </div>
-<p>在代码 <a class="reference internal" href="#metropolis-hastings"><span class="std std-ref">metropolis_hastings</span></a> 中，第 <span class="math notranslate nohighlight">\(9\)</span> 行从标准差为 <code class="docutils literal notranslate"><span class="pre">can_sd</span></code> 的高斯分布中采样来生成提议分布。第 <span class="math notranslate nohighlight">\(10\)</span> 行在参数值 <code class="docutils literal notranslate"><span class="pre">θ_can</span></code> 处估计后验，第 <span class="math notranslate nohighlight">\(11\)</span> 行计算接受概率。第 <span class="math notranslate nohighlight">\(17\)</span> 行在轨迹数组 <code class="docutils literal notranslate"><span class="pre">trace</span></code> 中保存了 <code class="docutils literal notranslate"><span class="pre">θ</span></code> 的值。该值是一个新值还是重复上一次的值，取决于第 <span class="math notranslate nohighlight">\(13\)</span> 行的比较结果。</p>
+<p>在代码 <a class="reference internal" href="#id23"><span class="std std-ref">metropolis_hastings</span></a> 中，第 <span class="math notranslate nohighlight">\(9\)</span> 行从标准差为 <code class="docutils literal notranslate"><span class="pre">can_sd</span></code> 的高斯分布中采样来生成提议分布。第 <span class="math notranslate nohighlight">\(10\)</span> 行在参数值 <code class="docutils literal notranslate"><span class="pre">θ_can</span></code> 处估计后验，第 <span class="math notranslate nohighlight">\(11\)</span> 行计算接受概率。第 <span class="math notranslate nohighlight">\(17\)</span> 行在轨迹数组 <code class="docutils literal notranslate"><span class="pre">trace</span></code> 中保存了 <code class="docutils literal notranslate"><span class="pre">θ</span></code> 的值。该值是一个新值还是重复上一次的值，取决于第 <span class="math notranslate nohighlight">\(13\)</span> 行的比较结果。</p>
 <div class="admonition-mcmc admonition">
-<p class="admonition-title">模棱两可的 MCMC 术语 </p>
+<p class="admonition-title">模棱两可的 MCMC 术语</p>
 <p>当使用马尔可夫链蒙特卡洛方法进行贝叶斯推断时，我们通常将其称为<strong>MCMC 采样器</strong>。在每次迭代中，我们从采样器中抽取一个随机样本，因此很自然地将 MCMC 的结果称为 <em>样本（ Samples ）</em> 或 <em>抽取（Draws）</em>。有些人喜欢将 <em>样本</em> 视为由一组 <em>抽取</em> 组成，而另外一些人则倾向于两个概念可以互换。</p>
-<p>由于 MCMC 是按迭代顺序抽取样本的，因此也会说：*我们得到了一个采样结果的 <em>链（ Chain ）</em>，或者简称为 <em>MCMC 链</em> 。出于计算和诊断的原因，通常需要抽取许多链。所有输出的链，无论是单条还是多条，通常都被称为<code class="docutils literal notranslate"><span class="pre">轨迹、迹（</span> <span class="pre">Trace</span> <span class="pre">）</span></code>或直接称为<code class="docutils literal notranslate"><span class="pre">后验</span></code>。</p>
+<p>由于 MCMC 是按迭代顺序抽取样本的，因此也会说：我们得到了一个采样结果的 <em>链（ Chain ）</em>，或者简称为 <em>MCMC 链</em> 。出于计算和诊断的原因，通常需要抽取许多链。所有输出的链，无论是单条还是多条，通常都被称为 <code class="docutils literal notranslate"><span class="pre">轨迹、迹（</span> <span class="pre">Trace</span> <span class="pre">）</span></code> 或直接称为 <code class="docutils literal notranslate"><span class="pre">后验</span></code>。</p>
 <p>无论怎么定义这些名词，口语总是不精确的。如果需要精确，最好的方法还是查看代码以准确了解正在发生的事。</p>
 </div>
-<p>请注意，代码 <a class="reference internal" href="#metropolis-hastings"><span class="std std-ref">metropolis_hastings</span></a> 中的实现并非旨在提高效率，实际上生产级代码中会出现许多优化，例如计算对数尺度的概率，以避免溢出问题、提高计算稳定性等（ 参见 <a class="reference internal" href="chp_10.html#log-probabilities"><span class="std std-ref">10.4.1 对数概率</span></a> ），或预先计算提议分布值。这些优化都是需要改变数学纯粹性以适应计算机实现的地方，也能解释为什么最好让专家来构建推断引擎。</p>
-<p>同样， <code class="docutils literal notranslate"><span class="pre">can_sd</span></code> 的值是 <code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span> <span class="pre">算法</span></code> 的参数，而不是贝叶斯模型的参数。理论上该参数不应该影响算法的正确行为，但在实践中它又非常重要，因为方法效率肯定会受到其值的影响（ 参阅 <a class="reference internal" href="chp_11.html#inference-methods"><span class="std std-ref">11.9 推断方法</span></a>  ）。</p>
-<p><strong>（3）推断结果的诊断</strong></p>
-<p>回到示例，现在有了 MCMC 样本，我们想了解其形态。检查贝叶斯推断结果的一种常用方法是将每次迭代得到的采样值通过直方图或其他可视化工具绘制出来，以表示分布。例如，可以使用代码 <a class="reference internal" href="#diy-trace-plot"><span class="std std-ref">diy_trace_plot</span></a> 中的代码来绘制 <a class="reference internal" href="#fig-traceplot"><span class="std std-numref">Fig. 2</span></a> <a class="footnote-reference brackets" href="#id53" id="id19">11</a>：</p>
+<p>请注意，代码 <a class="reference internal" href="#id23"><span class="std std-ref">metropolis_hastings</span></a> 中的实现方式并非旨在提高效率，实际上生产级代码中会出现许多优化，例如会改为计算对数尺度的概率，以避免溢出问题、提高计算稳定性等（ 参见 <a class="reference internal" href="chp_10.html#log-probabilities"><span class="std std-ref">10.4.1 对数概率</span></a> ），或预先计算提议分布值。这些优化都是需要改变数学纯粹性以适应计算机实现的地方，也能解释为什么最好让专家来构建推断引擎。</p>
+<p>同样， <code class="docutils literal notranslate"><span class="pre">can_sd</span></code> 的值是 <code class="docutils literal notranslate"><span class="pre">Metropolis-Hastings</span> <span class="pre">算法</span></code> 的参数，而不是贝叶斯模型的参数。理论上该参数不应该影响算法的正确行为，但在实践中它又非常重要，因为方法的效率肯定会受到该值的影响（ 参阅 <a class="reference internal" href="chp_11.html#inference-methods"><span class="std std-ref">11.9 推断方法</span></a>  ）。</p>
+</div>
+<div class="section" id="id24">
+<h3>（3）推断结果的诊断<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<p>回到示例，现在有了 MCMC 样本，我们想了解其形态。检查贝叶斯推断结果的一种常用方法是：将每次迭代得到的采样值通过直方图或其他可视化工具绘制出来，以表示分布。例如，可以使用代码 <a class="reference internal" href="#diy-trace-plot"><span class="std std-ref">diy_trace_plot</span></a> 中的代码来绘制 <a class="reference internal" href="#fig-traceplot"><span class="std std-numref">Fig. 2</span></a> <a class="footnote-reference brackets" href="#id59" id="id25">11</a>：</p>
 <div class="literal-block-wrapper docutils container" id="diy-trace-plot">
 <div class="code-block-caption"><span class="caption-number">Listing 4 </span><span class="caption-text">diy_trace_plot</span><a class="headerlink" href="#diy-trace-plot" title="Permalink to this code">¶</a></div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s2">"θ"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.5"</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">"horizontal"</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -527,7 +625,7 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <a class="reference internal image-reference" href="../_images/traceplot.png"><img alt="../_images/traceplot.png" src="../_images/traceplot.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">左图中，每次迭代都会产生参数 <span class="math notranslate nohighlight">\(\theta\)</span> 的采样值。右图为 <span class="math notranslate nohighlight">\(\theta\)</span> 采样值的直方图。该直方图经过了旋转，以便更容易看出两个图之间的密切关系。左图显示了采样值的顺序序列，该序列其实就是所谓的马尔可夫链，而右图则显示了采样值的分布情况。</span><a class="headerlink" href="#fig-traceplot" title="Permalink to this image">¶</a></p>
 </div>
-<p>通常，计算一些数字汇总信息也很有用。我们将使用名为 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 的 Python 软件包 <span id="id20">[<a class="reference internal" href="references.html#id11">3</a>]</span> 来计算这些统计信息：</p>
+<p>通常，计算一些数字汇总信息也很有用。我们将使用名为 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 的 Python 软件包 <span id="id26">[<a class="reference internal" href="references.html#id11">3</a>]</span> 来计算这些统计信息：</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://arviz-devs.github.io/arviz/api/generated/arviz.summary.html#arviz.summary" title="arviz.summary"><span class="n">az</span><span class="o">.</span><span class="n">summary</span></a><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"stats"</span><span class="p">,</span> <span class="n">round_to</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -555,40 +653,41 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 </tr>
 </tbody>
 </table>
-<p>ArviZ 的函数 <code class="docutils literal notranslate"><span class="pre">summary</span></code> 计算参数 <span class="math notranslate nohighlight">\(\theta\)</span> 的均值、标准差和 <span class="math notranslate nohighlight">\(94\%\)</span> 最高密度区间 (HDI)。 最高密度区间（ HDI ）是包含给定概率密度（此处为 <span class="math notranslate nohighlight">\(94\%\)</span> ）的最短区间 <a class="footnote-reference brackets" href="#id54" id="id21">12</a> 。 <a class="reference internal" href="#fig-plot-posterior"><span class="std std-numref">Fig. 3</span></a> 为采用 <code class="docutils literal notranslate"><span class="pre">az.plot_posterior(trace)</span></code> 生成，其与 <a class="reference internal" href="#tab-posterior-summary"><span class="std std-numref">Table 1</span></a> 中的汇总信息非常相似。我们可以在代表整个后验分布的曲线顶部看到均值和最高密度区间。该曲线是使用 <strong>核密度估计（ Kernel Density Estimator, KDE ）</strong> 计算的，类似于直方图的平滑版本。</p>
+<p>ArviZ 的函数 <code class="docutils literal notranslate"><span class="pre">summary</span></code> 计算参数 <span class="math notranslate nohighlight">\(\theta\)</span> 的均值、标准差和 <span class="math notranslate nohighlight">\(94\%\)</span> 最高密度区间 (HDI)。 最高密度区间（ HDI ）是包含给定概率密度（此处为 <span class="math notranslate nohighlight">\(94\%\)</span> ）的最短区间 <a class="footnote-reference brackets" href="#id60" id="id27">12</a> 。 <a class="reference internal" href="#fig-plot-posterior"><span class="std std-numref">Fig. 3</span></a> 为 <code class="docutils literal notranslate"><span class="pre">az.plot_posterior(trace)</span></code> 生成，其与 <a class="reference internal" href="#tab-posterior-summary"><span class="std std-numref">Table 1</span></a> 中的汇总信息非常相似。我们可以在代表整个后验分布的曲线顶部看到均值和最高密度区间。该曲线使用 <strong>核密度估计（ Kernel Density Estimator, KDE ）</strong> 计算，类似于直方图的平滑版本。</p>
 <p>ArviZ 在许多绘图函数中都会使用 KDE，甚至在内部进行一些计算。</p>
 <div class="figure align-default" id="fig-plot-posterior">
 <a class="reference internal image-reference" href="../_images/plot_posterior.png"><img alt="../_images/plot_posterior.png" src="../_images/plot_posterior.png" style="width: 4in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">用后验图对代码 <a class="reference internal" href="#metropolis-hastings"><span class="std std-ref">metropolis_hastings</span></a> 生成的样本进行可视化。后验分布使用核密度估计曲线表示，均值和 <span class="math notranslate nohighlight">\(94\%\)</span> 最高密度区间均在图中有所展示。</span><a class="headerlink" href="#fig-plot-posterior" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">用后验图对代码 <a class="reference internal" href="#id23"><span class="std std-ref">metropolis_hastings</span></a> 生成的样本进行可视化。后验分布使用核密度估计曲线表示，均值和 <span class="math notranslate nohighlight">\(94\%\)</span> 最高密度区间均在图中有所展示。</span><a class="headerlink" href="#fig-plot-posterior" title="Permalink to this image">¶</a></p>
 </div>
-<p>最高密度区间（ HDI ）是贝叶斯统计中的常见选择，像 <span class="math notranslate nohighlight">\(50\%\)</span> 或 <span class="math notranslate nohighlight">\(95\%\)</span> 这样的边界值也很常见。但  ArviZ 的默认值为 <span class="math notranslate nohighlight">\(94\%\)</span>（ 或 <span class="math notranslate nohighlight">\(0.94\)</span> ），如 <a class="reference internal" href="#tab-posterior-summary"><span class="std std-numref">Table 1</span></a> 和 <a class="reference internal" href="#fig-plot-posterior"><span class="std std-numref">Fig. 3</span></a> 中所示。这种选择的原因是 <span class="math notranslate nohighlight">\(94\)</span> 接近广泛使用的 <span class="math notranslate nohighlight">\(95\)</span>，而同时这种微小的区别可以提醒观众，边界值的选择并没有特别之处 <span id="id22">[<a class="reference internal" href="references.html#id33">10</a>]</span> 。理想情况下，你应该选择一个适合需要的值 <span id="id23">[<a class="reference internal" href="references.html#id99">11</a>]</span>，或者至少承认你使用的是默认值。</p>
+<p>最高密度区间（ HDI ）是贝叶斯统计中的常见选择，像 <span class="math notranslate nohighlight">\(50\%\)</span> 或 <span class="math notranslate nohighlight">\(95\%\)</span> 这样的边界值也很常见。但  ArviZ 的默认值为 <span class="math notranslate nohighlight">\(94\%\)</span>（ 或 <span class="math notranslate nohighlight">\(0.94\)</span> ），如 <a class="reference internal" href="#tab-posterior-summary"><span class="std std-numref">Table 1</span></a> 和 <a class="reference internal" href="#fig-plot-posterior"><span class="std std-numref">Fig. 3</span></a> 中所示。这种选择的原因是 <span class="math notranslate nohighlight">\(94\)</span> 接近广泛使用的 <span class="math notranslate nohighlight">\(95\)</span>，而同时这种微小的区别可以提醒观众，边界值的选择并没有特别之处 <span id="id28">[<a class="reference internal" href="references.html#id33">10</a>]</span> 。理想情况下，你应该选择一个满足需要的值 <span id="id29">[<a class="reference internal" href="references.html#id99">11</a>]</span>，或者至少承认你使用的是默认值。</p>
+</div>
 </div>
 <div class="section" id="automating-inference">
-<span id="id24"></span><h2>1.3 人工建模与自动推断<a class="headerlink" href="#automating-inference" title="Permalink to this headline">¶</a></h2>
-<p>我们可以在 <strong>概率编程语言 ( Probabilistic Programming Languages, PPL )</strong> 的帮助下定义和推断模型，而不是编写自己的采样器从头定义自己的模型。概率编程语言允许用户使用代码表达贝叶斯模型，然后借助<code class="docutils literal notranslate"><span class="pre">通用推断引擎</span></code>以自动化的方式执行贝叶斯推断。简而言之，概率编程语言能够帮助贝叶斯实践者将注意力更多地聚焦在模型构建本身，而不是数学和计算细节。</p>
-<p>在过去的几十年中，此类工具的可用性大大提升了贝叶斯方法的普及度和实用性。不幸的是，这些通用推断引擎方法并不是真正通用的，因为它们无法有效地求解所有贝叶斯模型。现代贝叶斯实践者的部分工作是能够理解这些限制并给出解决方法。</p>
-<p>在本书中，我们使用的概率编程语言是 PYMC3 <span id="id25">[<a class="reference internal" href="references.html#id124">1</a>]</span> 和 <code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span></code> <span id="id26">[<a class="reference internal" href="references.html#id141">2</a>]</span>。例如使用 PYMC3 为公式 <a class="reference internal" href="#equation-eq-beta-binomial">(8)</a> 编写模型：</p>
+<span id="id30"></span><h2>1.3 人工建模与自动推断<a class="headerlink" href="#automating-inference" title="Permalink to this headline">¶</a></h2>
+<p>我们可以在 <strong>概率编程语言 ( Probabilistic Programming Languages, PPL )</strong> 的帮助下定义和推断模型，而不是编写自己的采样器从头定义自己的模型。概率编程语言允许用户使用代码表达贝叶斯模型，然后借助 <code class="docutils literal notranslate"><span class="pre">通用推断引擎</span></code> 以自动化的方式执行贝叶斯推断。简而言之，概率编程语言能够帮助贝叶斯实践者将注意力更多地聚焦在模型构建本身，而不是数学和计算细节。</p>
+<p>在过去的几十年中，此类工具的可用性大大提升了贝叶斯方法的普及度和实用性。不幸的是，这些通用推断引擎方法并不是真正通用的，因为它们无法有效地求解所有贝叶斯模型。现代贝叶斯实践者的部分工作是理解这些局限性并给出解决方法。</p>
+<p>在本书中，我们使用的概率编程语言是 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> <span id="id31">[<a class="reference internal" href="references.html#id124">1</a>]</span> 和 <code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability(TFP)</span></code> <span id="id32">[<a class="reference internal" href="references.html#id141">2</a>]</span>。例如用 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 为公式 <a class="reference internal" href="#equation-eq-beta-binomial">(8)</a> 编写模型：</p>
 <div class="literal-block-wrapper docutils container" id="beta-binom">
 <div class="code-block-caption"><span class="caption-number">Listing 5 </span><span class="caption-text">beta_binom</span><a class="headerlink" href="#beta-binom" title="Permalink to this code">¶</a></div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Declare a model in PyMC3 </span>
-<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>     
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Declare a model in PyMC3</span>
+<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
    <span class="c1"># Specify the prior distribution of unknown parameter</span>
-    <span class="n">θ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="s2">"θ"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> 
-   <span class="c1"># Specify the likelihood distribution and condition on the observed data     </span>
-    <span class="n">y_obs</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Binomial</span><span class="p">(</span><span class="s2">"y_obs"</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">θ</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">Y</span><span class="p">)</span> 
+    <span class="n">θ</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="s2">"θ"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+   <span class="c1"># Specify the likelihood distribution and condition on the observed data</span>
+    <span class="n">y_obs</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Binomial</span><span class="p">(</span><span class="s2">"y_obs"</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">θ</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">Y</span><span class="p">)</span>
 
-<span class="c1"># Sample from the posterior distribution     </span>
-<span class="n">idata</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+<span class="c1"># Sample from the posterior distribution</span>
+<span class="n">idata</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<p>你可以自己检查这段代码的结果是否与之前自制采样器的结果一致。在概率编程语言支持下，工作量要少得多。如果你不熟悉 PYMC3 语法，现阶段只需关注代码注释中表达的每一行的意图。</p>
-<p>在 PYMC3 语法中定义了模型后，可以利用 <code class="docutils literal notranslate"><span class="pre">pm.model_to_graphviz(model)</span></code> 在代码 <a class="reference internal" href="#beta-binom"><span class="std std-ref">beta_binom</span></a> 中生成模型的概率图表示（参见 <a class="reference internal" href="#fig-betabinommodelgraphviz"><span class="std std-numref">Fig. 4</span></a>）。</p>
+<p>你可以自己检查这段代码的结果是否与之前自制采样器的结果一致。在概率编程语言支持下，工作量要少得多。如果你不熟悉 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 语法，现阶段只需关注代码注释中表达的每一行的意图。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 语法中定义了模型后，可以利用 <code class="docutils literal notranslate"><span class="pre">pm.model_to_graphviz(model)</span></code> 在代码 <a class="reference internal" href="#beta-binom"><span class="std std-ref">beta_binom</span></a> 中生成模型的概率图表示（参见 <a class="reference internal" href="#fig-betabinommodelgraphviz"><span class="std std-numref">Fig. 4</span></a>）。</p>
 <div class="figure align-default" id="fig-betabinommodelgraphviz">
 <a class="reference internal image-reference" href="../_images/BetaBinomModelGraphViz.png"><img alt="../_images/BetaBinomModelGraphViz.png" src="../_images/BetaBinomModelGraphViz.png" style="width: 2in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">公式 <a class="reference internal" href="#equation-eq-beta-binomial">(8)</a> 和代码 <a class="reference internal" href="#beta-binom"><span class="std std-ref">beta_binom</span></a> 中定义的贝叶斯模型的概率图表示。椭圆代表先验和似然，而 <span class="math notranslate nohighlight">\(20\)</span> 表示观测次数。</span><a class="headerlink" href="#fig-betabinommodelgraphviz" title="Permalink to this image">¶</a></p>
 </div>
-<p>概率编程语言不仅可以计算随机变量的对数概率以获得后验分布，还可以模拟我们前面提到的两种预测分布。例如，代码 <a class="reference internal" href="#predictive-distributions"><span class="std std-ref">predictive_distributions</span></a> 展示了如何使用 PYMC3 分别获得先验预测分布和后验预测分布的 <span class="math notranslate nohighlight">\(1000\)</span> 个样本。请注意，第一个函数仅有一个 <code class="docutils literal notranslate"><span class="pre">model</span></code> 参数，而第二个函数必须同时传递 <code class="docutils literal notranslate"><span class="pre">model</span></code> 和 <code class="docutils literal notranslate"><span class="pre">trace</span></code> 参数，这反映了先验预测分布仅需要模型，而后验预测分布不仅需要模型还需要后验分布。从两种预测分布生成的样本分别在绘制在 <a class="reference internal" href="#fig-quartet"><span class="std std-numref">Fig. 5</span></a> 的上下子图中。</p>
+<p>概率编程语言不仅可以计算随机变量的对数概率以获得后验分布，还可以模拟前面提到的两种预测分布：<code class="docutils literal notranslate"><span class="pre">先验预测分布</span></code> 和 <code class="docutils literal notranslate"><span class="pre">后验预测分布</span></code>。例如，代码 <a class="reference internal" href="#predictive-distributions"><span class="std std-ref">predictive_distributions</span></a> 展示了如何使用 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 分别获得先验预测分布和后验预测分布的 <span class="math notranslate nohighlight">\(1000\)</span> 个样本。请注意，第一个函数仅有 <code class="docutils literal notranslate"><span class="pre">model</span></code> 参数，而第二个函数必须同时传递 <code class="docutils literal notranslate"><span class="pre">model</span></code> 和 <code class="docutils literal notranslate"><span class="pre">trace</span></code> 参数，这反映了先验预测分布仅需要知道模型，而后验预测分布不仅需要模型还需要后验分布。两种预测分布的样本分别在绘制在 <a class="reference internal" href="#fig-quartet"><span class="std std-numref">Fig. 5</span></a> 的上下子图中。</p>
 <div class="literal-block-wrapper docutils container" id="predictive-distributions">
 <div class="code-block-caption"><span class="caption-number">Listing 6 </span><span class="caption-text">predictive_distributions</span><a class="headerlink" href="#predictive-distributions" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pred_dists</span> <span class="o">=</span> <span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">sample_prior_predictive</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">model</span><span class="p">)[</span><span class="s2">"y_obs"</span><span class="p">],</span>
@@ -596,9 +695,13 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 </pre></div>
 </div>
 </div>
-<p>公式 <a class="reference internal" href="#equation-eq-posterior-dist">(1)</a> 、 <a class="reference internal" href="#equation-eq-prior-pred-dist">(5)</a> 和 <a class="reference internal" href="#equation-eq-post-pred-dist">(6)</a> 清楚地将后验分布、先验预测分布和后验预测分布定义为三个不同的数学对象。后面两个是数据的分布，而第一个是参数的分布。<a class="reference internal" href="#fig-quartet"><span class="std std-numref">Fig. 5</span></a> 帮助我们可视化了这种区别，为了完整，图中还包括了先验分布。</p>
+<p>公式 <a class="reference internal" href="#equation-eq-posterior-dist">(1)</a> 、 <a class="reference internal" href="#equation-eq-prior-pred-dist">(5)</a> 和 <a class="reference internal" href="#equation-eq-post-pred-dist">(6)</a> 清楚地将后验分布、先验预测分布和后验预测分布定义为三个不同的数学对象。显然后面两个是数据的概率分布，而第一个是参数的概率分布。<a class="reference internal" href="#fig-quartet"><span class="std std-numref">Fig. 5</span></a> 帮助我们可视化了这种区别，为了完整，图中还包含了先验分布。</p>
+<div class="figure align-default" id="fig-quartet">
+<a class="reference internal image-reference" href="../_images/Bayesian_quartet_distributions.png"><img alt="../_images/Bayesian_quartet_distributions.png" src="../_images/Bayesian_quartet_distributions.png" style="width: 8.00in;"/></a>
+<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">自上至下，我们展示了：（1）参数 <span class="math notranslate nohighlight">\(\theta\)</span> 的先验分布样本； (2) 成功总数的先验预测分布样本； (3) 参数 <span class="math notranslate nohighlight">\(\theta\)</span> 的后验分布样本； (4) 成功总数的后验预测分布样本。在第一个和第三个图、第二个和第四个图之间分别共享 <span class="math notranslate nohighlight">\(x\)</span> 轴和 <span class="math notranslate nohighlight">\(y\)</span> 轴的坐标尺度。</span><a class="headerlink" href="#fig-quartet" title="Permalink to this image">¶</a></p>
+</div>
 <div class="admonition- admonition">
-<p class="admonition-title">熟练掌握几种统计模型的常见表达方式</p>
+<p class="admonition-title">应当熟练掌握的几种统计模型表达方式</p>
 <p>有许多方法可以表示统计模型的架构。以下没有特定的顺序：</p>
 <ul class="simple">
 <li><p>口语和书面语言</p></li>
@@ -608,10 +711,6 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 </ul>
 <p>对于现代贝叶斯实践者来说，所有这些媒介都很有用。它们是在会谈、科学论文、与同事讨论时的手绘草图、互联网上的代码示例等中经常看到的格式。熟练地使用这些媒介，你能够更好地理解以某种形式呈现的概念，然后将其应用到其他形式中。例如，阅读一篇论文然后实现一个模型，或者在演讲中听到一种技术，然后能够为其写一篇博客。对个人而言，熟练程度会加快你的学习速度并提高与他人交流的能力。</p>
 </div>
-<div class="figure align-default" id="fig-quartet">
-<a class="reference internal image-reference" href="../_images/Bayesian_quartet_distributions.png"><img alt="../_images/Bayesian_quartet_distributions.png" src="../_images/Bayesian_quartet_distributions.png" style="width: 8.00in;"/></a>
-<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">自上至下，我们展示了：（1）参数 <span class="math notranslate nohighlight">\(\theta\)</span> 的先验分布样本； (2) 成功总数的先验预测分布样本； (3) 参数 <span class="math notranslate nohighlight">\(\theta\)</span> 的后验分布样本； (4) 成功总数的后验预测分布样本。在第一个和第三个图、第二个和第四个图之间分别共享 <span class="math notranslate nohighlight">\(x\)</span> 轴和 <span class="math notranslate nohighlight">\(y\)</span> 轴的坐标尺度。</span><a class="headerlink" href="#fig-quartet" title="Permalink to this image">¶</a></p>
-</div>
 <p>正如已经提到的，后验预测分布考虑了估计结果的不确定性。<a class="reference internal" href="#fig-predictions-distributions"><span class="std std-numref">Fig. 6</span></a> 表明：根据后验均值计算得到的预测结果，比后验预测分布（根据完整的后验分布计算得到）中的预测结果范围更窄。此现象不仅对均值有效，对于其他任何点估计，都会得到类似的图。</p>
 <div class="figure align-default" id="fig-predictions-distributions">
 <a class="reference internal image-reference" href="../_images/predictions_distributions.png"><img alt="../_images/predictions_distributions.png" src="../_images/predictions_distributions.png" style="width: 8.00in;"/></a>
@@ -619,26 +718,25 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 </div>
 </div>
 <div class="section" id="make-prior-count">
-<span id="id27"></span><h2>1.4 量化先验中信息的几种可选方法<a class="headerlink" href="#make-prior-count" title="Permalink to this headline">¶</a></h2>
-<p>在贝叶斯统计中，必须要选择先验分布这件事，既是一种负担又是一种祈福，而我们认为这是必要的。如果你没有选择先验，那么最大可能是别人在为你做这件事。当然，让别人替你做决定并不总是坏事。如果在正确的场景中应用并且意识到其局限性，许多非贝叶斯方法会非常有用和有效。然而，我们坚信：<strong>了解模型假设并灵活调整这些假设是有优势的，而先验是假设的形式之一</strong>。</p>
+<span id="id33"></span><h2>1.4 先验分布的选择方法<a class="headerlink" href="#make-prior-count" title="Permalink to this headline">¶</a></h2>
+<p>在贝叶斯统计中，必须要选择先验分布这件事，既是一种负担又是一种祈福，而我们认为这是必要的。如果你没有选择先验，那么最大可能是别人已经为你做这件事。当然，让别人替你做决定并不总是坏事。如果在正确的场景中应用并且意识到其局限性，许多非贝叶斯方法会非常有用和有效。然而，我们坚信：<strong>了解模型假设并灵活调整这些假设是有优势的，而先验是假设的形式之一</strong>。</p>
 <p>我们也明白，对于许多实践者来说，先验选择可能是怀疑、焦虑甚至沮丧的根源，尤其是对于新手。寻找给定问题的最佳先验，是一个常见且有效的问题。但是除了没有最佳先验这个结论之外，很难给出一个令人满意的答案。好在我们有一些默认值，可以作为迭代式建模工作流的起点。</p>
-<p>在本节中，我们将讨论一些选择先验的一般性方法。此讨论或多或少遵循一个信息性的阶梯，从不包含任何信息的“空白”先验，到信息丰富的、信息尽可能多的先验。</p>
-<p>本章关于先验的讨论更多是在理论方面的。在后续章节中，我们将讨论如何在更实际的环境中选择先验。</p>
+<p>在本节中，我们将讨论一些选择先验的一般性方法。此讨论或多或少遵循一个信息性的阶梯，从不包含任何信息的“空白”先验，到信息丰富的、信息尽可能多的先验。本章关于先验的讨论更多是在理论方面的。在后续章节中，我们将讨论如何在更实际的环境中选择先验。</p>
 <div class="section" id="conjugate-priors">
-<span id="id28"></span><h3>1.4.1 共轭先验<a class="headerlink" href="#conjugate-priors" title="Permalink to this headline">¶</a></h3>
+<span id="id34"></span><h3>1.4.1 共轭先验<a class="headerlink" href="#conjugate-priors" title="Permalink to this headline">¶</a></h3>
 <p>如果后验与先验属于同一分布族，则先验与似然共轭，或称其为似然的共轭先验。例如，如果似然是 <code class="docutils literal notranslate"><span class="pre">Poisson</span></code> 分布并且先验为 <code class="docutils literal notranslate"><span class="pre">Gamma</span></code> 分布，那么后验也会是 <code class="docutils literal notranslate"><span class="pre">Gamma</span></code> 分布。</p>
-<p>从纯数学角度来看，<strong>共轭先验</strong>是最有利的选择，因为共轭先验和似然能够得到后验的封闭形式解，这允许我们用“纸笔”就可以分析和计算后验分布 <a class="footnote-reference brackets" href="#id55" id="id29">14</a>。但从现代计算角度来看，共轭先验通常并不比其他方法好，主要原因是现代计算方法允许我们使用几乎任何先验进行推断，而不仅仅是那些在数学上方便的有限选择。尽管如此，共轭先验在学习贝叶斯推断时、以及在某些需要对后验使用解析表达式的情况下，可能仍然非常有用（ 参阅 <a class="reference internal" href="chp_10.html#conjugate-case-study"><span class="std std-ref">10.2.2 示例：近实时推断</span></a> 中的示例 ）。因此，我们会简要地讨论 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>中解析形式的共轭先验。顾名思义，该模型的似然为 <code class="docutils literal notranslate"><span class="pre">Binomial</span> <span class="pre">分布</span></code>，而其共轭先验为<code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code>：</p>
+<p>从纯数学角度来看，<strong>共轭先验</strong>是最有利的选择，因为共轭先验和似然能够得到后验的封闭形式解，这允许我们用“纸笔”就可以分析和计算后验分布 <a class="footnote-reference brackets" href="#id61" id="id35">14</a>。但从现代计算角度来看，共轭先验通常并不比其他方法好，主要原因是现代计算方法允许我们使用几乎任何先验进行推断，而不仅仅是那些在数学上方便的有限选择。尽管如此，共轭先验在学习贝叶斯推断时、以及在某些需要对后验使用解析表达式的情况下，可能仍然非常有用（ 参阅 <a class="reference internal" href="chp_10.html#conjugate-case-study"><span class="std std-ref">10.2.2 示例：近实时推断</span></a> 中的示例 ）。因此，我们会简要地讨论 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code> 中解析形式的共轭先验。顾名思义，该模型的似然为 <code class="docutils literal notranslate"><span class="pre">Binomial</span> <span class="pre">分布</span></code>，而其共轭先验为 <code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code>：</p>
 <div class="math notranslate nohighlight">
-\[p(\theta \mid Y) \propto \overbrace{\frac{N!}{y!(N-y)!} \theta^y (1 - \theta)^{N-y}}^{\text{binomial-likelihood}} \: \overbrace{\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\, \theta^{\alpha-1}(1-\theta)^{\beta-1}}^{\text{beta.prior}} \]</div>
+\[p(\theta \mid Y) \propto \overbrace{\frac{N!}{y!(N-y)!} \theta^y (1 - \theta)^{N-y}}^{\text{binomial-likelihood}} \: \overbrace{\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\, \theta^{\alpha-1}(1-\theta)^{\beta-1}}^{\text{beta.prior}}\]</div>
 <p>式中所有不包含 <span class="math notranslate nohighlight">\(\theta\)</span> 的项关于 <span class="math notranslate nohighlight">\(\theta\)</span> 都是不变的，可以省略它们，进而得到：</p>
 <div class="math notranslate nohighlight">
 \[p(\theta \mid Y) \propto \overbrace{\theta^y (1 - \theta)^{N-y}}^{\text{binomial-likelihood}} \: \overbrace{ \theta^{\alpha-1}(1-\theta)^{\beta-1}}^{\text{beta.prior}}\]</div>
 <p>重新组织公式，得到：</p>
 <div class="math notranslate nohighlight" id="equation-eq-kernel-beta">
-<span class="eqno">(9)<a class="headerlink" href="#equation-eq-kernel-beta" title="Permalink to this equation">¶</a></span>\[p(\theta \mid Y) \propto \theta^{\alpha-1+y}(1-\theta)^{\beta-1+N-y} \]</div>
+<span class="eqno">(9)<a class="headerlink" href="#equation-eq-kernel-beta" title="Permalink to this equation">¶</a></span>\[p(\theta \mid Y) \propto \theta^{\alpha-1+y}(1-\theta)^{\beta-1+N-y}\]</div>
 <p>如果想确保后验是一个正确的概率分布函数，还需要添加一个归一化常数，以确保密度函数的积分为 <span class="math notranslate nohighlight">\(1\)</span>（参见 <a class="reference internal" href="chp_11.html#cont-rvs"><span class="std std-ref">11.1.5 连续型随机变量及其分布</span></a> ）。请注意，公式 <a class="reference internal" href="#equation-eq-kernel-beta">(9)</a> 看起来与<code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code>的核一致，由此，在添加<code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code>的归一化常数后，得出 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code> 的后验分布为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-beta-posterior">
-<span class="eqno">(10)<a class="headerlink" href="#equation-eq-beta-posterior" title="Permalink to this equation">¶</a></span>\[p(\theta \mid Y) \propto \frac{\Gamma(\alpha_{post}+\beta_{post})}{\Gamma(\alpha_{post})\Gamma(\beta_{post})} \theta^{\alpha_{post}-1}(1-\theta)^{\beta_{post}-1} = \text{Beta}(\alpha_{post}, \beta_{post}) \]</div>
+<span class="eqno">(10)<a class="headerlink" href="#equation-eq-beta-posterior" title="Permalink to this equation">¶</a></span>\[p(\theta \mid Y) \propto \frac{\Gamma(\alpha_{post}+\beta_{post})}{\Gamma(\alpha_{post})\Gamma(\beta_{post})} \theta^{\alpha_{post}-1}(1-\theta)^{\beta_{post}-1} = \text{Beta}(\alpha_{post}, \beta_{post})\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(\alpha_{post} = \alpha+y\)</span> 和 <span class="math notranslate nohighlight">\(\beta_{post} = \beta+N-y\)</span>。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>的后验也是<code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code>，因此我们可以使用其作为下一步贝叶斯分析的先验。这意味着，<em>一次使用完整的数据集</em> 和 <em>一次使用一个数据点</em> 将获得相同的结果。例如，<a class="reference internal" href="#fig-beta-binomial-update"><span class="std std-numref">Fig. 7</span></a> 的前四个子图显示了从 <span class="math notranslate nohighlight">\(0\)</span> 次到 <span class="math notranslate nohighlight">\(1\)</span>次、 <span class="math notranslate nohighlight">\(2\)</span> 次和 <span class="math notranslate nohighlight">\(3\)</span> 次试验时，不同的先验更新情况。遵循此顺序，或者直接从 <span class="math notranslate nohighlight">\(0\)</span> 次试验跳到 <span class="math notranslate nohighlight">\(3\)</span> 次试验（ 或 <span class="math notranslate nohighlight">\(n\)</span> 次试验 ）最终会得到一致的结果。</p>
 <p>从 <a class="reference internal" href="#fig-beta-binomial-update"><span class="std std-numref">Fig. 7</span></a> 中还可以看到很多其他有趣的事情。例如，随着试验次数增加，后验的宽度越来越小，不确定性越来越低。子图 <span class="math notranslate nohighlight">\(3\)</span> 和 <span class="math notranslate nohighlight">\(5\)</span> 分别显示了“ <span class="math notranslate nohighlight">\(2\)</span> 次试验成功 <span class="math notranslate nohighlight">\(1\)</span> 次” 和“ <span class="math notranslate nohighlight">\(12\)</span> 次试验成功 <span class="math notranslate nohighlight">\(6\)</span> 次” 的结果。两种情况根据样本得到的成功比例估计值 <span class="math notranslate nohighlight">\(\hat \theta = \frac{y}{n}\)</span>（ 黑点 ）相同，均为 <span class="math notranslate nohighlight">\(0.5\)</span>（ 后验分布的众数也是 <span class="math notranslate nohighlight">\(0.5\)</span> ），不过子图 <span class="math notranslate nohighlight">\(5\)</span> 中的后验相对更加集中，反映出观测数量更大，不确定性更低。最后可以观察到：随着观测次数增加，不同先验最终可以收敛到同样的后验。在无限数据的条件下，后验与先验的选择无关，根据不同的先验推断得到的后验，最终将在点 <span class="math notranslate nohighlight">\(\hat \theta = \frac{y}{n}\)</span> 处具有几乎所有密度。</p>
@@ -680,24 +778,24 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <p>对于 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>，后验众数为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-beta-binom-mode">
 <span class="eqno">(12)<a class="headerlink" href="#equation-eq-beta-binom-mode" title="Permalink to this equation">¶</a></span>\[\operatorname*{argmax}_{\theta}{[\theta \mid Y]}  = \frac{\alpha + y - 1}{\alpha + \beta + n - 2}\]</div>
-<p>可以看到，当先验为 <span class="math notranslate nohighlight">\(\text{Beta}(\alpha\!=\!1, \beta\!=\!1)\)</span> ( 即均匀分布 ) 时，后验众数在数值上等于根据样本计算的成功比例估计值 <span class="math notranslate nohighlight">\(\hat \theta = \frac{y}{n}\)</span>。后验众数通常被称为<strong>最大后验( MAP )</strong> 值。此结果并非 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>独有。事实上，许多非贝叶斯方法的结果都可以被理解为贝叶斯方法在特定先验条件下的最大后验 <a class="footnote-reference brackets" href="#id56" id="id30">15</a>。</p>
+<p>可以看到，当先验为 <span class="math notranslate nohighlight">\(\text{Beta}(\alpha\!=\!1, \beta\!=\!1)\)</span> ( 即均匀分布 ) 时，后验众数在数值上等于根据样本计算的成功比例估计值 <span class="math notranslate nohighlight">\(\hat \theta = \frac{y}{n}\)</span>。后验众数通常被称为<strong>最大后验( MAP )</strong> 值。此结果并非 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span> <span class="pre">模型</span></code>独有。事实上，许多非贝叶斯方法的结果都可以被理解为贝叶斯方法在特定先验条件下的最大后验 <a class="footnote-reference brackets" href="#id62" id="id36">15</a>。</p>
 <p>将公式 <a class="reference internal" href="#equation-eq-beta-binom-mean">(11)</a> 与样本得到的成功比率估计值 <span class="math notranslate nohighlight">\(\frac{y}{n}\)</span> 进行比较。贝叶斯估计器将成功次数增加了 <span class="math notranslate nohighlight">\(\alpha\)</span> ，将试验次数增加了 <span class="math notranslate nohighlight">\(\alpha + \beta\)</span> 。这使得 <span class="math notranslate nohighlight">\(\beta\)</span> 成为失败的次数。从此意义上说，我们可以将先验参数视为 <em>伪计数</em> 。先验 <span class="math notranslate nohighlight">\(\text{Beta}(1, 1)\)</span> 等价于进行两次试验，<span class="math notranslate nohighlight">\(1\)</span> 次成功，<span class="math notranslate nohighlight">\(1\)</span> 次失败。从概念上讲，<code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code>的形状由参数 <span class="math notranslate nohighlight">\(\alpha\)</span> 和 <span class="math notranslate nohighlight">\(\beta\)</span> 控制，观测数据会更新先验，从而使<code class="docutils literal notranslate"><span class="pre">Beta</span> <span class="pre">分布</span></code>的形状更接近、更窄地移动到大多数观测值。对于 <span class="math notranslate nohighlight">\(\alpha &lt; 1\)</span> 和/或 <span class="math notranslate nohighlight">\(\beta &lt; 1\)</span> 的值，先验的解释变得有点奇怪，因为字面解释会说先验 <span class="math notranslate nohighlight">\(\text{Beta}(0.5, 0.5)\)</span> 对应于一次试验，半次失败，半次成功，或者可能是一次结果未定的试验。</p>
 <p>一些比较常见的似然及其共轭先验，可参见 <a class="reference external" href="https://en.wikipedia.org/wiki/Conjugate_prior#Table_of_conjugate_distributions">维基百科</a>。</p>
 </div>
 <div class="section" id="objective-priors">
-<span id="id31"></span><h3>1.4.2 无信息先验（ 或客观先验 ）<a class="headerlink" href="#objective-priors" title="Permalink to this headline">¶</a></h3>
+<span id="id37"></span><h3>1.4.2 无信息先验（ 或客观先验 ）<a class="headerlink" href="#objective-priors" title="Permalink to this headline">¶</a></h3>
 <p>在没有先验信息的情况下，遵循 <em>无差别原则</em> 听起来似乎更合理。此原则基本上是说：如果你没有关于某个问题的信息，那么你就没有任何理由相信一个结果会比任何其他结果更有可能发生。</p>
 <p>在贝叶斯统计背景下，这一原则推动了 <strong>客观先验（ Objective Priors ）</strong> 的研究和应用。这是一种“生成对给定分析影响最小的先验”的系统方法。有些统计学者偏爱客观先验，因为他们认为此类先验消除了先验的主观性。但其实这种想法是立不住脚的，因为采用客观先验并没有消除其他来源的主观性，例如：似然的选择、数据的选择、问题的选择等等。</p>
-<p>一种获得客观先验的方法是著名的 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>。此类先验通常被称为 <em>无信息先验</em> ，尽管它总是以某种方式提供了信息。 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>具有在<strong>重参数化</strong>时保持不变性的特点（ 重参数化指以形式不同但在数学上等效的方式重写表达式 ）。让我们用例子来解释一下这是什么意思。</p>
-<p>假设 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 具有参数为 <span class="math notranslate nohighlight">\(\theta\)</span> 的 <code class="docutils literal notranslate"><span class="pre">Binomial</span></code> 似然，她选择了某种先验并计算得到后验。而她的朋友 <code class="docutils literal notranslate"><span class="pre">Bob</span></code>，也对同一问题感兴趣，但并不关心成功次数 <span class="math notranslate nohighlight">\(\theta\)</span> ，而是关心另外一个参数：<strong>成功的赔率（ odds ）</strong>，即关心参数 <span class="math notranslate nohighlight">\(\kappa\)</span> ，<span class="math notranslate nohighlight">\(\kappa = \frac{\theta}{1-\theta}\)</span> 。 此时 <code class="docutils literal notranslate"><span class="pre">Bob</span></code> 有两种选择：一是使用 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 在 <span class="math notranslate nohighlight">\(\theta\)</span> 上的后验来计算 <span class="math notranslate nohighlight">\(\kappa\)</span> ，二是在 <span class="math notranslate nohighlight">\(\kappa\)</span> 上选择先验来计算自己的后验 <a class="footnote-reference brackets" href="#id57" id="id32">16</a>。</p>
+<p>一种获得客观先验的方法是著名的 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>。此类先验通常被称为 <em>无信息先验</em> ，尽管它总是以某种方式提供了信息。 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>具有在 <strong>重参数化</strong> 时保持不变性的特点（ 重参数化指以形式不同但在数学上等效的方式重写表达式 ）。让我们用例子来解释一下这是什么意思。</p>
+<p>假设 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 具有参数为 <span class="math notranslate nohighlight">\(\theta\)</span> 的 <code class="docutils literal notranslate"><span class="pre">Binomial</span></code> 似然，她选择了某种先验并计算得到后验。而她的朋友 <code class="docutils literal notranslate"><span class="pre">Bob</span></code>，也对同一问题感兴趣，但并不关心成功次数 <span class="math notranslate nohighlight">\(\theta\)</span> ，而是关心另外一个参数：<strong>成功的赔率（ odds ）</strong>，即关心参数 <span class="math notranslate nohighlight">\(\kappa\)</span> ，<span class="math notranslate nohighlight">\(\kappa = \frac{\theta}{1-\theta}\)</span> 。 此时 <code class="docutils literal notranslate"><span class="pre">Bob</span></code> 有两种选择：一是使用 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 在 <span class="math notranslate nohighlight">\(\theta\)</span> 上的后验来计算 <span class="math notranslate nohighlight">\(\kappa\)</span> ，二是在 <span class="math notranslate nohighlight">\(\kappa\)</span> 上选择先验来计算自己的后验 <a class="footnote-reference brackets" href="#id63" id="id38">16</a>。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 的不变性是指：</p>
 <p>在针对同一问题的两种参数化表示中，如果 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 模型 和 <code class="docutils literal notranslate"><span class="pre">Bob</span></code> 模型都为各自的参数设置了 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>，那么无论 <code class="docutils literal notranslate"><span class="pre">Bob</span></code> 用 <span class="math notranslate nohighlight">\(\theta\)</span> 的后验推导出 <span class="math notranslate nohighlight">\(\kappa\)</span> 的后验，还是自己用 <span class="math notranslate nohighlight">\(\kappa\)</span> 的先验推断出其后验，最终都会得到相同的结果。也就是说，最终的后验推断结果对于所选择的参数而言具有不变性。此解释的一个推论是，除非使用 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>，否则无法保证模型的两种或多种参数化必然会导致一致的后验。</p>
 <p>对于一维 <span class="math notranslate nohighlight">\(\theta\)</span> 的情况， <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 为：</p>
 <div class="math notranslate nohighlight" id="equation-eq-jeffreys-prior0">
-<span class="eqno">(13)<a class="headerlink" href="#equation-eq-jeffreys-prior0" title="Permalink to this equation">¶</a></span>\[p(\theta) \propto \sqrt{I(\theta)} \]</div>
+<span class="eqno">(13)<a class="headerlink" href="#equation-eq-jeffreys-prior0" title="Permalink to this equation">¶</a></span>\[p(\theta) \propto \sqrt{I(\theta)}\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(I(\theta)\)</span> 为 <code class="docutils literal notranslate"><span class="pre">Fisher</span> <span class="pre">信息的期望</span></code>：</p>
 <div class="math notranslate nohighlight" id="equation-eq-jeffreys-prior">
-<span class="eqno">(14)<a class="headerlink" href="#equation-eq-jeffreys-prior" title="Permalink to this equation">¶</a></span>\[I(\theta) = - \mathbb{E_{Y}}\left[\frac{d^2}{d\theta^2} \log p(Y \mid \theta)\right] \]</div>
+<span class="eqno">(14)<a class="headerlink" href="#equation-eq-jeffreys-prior" title="Permalink to this equation">¶</a></span>\[I(\theta) = - \mathbb{E_{Y}}\left[\frac{d^2}{d\theta^2} \log p(Y \mid \theta)\right]\]</div>
 <p>此式意味着：一旦建模者确定了似然函数 <span class="math notranslate nohighlight">\(p(Y \mid \theta)\)</span> ，<code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 就自动被确定了。也就是说，消除了对先验选择的任何讨论。</p>
 <p>有关 <code class="docutils literal notranslate"><span class="pre">Alice</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Bob</span></code> 问题的 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 推导，请参阅 <a class="reference internal" href="chp_11.html#jeffreys-prior-derivation"><span class="std std-ref">11.6 Jeffreys 先验的推导</span></a> 。这里跳过细节，<code class="docutils literal notranslate"><span class="pre">Alice</span></code> 的 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 为：</p>
 <div class="math notranslate nohighlight">
@@ -713,16 +811,16 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <a class="reference internal image-reference" href="../_images/Jeffrey_priors.png"><img alt="../_images/Jeffrey_priors.png" src="../_images/Jeffrey_priors.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">上图：二项似然的两种参数化形式对应的 Jeffreys 先验（ 未归一化 ），左图根据成功次数 <span class="math notranslate nohighlight">\(\theta\)</span> 参数化，右图根据成功赔率 <span class="math notranslate nohighlight">\(\kappa\)</span> 参数化。下图：根据成功次数 <span class="math notranslate nohighlight">\(\theta\)</span>（ 左 ）或成功赔率 <span class="math notranslate nohighlight">\(\kappa\)</span>（ 右 ）参数化的二项似然的 Jeffreys 后验（ 未归一化 ）。后验之间的箭头表示，通过应用一些变量规则的调整，两个后验之间可相互转换（ 详细信息参阅 <a class="reference internal" href="chp_11.html#transformations"><span class="std std-ref">11.1.9 变换</span></a> ）。</span><a class="headerlink" href="#fig-jeffrey-priors" title="Permalink to this image">¶</a></p>
 </div>
-<p>注意，公式 <a class="reference internal" href="#equation-eq-jeffreys-prior">(14)</a> 中的期望是关于观测 <span class="math notranslate nohighlight">\(Y \mid \theta\)</span> 的，这是在样本空间上的期望。这意味着为了获得 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>，我们需要对所有可能的实验结果求平均，这违反了似然原则 <a class="footnote-reference brackets" href="#id58" id="id33">17</a>，因为关于 <span class="math notranslate nohighlight">\(\theta\)</span> 的推断不仅取决于手头数据，还取决于潜在（但尚未）观测的数据集。</p>
+<p>注意，公式 <a class="reference internal" href="#equation-eq-jeffreys-prior">(14)</a> 中的期望是关于观测 <span class="math notranslate nohighlight">\(Y \mid \theta\)</span> 的，这是在样本空间上的期望。这意味着为了获得 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code>，我们需要对所有可能的实验结果求平均，这违反了似然原则 <a class="footnote-reference brackets" href="#id64" id="id39">17</a>，因为关于 <span class="math notranslate nohighlight">\(\theta\)</span> 的推断不仅取决于手头数据，还取决于潜在（但尚未）观测的数据集。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 可以是不恰当的先验，即它的积分可能不会为 <span class="math notranslate nohighlight">\(1\)</span> 。例如，已知方差的高斯分布，其均值参数的 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 在整个实数轴上均匀分布。但只要能够验证，这些不恰当的先验与似然组合后，能够产生恰当（ 即积分为 <span class="math notranslate nohighlight">\(1\)</span> ）的后验，则这些不恰当的先验就是可用的。</p>
 <p>另外还要注意，我们不能从不恰当的先验中抽取随机样本（ 即此类先验是非生成式的 ），这会造成许多模型推断工具失效。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 并不是获得客观先验的唯一方法。另一种途径是通过最大化先验和后验之间<code class="docutils literal notranslate"><span class="pre">KL</span> <span class="pre">散度的期望</span></code>来获得先验（ 参见 <a class="reference internal" href="chp_11.html#dkl"><span class="std std-ref">11.3 KL 散度</span></a> ）。此类先验被称为 <code class="docutils literal notranslate"><span class="pre">Bernardo</span> <span class="pre">参考先验</span></code>，之所以是客观性先验，是因为它们 “允许数据将最大量的信息带入后验”。 另外，<code class="docutils literal notranslate"><span class="pre">Bernardo</span> <span class="pre">参考先验</span></code>和 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 不必一致。</p>
 <p>此外，对于某些复杂模型，可能不存在客观先验或难以推导出客观先验。</p>
 </div>
 <div class="section" id="maximum-entropy-priors">
-<span id="id34"></span><h3>1.4.3 最大熵先验<a class="headerlink" href="#maximum-entropy-priors" title="Permalink to this headline">¶</a></h3>
+<span id="id40"></span><h3>1.4.3 最大熵先验<a class="headerlink" href="#maximum-entropy-priors" title="Permalink to this headline">¶</a></h3>
 <p>另一种证明先验选择合理性的方法是选择具有最大熵的先验。</p>
-<p>如果我们对参数的可取值完全无区别对待，那么此先验就是可取值范围内的均匀分布 <a class="footnote-reference brackets" href="#id59" id="id35">18</a>。但当我们对可取值并非无动于衷呢？例如，我们可能知道参数必须位于 <span class="math notranslate nohighlight">\([0, \infty)\)</span> 区间，那我们能得到既有最大熵又能满足约束的先验吗？这个先验是什么呢？这正是最大熵先验背后的思想。在文献中谈论最大熵原理时，通常会找到 <code class="docutils literal notranslate"><span class="pre">MaxEnt</span></code> 这个词。</p>
+<p>如果我们对参数的可取值完全无区别对待，那么此先验就是可取值范围内的均匀分布 <a class="footnote-reference brackets" href="#id65" id="id41">18</a>。但当我们对可取值并非无动于衷呢？例如，我们可能知道参数必须位于 <span class="math notranslate nohighlight">\([0, \infty)\)</span> 区间，那我们能得到既有最大熵又能满足约束的先验吗？这个先验是什么呢？这正是最大熵先验背后的思想。在文献中谈论最大熵原理时，通常会找到 <code class="docutils literal notranslate"><span class="pre">MaxEnt</span></code> 这个词。</p>
 <p>为了获得最大熵先验，需要求解包含一组约束条件的优化问题。在数学上，这可以使用<code class="docutils literal notranslate"><span class="pre">拉格朗日乘数</span></code>来实现。但这里我们不会采用形式化方法去推导和证明最大熵先验，而是使用几个代码案例来感性认识它。</p>
 <p><a class="reference internal" href="#fig-max-entropy"><span class="std std-numref">Fig. 9</span></a> 展示了通过最大化熵获得的 <span class="math notranslate nohighlight">\(3\)</span> 个分布。紫色分布是在没有约束条件下获得的，这确实是 <a class="reference internal" href="chp_11.html#entropy"><span class="std std-ref">11.2 熵</span></a> 中所预期的均匀分布，如果我们对问题一无所知，那么所有事件都是同等可能的。第二个青色分布是在知道分布均值为 <span class="math notranslate nohighlight">\(1.5\)</span> 的约束下获得的最大熵先验，这是一个类似指数的分布。最后一个黄绿色的分布是在已知 <span class="math notranslate nohighlight">\(3\)</span> 和 <span class="math notranslate nohighlight">\(4\)</span> 的概率为 <span class="math notranslate nohighlight">\(0.8\)</span> 的约束下获得的最大熵先验。</p>
 <blockquote>
@@ -779,7 +877,7 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <a class="reference internal image-reference" href="../_images/max_entropy_vs_random_dist.png"><img alt="../_images/max_entropy_vs_random_dist.png" src="../_images/max_entropy_vs_random_dist.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">一组随机生成的分布的熵的分布。垂直虚线表示具有最大熵分布的值，使用代码 <a class="reference internal" href="#max-ent-priors"><span class="std std-ref">max_ent_priors</span></a> 计算。可以看到，没有一个随机生成的分布的熵大于具有最大熵分布的熵，尽管这不是形式化的证明，但结果是令人放心的。</span><a class="headerlink" href="#fig-max-entropy-vs-random-dist" title="Permalink to this image">¶</a></p>
 </div>
-<p>在以下约束下，对应的最大熵分布分别为 <a class="footnote-reference brackets" href="#id60" id="id36">19</a>：</p>
+<p>在以下约束下，对应的最大熵分布分别为 <a class="footnote-reference brackets" href="#id66" id="id42">19</a>：</p>
 <ul class="simple">
 <li><p>无约束时：均匀分布（连续的或离散的，取决于随机变量类型）</p></li>
 <li><p>具有正均值，值域为 <span class="math notranslate nohighlight">\([0, \infty)\)</span> 时：指数分布</p></li>
@@ -791,12 +889,12 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <p>有趣的是，在考虑到模型约束时，许多传统上的广义线性模型（ 如 <a class="reference internal" href="chp_03.html#chap2"><span class="std std-ref">第 3 章</span></a> 中的模型 ）都是使用最大熵分布来定义的。与<code class="docutils literal notranslate"><span class="pre">客观先验</span></code>类似，<code class="docutils literal notranslate"><span class="pre">MaxEnt</span> <span class="pre">先验</span></code>有可能并不存在或难以推导。</p>
 </div>
 <div class="section" id="weakly-informative-priors-and-regularization-priors">
-<span id="id37"></span><h3>1.4.4 弱信息性先验与正则化先验<a class="headerlink" href="#weakly-informative-priors-and-regularization-priors" title="Permalink to this headline">¶</a></h3>
+<span id="id43"></span><h3>1.4.4 弱信息性先验与正则化先验<a class="headerlink" href="#weakly-informative-priors-and-regularization-priors" title="Permalink to this headline">¶</a></h3>
 <p>在前面部分中，我们使用一般性的过程来生成了无信息先验（此处指客观先验），旨在不将<em>太多</em>信息放入分析中。这些过程甚至还提供了“以某种方式”自动生成先验的方法。这两个特征听起来非常具有吸引力，而且在实际上被大量贝叶斯实践者和理论家所采用。</p>
 <p>但在本书中，我们不会过分依赖这些先验。我们认为先验的选择应该取决于背景环境。这意味着特定问题的细节、给定科学领域的特性等，都可以为先验的选择提供信息。虽然 <code class="docutils literal notranslate"><span class="pre">MaxEnt</span> <span class="pre">先验</span></code>能够包含其中一些约束，但我们似乎还可以更加靠近信息性先验频谱的信息端，这就是弱信息先验。</p>
 <p>构造弱信息先验的方法通常在数学上没有 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 或 <code class="docutils literal notranslate"><span class="pre">MaxEnt</span> <span class="pre">先验</span></code> 那样的良好定义。相反，弱信息先验更多是<em>经验主义</em>和<em>模型驱动</em> 的。也就是说，弱信息先验大多通过结合领域知识和模型本身来定义。对于很多问题，我们经常有关于参数可取值的信息，这些信息往往来自于参数的物理意义，例如身高必须是正数。我们甚至可以从之前的实验或观测中得到取值范围。我们或许有充分理由证明一个值应该接近零或高于某个预定义的下界。上述这些信息都能够为我们选择先验提供微弱的信息，同时保持一定程度的未知。</p>
-<p>这里再次使用 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span></code> 模型作为例子，<a class="reference internal" href="#fig-prior-informativeness-spectrum"><span class="std std-numref">Fig. 11</span></a> 显示了四个可选的先验。前两个分别是 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 和最大熵先验；第三个是弱信息先验，它优先考虑 <span class="math notranslate nohighlight">\(\theta=0.5\)</span> ，同时对其他值保持很宽泛或相对模糊；最后一个是信息性先验，以 <span class="math notranslate nohighlight">\(\theta=0.8\)</span> 为中心 <a class="footnote-reference brackets" href="#id61" id="id38">20</a> 。如果从理论、之前的实验、观测数据中能够获得高质量的信息，则信息性先验是最有效的选择。信息性先验可以传达大量信息，因们通常需要比选择其他先验更强的理由。正如 <code class="docutils literal notranslate"><span class="pre">Carl</span> <span class="pre">Sagan</span></code> 说的 “非凡主张需要非凡的证据” <span id="id39">[<a class="reference internal" href="references.html#id100">12</a>]</span>。</p>
-<p>重要的：先验的信息量取决于模型及其上下文。一个在某种情境中的无信息先验，可能在另一个情境中变得非常有用 <span id="id40">[<a class="reference internal" href="references.html#id63">13</a>]</span> 。例如，如果以米为单位对成年人的平均身高进行建模，则 <span class="math notranslate nohighlight">\(\mathcal{N}(2,1)\)</span> 的先验被认为是无信息的；但如果用于估计长颈鹿的高度，则该先验变得信息量非常大，因为现实中长颈鹿的高度与人类身高相差很大，该先验的取值范围对于人类的身高范围而言信息量几乎为 <span class="math notranslate nohighlight">\(0\)</span>，但对长颈鹿的高度而言，具有很好的解释性。</p>
+<p>这里再次使用 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span></code> 模型作为例子，<a class="reference internal" href="#fig-prior-informativeness-spectrum"><span class="std std-numref">Fig. 11</span></a> 显示了四个可选的先验。前两个分别是 <code class="docutils literal notranslate"><span class="pre">Jeffreys</span> <span class="pre">先验</span></code> 和最大熵先验；第三个是弱信息先验，它优先考虑 <span class="math notranslate nohighlight">\(\theta=0.5\)</span> ，同时对其他值保持很宽泛或相对模糊；最后一个是信息性先验，以 <span class="math notranslate nohighlight">\(\theta=0.8\)</span> 为中心 <a class="footnote-reference brackets" href="#id67" id="id44">20</a> 。如果从理论、之前的实验、观测数据中能够获得高质量的信息，则信息性先验是最有效的选择。信息性先验可以传达大量信息，因们通常需要比选择其他先验更强的理由。正如 <code class="docutils literal notranslate"><span class="pre">Carl</span> <span class="pre">Sagan</span></code> 说的 “非凡主张需要非凡的证据” <span id="id45">[<a class="reference internal" href="references.html#id100">12</a>]</span>。</p>
+<p>重要的：先验的信息量取决于模型及其上下文。一个在某种情境中的无信息先验，可能在另一个情境中变得非常有用 <span id="id46">[<a class="reference internal" href="references.html#id63">13</a>]</span> 。例如，如果以米为单位对成年人的平均身高进行建模，则 <span class="math notranslate nohighlight">\(\mathcal{N}(2,1)\)</span> 的先验被认为是无信息的；但如果用于估计长颈鹿的高度，则该先验变得信息量非常大，因为现实中长颈鹿的高度与人类身高相差很大，该先验的取值范围对于人类的身高范围而言信息量几乎为 <span class="math notranslate nohighlight">\(0\)</span>，但对长颈鹿的高度而言，具有很好的解释性。</p>
 <div class="figure align-default" id="fig-prior-informativeness-spectrum">
 <a class="reference internal image-reference" href="../_images/prior_informativeness_spectrum.png"><img alt="../_images/prior_informativeness_spectrum.png" src="../_images/prior_informativeness_spectrum.png" style="width: 8.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">先验信息谱： <code class="docutils literal notranslate"><span class="pre">Jeffrey</span> <span class="pre">先验</span></code>和 <code class="docutils literal notranslate"><span class="pre">MaxEnt</span> <span class="pre">先验</span></code>是为二项似然唯一定义的，但弱信息先验和信息性先验不是，后者取决于之前的信息和实践者的建模决策。</span><a class="headerlink" href="#fig-prior-informativeness-spectrum" title="Permalink to this image">¶</a></p>
@@ -804,18 +902,18 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <p>弱信息先验可以将后验分布保持在一定的合理范围内，所以它们也被称为正则化先验。正则化是一种添加信息的过程，目的是解决不适定问题或减少过拟合的机会，先验提供了一种执行正则化的原则方法。在本书中，我们经常使用弱信息先验。</p>
 <p>有时会在没有太多理由的情况下在模型中使用先验，仅仅是因为示例的重点可能与贝叶斯建模工作流程的其他方面有关。但我们也会展示一些使用先验预测检查来校准先验分布的例子。</p>
 <div class="admonition-overfitting admonition">
-<p class="admonition-title">过拟合（ Overfitting ） </p>
+<p class="admonition-title">过拟合（ Overfitting ）</p>
 <p>当模型生成的预测非常接近用于拟合它的有限数据集时，往往会发生过拟合，但这样的模型无法拟合新数据和/或不能很好地预测未来的观测。也就是说，它未能将其预测推广到更广泛的可观测结果。过拟合的反义词是欠拟合，即模型未能充分捕捉数据的底层结构。我们会在 <a class="reference internal" href="chp_02.html#model-cmp"><span class="std std-ref">2.5 模型比较</span></a> 和 <a class="reference internal" href="chp_11.html#information-criterion"><span class="std std-ref">11.4 信息准则</span></a> 部分讨论此主题的更多信息。</p>
 </div>
 </div>
 <div class="section" id="using-prior-predictive-distributions-to-assess-priors">
-<span id="id41"></span><h3>1.4.5 先验预测分布用于评估先验选择<a class="headerlink" href="#using-prior-predictive-distributions-to-assess-priors" title="Permalink to this headline">¶</a></h3>
+<span id="id47"></span><h3>1.4.5 先验预测分布用于评估先验选择<a class="headerlink" href="#using-prior-predictive-distributions-to-assess-priors" title="Permalink to this headline">¶</a></h3>
 <p>在评估先验选择时，<a class="reference internal" href="#automating-inference"><span class="std std-ref">1.3 人工建模与自动推断</span></a> 中显示的先验预测分布是一个方便的工具。通过从先验预测分布中采样，计算机会将 <em>在参数空间中的选择</em> 转换为 <em>在观测空间中的样本</em> 。而考虑观测值通常会比考虑模型参数更直观，这使模型评估变得更容易。以 <code class="docutils literal notranslate"><span class="pre">Beta-Binomial</span></code> 模型为例，与判断 <span class="math notranslate nohighlight">\(\theta\)</span> 的特定值是否合理不同，先验预测分布允许我们判断特定的成功次数是否合理。这对于那些参数需要许多数学运算或多个先验相交互的复杂模型来说，更为有用。最后，计算先验预测分布可以帮助我们确保模型已经被正确地编码，并且能够在概率编程语言中运行，甚至可以帮助我们调试模型。</p>
 <p>在接下来的章节中，我们将看到更具体的示例，说明如何推断先验预测样本并使用它们来选择合理的先验。</p>
 </div>
 </div>
 <div class="section" id="exercises1">
-<span id="id42"></span><h2>1.5 练习<a class="headerlink" href="#exercises1" title="Permalink to this headline">¶</a></h2>
+<span id="id48"></span><h2>1.5 练习<a class="headerlink" href="#exercises1" title="Permalink to this headline">¶</a></h2>
 <p>Problems are labeled Easy (E), Medium (M), and Hard (H).</p>
 <p><strong>1E1.</strong> As we discussed, models are artificial representations used to help define and understand an object or process.</p>
 <p>However, no model is able to perfectly replicate what it represents and thus is deficient in some way. In this book we focus on a particular type of models, statistical models. What are other types of models you can think of? How do they aid understanding of the thing that is being modeled? How are they deficient?</p>
@@ -847,7 +945,7 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <p><strong>1E7.</strong> Compare priors <span class="math notranslate nohighlight">\(\text{Beta}(0.5, 0.5)\)</span>, <span class="math notranslate nohighlight">\(\text{Beta}(1, 1)\)</span>, <span class="math notranslate nohighlight">\(\text{Beta}(1, 4)\)</span>. How do the priors differ in terms of shape?</p>
 <p><strong>1E8</strong>. Rerun Code Block <a class="reference internal" href="#binomial-update"><span class="std std-ref">binomial_update</span></a> but using two Beta-priors of your choice. Hint: you may what to try priors with <span class="math notranslate nohighlight">\(\alpha \neq \beta\)</span> like <span class="math notranslate nohighlight">\(\text{Beta}(2, 5)\)</span>.</p>
 <p><strong>1E9.</strong> Try to come up with new constraints in order to obtain new Max-Ent distributions (Code Block <a class="reference internal" href="#max-ent-priors"><span class="std std-ref">max_ent_priors</span></a>)</p>
-<p><strong>1E10.</strong> In Code Block <a class="reference internal" href="#metropolis-hastings"><span class="std std-ref">metropolis_hastings</span></a>, change the value of <code class="docutils literal notranslate"><span class="pre">can_sd</span></code> and run the Metropolis-Hastings sampler. Try values like 0.001 and 1.</p>
+<p><strong>1E10.</strong> In Code Block <a class="reference internal" href="#id23"><span class="std std-ref">metropolis_hastings</span></a>, change the value of <code class="docutils literal notranslate"><span class="pre">can_sd</span></code> and run the Metropolis-Hastings sampler. Try values like 0.001 and 1.</p>
 <ol class="simple">
 <li><p>Compute the mean, SD, and HDI and compare the values with those in   the book (computed using <code class="docutils literal notranslate"><span class="pre">can_sd=0.05</span></code>). How different are the   estimates?</p></li>
 <li><p>Use the function <code class="docutils literal notranslate"><span class="pre">az.plot_posterior</span></code>.</p></li>
@@ -892,15 +990,15 @@ Y \sim &amp;\; \text{Bin}(n=1, p=\theta)
 <p>Show why the marginal likelihood is not needed for the Metropolis-Hasting method to work. Hint: this is a pen and paper exercise, try by expanding Equation <a class="reference internal" href="#equation-acceptance-prob">(7)</a>.</p>
 <p><strong>1M15.</strong> In the following definition of a probabilistic model, identify the prior, the likelihood, and the posterior:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{split} 
-Y \sim \mathcal{N}(\mu, \sigma)\\ 
-\mu \sim \mathcal{N}(0, 1)\\ 
-\sigma \sim \mathcal{HN}(1)\\ 
+\[\begin{split}\begin{split}
+Y \sim \mathcal{N}(\mu, \sigma)\\
+\mu \sim \mathcal{N}(0, 1)\\
+\sigma \sim \mathcal{HN}(1)\\
 \end{split}\end{split}\]</div>
 <p><strong>1M16.</strong> In the previous model, how many parameters will the posterior have? Compare your answer with that from the model in the coin-flipping problem in Equation <a class="reference internal" href="#equation-eq-beta-binomial">(8)</a>.</p>
 <p><strong>1M17.</strong> Suppose that we have two coins; when we toss the first coin, half of the time it lands tails and half of the time on heads. The other coin is a loaded coin that always lands on heads. If we choose one of the coins at random and observe a head, what is the probability that this coin is the loaded one?</p>
 <p><strong>1M18.</strong> Modify Code Block <a class="reference internal" href="#metropolis-hastings-sampler-rvs"><span class="std std-ref">metropolis_hastings_sampler_rvs</span></a> to generate random samples from a Poisson distribution with parameters of your choosing.</p>
-<p>Then modify Code Blocks <a class="reference internal" href="#metropolis-hastings-sampler"><span class="std std-ref">metropolis_hastings_sampler</span></a> and <a class="reference internal" href="#metropolis-hastings"><span class="std std-ref">metropolis_hastings</span></a> to generate MCMC samples estimating your chosen parameters. Test how the number of samples, MCMC iterations, and initial starting point affect convergence to your true chosen parameter.</p>
+<p>Then modify Code Blocks <a class="reference internal" href="#metropolis-hastings-sampler"><span class="std std-ref">metropolis_hastings_sampler</span></a> and <a class="reference internal" href="#id23"><span class="std std-ref">metropolis_hastings</span></a> to generate MCMC samples estimating your chosen parameters. Test how the number of samples, MCMC iterations, and initial starting point affect convergence to your true chosen parameter.</p>
 <p><strong>1M19.</strong> Assume we are building a model to estimate the mean and standard deviation of adult human heights in centimeters. Build a model that will make these estimation. Start with Code Block <a class="reference internal" href="#beta-binom"><span class="std std-ref">beta_binom</span></a> and change the likelihood and priors as needed. After doing so then</p>
 <ol class="simple">
 <li><p>Sample from the prior predictive. Generate a visualization and   numerical summary of the prior predictive distribution</p></li>
@@ -913,7 +1011,7 @@ Y \sim \mathcal{N}(\mu, \sigma)\\
 <li><p>Use PyMC3 to compute the posterior distribution of <span class="math notranslate nohighlight">\(n\)</span> for all   combinations of <span class="math notranslate nohighlight">\(Y \in {0, 5, 10}\)</span> and <span class="math notranslate nohighlight">\(\theta \in {0.2, 0.5}\)</span>. Use   <code class="docutils literal notranslate"><span class="pre">az.plot_posterior</span></code> to plot the results in a single plot.</p></li>
 <li><p>Summarize the effect of <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(\theta\)</span> on the posterior</p></li>
 </ol>
-<p><strong>1H22.</strong> Modify Code Block <a class="reference internal" href="#metropolis-hastings-sampler-rvs"><span class="std std-ref">metropolis_hastings_sampler_rvs</span></a> to generate samples from a Normal Distribution, noting your choice of parameters for the mean and standard deviation. Then modify Code Blocks <a class="reference internal" href="#metropolis-hastings-sampler"><span class="std std-ref">metropolis_hastings_sampler</span></a> and <a class="reference internal" href="#metropolis-hastings"><span class="std std-ref">metropolis_hastings</span></a> to sample from a Normal model and see if you can recover your chosen parameters.</p>
+<p><strong>1H22.</strong> Modify Code Block <a class="reference internal" href="#metropolis-hastings-sampler-rvs"><span class="std std-ref">metropolis_hastings_sampler_rvs</span></a> to generate samples from a Normal Distribution, noting your choice of parameters for the mean and standard deviation. Then modify Code Blocks <a class="reference internal" href="#metropolis-hastings-sampler"><span class="std std-ref">metropolis_hastings_sampler</span></a> and <a class="reference internal" href="#id23"><span class="std std-ref">metropolis_hastings</span></a> to sample from a Normal model and see if you can recover your chosen parameters.</p>
 <p><strong>1H23.</strong> Make a model that estimates the proportion of the number of sunny versus cloudy days in your area. Use the past 5 days of data from your personal observations. Think through the data collection process. How hard is it to remember the past 5 days. What if needed the past 30 days of data? Past year? Justify your choice of priors. Obtain a posterior distribution that estimates the proportion of sunny versus cloudy days. Generate predictions for the next 10 days of weather.</p>
 <p>Communicate your answer using both numerical summaries and visualizations.</p>
 <p><strong>1H24.</strong> You planted 12 seedlings and 3 germinate. Let us call <span class="math notranslate nohighlight">\(\theta\)</span> the probability that a seedling germinates. Assuming <span class="math notranslate nohighlight">\(\text{Beta}(1, 1)\)</span> prior distribution for <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
@@ -926,61 +1024,61 @@ Y \sim \mathcal{N}(\mu, \sigma)\\
 <hr class="docutils"/>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
+<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
 <dd><p>If you want to be more general you can even say that everything is a probability distribution as a quantity you assume to know with arbitrary precision that can be described by a Dirac delta function.</p>
 </dd>
-<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
+<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
 <dd><p>Some authors call these quantities latent variables and reserve the name parameter to identify fixed, but unknown, quantities.</p>
 </dd>
-<dt class="label" id="id45"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
+<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
 <dd><p>Alternatively you can think of this in terms of certainty or information, depending if you are a glass half empty or glass half full person.</p>
 </dd>
-<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id9">4</a></span></dt>
+<dt class="label" id="id52"><span class="brackets"><a class="fn-backref" href="#id9">4</a></span></dt>
 <dd><p>Sometimes the word <em>distribution</em> will be implicit, this commonly occurs when discussing these topics.</p>
 </dd>
-<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id10">5</a></span></dt>
+<dt class="label" id="id53"><span class="brackets"><a class="fn-backref" href="#id10">5</a></span></dt>
 <dd><p>Here we are using experiment in the broad sense of any procedure to collect or generate data.</p>
 </dd>
-<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id11">6</a></span></dt>
+<dt class="label" id="id54"><span class="brackets"><a class="fn-backref" href="#id11">6</a></span></dt>
 <dd><p><a class="reference external" href="https://xkcd.com/2117/">https://xkcd.com/2117/</a></p>
 </dd>
-<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id12">7</a></span></dt>
+<dt class="label" id="id55"><span class="brackets"><a class="fn-backref" href="#id14">7</a></span></dt>
 <dd><p>Technically we should talk about the expectation of a random variable. See Section <a class="reference internal" href="chp_11.html#expectations"><span class="std std-ref">11.1.8 期望</span></a> for details.</p>
 </dd>
-<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id15">8</a></span></dt>
+<dt class="label" id="id56"><span class="brackets"><a class="fn-backref" href="#id19">8</a></span></dt>
 <dd><p>See detailed balance at Sections <a class="reference internal" href="chp_11.html#markov-chains"><span class="std std-ref">11.1.11 马尔可夫链</span></a> and <a class="reference internal" href="chp_11.html#sec-metropolis-hastings"><span class="std std-ref">11.9.2 Metropolis-Hastings 采样器</span></a>.</p>
 </dd>
-<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id17">9</a></span></dt>
+<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id21">9</a></span></dt>
 <dd><p>For a more extensive discussion about inference methods you should read Section <a class="reference internal" href="chp_11.html#inference-methods"><span class="std std-ref">11.9 推断方法</span></a> and references therein.</p>
 </dd>
-<dt class="label" id="id52"><span class="brackets"><a class="fn-backref" href="#id18">10</a></span></dt>
+<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id22">10</a></span></dt>
 <dd><p>This is sometimes referred to as a kernel in other Universal Inference Engines.</p>
 </dd>
-<dt class="label" id="id53"><span class="brackets"><a class="fn-backref" href="#id19">11</a></span></dt>
+<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id25">11</a></span></dt>
 <dd><p>You can use ArviZ <code class="docutils literal notranslate"><span class="pre">plot_trace</span></code> function to get a similar plot.  This is how we will do in the rest of the book.</p>
 </dd>
-<dt class="label" id="id54"><span class="brackets"><a class="fn-backref" href="#id21">12</a></span></dt>
+<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id27">12</a></span></dt>
 <dd><p>Notice that in principle the number of possible intervals containing a given proportion of the total density is infinite.</p>
 </dd>
-<dt class="label" id="id55"><span class="brackets"><a class="fn-backref" href="#id29">14</a></span></dt>
+<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id35">14</a></span></dt>
 <dd><p>Except, the ones happening in your brain.</p>
 </dd>
-<dt class="label" id="id56"><span class="brackets"><a class="fn-backref" href="#id30">15</a></span></dt>
+<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id36">15</a></span></dt>
 <dd><p>For example, a regularized linear regression with a L2 regularization is the same as using a Gaussian prior on the coefficient.</p>
 </dd>
-<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id32">16</a></span></dt>
+<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id38">16</a></span></dt>
 <dd><p>For example, if we have samples from the posterior, then we can plug those samples of <span class="math notranslate nohighlight">\(\theta\)</span> into <span class="math notranslate nohighlight">\(\kappa = \frac{\theta}{1-\theta}\)</span>.</p>
 </dd>
-<dt class="label" id="id58"><span class="brackets"><a class="fn-backref" href="#id33">17</a></span></dt>
+<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id39">17</a></span></dt>
 <dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Likelihood_principle">https://en.wikipedia.org/wiki/Likelihood_principle</a></p>
 </dd>
-<dt class="label" id="id59"><span class="brackets"><a class="fn-backref" href="#id35">18</a></span></dt>
+<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id41">18</a></span></dt>
 <dd><p>See Section <a class="reference internal" href="chp_11.html#entropy"><span class="std std-ref">11.2 熵</span></a> for more details.</p>
 </dd>
-<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id36">19</a></span></dt>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id42">19</a></span></dt>
 <dd><p>Wikipedia has a longer list at <a class="reference external" href="https://en.wikipedia.org/wiki/Maximum_entropy_probability_distribution#Other_examples">https://en.wikipedia.org/wiki/Maximum_entropy_probability_distribution#Other_examples</a></p>
 </dd>
-<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id38">20</a></span></dt>
+<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id44">20</a></span></dt>
 <dd><p>Even when the definition of such priors will require more context than the one provided, we still think the example conveys a useful intuition, that will be refined as we progress through this book.</p>
 </dd>
 </dl>
@@ -1018,7 +1116,7 @@ Y \sim \mathcal{N}(\mu, \sigma)\\
 <a class="right-next" href="chp_02.html" id="next-link" title="next page">
 <div class="prev-next-info">
 <p class="prev-next-subtitle">next</p>
-<p class="prev-next-title">第二章: 贝叶斯模型的探索性分析</p>
+<p class="prev-next-title">第二章：贝叶斯模型的探索性分析</p>
 </div>
 <i class="fas fa-angle-right"></i>
 </a>

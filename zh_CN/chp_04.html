@@ -92,12 +92,12 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_01.html">
-   第一章: 贝叶斯推断
+   第一章：贝叶斯推断
   </a>
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_02.html">
-   第二章: 贝叶斯模型的探索性分析
+   第二章：贝叶斯模型的探索性分析
   </a>
 </li>
 <li class="toctree-l1">
@@ -142,7 +142,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_11.html">
-   第十一章: 附加主题
+   第十一章：附加主题
   </a>
 </li>
 <li class="toctree-l1">
@@ -152,7 +152,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="references.html">
-   References
+   参考文献
   </a>
 </li>
 </ul>
@@ -262,7 +262,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises4">
-   4.7 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id31">
+   参考文献
   </a>
 </li>
 </ul>
@@ -354,7 +359,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises4">
-   4.7 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id31">
+   参考文献
   </a>
 </li>
 </ul>
@@ -483,7 +493,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 \end{split}\end{split}\]</div>
 <p>式中 <span class="math notranslate nohighlight">\(\beta_3\)</span> 是交互项 <span class="math notranslate nohighlight">\(X_1X_2\)</span> 的系数。其实还存在其他引入交互的方法，但采用原始预测变量乘积的形式应用比较广泛。</p>
 <p>现在定义了交互效应是什么，我们就可以对比性地定义 <strong>主效应</strong> ，即一个预测变量对结果变量的影响只与自身取值有关，与所有其他预测变量取值无关。</p>
-<p>为了说明，我们使用一个消费模型的例子，代码 <a class="reference internal" href="#tips-no-interaction"><span class="std std-ref">tips_no_interaction</span></a> 对用餐者留下的小费金额进行了建模，将小费建模为总账单的函数。这听起来很合理，因为小费金额通常是按总账单的百分比来计算的。不过确切的百分比会因不同因素而异，例如餐厅类型、服务质量、所在国家等。在此示例中，我们重点关注吸烟者与非吸烟者的小费金额差异，重点研究吸烟与总账单金额之间是否存在交互作用 <a class="footnote-reference brackets" href="#id31" id="id6">2</a>。就像模型 <a class="reference internal" href="chp_03.html#penguin-mass-multi"><span class="std std-ref">penguin_mass_multi</span></a> 一样，先将吸烟者作为独立的预测变量添加到回归模型中。</p>
+<p>为了说明，我们使用一个消费模型的例子，代码 <a class="reference internal" href="#tips-no-interaction"><span class="std std-ref">tips_no_interaction</span></a> 对用餐者留下的小费金额进行了建模，将小费建模为总账单的函数。这听起来很合理，因为小费金额通常是按总账单的百分比来计算的。不过确切的百分比会因不同因素而异，例如餐厅类型、服务质量、所在国家等。在此示例中，我们重点关注吸烟者与非吸烟者的小费金额差异，重点研究吸烟与总账单金额之间是否存在交互作用 <a class="footnote-reference brackets" href="#id32" id="id6">2</a>。就像模型 <a class="reference internal" href="chp_03.html#penguin-mass-multi"><span class="std std-ref">penguin_mass_multi</span></a> 一样，先将吸烟者作为独立的预测变量添加到回归模型中。</p>
 <div class="literal-block-wrapper docutils container" id="tips-no-interaction">
 <div class="code-block-caption"><span class="caption-number">Listing 48 </span><span class="caption-text">tips_no_interaction</span><a class="headerlink" href="#tips-no-interaction" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tips_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"../data/tips.csv"</span><span class="p">)</span>
@@ -537,12 +547,12 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 <p>异常值指位于 “合理预期” 范围之外的观测值。异常值通常不可取，因为其中的某个或几个异常值可能会显著改变模型的参数估计结果。存在多种异常值的处理方法 <span id="id8">[<a class="reference internal" href="references.html#id119">42</a>]</span> ，但无论如何，如何处理异常值都是统计学家必须做出的主观选择。</p>
 <p>一般来说，至少有两种方法可以解决异常值问题。一种是使用一些预定义规则删除异常值，例如 <span class="math notranslate nohighlight">\(3\)</span> 个标准差或四分位间距的 <span class="math notranslate nohighlight">\(1.5\)</span> 倍。另一种策略是选择一个可以处理异常值并仍然提供有用结果的模型。在回归问题中，后者通常被称为稳健（或鲁棒）回归模型，特别要注意：此类模型对远离大量数据的观测点不太敏感。</p>
 <p>从技术上讲，稳健回归模型旨在减少基础数据生成过程那些有违假设的影响。在贝叶斯回归中，一个常见的例子，是将似然函数从高斯分布更改为学生 <span class="math notranslate nohighlight">\(t\)</span> 分布。高斯分布由位置参数 <span class="math notranslate nohighlight">\(\mu\)</span> 和尺度参数 <span class="math notranslate nohighlight">\(\sigma\)</span> 两个参数定义，这些参数控制着高斯分布的均值和标准差（离散度）。</p>
-<p>学生 <span class="math notranslate nohighlight">\(t\)</span> 分布也有位置参数和尺度参数 <a class="footnote-reference brackets" href="#id32" id="id9">3</a>。但还有一个附加的参数，被称为自由度 <span class="math notranslate nohighlight">\(\nu\)</span>。自由度参数控制学生 <span class="math notranslate nohighlight">\(t\)</span> 分布尾部的权重，如 <a class="reference internal" href="#fig-studentt-normal-comparison"><span class="std std-numref">Fig. 62</span></a> 所示。图中比较了 <span class="math notranslate nohighlight">\(3\)</span> 个学生 <span class="math notranslate nohighlight">\(t\)</span> 分布和一个高斯分布，其间的主要区别在于尾部密度在总概率质量中所占的比例。当<span class="math notranslate nohighlight">\(\nu\)</span> 较小时，分布主体处的质量比例减少，尾部分布的质量更多；随着<span class="math notranslate nohighlight">\(\nu\)</span> 值的增加，分布主体处的质量比例也增加，尾部分布的质量相应地减少，此时学生 <span class="math notranslate nohighlight">\(t\)</span> 分布越来越接近于一个高斯分布。这也意味着：当 <span class="math notranslate nohighlight">\(\nu\)</span> 较小时，更可能出现远离均值的值。因此，当用学生 <span class="math notranslate nohighlight">\(t\)</span> 分布替换高斯分布作为似然时，将会为异常值提供稳健性。</p>
+<p>学生 <span class="math notranslate nohighlight">\(t\)</span> 分布也有位置参数和尺度参数 <a class="footnote-reference brackets" href="#id33" id="id9">3</a>。但还有一个附加的参数，被称为自由度 <span class="math notranslate nohighlight">\(\nu\)</span>。自由度参数控制学生 <span class="math notranslate nohighlight">\(t\)</span> 分布尾部的权重，如 <a class="reference internal" href="#fig-studentt-normal-comparison"><span class="std std-numref">Fig. 62</span></a> 所示。图中比较了 <span class="math notranslate nohighlight">\(3\)</span> 个学生 <span class="math notranslate nohighlight">\(t\)</span> 分布和一个高斯分布，其间的主要区别在于尾部密度在总概率质量中所占的比例。当<span class="math notranslate nohighlight">\(\nu\)</span> 较小时，分布主体处的质量比例减少，尾部分布的质量更多；随着<span class="math notranslate nohighlight">\(\nu\)</span> 值的增加，分布主体处的质量比例也增加，尾部分布的质量相应地减少，此时学生 <span class="math notranslate nohighlight">\(t\)</span> 分布越来越接近于一个高斯分布。这也意味着：当 <span class="math notranslate nohighlight">\(\nu\)</span> 较小时，更可能出现远离均值的值。因此，当用学生 <span class="math notranslate nohighlight">\(t\)</span> 分布替换高斯分布作为似然时，将会为异常值提供稳健性。</p>
 <div class="figure align-default" id="fig-studentt-normal-comparison">
 <a class="reference internal image-reference" href="../_images/StudentT_Normal_Comparison.png"><img alt="../_images/StudentT_Normal_Comparison.png" src="../_images/StudentT_Normal_Comparison.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 62 </span><span class="caption-text">高斯分布（蓝色），与 <span class="math notranslate nohighlight">\(3\)</span> 个具有不同 <span class="math notranslate nohighlight">\(\nu\)</span> 参数的学生 <span class="math notranslate nohighlight">\(t\)</span> 分布比较。位置和比例参数都是相同的，这可以分理出 <span class="math notranslate nohighlight">\(\nu\)</span> 对尾部的影响。 <span class="math notranslate nohighlight">\(\nu\)</span> 的值越小，分布尾部的密度越大。</span><a class="headerlink" href="#fig-studentt-normal-comparison" title="Permalink to this image">¶</a></p>
 </div>
-<p>稳健回归可以在下面的例子中体现。假设你在阿根廷拥有一家餐厅并出售肉馅馅饼 <a class="footnote-reference brackets" href="#id33" id="id10">4</a>。随着时间推移，你收集了每天顾客数量和餐厅收入总金额的数据，如 <a class="reference internal" href="#fig-empanada-scatter-plot"><span class="std std-numref">Fig. 63</span></a> 所示。其中，大多数数据点沿着一条线排列，只是偶尔有几天，售出的单客馅饼数量远高于邻近数据点。这可能是因为在某些大型庆祝活动日  <a class="footnote-reference brackets" href="#id34" id="id11">5</a>，人们比平时吃的馅饼更多。</p>
+<p>稳健回归可以在下面的例子中体现。假设你在阿根廷拥有一家餐厅并出售肉馅馅饼 <a class="footnote-reference brackets" href="#id34" id="id10">4</a>。随着时间推移，你收集了每天顾客数量和餐厅收入总金额的数据，如 <a class="reference internal" href="#fig-empanada-scatter-plot"><span class="std std-numref">Fig. 63</span></a> 所示。其中，大多数数据点沿着一条线排列，只是偶尔有几天，售出的单客馅饼数量远高于邻近数据点。这可能是因为在某些大型庆祝活动日  <a class="footnote-reference brackets" href="#id35" id="id11">5</a>，人们比平时吃的馅饼更多。</p>
 <div class="figure align-default" id="fig-empanada-scatter-plot">
 <a class="reference internal image-reference" href="../_images/Empanada_Scatter_Plot.png"><img alt="../_images/Empanada_Scatter_Plot.png" src="../_images/Empanada_Scatter_Plot.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 63 </span><span class="caption-text">根据顾客数量和收入绘制的模拟数据。图表顶部的 <span class="math notranslate nohighlight">\(5\)</span> 个点被视为异常值。</span><a class="headerlink" href="#fig-empanada-scatter-plot" title="Permalink to this image">¶</a></p>
@@ -1154,9 +1164,9 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 </div>
 <div class="section" id="priors-for-multilevel-models">
 <span id="id26"></span><h3>4.6.4 分层模型的先验选择<a class="headerlink" href="#priors-for-multilevel-models" title="Permalink to this headline">¶</a></h3>
-<p>先验选择对于分层模型来说更为重要，因为先验如何与似然的信息量相互作用，如上面第 <a class="reference internal" href="#model-geometry"><span class="std std-ref">4.6.2 分层模型的新问题 — 后验几何形态的复杂性带来的采样难题</span></a> 部分所示。此外，不仅先验分布的形状很重要，我们还可以选择如何参数化它们。这并不仅限于高斯先验，还适用于位置尺度分布族 <a class="footnote-reference brackets" href="#id35" id="id27">6</a> 中的所有分布。</p>
+<p>先验选择对于分层模型来说更为重要，因为先验如何与似然的信息量相互作用，如上面第 <a class="reference internal" href="#model-geometry"><span class="std std-ref">4.6.2 分层模型的新问题 — 后验几何形态的复杂性带来的采样难题</span></a> 部分所示。此外，不仅先验分布的形状很重要，我们还可以选择如何参数化它们。这并不仅限于高斯先验，还适用于位置尺度分布族 <a class="footnote-reference brackets" href="#id36" id="id27">6</a> 中的所有分布。</p>
 <p>在分层模型中，先验分布不仅可以表征组内变化，还可以表征组间变化。从某种意义上说，超先验的选择是在定义“变化的变化”，这可能会使先验信息的表达和推断变得困难。此外，部分池化是超先验的信息量、组数量以及组中的观测数的组合效应。因此，如果你在相似数据集上使用相同的模型但使用较少的组执行推断，则相同的超先验可能不起作用。</p>
-<p>因此，除了经验主义（例如，文章中发表的一般性推荐）或一般性建议 <a class="footnote-reference brackets" href="#id36" id="id28">7</a>，我们还可以进行敏感性研究，以更好地了解我们的先验选择。例如 Lemoine <span id="id29">[<a class="reference internal" href="references.html#id122">48</a>]</span> 表明，当使用如下模型结构对生态数据进行建模时：</p>
+<p>因此，除了经验主义（例如，文章中发表的一般性推荐）或一般性建议 <a class="footnote-reference brackets" href="#id37" id="id28">7</a>，我们还可以进行敏感性研究，以更好地了解我们的先验选择。例如 Lemoine <span id="id29">[<a class="reference internal" href="references.html#id122">48</a>]</span> 表明，当使用如下模型结构对生态数据进行建模时：</p>
 <div class="math notranslate nohighlight" id="equation-eq-ecology-regression">
 <span class="eqno">(40)<a class="headerlink" href="#equation-eq-ecology-regression" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
   \alpha_i \sim&amp; \mathcal{N}(\mu_{\alpha},\sigma^2_{\alpha}) \\
@@ -1167,7 +1177,7 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 </div>
 </div>
 <div class="section" id="exercises4">
-<span id="id30"></span><h2>4.7 练习<a class="headerlink" href="#exercises4" title="Permalink to this headline">¶</a></h2>
+<span id="id30"></span><h2>习题<a class="headerlink" href="#exercises4" title="Permalink to this headline">¶</a></h2>
 <p><strong>4E1.</strong> What are examples of covariate-response relationships that are nonlinear in everyday life?</p>
 <p><strong>4E2.</strong> Assume you are studying the relationship between a covariate and an outcome and the data can be into 2 groups. You will be using a regression with a slope and intercept as your basic model structure.</p>
 <div class="math notranslate nohighlight">
@@ -1231,24 +1241,27 @@ Y \sim&amp; \mathcal{N}(\beta_{m} * X_m,\sigma_{m})
 <li><p>The velocity of the ball at each point during her measurements</p></li>
 <li><p>The estimated position of the ball from time 20 to time 30</p></li>
 </ol>
+</div>
+<div class="section" id="id31">
+<h2>参考文献<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h2>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id31"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
+<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
 <dd><p>Remember this is just a toy dataset, so the take-home message   should be about modeling interactions and not about tips.</p>
 </dd>
-<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id9">3</a></span></dt>
+<dt class="label" id="id33"><span class="brackets"><a class="fn-backref" href="#id9">3</a></span></dt>
 <dd><p>Although the mean is defined only for <span class="math notranslate nohighlight">\(\nu &gt; 1\)</span>, and the value of   <span class="math notranslate nohighlight">\(\sigma\)</span> agrees with the standard deviation only when   <span class="math notranslate nohighlight">\(\nu \to \infty\)</span>.</p>
 </dd>
-<dt class="label" id="id33"><span class="brackets"><a class="fn-backref" href="#id10">4</a></span></dt>
+<dt class="label" id="id34"><span class="brackets"><a class="fn-backref" href="#id10">4</a></span></dt>
 <dd><p>A thin dough filled with a salty or sweet preparation and baked or   fried. The filling can include red or white meat, fish, vegetables,   or fruit. Empanadas are common in Southern European, Latin American,   and the Filipino cultures.</p>
 </dd>
-<dt class="label" id="id34"><span class="brackets"><a class="fn-backref" href="#id11">5</a></span></dt>
+<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id11">5</a></span></dt>
 <dd><p>The commemoration of the first Argentine government and the   Argentine independence day respectively.</p>
 </dd>
-<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id27">6</a></span></dt>
+<dt class="label" id="id36"><span class="brackets"><a class="fn-backref" href="#id27">6</a></span></dt>
 <dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Location%E2%80%93scale_family">https://en.wikipedia.org/wiki/Location–scale_family</a></p>
 </dd>
-<dt class="label" id="id36"><span class="brackets"><a class="fn-backref" href="#id28">7</a></span></dt>
+<dt class="label" id="id37"><span class="brackets"><a class="fn-backref" href="#id28">7</a></span></dt>
 <dd><p><a class="reference external" href="https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations">https://github.com/stan-dev/stan/wiki/Prior-Choice-Recommendations</a></p>
 </dd>
 </dl>

@@ -43,7 +43,7 @@
 <link href="../genindex.html" rel="index" title="Index"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="chp_04.html" rel="next" title="第四章：扩展线性模型"/>
-<link href="chp_02.html" rel="prev" title="第二章: 贝叶斯模型的探索性分析"/>
+<link href="chp_02.html" rel="prev" title="第二章：贝叶斯模型的探索性分析"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="None" name="docsearch:language"/>
 <!-- Google Analytics -->
@@ -92,12 +92,12 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_01.html">
-   第一章: 贝叶斯推断
+   第一章：贝叶斯推断
   </a>
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_02.html">
-   第二章: 贝叶斯模型的探索性分析
+   第二章：贝叶斯模型的探索性分析
   </a>
 </li>
 <li class="toctree-l1 current active">
@@ -142,7 +142,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="chp_11.html">
-   第十一章: 附加主题
+   第十一章：附加主题
   </a>
 </li>
 <li class="toctree-l1">
@@ -152,7 +152,7 @@
 </li>
 <li class="toctree-l1">
 <a class="reference internal" href="references.html">
-   References
+   参考文献
   </a>
 </li>
 </ul>
@@ -266,7 +266,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises3">
-   3.6 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id41">
+   参考文献
   </a>
 </li>
 </ul>
@@ -362,7 +367,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry">
 <a class="reference internal nav-link" href="#exercises3">
-   3.6 练习
+   习题
+  </a>
+</li>
+<li class="toc-h2 nav-item toc-entry">
+<a class="reference internal nav-link" href="#id41">
+   参考文献
   </a>
 </li>
 </ul>
@@ -550,7 +560,7 @@
 </pre></div>
 </div>
 </div>
-<p>我们为每个参数使用了可选的 <strong>形状（ Shape ，Python 中描述多维张量各维度大小的术语 ）</strong> 参数，并在似然中添加一个索引，以告诉 PYMC3 我们希望独立调节每个物种的后验。在编程语言设计中，使表达思想更加无缝的小技巧被称为<strong>语法糖</strong>。概率编程开发人员也会使用一些语法糖；概率编程语言会努力让表达模型更容易且错误更少。</p>
+<p>我们为每个参数使用了可选的 <strong>形状（ Shape ，Python 中描述多维张量各维度大小的术语 ）</strong> 参数，并在似然中添加一个索引，以告诉 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 我们希望独立调节每个物种的后验。在编程语言设计中，使表达思想更加无缝的小技巧被称为<strong>语法糖</strong>。概率编程开发人员也会使用一些语法糖；概率编程语言会努力让表达模型更容易且错误更少。</p>
 <p>运行模型后，再次检查核密度估计曲线和秩图，参阅 <a class="reference internal" href="#fig-all-penguins-rank-kde-plot"><span class="std std-numref">Fig. 35</span></a>。与 <a class="reference internal" href="#fig-single-penguins-rank-kde-plot"><span class="std std-numref">Fig. 33</span></a> 相比，你将看到 <span class="math notranslate nohighlight">\(4\)</span> 个额外的图，每个物种添加了 <span class="math notranslate nohighlight">\(2\)</span> 个参数。花点时间将均值的估计与 <a class="reference internal" href="#tab-penguin-mass-parameters-point-estimates"><span class="std std-numref">Table 3</span></a> 中各物种的汇总均值进行比较。为了更好地可视化各物种分布之间的差异，可以使用代码 <a class="reference internal" href="#mass-forest-plot"><span class="std std-ref">mass_forest_plot</span></a> 来绘制多个后验分布的森林图。</p>
 <p><a class="reference internal" href="#fig-forest-plot-means"><span class="std std-numref">Fig. 36</span></a> 使我们更容易对不同物种的估计做比较，注意 <code class="docutils literal notranslate"><span class="pre">Gentoo</span> <span class="pre">种企鹅</span></code> 似乎比 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code> 或 <code class="docutils literal notranslate"><span class="pre">Chinstrap</span> <span class="pre">种</span></code> 有更大的体重。</p>
 <div class="figure align-default" id="fig-all-penguins-rank-kde-plot">
@@ -577,12 +587,12 @@
 </div>
 <div class="section" id="comparing-two-ppls">
 <span id="id4"></span><h3>3.1.1 比较两种概率编程语言<a class="headerlink" href="#comparing-two-ppls" title="Permalink to this headline">¶</a></h3>
-<p>在进一步扩展统计建模思想之前，我们先花点时间讨论概率编程语言，并介绍将在本书中使用的另一种概率编程语言：<code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span> <span class="pre">(TFP)</span></code>。我们将在代码 <a class="reference internal" href="#nocovariate-mass"><span class="std std-ref">nocovariate_mass</span></a> 中，将 PYMC3 的截距模型转换为 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> ，以便于大家理解。</p>
+<p>在进一步扩展统计建模思想之前，我们先花点时间讨论概率编程语言，并介绍将在本书中使用的另一种概率编程语言：<code class="docutils literal notranslate"><span class="pre">TensorFlow</span> <span class="pre">Probability</span> <span class="pre">(TFP)</span></code>。我们将在代码 <a class="reference internal" href="#nocovariate-mass"><span class="std std-ref">nocovariate_mass</span></a> 中，将 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 的截距模型转换为 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> ，以便于大家理解。</p>
 <p>学习不同的概率编程语言似乎没有必要。但本书中选择使用两种概率编程语言有些特殊的原因：<em>在不同概率编程语言中看到相同的工作流程，将使你对贝叶斯建模和计算有更透彻的理解，帮助你将计算细节与统计思想分开，并使你成为一个更强大的建模者</em>。</p>
-<p>此外，不同概率编程语言有不同的能力和重点。 PYMC3 是更高级别的概率编程语言，可以轻松地以更少代码表达模型，而 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 为建模和推断提供了更低级别的概率编程能力。并非所有概率编程语言都能够像彼此一样非常容易地表达所有模型。例如，时间序列模型（ <a class="reference internal" href="chp_06.html#chap4"><span class="std std-ref">第 6 章</span></a> ）在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中更容易定义，而贝叶斯加性回归树在 PYMC3 中更容易表达（ <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref">第 7 章</span></a> ）。通过对多种语言的接触，你将对贝叶斯建模的基本要素以及其在在计算上的实现有更深入了解。</p>
+<p>此外，不同概率编程语言有不同的能力和重点。 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 是更高级别的概率编程语言，可以轻松地以更少代码表达模型，而 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 为建模和推断提供了更低级别的概率编程能力。并非所有概率编程语言都能够像彼此一样非常容易地表达所有模型。例如，时间序列模型（ <a class="reference internal" href="chp_06.html#chap4"><span class="std std-ref">第 6 章</span></a> ）在 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 中更容易定义，而贝叶斯加性回归树在 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 中更容易表达（ <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref">第 7 章</span></a> ）。通过对多种语言的接触，你将对贝叶斯建模的基本要素以及其在在计算上的实现有更深入了解。</p>
 <p>概率编程语言由原语组成，在编程语言中，原语是用于构建更复杂程序的最简单元素。你可以将原语理解成自然语言中的单词，能够形成更复杂的结构，比如句子。由于不同语言使用不同的词，不同概率编程语言也会使用不同的原语。这些原语主要用于表达模型、执行推断或表达工作流的其他部分。</p>
-<p>在 PYMC3 中，与模型构建相关的原语包含在命名空间 <code class="docutils literal notranslate"><span class="pre">pm</span></code> 下。例如，在代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中，可以看到 <code class="docutils literal notranslate"><span class="pre">pm.HalfStudentT(.)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pm.Normal(.)</span></code>，其中“ <span class="math notranslate nohighlight">\(.\)</span><code class="docutils literal notranslate"><span class="pre">”代表一个随机变量。</span></code>with pm.Model() as .<code class="docutils literal notranslate"><span class="pre">语句调用</span> <span class="pre">Python</span> <span class="pre">的上下文环境管理器，PYMC3</span> <span class="pre">使用该语句来收集上下文管理器中的随机变量，并构建模型</span></code>model_adelie_penguin_mass<code class="docutils literal notranslate"><span class="pre">。然后可以使用</span> </code>pm.sample_prior_predictive(.)<code class="docutils literal notranslate"><span class="pre">和</span></code>pm.sample(.)` 分别获得先验预测分布和后验分布的样本。</p>
-<p>类似地，TFP 为用户提供了在  <code class="docutils literal notranslate"><span class="pre">tfp.distributions</span></code> 中指定分布和模型、运行 MCMC 推断( <code class="docutils literal notranslate"><span class="pre">tfp.mcmc</span></code> ) 等原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 的 API 原语 <span id="id5">[<a class="reference internal" href="references.html#id128">29</a>]</span>。在本书的其余部分中，我们会主要使用 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code>，但读者应当知道还有 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 的一些变体可能更适合你的应用 <a class="footnote-reference brackets" href="#id41" id="id6">1</a>。由于导入数据和计算汇总统计量的代码和 <a class="reference internal" href="#penguin-load"><span class="std std-ref">penguin_load</span></a> 和 <a class="reference internal" href="#penguin-mass-empirical"><span class="std std-ref">penguin_mass_empirical</span></a> 一致，因此这里我们专注于模型构建和推断。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 中，与模型构建相关的原语包含在命名空间 <code class="docutils literal notranslate"><span class="pre">pm</span></code> 下。例如，在代码 <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> 中，可以看到 <code class="docutils literal notranslate"><span class="pre">pm.HalfStudentT(.)</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pm.Normal(.)</span></code>，其中“ <span class="math notranslate nohighlight">\(.\)</span><code class="docutils literal notranslate"><span class="pre">”代表一个随机变量。</span></code>with pm.Model() as .<code class="docutils literal notranslate"><span class="pre">语句调用</span> <span class="pre">Python</span> <span class="pre">的上下文环境管理器，PYMC3</span> <span class="pre">使用该语句来收集上下文管理器中的随机变量，并构建模型</span></code>model_adelie_penguin_mass<code class="docutils literal notranslate"><span class="pre">。然后可以使用</span> </code>pm.sample_prior_predictive(.)<code class="docutils literal notranslate"><span class="pre">和</span></code>pm.sample(.)` 分别获得先验预测分布和后验分布的样本。</p>
+<p>类似地，TFP 为用户提供了在  <code class="docutils literal notranslate"><span class="pre">tfp.distributions</span></code> 中指定分布和模型、运行 MCMC 推断( <code class="docutils literal notranslate"><span class="pre">tfp.mcmc</span></code> ) 等原语。例如，为了构建贝叶斯模型，TensorFlow 提供了多个名为 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 的 API 原语 <span id="id5">[<a class="reference internal" href="references.html#id128">29</a>]</span>。在本书的其余部分中，我们会主要使用 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine</span></code>，但读者应当知道还有 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code> 的一些变体可能更适合你的应用 <a class="footnote-reference brackets" href="#id42" id="id6">1</a>。由于导入数据和计算汇总统计量的代码和 <a class="reference internal" href="#penguin-load"><span class="std std-ref">penguin_load</span></a> 和 <a class="reference internal" href="#penguin-mass-empirical"><span class="std std-ref">penguin_mass_empirical</span></a> 一致，因此这里我们专注于模型构建和推断。</p>
 <p><code class="docutils literal notranslate"><span class="pre">model_penguin_mass_all_species</span></code> 以 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 表示为代码 <a class="reference internal" href="#penguin-mass-tfp"><span class="std std-ref">penguin_mass_tfp</span></a> ：</p>
 <div class="literal-block-wrapper docutils container" id="penguin-mass-tfp">
 <div class="code-block-caption"><span class="caption-number">Listing 19 </span><span class="caption-text">penguin_mass_tfp</span><a class="headerlink" href="#penguin-mass-tfp" title="Permalink to this code">¶</a></div>
@@ -613,7 +623,7 @@
 </pre></div>
 </div>
 </div>
-<p>这是我们第一次遇到用 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 编写的贝叶斯模型，所以花点时间来详细介绍一下。 <code class="docutils literal notranslate"><span class="pre">tfp.distributions</span></code> 是原语中的分布类，我们通常为其赋予一个较短的别名 <code class="docutils literal notranslate"><span class="pre">tfd</span> <span class="pre">=</span> <span class="pre">tfp.distributions</span></code> 。 <code class="docutils literal notranslate"><span class="pre">tfd</span></code> 中包含了常用的分布，例如高斯分布 <code class="docutils literal notranslate"><span class="pre">tfd.Normal(.)</span></code> 。代码中还使用了 <code class="docutils literal notranslate"><span class="pre">tfd.Sample</span></code>，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 PYMC3 语法糖 <code class="docutils literal notranslate"><span class="pre">shape=(.)</span></code> 的功能 ）。 <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 <code class="docutils literal notranslate"><span class="pre">reinterpreted_batch_ndims</span></code> 函参指定。通常用 <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> 封装与观测相关的分布 <a class="footnote-reference brackets" href="#id42" id="id7">2</a> 。你可以在 <a class="reference internal" href="chp_10.html#shape-ppl"><span class="std std-ref">10.8.1 PPL 中的形状处理</span></a> 部分阅读更多关于 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 和概率编程语言中的形状处理的信息。</p>
+<p>这是我们第一次遇到用 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 编写的贝叶斯模型，所以花点时间来详细介绍一下。 <code class="docutils literal notranslate"><span class="pre">tfp.distributions</span></code> 是原语中的分布类，我们通常为其赋予一个较短的别名 <code class="docutils literal notranslate"><span class="pre">tfd</span> <span class="pre">=</span> <span class="pre">tfp.distributions</span></code> 。 <code class="docutils literal notranslate"><span class="pre">tfd</span></code> 中包含了常用的分布，例如高斯分布 <code class="docutils literal notranslate"><span class="pre">tfd.Normal(.)</span></code> 。代码中还使用了 <code class="docutils literal notranslate"><span class="pre">tfd.Sample</span></code>，它返回来自基础分布的多个独立副本（ 从概念上讲，实现了 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 语法糖 <code class="docutils literal notranslate"><span class="pre">shape=(.)</span></code> 的功能 ）。 <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> 用于指示该分布包含多少个副本，我们希望在计算对数似然时在某个轴上对这些副本求和，这由 <code class="docutils literal notranslate"><span class="pre">reinterpreted_batch_ndims</span></code> 函参指定。通常用 <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> 封装与观测相关的分布 <a class="footnote-reference brackets" href="#id43" id="id7">2</a> 。你可以在 <a class="reference internal" href="chp_10.html#shape-ppl"><span class="std std-ref">10.8.1 PPL 中的形状处理</span></a> 部分阅读更多关于 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 和概率编程语言中的形状处理的信息。</p>
 <p>代码中的模型签名 <code class="docutils literal notranslate"><span class="pre">@tfd.JointDistributionCoroutine</span></code> 很有意思，顾名思义，就是在 Python 中使用协程（ Coroutine ），不过我们在此不过多地介绍生成器和协程的概念。</p>
 <p><code class="docutils literal notranslate"><span class="pre">yield</span></code> 语句会为你提供模型函数内部的一些随机变量，你可以将 <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">yield</span> <span class="pre">Normal(.)</span></code> 视为 <span class="math notranslate nohighlight">\(y \sim \text{Normal(.)}\)</span> 的代码表达方式。</p>
 <p>此外，我们通过 <code class="docutils literal notranslate"><span class="pre">tfd.JointDistributionCoroutine.Root</span></code> 来包装没有依赖关系的随机变量。</p>
@@ -646,7 +656,7 @@
 </pre></div>
 </div>
 </div>
-<p>推断是使用 <code class="docutils literal notranslate"><span class="pre">target_density_function</span></code> 完成的，例如，我们可以找到函数的最大值，这给出了<strong>最大后验概率</strong>（MAP）估计。我们还可以使用 <code class="docutils literal notranslate"><span class="pre">tfp.mcmc</span></code> <span id="id8">[<a class="reference internal" href="references.html#id133">30</a>]</span> 中的方法从后验采样。或者更方便的是，使用类似于 PYMC3 <a class="footnote-reference brackets" href="#id43" id="id9">3</a> 中当前使用的标准采样例程，如代码 <a class="reference internal" href="#tfp-posterior-inference"><span class="std std-ref">tfp_posterior_inference</span></a> 所示：</p>
+<p>推断是使用 <code class="docutils literal notranslate"><span class="pre">target_density_function</span></code> 完成的，例如，我们可以找到函数的最大值，这给出了<strong>最大后验概率</strong>（MAP）估计。我们还可以使用 <code class="docutils literal notranslate"><span class="pre">tfp.mcmc</span></code> <span id="id8">[<a class="reference internal" href="references.html#id133">30</a>]</span> 中的方法从后验采样。或者更方便的是，使用类似于 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> <a class="footnote-reference brackets" href="#id44" id="id9">3</a> 中当前使用的标准采样例程，如代码 <a class="reference internal" href="#tfp-posterior-inference"><span class="std std-ref">tfp_posterior_inference</span></a> 所示：</p>
 <div class="literal-block-wrapper docutils container" id="tfp-posterior-inference">
 <div class="code-block-caption"><span class="caption-number">Listing 23 </span><span class="caption-text">TFp 的后验推断</span><a class="headerlink" href="#tfp-posterior-inference" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run_mcmc</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
@@ -692,7 +702,7 @@
 </pre></div>
 </div>
 </div>
-<p>我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是<em>以贝叶斯为中心</em>，哪些概念是<em>以概率编程语言为中心</em>。在本章的剩余部分和下一章中，我们将在 PYMC3 和 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。</p>
+<p>我们对 TensorFlow Probability 的旋风之旅到此结束。像任何语言一样，你在初次接触时可能不会流利。但是通过比较这两个模型，你现在应该更好地了解哪些概念是<em>以贝叶斯为中心</em>，哪些概念是<em>以概率编程语言为中心</em>。在本章的剩余部分和下一章中，我们将在 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">TFP</span></code> 之间切换，以继续帮助你识别这种差异并查看更多工作示例。我们包括将代码示例从一个翻译到另一个的练习，以帮助你在成为概率编程语言 多语种的过程中进行练习。</p>
 </div>
 </div>
 <div class="section" id="linear-regression">
@@ -848,8 +858,8 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 <a class="reference internal image-reference" href="../_images/SingleSpecies_MultipleRegression_Centered.png"><img alt="../_images/SingleSpecies_MultipleRegression_Centered.png" src="../_images/SingleSpecies_MultipleRegression_Centered.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 43 </span><span class="caption-text">来自代码 <a class="reference internal" href="#tfp-penguins-centered-predictor"><span class="std std-ref">tfp_penguins_centered_predictor</span></a> 的系数估计。注意，<span class="math notranslate nohighlight">\(beta\_1\)</span> 的分布与 <a class="reference internal" href="#fig-adelie-coefficient-posterior-plots"><span class="std std-numref">Fig. 39</span></a> 中相同，但 <span class="math notranslate nohighlight">\(beta\_0\)</span> 的分布发生了偏移。由于我们在鳍状肢长度的均值处做了中心化处理，因此 <span class="math notranslate nohighlight">\(beta\_0\)</span> 现在代表了具有平均鳍状肢长度的企鹅体重分布。</span><a class="headerlink" href="#fig-singlespecies-multipleregression-centered" title="Permalink to this image">¶</a></p>
 </div>
-<p>代码 <a class="reference internal" href="#tfp-penguins-centered-predictor"><span class="std std-ref">tfp_penguins_centered_predictor</span></a> 中定义的数学模型与代码 <a class="reference internal" href="#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> 中的 PYMC3 模型 <code class="docutils literal notranslate"><span class="pre">model_adelie_flipper_regression</span></code> 基本等价，唯一区别是对预测变量做了中心化处理。不过，在概率编程语言方面，<code class="docutils literal notranslate"><span class="pre">TFP</span></code> 的结构需要在不同行中添加 <code class="docutils literal notranslate"><span class="pre">tensor_x[...,</span> <span class="pre">None]</span></code> 来扩展标量的批次，使其能够与向量批次一起广播。具体来说，<code class="docutils literal notranslate"><span class="pre">None</span></code> 会添加一个新轴，这也可以使用 <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> 或 <code class="docutils literal notranslate"><span class="pre">tf.newaxis</span></code> 来完成。此外，<code class="docutils literal notranslate"><span class="pre">TFP</span></code> 还将模型包装在一个函数中，以便轻松地将不同的预测变量作为条件。当然，中心化处理后，预测变量也应当是中心化后的变量。</p>
-<p>当再次绘制系数的后验分布时，<span class="math notranslate nohighlight">\(\beta_1\)</span> 与 PYMC3 模型相同，但 <span class="math notranslate nohighlight">\(\beta_0\)</span> 的分布发生了变化。由于我们将输入数据中心化到了其均值上，<span class="math notranslate nohighlight">\(\beta_0\)</span> 的后验分布将代表非中心化数据集中均值对应的预测分布。通过将数据中心化，现在可以将 <span class="math notranslate nohighlight">\(\beta_0\)</span> 解释为具有平均鳍状肢长度的 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code>企鹅的平均体重分布。</p>
+<p>代码 <a class="reference internal" href="#tfp-penguins-centered-predictor"><span class="std std-ref">tfp_penguins_centered_predictor</span></a> 中定义的数学模型与代码 <a class="reference internal" href="#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> 中的 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 模型 <code class="docutils literal notranslate"><span class="pre">model_adelie_flipper_regression</span></code> 基本等价，唯一区别是对预测变量做了中心化处理。不过，在概率编程语言方面，<code class="docutils literal notranslate"><span class="pre">TFP</span></code> 的结构需要在不同行中添加 <code class="docutils literal notranslate"><span class="pre">tensor_x[...,</span> <span class="pre">None]</span></code> 来扩展标量的批次，使其能够与向量批次一起广播。具体来说，<code class="docutils literal notranslate"><span class="pre">None</span></code> 会添加一个新轴，这也可以使用 <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> 或 <code class="docutils literal notranslate"><span class="pre">tf.newaxis</span></code> 来完成。此外，<code class="docutils literal notranslate"><span class="pre">TFP</span></code> 还将模型包装在一个函数中，以便轻松地将不同的预测变量作为条件。当然，中心化处理后，预测变量也应当是中心化后的变量。</p>
+<p>当再次绘制系数的后验分布时，<span class="math notranslate nohighlight">\(\beta_1\)</span> 与 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 模型相同，但 <span class="math notranslate nohighlight">\(\beta_0\)</span> 的分布发生了变化。由于我们将输入数据中心化到了其均值上，<span class="math notranslate nohighlight">\(\beta_0\)</span> 的后验分布将代表非中心化数据集中均值对应的预测分布。通过将数据中心化，现在可以将 <span class="math notranslate nohighlight">\(\beta_0\)</span> 解释为具有平均鳍状肢长度的 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code>企鹅的平均体重分布。</p>
 <p>转换输入变量的想法也可以在任意选择的值上执行。例如，可以减去最小鳍状肢长度后拟合模型。在做这种转换后，可以将 <span class="math notranslate nohighlight">\(\beta_0\)</span> 的解释变更为观测到的最小鳍状肢长度的平均体重分布。</p>
 <p>为了更深入地讨论线性回归中的转换，推荐应用回归分析和广义线性模型 <span id="id14">[<a class="reference internal" href="references.html#id60">31</a>]</span>。</p>
 </div>
@@ -887,7 +897,7 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 <p class="admonition-title">线性模型的语法糖</p>
 <p>线性模型的使用如此广泛，以至于有人为其回归专门编写了语法、方法和库。其中一个典型库是 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code>（ 贝叶斯模型构建接口，Bayesian Model-Building Interface 的缩写 ）<span id="id17">[<a class="reference internal" href="references.html#id118">33</a>]</span>）。</p>
 <p><code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 是一个 <code class="docutils literal notranslate"><span class="pre">Python</span></code> 软件包，使用形式化语法来拟合广义线性层次模型，类似于在 <code class="docutils literal notranslate"><span class="pre">R</span></code> 包中的 <code class="docutils literal notranslate"><span class="pre">lme4</span> <span class="pre">包</span></code> <span id="id18">[<a class="reference internal" href="references.html#id82">34</a>]</span>、<code class="docutils literal notranslate"><span class="pre">nlme</span> <span class="pre">包</span></code> <span id="id19">[<a class="reference internal" href="references.html#id81">35</a>]</span>、<code class="docutils literal notranslate"><span class="pre">rstanarm</span> <span class="pre">包</span></code> <span id="id20">[<a class="reference internal" href="references.html#id83">36</a>]</span> 或 <code class="docutils literal notranslate"><span class="pre">brms</span> <span class="pre">包</span></code> <span id="id21">[<a class="reference internal" href="references.html#id84">37</a>]</span>）等。</p>
-<p><code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 在底层使用 PYMC3 并提供更高级别的 API。要编写同一个模型，在忽略代码 <a class="reference internal" href="#penguin-mass-multi"><span class="std std-ref">penguin_mass_multi</span></a> 中的先验 <a class="footnote-reference brackets" href="#id44" id="id22">4</a> 时，可以用 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 编程为：</p>
+<p><code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 在底层使用 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 并提供更高级别的 API。要编写同一个模型，在忽略代码 <a class="reference internal" href="#penguin-mass-multi"><span class="std std-ref">penguin_mass_multi</span></a> 中的先验 <a class="footnote-reference brackets" href="#id45" id="id22">4</a> 时，可以用 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 编程为：</p>
 <div class="literal-block-wrapper docutils container" id="bambi-categorical">
 <div class="code-block-caption"><span class="caption-number">Listing 30 </span><span class="caption-text">bambi_categorical</span><a class="headerlink" href="#bambi-categorical" title="Permalink to this code">¶</a></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bambi</span> <span class="k">as</span> <span class="nn">bmb</span>
@@ -897,9 +907,9 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 </pre></div>
 </div>
 </div>
-<p>如果不人为设置先验，软件包会自动分配先验。在 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 内部几乎存储了 PYMC3 生成的所有对象，使用户可以轻松检索、检查和修改这些对象。此外，<code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 还返回一个 <code class="docutils literal notranslate"><span class="pre">az.InferenceData</span></code> 对象，可以直接与 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 一起使用。</p>
+<p>如果不人为设置先验，软件包会自动分配先验。在 <code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 内部几乎存储了 <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> 生成的所有对象，使用户可以轻松检索、检查和修改这些对象。此外，<code class="docutils literal notranslate"><span class="pre">Bambi</span></code> 还返回一个 <code class="docutils literal notranslate"><span class="pre">az.InferenceData</span></code> 对象，可以直接与 <code class="docutils literal notranslate"><span class="pre">ArviZ</span></code> 一起使用。</p>
 </div>
-<p>由于我们将 “雄性” 编码为 <span class="math notranslate nohighlight">\(0\)</span>，因此来自 <code class="docutils literal notranslate"><span class="pre">model_penguin_mass_categorical</span></code> 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。这里比较重要的一点是：模型通过引入第二个预测变量，形成了一个多元线性回归，同时我们在解释系数时也必须更加小心了。在多元线性回归中，系数通常提供了如下信息：<strong>如果所有其他预测变量保持不变时，某个预测变量与结果变量之间的线性关系</strong> <a class="footnote-reference brackets" href="#id45" id="id23">5</a>。</p>
+<p>由于我们将 “雄性” 编码为 <span class="math notranslate nohighlight">\(0\)</span>，因此来自 <code class="docutils literal notranslate"><span class="pre">model_penguin_mass_categorical</span></code> 的后验估计了雄性企鹅与具有相同鳍状肢长度的雌性企鹅相比的体重差异。这里比较重要的一点是：模型通过引入第二个预测变量，形成了一个多元线性回归，同时我们在解释系数时也必须更加小心了。在多元线性回归中，系数通常提供了如下信息：<strong>如果所有其他预测变量保持不变时，某个预测变量与结果变量之间的线性关系</strong> <a class="footnote-reference brackets" href="#id46" id="id23">5</a>。</p>
 <div class="figure align-default" id="fig-single-species-categorical-regression">
 <a class="reference internal image-reference" href="../_images/Single_Species_Categorical_Regression.png"><img alt="../_images/Single_Species_Categorical_Regression.png" src="../_images/Single_Species_Categorical_Regression.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 45 </span><span class="caption-text">使用类别型预测变量编码的雄性和雌性 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code> 企鹅的鳍状肢长度与体重之间的多元回归。注意雄性和雌性企鹅之间的体重差异所有鳍状肢长度上保持不变，该差异相当于 <span class="math notranslate nohighlight">\(\beta_2\)</span> 系数的大小。</span><a class="headerlink" href="#fig-single-species-categorical-regression" title="Permalink to this image">¶</a></p>
@@ -987,25 +997,25 @@ Y \sim&amp; \mathcal{N}(\mu, \sigma)
 <p class="caption"><span class="caption-number">Fig. 47 </span><span class="caption-text">代码 <a class="reference internal" href="#tfp-flipper-bill-sex-counterfactuals"><span class="std std-ref">tfp_flipper_bill_sex_counterfactuals</span></a> 中，采用反事实分析方法获得的 <code class="docutils literal notranslate"><span class="pre">Adelie</span> <span class="pre">种</span></code> 企鹅的体重估计值，其中仅鳍状肢长度变化，所有其他预测变量都保持不变。</span><a class="headerlink" href="#fig-linearcounterfactual" title="Permalink to this image">¶</a></p>
 </div>
 <p>遵循 McElreath<span id="id26">[<a class="reference internal" href="references.html#id33">10</a>]</span> 的提法， <a class="reference internal" href="#fig-linearcounterfactual"><span class="std std-numref">Fig. 47</span></a> 被称为反事实图。正如 “反事实” 一词所暗示的那样，我们正在评估一种与观测数据或事实相悖的情况。或者换句话说，我们正在评估尚未发生的情况。</p>
-<p>反事实图的用途之一是通过调整预测变量来探索结果变量的预测值。这是一种很棒的方法，因为它使我们能够探索现实中无法实现的一些 <em>what-if</em> 场景 <a class="footnote-reference brackets" href="#id46" id="id27">6</a>。但是，在解释这种方法时我们必须谨慎，因为可能存在一些陷阱。第一个陷阱是反事实的结果有可能根本不会出现，例如，永远不会存在鳍状肢长度大于 <span class="math notranslate nohighlight">\(1500\)</span> 毫米的企鹅，但该模型会机械地提供对这种情况的估计。第二个陷阱更隐蔽，即假设可以独立地改变每个预测变量。这在实际中几乎不可能出现。例如，随着企鹅鳍状肢长度的增加，其他预测变量（如喙长度）也会增加。</p>
+<p>反事实图的用途之一是通过调整预测变量来探索结果变量的预测值。这是一种很棒的方法，因为它使我们能够探索现实中无法实现的一些 <em>what-if</em> 场景 <a class="footnote-reference brackets" href="#id47" id="id27">6</a>。但是，在解释这种方法时我们必须谨慎，因为可能存在一些陷阱。第一个陷阱是反事实的结果有可能根本不会出现，例如，永远不会存在鳍状肢长度大于 <span class="math notranslate nohighlight">\(1500\)</span> 毫米的企鹅，但该模型会机械地提供对这种情况的估计。第二个陷阱更隐蔽，即假设可以独立地改变每个预测变量。这在实际中几乎不可能出现。例如，随着企鹅鳍状肢长度的增加，其他预测变量（如喙长度）也会增加。</p>
 <p>反事实分析法的强大之处在于：<strong>其允许我们探索尚未发生的结果，或者至少没有被观测到发生的结果</strong>；但该方法也很容易为 <em>永远</em> 不会发生的情况生成估计值。模型本身无法区分两者，只能由建模者来识别它们。</p>
 <div class="admonition-correlation-causality admonition">
 <p class="admonition-title">相关性（ Correlation ）与因果性（ Causality ）</p>
-<p>在解释线性回归时，很容易将其描述为 “ <span class="math notranslate nohighlight">\(X\)</span> 的增加导致了 <span class="math notranslate nohighlight">\(Y\)</span> 的增加 ” （ 即 <span class="math notranslate nohighlight">\(Y\)</span> 是  <span class="math notranslate nohighlight">\(X\)</span> 的结果 ），但事实并不一定如此。事实上 <em>因果陈述</em> 无法仅从回归关系中得出。<strong>在数学上，回归模型只是将两个（或更多变量）联系在一起，但这种联系不需要是因果关系</strong>。例如，增加降水量可以（并且因果地）促进植物的生长，但没有什么能够阻止我们颠倒这种关系，即用植物的生长来估计降水量，尽管我们都知道植物的生长不会导致降雨 <a class="footnote-reference brackets" href="#id47" id="id28">7</a>。</p>
+<p>在解释线性回归时，很容易将其描述为 “ <span class="math notranslate nohighlight">\(X\)</span> 的增加导致了 <span class="math notranslate nohighlight">\(Y\)</span> 的增加 ” （ 即 <span class="math notranslate nohighlight">\(Y\)</span> 是  <span class="math notranslate nohighlight">\(X\)</span> 的结果 ），但事实并不一定如此。事实上 <em>因果陈述</em> 无法仅从回归关系中得出。<strong>在数学上，回归模型只是将两个（或更多变量）联系在一起，但这种联系不需要是因果关系</strong>。例如，增加降水量可以（并且因果地）促进植物的生长，但没有什么能够阻止我们颠倒这种关系，即用植物的生长来估计降水量，尽管我们都知道植物的生长不会导致降雨 <a class="footnote-reference brackets" href="#id48" id="id28">7</a>。</p>
 <p>因果推断涉及在随机实验或观测研究背景下做出因果陈述所必需的一些工具和程序，感兴趣的读者可以参见 <a class="reference internal" href="chp_07.html#chap6"><span class="std std-ref"> 第 7 章 </span></a>  中的简要讨论 。</p>
 </div>
 </div>
 </div>
 <div class="section" id="generalized-linear-models">
 <span id="id29"></span><h2>3.4 广义线性模型<a class="headerlink" href="#generalized-linear-models" title="Permalink to this headline">¶</a></h2>
-<p>到目前为止，我们讨论的所有线性模型都假设观测值的分布为高斯分布，这在许多情况下都能很好地工作。但有时我们可能需要使用其他分布。例如要对受限于某个区间的事物建模，区间 <span class="math notranslate nohighlight">\([0, 1]\)</span> 中的数字类似于概率，或者自然数 <span class="math notranslate nohighlight">\(\{1, 2, 3, \dots \}\)</span> 类似于计数事件。为此，我们使用线性函数 <span class="math notranslate nohighlight">\(\mathbf{X} \mathit{\beta}\)</span>，并使用反向链接函数 <a class="footnote-reference brackets" href="#id48" id="id30">8</a> <span class="math notranslate nohighlight">\(\phi\)</span> 对其进行修改，如公式 <a class="reference internal" href="#equation-eq-generalized-linear-model">(28)</a> 所示：</p>
+<p>到目前为止，我们讨论的所有线性模型都假设观测值的分布为高斯分布，这在许多情况下都能很好地工作。但有时我们可能需要使用其他分布。例如要对受限于某个区间的事物建模，区间 <span class="math notranslate nohighlight">\([0, 1]\)</span> 中的数字类似于概率，或者自然数 <span class="math notranslate nohighlight">\(\{1, 2, 3, \dots \}\)</span> 类似于计数事件。为此，我们使用线性函数 <span class="math notranslate nohighlight">\(\mathbf{X} \mathit{\beta}\)</span>，并使用反向链接函数 <a class="footnote-reference brackets" href="#id49" id="id30">8</a> <span class="math notranslate nohighlight">\(\phi\)</span> 对其进行修改，如公式 <a class="reference internal" href="#equation-eq-generalized-linear-model">(28)</a> 所示：</p>
 <div class="math notranslate nohighlight" id="equation-eq-generalized-linear-model">
 <span class="eqno">(28)<a class="headerlink" href="#equation-eq-generalized-linear-model" title="Permalink to this equation">¶</a></span>\[\begin{split}\begin{split}
 \mu =&amp; \phi(\mathbf{X} \beta) \\
 Y \sim&amp; \Psi (\mu, \theta)
 \end{split}\end{split}\]</div>
 <p>其中 <span class="math notranslate nohighlight">\(\Psi\)</span> 是一些由 <span class="math notranslate nohighlight">\(\mu\)</span> 和 <span class="math notranslate nohighlight">\(\theta\)</span> 参数化的分布，表示数据的似然。</p>
-<p>反向链接函数的具体目的是将实数范围 <span class="math notranslate nohighlight">\((-\infty, \infty)\)</span> 的输出映射到受限区间范围。换句话说，反向链接函数是将线性模型推广到更多模型架构所需的一种 “技巧”。我们在这里处理的仍然是线性模型，因为生成观测数据的分布（即似然）均值仍然遵循模型参数和预测变量之间的线性函数，只不过现在可以将其使用和推广到更多场景 <a class="footnote-reference brackets" href="#id49" id="id31">9</a>。</p>
+<p>反向链接函数的具体目的是将实数范围 <span class="math notranslate nohighlight">\((-\infty, \infty)\)</span> 的输出映射到受限区间范围。换句话说，反向链接函数是将线性模型推广到更多模型架构所需的一种 “技巧”。我们在这里处理的仍然是线性模型，因为生成观测数据的分布（即似然）均值仍然遵循模型参数和预测变量之间的线性函数，只不过现在可以将其使用和推广到更多场景 <a class="footnote-reference brackets" href="#id50" id="id31">9</a>。</p>
 <div class="section" id="logistic-regression">
 <span id="id32"></span><h3>3.4.1 结果变量取值为概率时 — 逻辑斯谛回归<a class="headerlink" href="#logistic-regression" title="Permalink to this headline">¶</a></h3>
 <p>最常见的广义线性模型之一是逻辑斯谛回归。它在只有两种可能结果之一的数据建模中特别有用。掷硬币中“正面”或“反面”结果的概率是常见的教科书示例。更多“现实世界”中的例子包括：生产中的缺陷可能性、癌症测试的阴性或阳性、火箭发射是否失败 <span id="id33">[<a class="reference internal" href="references.html#id79">38</a>]</span>。</p>
@@ -1363,7 +1373,7 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 <a class="reference internal image-reference" href="../_images/PosteriorUninformativeLinearRegression.png"><img alt="../_images/PosteriorUninformativeLinearRegression.png" src="../_images/PosteriorUninformativeLinearRegression.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 55 </span><span class="caption-text">在采用模糊先验或宽泛先验的情况下，该模型表明，有吸引力的父母所生孩子的性别比率存在很大差异。其中一些拟合值存在高达 20% 的变化，这似乎令人难以置信，因为没有其他研究表明吸引力会对出生性别有如此大的影响。</span><a class="headerlink" href="#fig-posterioruninformativelinearregression" title="Permalink to this image">¶</a></p>
 </div>
-<p>名义上讲，我们将假设生男孩和生女孩的比例一样，并且吸引力对性别比例没有影响。这意味着将截距 <span class="math notranslate nohighlight">\(\beta_0\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(50\)</span>，将斜率 <span class="math notranslate nohighlight">\(\beta_1\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(0\)</span>；并且由于我们缺乏领域专业知识，因为还为两个参数都设置了比较宽泛的先验以表达这种不确定性。该先验并非一个完全<em>无信息的先验</em>（ <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 量化先验中信息的几种可选方法</span></a> ），但它确实是一个非常宽泛的先验。</p>
+<p>名义上讲，我们将假设生男孩和生女孩的比例一样，并且吸引力对性别比例没有影响。这意味着将截距 <span class="math notranslate nohighlight">\(\beta_0\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(50\)</span>，将斜率 <span class="math notranslate nohighlight">\(\beta_1\)</span> 的先验均值设置为 <span class="math notranslate nohighlight">\(0\)</span>；并且由于我们缺乏领域专业知识，因为还为两个参数都设置了比较宽泛的先验以表达这种不确定性。该先验并非一个完全<em>无信息的先验</em>（ <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 先验分布的选择方法</span></a> ），但它确实是一个非常宽泛的先验。</p>
 <p>根据上述选择，我们在代码 <a class="reference internal" href="#uninformative-prior-sex-ratio"><span class="std std-ref">uninformative_prior_sex_ratio</span></a>) 中编写了模型、运行推断、并生成样本来估计后验分布。</p>
 <p>根据数据和模型， <span class="math notranslate nohighlight">\(\beta_1\)</span> 的估计均值为 <span class="math notranslate nohighlight">\(1.4\)</span>，这意味着与最具吸引力的群体相比，吸引力最小的群体的男女出生率平均相差 <span class="math notranslate nohighlight">\(7.4\%\)</span> 。在 <a class="reference internal" href="#fig-posterioruninformativelinearregression"><span class="std std-numref">Fig. 55</span></a> 中，如果考虑不确定性，则在将参数条件化为数据之前，从 <span class="math notranslate nohighlight">\(50\)</span> 条可能的 “拟合线” 样本中，每单位吸引力的变化可能带来超过 <span class="math notranslate nohighlight">\(20\%\)</span> 的男女出生比率变化 。</p>
 <p>从数学角度来看，此结果是有效的。但从常识和出生性别比来理解，此结果值得怀疑。出生时的“自然”性别比约为 “ <span class="math notranslate nohighlight">\(105\)</span> 个男孩/<span class="math notranslate nohighlight">\(100\)</span> 个女孩” ( 大约 <span class="math notranslate nohighlight">\(103\)</span> 到 <span class="math notranslate nohighlight">\(107\)</span> 个男孩 )，这意味着出生时的性别比为 <span class="math notranslate nohighlight">\(48.5%\)</span> ，标准差为 <span class="math notranslate nohighlight">\(0.5\)</span>。此外，即便与人类生物学存在内在联系因素，也不会对出生率影响到这种大程度，这主观上削弱了吸引力应该具有此影响程度的信念。鉴于此信息，两组之间 <span class="math notranslate nohighlight">\(8%\)</span> 的变化将需要特殊的观测。</p>
@@ -1394,10 +1404,10 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 <a class="reference internal image-reference" href="../_images/PosteriorInformativeLinearRegression.png"><img alt="../_images/PosteriorInformativeLinearRegression.png" src="../_images/PosteriorInformativeLinearRegression.png" style="width: 7.00in;"/></a>
 <p class="caption"><span class="caption-number">Fig. 56 </span><span class="caption-text">根据其他论文和专家知识优化后的先验，平均后验在吸引力比率上几乎没有变化，这表明如果认为父母吸引力对出生率有影响，则应该收集更多数据来展示这种影响。</span><a class="headerlink" href="#fig-posteriorinformativelinearregression" title="Permalink to this image">¶</a></p>
 </div>
-<p>这次我们看到吸引力对性别的影响几乎可以忽略不计，根本没有足够信息来影响后验。正如在 <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 量化先验中信息的几种可选方法</span></a> 节中提到的，选择先验既是负担也是祝福。无论你认为是哪一种，重要的是使用这种统计工具并做出可解释和有原则的选择。</p>
+<p>这次我们看到吸引力对性别的影响几乎可以忽略不计，根本没有足够信息来影响后验。正如在 <a class="reference internal" href="chp_01.html#make-prior-count"><span class="std std-ref">1.4 先验分布的选择方法</span></a> 节中提到的，选择先验既是负担也是祝福。无论你认为是哪一种，重要的是使用这种统计工具并做出可解释和有原则的选择。</p>
 </div>
 <div class="section" id="exercises3">
-<span id="id40"></span><h2>3.6 练习<a class="headerlink" href="#exercises3" title="Permalink to this headline">¶</a></h2>
+<span id="id40"></span><h2>习题<a class="headerlink" href="#exercises3" title="Permalink to this headline">¶</a></h2>
 <p><strong>E1.</strong> Comparisons are part of everyday life. What is something you compare on a daily basis and answer the following question:</p>
 <ul class="simple">
 <li><p>What is the numerical quantification you use for comparison?</p></li>
@@ -1419,13 +1429,13 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 </ol>
 <p>Explain how they are different, the steps to perform each, and situations where they would be useful. Use the penguin example or come up with your own.</p>
 <p><strong>E4.</strong> In Code Block <a class="reference internal" href="#flipper-centering"><span class="std std-ref">flipper_centering</span></a> and Code Block <a class="reference internal" href="#tfp-penguins-centered-predictor"><span class="std std-ref">tfp_penguins_centered_predictor</span></a> we centered the flipper length covariate. Refit the model, but instead of centering, subtract the minimum observed flipped length. Compare the posterior estimates of the slope and intercept parameters of the centered model. What is different, what is the same. How does the interpretation of this model change when compared to the centered model?</p>
-<p><strong>E5.</strong> Translate the following primitives from PYMC3 to TFP. Assume the model name is <code class="docutils literal notranslate"><span class="pre">pymc_model</span></code></p>
+<p><strong>E5.</strong> Translate the following primitives from <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> to TFP. Assume the model name is <code class="docutils literal notranslate"><span class="pre">pymc_model</span></code></p>
 <ol class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">pm.StudentT("x",</span> <span class="pre">0,</span> <span class="pre">10,</span> <span class="pre">20)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pm.sample(chains=2)</span></code></p></li>
 </ol>
 <p>Hint: write the model and inference first in PYMC3, and find the similar primitives in TFP using the code shown in this chapter.</p>
-<p><strong>E6.</strong> PYMC3 and TFP use different argument names for their distribution parameterizations. For example in PYMC3 the Uniform Distribution is parameterized as <code class="docutils literal notranslate"><span class="pre">pm.Uniform.dist(lower=,</span> <span class="pre">upper=)</span></code> whereas in TFP it is <code class="docutils literal notranslate"><span class="pre">tfd.Uniform(low=,</span> <span class="pre">high=)</span></code>. Use the online documentation to identify the difference in argument names for the following distributions.</p>
+<p><strong>E6.</strong> <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> and TFP use different argument names for their distribution parameterizations. For example in <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> the Uniform Distribution is parameterized as <code class="docutils literal notranslate"><span class="pre">pm.Uniform.dist(lower=,</span> <span class="pre">upper=)</span></code> whereas in TFP it is <code class="docutils literal notranslate"><span class="pre">tfd.Uniform(low=,</span> <span class="pre">high=)</span></code>. Use the online documentation to identify the difference in argument names for the following distributions.</p>
 <ol class="simple">
 <li><p>Normal</p></li>
 <li><p>Poisson</p></li>
@@ -1442,43 +1452,46 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 <p><strong>E11.</strong> Refit the model in Code Block <a class="reference internal" href="#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> on Gentoo penguins and Chinstrap penguins. How are the posteriors different from each other? How are they different from the Adelie posterior estimation? What inferences can you make about the relationship between flipper length and mass for these other species of penguins? What does the change in <span class="math notranslate nohighlight">\(\sigma\)</span> tell you about the ability of flipper length to estimate mass?</p>
 <p><strong>M12.</strong> Using the model in Code Block <a class="reference internal" href="#tfp-flipper-bill-sex-counterfactuals"><span class="std std-ref">tfp_flipper_bill_sex_counterfactuals</span></a> run a counterfactual analysis for female penguin flipper length with mean flipper length and a bill length of 20mm. Plot a kernel density estimate of the posterior predictive samples.</p>
 <p><strong>M13.</strong> Duplicate the flipper length covariate in Code Block <a class="reference internal" href="#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> by adding a <span class="math notranslate nohighlight">\(\beta_2\)</span> coefficient and rerun the model. What do diagnostics such as ESS and rhat indicate about this model with a duplicated coefficient?</p>
-<p><strong>M14.</strong> Translate the PYMC3 model in Code Block <a class="reference internal" href="#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> into Tensorflow Probability. List three of the syntax differences.</p>
+<p><strong>M14.</strong> Translate the <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> model in Code Block <a class="reference internal" href="#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> into Tensorflow Probability. List three of the syntax differences.</p>
 <p><strong>M15.</strong> Translate the TFP model in Code Block <a class="reference internal" href="#tfp-penguins-centered-predictor"><span class="std std-ref">tfp_penguins_centered_predictor</span></a> into PYMC3. List three of the syntax differences.</p>
 <p><strong>M16.</strong> Use a logistic regression with increasing number of covariates to reproduce the prior predictive distributions in <a class="reference internal" href="chp_02.html#fig-prior-predictive-check-01"><span class="std std-numref">Fig. 14</span></a>.</p>
 <p>Explain why its the case that a logistic regression with many covariates generate a prior response with extreme values.</p>
-<p><strong>H17.</strong> Translate the PYMC3 model in Code Block <a class="reference internal" href="#model-logistic-penguins-bill-length-mass"><span class="std std-ref">model_logistic_penguins_bill_length_mass</span></a> into TFP to classify Adelie and Chinstrap penguins. Reuse the same model to classify Chinstrap and Gentoo penguins. Compare the coefficients, how do they differ?</p>
+<p><strong>H17.</strong> Translate the <code class="docutils literal notranslate"><span class="pre">PYMC3</span></code> model in Code Block <a class="reference internal" href="#model-logistic-penguins-bill-length-mass"><span class="std std-ref">model_logistic_penguins_bill_length_mass</span></a> into TFP to classify Adelie and Chinstrap penguins. Reuse the same model to classify Chinstrap and Gentoo penguins. Compare the coefficients, how do they differ?</p>
 <p><strong>H18.</strong> In Code Block <a class="reference internal" href="#penguin-mass"><span class="std std-ref">penguin_mass</span></a> our model allowed for negative values mass. Change the model so negative values are no longer possible. Run a prior predictive check to verify that your change was effective. Perform MCMC sampling and plot the posterior. Has the posterior changed from the original model? Given the results why would you choose one model over the other and why?</p>
 <p><strong>H19.</strong> The Palmer Penguin dataset includes additional data for the observed penguins such as island and bill depth. Include these covariates into the linear regression model defined in Code Block <a class="reference internal" href="#non-centered-regression"><span class="std std-ref">non_centered_regression</span></a> in two parts, first adding bill depth, and then adding the island covariates.</p>
 <p>Do these covariates help estimate Adelie mass more precisely? Justify your answer using the parameter estimates and model comparison tools.</p>
 <p><strong>H20.</strong> Similar the exercise 2H19, see if adding bill depth or island covariates to the penguin logistic regression help classify Adelie and Gentoo penguins more precisely. Justify if the additional covariates helped using the numerical and visual tools shown in this chapter.</p>
+</div>
+<div class="section" id="id41">
+<h2>参考文献<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h2>
 <p>Nature can be hard to grasp with simple statements.</p>
 <hr class="footnotes docutils"/>
 <dl class="footnote brackets">
-<dt class="label" id="id41"><span class="brackets"><a class="fn-backref" href="#id6">1</a></span></dt>
+<dt class="label" id="id42"><span class="brackets"><a class="fn-backref" href="#id6">1</a></span></dt>
 <dd><p>You can find more information in the TensorFlow tutorials and   documentations. For example,   <a class="reference external" href="https://www.tensorflow.org/probability/examples/JointDistributionAutoBatched_A_Gentle_Tutorial">https://www.tensorflow.org/probability/examples/JointDistributionAutoBatched_A_Gentle_Tutorial</a>   and   <a class="reference external" href="https://www.tensorflow.org/probability/examples/Modeling_with_JointDistribution">https://www.tensorflow.org/probability/examples/Modeling_with_JointDistribution</a>.</p>
 </dd>
-<dt class="label" id="id42"><span class="brackets"><a class="fn-backref" href="#id7">2</a></span></dt>
+<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id7">2</a></span></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">tfd.Sample</span></code> and <code class="docutils literal notranslate"><span class="pre">tfd.Independent</span></code> are distribution constructors   that takes other distributions as input and return a new   distribution. There are other meta distribution but with different   purposes like <code class="docutils literal notranslate"><span class="pre">tfd.Mixture</span></code>, <code class="docutils literal notranslate"><span class="pre">tfd.TransformedDistribution</span></code>, and   <code class="docutils literal notranslate"><span class="pre">tfd.JointDistribution</span></code>. A more comprehensive introduction to   <code class="docutils literal notranslate"><span class="pre">tfp.distributions</span></code> can be found in   <a class="reference external" href="https://www.tensorflow.org/probability/examples/TensorFlow_Distributions_Tutorial">https://www.tensorflow.org/probability/examples/TensorFlow_Distributions_Tutorial</a></p>
 </dd>
-<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id9">3</a></span></dt>
+<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id9">3</a></span></dt>
 <dd><p><a class="reference external" href="https://mc-stan.org/docs/2_23/reference-manual/hmc-algorithm-parameters.html#automatic-parameter-tuning">https://mc-stan.org/docs/2_23/reference-manual/hmc-algorithm-parameters.html#automatic-parameter-tuning</a></p>
 </dd>
-<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id22">4</a></span></dt>
+<dt class="label" id="id45"><span class="brackets"><a class="fn-backref" href="#id22">4</a></span></dt>
 <dd><p>If wanted exactly the same model we could specify the priors in   Bambi, not shown here. For our purposes however, the models are   “close enough”.</p>
 </dd>
-<dt class="label" id="id45"><span class="brackets"><a class="fn-backref" href="#id23">5</a></span></dt>
+<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id23">5</a></span></dt>
 <dd><p>You can also parse the design matrix differently so that   covariates represents the contrast between 2 categories within a   column.</p>
 </dd>
-<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id27">6</a></span></dt>
+<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id27">6</a></span></dt>
 <dd><p>Maybe because collecting more data is expensive or difficult or   even impossible</p>
 </dd>
-<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id28">7</a></span></dt>
+<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id28">7</a></span></dt>
 <dd><p>Unless we are talking about large systems like rain forests, where   the presence of plants actually have an impact in the weather.</p>
 </dd>
-<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id30">8</a></span></dt>
+<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id30">8</a></span></dt>
 <dd><p>Traditionally people a<code class="docutils literal notranslate"><span class="pre">PPL</span></code>y functions like <span class="math notranslate nohighlight">\(\phi\)</span> to the left side   of Equation <a class="reference internal" href="#equation-eq-generalized-linear-model">(28)</a>, and call them link   functions. We instead prefer to a<code class="docutils literal notranslate"><span class="pre">PPL</span></code>y them to the right-hand side   and then to avoid confusion we use term inverse link function.</p>
 </dd>
-<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id31">9</a></span></dt>
+<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id31">9</a></span></dt>
 <dd><p>Usually in the traditional Generalized Linear Models Literature,   the likelihood of the observation need to be from the Exponential   family, but being Bayesian we are actually not restricted by that   and can use any likelihood that can be parameterized by the expected   value.</p>
 </dd>
 </dl>
@@ -1510,7 +1523,7 @@ x &amp;= -\frac{\beta_{0}}{\beta_{1}} \\
 <i class="fas fa-angle-left"></i>
 <div class="prev-next-info">
 <p class="prev-next-subtitle">previous</p>
-<p class="prev-next-title">第二章: 贝叶斯模型的探索性分析</p>
+<p class="prev-next-title">第二章：贝叶斯模型的探索性分析</p>
 </div>
 </a>
 <a class="right-next" href="chp_04.html" id="next-link" title="next page">

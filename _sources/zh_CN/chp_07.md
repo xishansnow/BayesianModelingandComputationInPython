@@ -449,7 +449,7 @@ $m=\{2、10、20、50\}$ 时，根据 Space Influenza 数据集拟合的贝叶�
 
 (exercises7)= 
 
-## 7.9 练习 
+## 习题 
 
 **7E1.** Explain each of the following 
 
@@ -499,7 +499,7 @@ $m=\{2、10、20、50\}$ 时，根据 Space Influenza 数据集拟合的贝叶�
 
 **7M12.** Use BART to redo the penguin classification we performed in Section {ref}`classifying_penguins`. Build a model with the covariates "bill_length_mm", "bill_depth_mm", "flipper_length_mm", and "body_mass_g" and assess their relative variable importance. Compare the results with the PDPs from the previous exercise.
 
- ---
+## 参考文献
 
 [^1]: Maybe you have heard about its non-Bayesian cousin: Random Forest   {cite:p}`BreimanForests2001` 
 
