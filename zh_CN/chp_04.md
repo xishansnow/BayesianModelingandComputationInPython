@@ -1055,7 +1055,7 @@ ppc = out_of_sample_prediction_model2.sample(var0=amended_posterior)
 
 (exercises4)= 
 
-## 4.7 练习 
+## 习题 
 
 **4E1.** What are examples of covariate-response relationships that are nonlinear in everyday life? 
 
@@ -1156,6 +1156,9 @@ Your friend asks you to estimate the following quantities
 3.  The velocity of the ball at each point during her measurements 
 
 4.  The estimated position of the ball from time 20 to time 30 
+
+
+## 参考文献
 
 [^1]: The difference between the observed value and the estimated value   of a quantity of interest is call the residual.
 

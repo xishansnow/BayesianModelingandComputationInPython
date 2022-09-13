@@ -933,7 +933,7 @@ az.summary(t_trace, kind="stats")
 
 (exercises9)= 
 
-## 9.12 练习 
+## 习题 
 
 **9E1.** What kind of data collection scheme would be most appropriate for these situations scenarios. Justify your choices by asking questions such as "How important is it that the information is reliable?\" or "Can we collect the data in a reason time?\" Explain how you would collect the data 
 
@@ -1011,7 +1011,7 @@ After refitting make the same assessment. In particular justify if the Skew Norm
 
 3. Craft a 1 minute explanation to the same audience using the Bokeh   plot, incorporating the additional interactivity allowed by Bokeh.
 
---- 
+## 参考文献
 
 [^1]: <https://en.wikipedia.org/wiki/Newsvendor_model> 
 

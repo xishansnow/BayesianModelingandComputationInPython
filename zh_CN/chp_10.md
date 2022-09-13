@@ -1171,7 +1171,7 @@ As a user, particularly if you are just starting out, it can be difficult to und
 
 (exercises10)= 
 
-## 10.10 练习 
+## 习题 
 
 **10E1.** Find a PPLs that utilizes another base language other than Python. Determine what differences are between PyMC3 or TFP.
 
@@ -1223,7 +1223,7 @@ Verify which distributions are automatically transformed from bounded to unbound
 
  **10H11.** We have explained reparameterization in previous chapter, for example, center and non-center parameterization for linear model in Section {ref}`model_geometry`. One of the use case for effect handling is to perform automatic reparameterization  {cite:p}`gorinova2019automatic`. Try to write a effect handler in NumPyro to perform automatic non-centering of a random variable in a model. Hint: NumPyro already provides this functionality with `numpyro.handlers.reparam`.
 
----
+## 参考文献
 
 [^1]: With the prerequisite that basic ingredients like APIs to specify   probability distribution and random variables, basic numerical   transformations are already implemented.
 

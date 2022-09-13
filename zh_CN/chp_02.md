@@ -12,21 +12,25 @@ kernelspec:
   name: python3
 ---
 
-(chap1bis)= 
+(chap1bis)=
 
-# 第二章: 贝叶斯模型的探索性分析 
+# 第二章：贝叶斯模型的探索性分析
 
 <style>p{text-indent:2em;2}</style>
 
-正如 [第 1 章](chap1) 所述，**贝叶斯推断**使用观测数据对模型（即先验和似然）进行条件化并获得后验分布。我们可以使用纸笔、计算机或其他设备来实现推断 [^1] 。此外，推断过程通常还包括一些其他量的计算，例如先验预测分布和后验预测分布。但**贝叶斯建模**相对于贝叶斯推断而言内容更为广泛。我们通常希望贝叶斯建模能够靠简单指定模型和计算后验就能实现，但通常情况下并非如此。现实情况是，成功的贝叶斯数据分析需要完成许多其他同等重要的任务。
+正如 [第 1 章](chap1) 所述，**贝叶斯推断** 使用观测数据对模型（即先验和似然）进行条件化并获得后验分布。我们可以使用纸笔、计算机或其他设备来实现推断 [^1] 。此外，推断过程通常还包括一些其他量的计算，例如先验预测分布和后验预测分布。但 **贝叶斯建模** 相对于贝叶斯推断而言内容更为广泛。我们通常希望贝叶斯建模能够靠简单指定模型和计算后验就能实现，但通常情况下并非如此。现实情况是，成功的贝叶斯数据分析需要完成许多其他同等重要的任务。
 
-在本章中，我们将讨论其中一些任务，包括：**模型假设的检查**、**模型推断结果的诊断** 和 **模型的比较**。
+在本章中，我们将讨论其中一些任务，包括：
 
-(there-is-life-after-inference-and-before-too)= 
+- **模型假设的检查**
+- **模型推断结果的诊断**
+- **模型的比较**
 
-## 2.1 “贝叶斯建模”大于“贝叶斯推断” 
+(there-is-life-after-inference-and-before-too)=
 
-成功的贝叶斯建模方法除了贝叶斯推断之外，还需要执行其他额外的任务 [^2]。
+## 2.1 “贝叶斯建模” 大于 “贝叶斯推断”
+
+成功的贝叶斯建模方法除了贝叶斯推断之外，还需要执行很多其他额外的任务 [^2]。
 
 典型如：
 
@@ -38,19 +42,21 @@ kernelspec:
 
 - 模型沟通，为特定受众准备结果。
 
-实现上述任务需要一些数字汇总和可视化手段来帮助从业者对模型进行分析，我们称此类方法为**贝叶斯模型的探索性分析（ Exploratory Analysis of Bayesian Models ）**。此名称源于统计方法中的探索性数据分析 ( Exploratory Data Analysis, EDA ) {cite:p}`tukey77` 。该分析方法旨在汇总数据集的主要特征，并且通常使用可视化方法。用 `Persi Diaconis` 的话来说 {cite:p}`Diaconis2011` ：
+实现上述任务需要一些数字汇总和可视化手段来帮助从业者对模型进行分析，我们称此类方法为 **贝叶斯模型的探索性分析（ Exploratory Analysis of Bayesian Models ）**。此名称源于统计方法中的探索性数据分析 ( Exploratory Data Analysis, EDA ) {cite:p}`tukey77` 。该分析方法旨在汇总数据集的主要特征，并且通常使用可视化方法。用 `Persi Diaconis` 的话来说 {cite:p}`Diaconis2011` ：
 
-> 探索性数据分析 (探索性数据分析) 旨在揭示数据中的结构或简单描述。人们查看数字或图表并尝试找到其中蕴含的模式（ Patterns ），寻求由背景信息、想象力、感知到的模式和其他数据分析经验提供的前瞻性线索。
+> 探索性数据分析 （探索性数据分析） 旨在揭示数据中的结构或简单描述。人们查看数字或图表并尝试找到其中蕴含的模式（ Patterns ），寻求由背景信息、想象力、感知到的模式和其他数据分析经验提供的前瞻性线索。
 
 探索性数据分析 通常在推断之前执行，有时甚至可以代替推断。我们以及之前许多研究者 {cite:p}`gabry_visualization_2017, Gelman2020` 认为，探索性数据分析 中的许多想法都可以被使用、重新解释，并扩展为强大的贝叶斯建模方法。
 
-在本书中将主要使用 `Python` 的 `ArviZ` 库 [^3] 来对贝叶斯模型进行探索性分析。
+在本书中将主要使用 Python 的 `ArviZ` 库 [^3] 来对贝叶斯模型进行探索性分析。
 
-在现实生活中，贝叶斯推断步骤和模型的探索性分析步骤经常交织在一个迭代的工作流中，其中可能还包括编码错误、计算问题、对模型充分性的怀疑、对我们当前对数据的理解的怀疑、非线性模型构建、模型检查等很多方面。试图在一本书中描述这种复杂的工作流非常具有挑战性，而且也不是本书的重点。因此，我们可能会省略部分甚至全部探索性分析步骤，或者将其留作练习。这并非因为探索性分析没有必要或不重要；相反，它非常地重要，在编写本书过程中，我们实际上在 “幕后” 进行了大量地迭代工作。但也确实在某些地方省略了它们，以便将重点放在其他注意力方面，例如模型细节、计算特征或基础数学。
+在现实生活中，贝叶斯推断步骤和模型的探索性分析步骤经常交织在一个迭代的工作流中，其中可能还包括编码错误、计算问题、对模型充分性的怀疑、对我们当前对数据的理解的怀疑、非线性模型构建、模型检查等很多方面。
 
-(prior_predictive_checks)= 
+试图在一本书中描述这种复杂的工作流非常具有挑战性，而且也不是本书的重点。因此，我们会省略部分甚至全部探索性分析步骤，或者将其留作练习。这并非因为探索性分析没有必要或不重要；相反，它非常地重要，在编写本书过程中，我们实际上在 “幕后” 进行了大量地迭代工作。但也确实在某些地方省略了它们，以便将重点放在其他注意力方面，例如模型细节、计算特征或基础数学。
 
-## 2.2 先验预测检查 
+(prior_predictive_checks)=
+
+## 2.2 先验预测检查
 
 正如在 {ref}`make_prior_count` 节中讨论的，“什么是最好的先验？” 是一个很吸引人的话题。但除了 “这取决于 ？” 之外，很难给出一个令人满意的答案。我们可以尝试寻找给定模型或模型族的默认先验，将其推广到更广泛的数据集，并产生良好结果。但如果能够为特定问题生成具有更多信息的先验，那么一定也能够找到在特定问题上优于它们的方法。事实上，好的缺省先验不仅可以作为快速分析的基础，当我们深入迭代式探索的贝叶斯建模工作流时，它还可以作为更优先验的一个占位符。
 
@@ -121,22 +127,21 @@ Y &= \text{Bin}(n=1, p=\text{p_goal})
 
 ### 2.2.3 其他好处
 
-上述两个例子都表明，不能孤立地理解先验，我们必须将其放在特定模型的语境中。通常直接根据观测值进行思考，会比简接根据模型参数进行思考更容易，因此先验预测分布有助于降低模型评估的难度。在参数经过多次转换或多个先验存在交互的复杂模型场景中，先验预测分布的这种作用更为明显。
+上述两个例子都表明，不能孤立地理解先验，我们必须将其放在特定模型的语境中。通常直接根据观测值进行思考，会比直接根据模型参数进行思考更容易，因此先验预测分布有助于降低模型评估的难度。在参数经过多次转换或多个先验存在交互的复杂模型场景中，先验预测分布的这种作用更为明显。
 
-此外，先验预测分布也可用于直观地向广大涉众展示结果或讨论模型。当领域专家不熟悉统计符号或代码时，沟通很难富有成效，但如果你展示的是一个或多个模型的直观涵义，那就可以为他们提供更多讨论材料，进而为你和合作伙伴提供有价值的见解。
+此外，先验预测分布也可用于直观向广大涉众展示结果或讨论模型。当领域专家不熟悉统计符号或代码时，沟通很难富有成效，但如果你展示的是一个或多个模型的直观涵义，那就可以为他们提供更多讨论材料，进而为你和合作伙伴提供有价值的见解。
 
 计算先验预测还具有其他优势，例如辅助调试模型、确保模型编写正确、保证模型能够在计算环境中正确运行等。
 
+(posterior_pd)=
 
-(posterior_pd)= 
+## 2.3 后验预测检查
 
-## 2.3 后验预测检查 
-
-既然可以使用来自先验预测分布的合成数据来帮助我们检查模型，那么也可以使用**后验预测分布**进行类似的分析，这个概念在 {ref}`Bayesian_inference` 和公式 [eq: post_pred_dist](eq:post_pred_dist) 中曾经提到过。
+既然可以使用来自先验预测分布的合成数据来帮助我们检查模型，那么也可以使用 **后验预测分布** 进行类似的分析，这个概念在 {ref}`Bayesian_inference` 和公式 [eq: post_pred_dist](eq:post_pred_dist) 中曾经提到过。
 
 ### 2.3.1 什么是后验预测检查？
 
-生成后验预测样本并基于样本做模型评估的过程，通常被称为**后验预测检查（ Posterior Predictive Checks ）**。其基本思想是评估生成数据与实际观测数据的接近程度。
+生成后验预测样本并基于样本做模型评估的过程，通常被称为 **后验预测检查（ Posterior Predictive Checks ）**。其基本思想是评估生成数据与实际观测数据的接近程度。
 
 理论上，评估接近程度的方法取决于研究问题本身，但也存在一些通用规则。我们甚至可能想要使用多种测度来评估不同模型匹配数据（或错配数据）的方式。
 
@@ -160,19 +165,19 @@ p_{B} = p(T_{sim} \leq T_{obs} \mid \tilde Y)
 
 ```
 
-其中 $p_{B}$ 是贝叶斯 $p$ 值，定义为模拟的统计量 $T_{sim}$ 小于或等于观测统计量 $T_{obs}$ 的概率。统计量 $T$ 可以是任何“用于评估模型是否拟合数据的”指标。
+其中 $p_{B}$ 是贝叶斯 $p$ 值，定义为模拟的统计量 $T_{sim}$ 小于或等于观测统计量 $T_{obs}$ 的概率。统计量 $T$ 可以是任何 “用于评估模型是否拟合数据的” 指标。
 
-对于上述二项模型的示例，我们可以选择成功率作为统计量，其中观测到的成功率作为 $T_{obs}$ ，然后将其与后验预测分布的成功率 $T_{sim}$ 进行比较。如果 $p_{B}=0.5$ ，表明我们模拟生成的统计量 $T_{sim}$ ，有一半时间低于观测统计量 $T_{obs}$，另外一半时间高于观测统计量 $T_{obs}$，这是一个我们期望的正确拟合结果。
+对于上述二项模型的示例，我们可以选择成功率作为统计量，其中观测到的成功率作为 $T_{obs}$ ，然后将其与后验预测分布的成功率 $T_{sim}$ 进行比较。如果 $p_{B}=0.5$ ，表明我们模拟生成的统计量 $T_{sim}$ ，有一半时间低于观测统计量 $T_{obs}$，另外一半时间高于观测统计量 $T_{obs}$，而这恰恰是一个我们期望的正确拟合结果。
 
 因为绘图更加直观一些，所以也可以使用贝叶斯 $p$ 值来制图。
 
 {numref}`fig:posterior_predictive_check_pu_values` 的左图以黑色实线显示了贝叶斯 $p$ 值的分布，虚线表示了相同大小数据集期望的分布。 我们使用 ArviZ 的 `az.plot_bpv(., kind="p_value")` 函数获得此图。右图在概念上相似，不同之处在于评估了有多少模拟数据低于（或高于）观测数据。对于一个校准良好的模型，所有观测值都应该得到同样好的预测，即预测高于或低于期望的数量应该相同，因此应该得到一个均匀分布。对于任何有限数据集，即使完美校准的模型也会显示出与均匀分布的偏差，我们绘制了一个条带，期望看到类均匀曲线的 $94\%$ 区间。
 
-::: {admonition} 贝叶斯 $p$ 值 
+::: {admonition} 贝叶斯 $p$ 值
 
 我们将 $p_{B}$ 称为贝叶斯 $p$ 值，因为公式 {eq}`eq:post_pred_test_quantity` 中的量，实质上是 $p$ 值的定义，之所以称其为贝叶斯的，是因为我们并没有使用零假设条件下统计量 $T$ 的分布作为采样分布，而是使用了后验预测分布。请注意，我们没有以任何零假设为条件；也没有使用任何预定义的阈值来声明统计显著性或执行假设检验。
 
-::: 
+:::
 
 ```{figure} figures/posterior_predictive_check_pu_values.png
 :name: fig:posterior_predictive_check_pu_values
@@ -237,9 +242,9 @@ p_{B} = p(T_{sim} \leq T_{obs} \mid \tilde Y)
 
 无论是采用绘图、数字汇总信息还是两者结合的方式，后验预测检查都是一个足够灵活的思想。这个概念足以让从业者发挥他们的想象力，通过自己的后验预测来探索、评估和理解不同的途径和模型，进一步在面向特定问题时，掌握这些模型工作的优劣程度。
 
-(diagnosing_inference)= 
+(diagnosing_inference)=
 
-## 2.4 常用的数值化诊断方法 
+## 2.4 常用的数值化诊断方法
 
 对于某些模型，用笔和纸求解后验可能很乏味，有些甚至在数学上可能是无解的，此时采用数值方法来近似计算后验分布，能够让我们求解贝叶斯模型。不幸的是，这些数值方法并不总是按照预期工作。出于此原因，必须人工参与评估其结果的可用性。目前，有一系列数值和可视化诊断工具用于辅助诊断。在本节中，我们将面向 MCMC 方法，讨论其最常见和最有用的诊断工具。
 
@@ -267,7 +272,7 @@ chains = {"good_chains":good_chains,
 
 请注意，$3$ 个合成后验都是标量（单参数或一元随机变量）的后验分布样本，不过这对于当前讨论来说已经足够了，因为后面的诊断都是逐模型参数计算的。
 
-(ess)= 
+(ess)=
 
 ### 2.4.1 有效样本数量 （ ESS ）
 
@@ -296,7 +301,7 @@ Data variables:
 
 如果使用不同的随机种子重新生成合成后验的样本，你会看到每次的有效样本数都不同，这是由于每次的样本不会完全相同。对于 `good_chains` ，平均而言有效样本数的值将低于样本数。但请注意，有效样本数实际上可能更大！当使用 NUTS 采样器（ 参见 {ref}`inference_methods` ）时，如果存在某些参数的后验分布接近高斯分布但几乎独立于模型中其他参数，则可能会出现大于样本实际数的有效样本数。
 
-::: 
+:::
 
 马尔可夫链的收敛性在参数空间上并不均匀 {cite:p}`vehtari_rank_2019` ，直观地说，从分布主体中获得良好近似值比从尾部更容易，因为尾部由罕见的事件主导。 `az.ess()` 返回的默认值为 `bulk-ESS`，它主要评估分布中心的情况。如果你对后验区间或者罕见事件感兴趣，可以检查 `tail-ESS` 的值，它对应于百分位数 $5$ 和 $95$ 处的最小有效样本数。如果你对特定分位数感兴趣，可以使用 `az.ess(., method='quantile')` 函数对特定值进行查询。
 
@@ -317,7 +322,7 @@ az.plot_ess(chains, kind="quantile", ax=axes[1]);
 
 作为一般经验，我们建议有效样本数大于 $400$，否则，对有效样本数自身的估计和对其他量（ 如下面将看到的 $\hat R$ ）的估计，基本上不可靠  {cite:p}`vehtari_rank_2019` 。最后再次强调，我们讨论的有效样本数是指当样本为独立同分布时的样本数量，但必须非常小心地做出这种解释，因为参数空间不同区域的实际有效样本数可能并不相同。
 
-(potential-scale-reduction-factor-hat-r)= 
+(potential-scale-reduction-factor-hat-r)=
 
 ### 2.4.2 潜在尺度缩减因子（ $\hat R$ ）
 
@@ -351,9 +356,9 @@ Data variables:
 从此结果可以看出 $\hat R$ 准确地将 `good_chains` 识别为好样本，将 `bad_chains0` 和 `bad_chains1` 正确识别为具有不同程度问题的样本。虽然 `bad_chains0` 完全是一场灾难，但 `bad_chains1` 似乎更接近于达到良好链的状态，但其值 $\hat R = 1.033 > 1.01$ 依然有点大。
 
 
-(Monte_Carlo_standard_error)= 
+(Monte_Carlo_standard_error)=
 
-### 2.4.3 蒙特卡洛标准误差 
+### 2.4.3 蒙特卡洛标准误差
 
 MCMC 方法用有限数量的样本来近似整个后验分布，进而引入了额外的不确定性。这种不确定性可以使用基于 *马尔可夫链中心极限定理* 的 **蒙特卡洛标准误差 (MCSE)** 来量化（参见 {ref}`markov_chains` ）。 考虑到样本并非真正相互独立，蒙特卡洛标准误差实际上是从有效样本数（ ESS ） 计算得出的 {cite:p}`vehtari_rank_2019` 。有效样本数 ESS 和缩减因子 $\hat R$ 的取值独立于参数自身的尺度，因此对 MCSE 大小的解释需要在参数的尺度空间中进行，无法给出一个类似 $\hat R < 1.01$ 的指示阈值，往往需要分析人员具有领域专业知识。如果想要将估计的参数值取到小数点后两位，就需要确保 MCSE 低于小数点后两位，否则将错误地取得比实际精度更高的精度。此外，只有当我们确定有效样本数 ESS 足够大并且缩减因子 $\hat R$ 足够小时，检查 MCSE 才有意义；否则，计算 MCSE 是没有用的。
 
@@ -420,9 +425,9 @@ az.summary(chains, kind="diagnostics")
 
 表中第一列是均值参数的 MCSE ，第二列是标准差参数的 MCSE [^10] 。然后依次是参数空间的主体区域和尾部区域的有效样本数，最后是 $\hat R$ 的收敛性诊断。
 
-(trace-plots)= 
+(trace-plots)=
 
-### 2.4.4 轨迹图 
+### 2.4.4 轨迹图
 
 轨迹图可能是贝叶斯领域中最流行的图。它通常是贝叶斯推断完成后制作的第一张图，可以非常直观地检查 *我们得到了什么*。
 
@@ -443,13 +448,13 @@ az.plot_trace(chains)
 
 在 `good_chains` 中，两条独立链的抽取几乎来自于同一分布，因为它们的分布图之间（随机）差异很小。当我们按照迭代顺序查看抽取的样本时，可以发现两条链都相当 *杂乱* 且不存在明显趋势或模式，而且通过肉眼很难将两条链区分开来。
 
-`bad_chains0` 的情况与之形成了鲜明对比，可以通过样本概率分布图和轨迹图清楚地看到两个不同的分布，其间只有少量重叠区，这表明两条链正在探索参数空间的不同区域且无法收敛。 
+`bad_chains0` 的情况与之形成了鲜明对比，可以通过样本概率分布图和轨迹图清楚地看到两个不同的分布，其间只有少量重叠区，这表明两条链正在探索参数空间的不同区域且无法收敛。
 
 `bad_chains1` 的情况有点微妙。其样本概率分布图似乎与 `good_chains` 中的分布相似，但两条独立链之间存在更加明显的差异。我们真的有 $2$ 个或 $3$ 个峰吗？分布似乎也不一致，也许真实分布只有一个峰，而另外一个是伪影！多峰形态通常看起来是比较可疑的，除非有确切理由让我们确信存在多峰分布，例如，数据来自多个群组。其轨迹图似乎也与 `good_chains` 中的轨迹有些相似，但仔细检查会发现其中存在部分单调性区域（图中平行于 $x$ 轴的线）。这清楚地表明采样器卡在了参数空间的某些区域中，这或许因为后验存在多峰，且在峰之间存在低概率的障碍区，又或许是因为参数空间中存在一些区域的曲率与其他区域存在明显不同。
 
-(autocorr_plot)= 
+(autocorr_plot)=
 
-### 2.4.5 自相关图 
+### 2.4.5 自相关图
 
 正如在讨论有效样本数时所述，自相关减少了样本中包含的实际信息量，因此希望尽量将其控制在最低限度，此时可以使用 `az.plot_autocorr` 函数直接可视化地检查自相关性。
 
@@ -458,7 +463,7 @@ az.plot_autocorr(chains, combined=True)
 ```
 
 ```{figure} figures/autocorrelation_plot.png
-:name: fig:autocorrelation_plot绘制
+:name: fig:autocorrelation_plot 绘制
 :width: 8.00in
 
 在 $100$ 步窗口上的自相关函数柱状图。对于整个图，`good_chains` 的柱高度接近于零（并且大部分在灰色带内），这表明自相关非常低。 `bad_chains0` 和 `bad_chains1` 中较高的柱状图表明自相关值较大，这是不可取的。灰色区域代表 $95\%$ 信念区间。
@@ -466,13 +471,13 @@ az.plot_autocorr(chains, combined=True)
 
 {numref}`fig:autocorrelation_plot` 中的内容在看到的 `az.ess` 结果后，至少是可定性预见的。`good_chains` 显示出基本上为零的自相关；`bad_chains0` 高度相关；而 `bad_chains1` 并没有那么糟糕，但自相关仍然很明显并且不会迅速下降。
 
-(rank-plots)= 
+(rank-plots)=
 
-### 2.4.6 秩图 
+### 2.4.6 秩图
 
 秩图是另一种可视化诊断工具，可以用它来比较链内和链间的采样行为。秩图是排序后样本的直方图，它先组合所有链后统一计算秩，然后再分别为每条链绘制排序结果。如果所有链都针对同一分布，则秩应当服从均匀分布。此外，如果所有链的秩图看起来相似，通常表明链的混合良好 {cite:p}`vehtari_rank_2019`。
 
-```python 
+```python
 az.plot_rank(chains, ax=ax[0], kind="bars")
 ```
 
@@ -484,7 +489,7 @@ az.plot_rank(chains, ax=ax[0], kind="bars")
 
 柱图表示法的一种替代方法是垂线，缩写为“vlines”。
 
-```python 
+```python
 az.plot_rank(chains, kind="vlines")
 ```
 
@@ -499,9 +504,9 @@ az.plot_rank(chains, kind="vlines")
 
 秩图比轨迹图更敏感，因此我们推荐多使用秩图。你可以使用 `az.plot_trace(., kind="rank_bars")` 函数或 `az.plot_trace(., kind="rank_vlines")` 函数绘制上面的两种秩图。这些函数不仅可以绘制秩图，还能绘制后验的边缘分布。这有助于快速了解后验 *看起来像什么* ，并帮助我们发现采样或模型定义中存在的问题。尤其是在建模早期阶段，我们不太确定真正想做的事情时，需要探索许多不同的选择。随着进展，待模型变得更有意义后，我们再检查 ESS 、$\hat R$ 和 MCSE 等指标是否正常，如果不正常我们也可以知道模型下一步需要改进的方向。
 
-(divergences)= 
+(divergences)=
 
-### 2.4.7 散度 
+### 2.4.7 散度
 
 到目前为止，我们一直在研究 MCMC 方法生成的样本，以诊断采样器的工作状况。本节将介绍另外一种通过监视采样器内部工作行为做诊断的方法。此类诊断方法的一个突出例子是 **Hamiltonian Monte Carlo ( HMC )** 采样器中涉及的 **散度（ Divergences ）** 概念 [^11]。散度是一种强大而灵敏的样本诊断方法，可作为前几节中诊断方法的补充。
 
@@ -537,7 +542,7 @@ with pm.Model() as model_0:
     idata_0 = pm.sample(return_inferencedata=True)
 ```
 
-::: {admonition}  ArviZ 支持的推断数据格式 -- InferenceData Format 
+::: {admonition}  ArviZ 支持的推断数据格式 -- InferenceData Format
 
 `az.InferenceData` 是一种专门为 MCMC 的贝叶斯用户设计的数据格式。
 
@@ -545,7 +550,7 @@ with pm.Model() as model_0:
 
 在本书中，我们会大量使用`az.InferenceData`。用它来存储贝叶斯推断结果、计算诊断、生成绘图以及从磁盘读取和写入。有关完整的技术说明和 API，请参阅 ArviZ 文档。
 
-::: 
+:::
 
 请注意代码 [divm0](divm0) 中的模型不以任何观测为条件，这意味着 `model_0` 指定了由两个未知数（ $\theta_1$ 和 $\theta_2$ ）参数化的后验分布。
 
@@ -597,29 +602,29 @@ with pm.Model() as model_1bis:
 
 
 
-::: {admonition} 重参数化 
+::: {admonition} 重参数化
 
 重参数化有助于将难以采样的后验几何形态转换为更容易采样的几何形态。这有助于消除散度，但即使不存在散度时，重参数化也会有所帮助。例如，可以在无需增加计算成本的条件下，使用它加快采样速度或增加有效样本数。此外，重参数化还有助于更好地解释或沟通模型及其结果（ 参见第 {ref}`conjugate_priors` 节中的 `Alice` 和 `Bob` 的示例 ）。
 
-::: 
+:::
 
-(sampler-parameters-and-other-diagnostics)= 
+(sampler-parameters-and-other-diagnostics)=
 
-### 2.4.8 采样器的参数和其他诊断方法 
+### 2.4.8 采样器的参数和其他诊断方法
 
 大多数采样器方法都有影响自身性能的超参数。虽然大多数概率编程语言尝试使用合理的默认值，但实践中并不适用于所有的数据和模型。
 
 有时可以通过增加参数`target_accept` 来消除部分散度，例如，当散度源于数值不精确的时候。
 
-另外还有其他参数能够帮助解决采样问题，例如，我们可能希望增加 MCMC 采样器的迭代次数。在 PYMC3 中，有默认的采样参数 `pm.sample(.,tune=1000)`。在调整阶段，采样器参数会自动调整。而有些模型更复杂，需要更多交互才能让采样器学习到更好的参数。因此增加调整步数有助于增加 ESS 或降低 $\hat R$。增加抽样次数也有助于收敛，但总的来说其他途径更有效。如果一个模型在数千次抽取后都未能收敛，那么通常它在 $10$ 倍以上的抽取中仍然会失败，或者稍有改进但其额外计算成本并不合理。此时，重参数化、改进模型结构、提供信息更多的先验，甚至更改模型通常会更有效 [^13]。
+另外还有其他参数能够帮助解决采样问题，例如，我们可能希望增加 MCMC 采样器的迭代次数。在 `PYMC3` 中，有默认的采样参数 `pm.sample(.,tune=1000)`。在调整阶段，采样器参数会自动调整。而有些模型更复杂，需要更多交互才能让采样器学习到更好的参数。因此增加调整步数有助于增加 ESS 或降低 $\hat R$。增加抽样次数也有助于收敛，但总的来说其他途径更有效。如果一个模型在数千次抽取后都未能收敛，那么通常它在 $10$ 倍以上的抽取中仍然会失败，或者稍有改进但其额外计算成本并不合理。此时，重参数化、改进模型结构、提供信息更多的先验，甚至更改模型通常会更有效 [^13]。
 
 需要注意的是，在建模早期，我们可以使用较少的抽取次数来测试模型是否能够运行、是否已经编写了期望的模型、是否大致得到了合理结果等。这种初始检查大约只需要 $200$ 或 $300$ 次抽样就足够达到目的了。然后，当我们对模型更有信心时，可以将抽取次数增加到几千次，大约可以设置为 $2000$ 或 $4000$ 次。
 
 除了本章中介绍的诊断之外，还存在其他诊断方法，例如平行图和分离图。所有这些诊断方法都是有自己的用途。但是为了简洁性，本节中没有介绍它们。建议你访问包含更多示例的 ArviZ 文档和绘图库。
 
-(model_cmp)= 
+(model_cmp)=
 
-## 2.5 模型比较 
+## 2.5 模型比较
 
 通常，我们希望模型既不太简单以至于错过了数据中有价值的信息，也不会太复杂从而过拟合了数据中的噪声。找到这个 *甜蜜点* 是一项复杂的任务，一方面没有单一的标准来定义最佳解决方案，二是可能压根儿不存在最佳解决方案，三是在实践中需要对同一数据集支撑下的有限个模型进行选择。
 
@@ -629,27 +634,27 @@ with pm.Model() as model_1bis:
 
 在众多评分规则中，对数评分规则具有非常好的理论性质 {cite:p}`gneiting_2007`，因此被广泛使用。对数评分规则的计算公式为：
 
-```{math} 
+```{math}
 :label: eq:elpd
 
-\text{ELPD} = \sum_{i=1}^离差{n} \int p_t(\tilde y_i) \; \log p(\tilde y_i \mid y_i) \; d\tilde y_i 
+\text{ELPD} = \sum_{i=1}^{n} \int p_t(\tilde y_i) \; \log p(\tilde y_i \mid y_i) \; d\tilde y_i
 ```
 
 其中 $p_t(\tilde y_i)$ 为生成数据 $\tilde y_i$ 的真实分布（即理想中的数据生成分布），而 $p(\tilde y_i \mid y_i)$ 为模型对应的后验预测分布。
 
-公式 {eq}`eq:elpd` 中定义的量被称为 **逐点对数预测密度的期望（Expected Log Pointwise Predict Density, ELPD）**。之所以称为”期望“，是因为我们是在真实数据生成过程上做**积分运算**，即在可能由该过程生成的所有数据上做积分；之所以称为“逐点”，是因为我们是在 $n$ 个观测点上执行**逐点计算**；术语“密度”，则是为了简化表述而同时被用于表示连续和离散模型 [^14]。
+公式 {eq}`eq:elpd` 中定义的量被称为 **逐点对数预测密度的期望（Expected Log Pointwise Predict Density, ELPD）**。之所以称为 “期望”，是因为我们是在真实数据生成过程上做 **积分运算**，即在可能由该过程生成的所有数据上做积分；之所以称为 “逐点”，是因为我们是在 $n$ 个观测点上执行 **逐点计算**；术语“密度”，则是为了简化表述而同时被用于表示连续和离散模型 [^14]。
 
-在实践中，我们并不知道真实的数据分布 $p_t(\tilde y_i)$ ，因此公式 {eq}`eq:elpd` 中定义的 ELPD 没法直接计算，实践中只能用观测数据集做经验主义的近似，即用下式计算：
+在实践中，我们并不知道真实的数据分布 $p_t(\tilde y_i)$ ，因此公式 {eq}`eq:elpd` 中定义的 ELPD 没法直接计算，只能用观测数据集做经验主义的近似，即用下式计算：
 
-```{math} 
+```{math}
 :label: eq:elpd_practice
 
-\sum_{i=1}^{n} \log \int \ p(y_i \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta} \mid y) d\boldsymbol{\theta} 
+\sum_{i=1}^{n} \log \int \ p(y_i \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta} \mid y) d\boldsymbol{\theta}
 ```
 
 公式 {eq}`eq:elpd_practice` 定义的量（或乘以某个常数的量）通常称为离差，它在贝叶斯和非贝叶斯场景中都有使用 [^15]。当似然为高斯时，公式 {eq}`eq:elpd_practice` 与均方误差成正比。
 
-::: {admonition} 离差（ Deviance ）及相关容易混淆的概念 
+::: {admonition} 离差（ Deviance ）及相关容易混淆的概念
 
 离差（又称“偏差”）是关于某个统计模型拟合优劣的统计量。
 
@@ -659,18 +664,18 @@ with pm.Model() as model_1bis:
 
 - 偏差值（ Deviation ）：是随机变量的输出值与某个参考值（常见如均值） 之间差异的具体度量，是偏离概念的一次具体实现。偏离值的符号代表了差异的方向，偏离值的大小代表了偏离的程度。常见的偏差术语有：
 
-  - 误差（ Error ）：某个感兴趣量的观测值与真实值（期望值）之间的偏差值。例如，如果 $21$ 岁男性人口的平均高度为$1.75$ 米，某个随机选择的人身高为 $1.80$ 米，那么误差为 $0.05$ 米;如果随机选择的人高 $1.70$ 米，那么误差为 $-0.05$ 米。期望值是整体的均值，通常不可观测，因此误差也无法观测。
+  - 误差（ Error ）：某个感兴趣量的观测值与真实值（期望值）之间的偏差值。例如，如果 $21$ 岁男性人口的平均高度为$1.75$ 米，某个随机选择的人身高为 $1.80$ 米，那么误差为 $0.05$ 米；如果随机选择的人高 $1.70$ 米，那么误差为 $-0.05$ 米。期望值是整体的均值，通常不可观测，因此误差也无法观测。
 
   - 残差（ Residual ）：某个感兴趣量的观测值与真实值的估计值之间的偏差值。针对身高的例子，假设我们有 $n$ 个人的随机样本，则可以用样本作为总体的近似估计，例如用样本的均值作为总体均值的估计。进而样本中每个人每个人的身高与不可观测的期望值之差是误差，而样本中每个人的身高与可观测样本的均值之间的差是残差。这些偏差值的概念适用于测量间隔和比率水平的数据。通常会用一组偏离值的统计量来定量地刻画总体的偏离情况，其中常见的有标准差。
 
 - 散度（ Divergence ）：在统计和信息几何中，泛指一个概率分布到另一个概率分布的统计距离，参见 {ref}`DKL` 中关于 $KL$ 散度的定义。
-::: 
+:::
 
 
 为了计算公式 {eq}`eq:elpd_practice`，我们使用了用于拟合模型的相同数据，因此平均而言，会高估 ELPD（ 公式 {eq}`eq:elpd` ），并导致最终选择的模型容易过拟合。幸运的是，还有几种方法可以更好地估计 ELPD 。其中之一是下面将看到的交叉验证法（ Cross Validation, CV ）。
 
-(CV_and_LOO)= 
-### 2.5.2 交叉验证和留一法 
+(CV_and_LOO)=
+### 2.5.2 交叉验证和留一法
 
 **（1）交叉验证的原理**
 
@@ -680,13 +685,13 @@ with pm.Model() as model_1bis:
 
 当被留出的数据仅包含一个数据点时，就是非常著名的留一法交叉验证 (LOO-CV) 。使用 LOO-CV 计算的 ELPD 为 $\text{ELPD}_\text{LOO-CV}$ ：
 
-```{math} 
+```{math}
 :label: eq:elpd_loo_cv
 
-\text{ELPD}_\text{LOO-CV} = \sum_{i=1}^{n} \log   \int \ p(y_i \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta} \mid y_{-i}) d\boldsymbol{\theta} 
+\text{ELPD}_\text{LOO-CV} = \sum_{i=1}^{n} \log   \int \ p(y_i \mid \boldsymbol{\theta}) \; p(\boldsymbol{\theta} \mid y_{-i}) d\boldsymbol{\theta}
 ```
 
-计算公式 {eq}`eq:elpd_loo_cv` 成本很高，因为在实践中，$\boldsymbol{\theta}$ 并不确定，因此我们每次运行都需要计算一次后验，也就是说，需要计算 $n$ 次后验zhi， $n$ 为数据集中观测点数量。
+计算公式 {eq}`eq:elpd_loo_cv` 成本很高，因为在实践中，$\boldsymbol{\theta}$ 并不确定，因此我们每次运行都需要计算一次后验，也就是说，需要计算 $n$ 次后验 zhi， $n$ 为数据集中观测点数量。
 
 **（3）帕雷托平滑重要性采样留一交叉验证**
 
@@ -743,7 +748,7 @@ idatas_cmp["mC"] = idataC
 
 在实践中，常常需要为多个模型计算 LOO ，Arviz 提供了 `az.compare(.)` 函数来进行多个模型之间 LOO 的比较。 {numref}`table:compare_00` 就是通过 `az.compare(idatas_cmp)` 生成的。
 
-```{list-table} 模型比较的汇总数据。模型按照 loo 列的 ELPD 值自低至高排序.
+```{list-table} 模型比较的汇总数据。模型按照 loo 列的 ELPD 值自低至高排序。
 :name: table:compare_00
 * -
   - **rank**
@@ -823,7 +828,7 @@ idatas_cmp["mC"] = idataC
 
 ```
 
-(elpd_plots)= 
+(elpd_plots)=
 ### 2.5.3 对数预测密度的期望
 
 在上一节中，我们计算了每个模型的 ELPD 值。这是一个有关模型 *全局* 的比较，它会将模型和数据简化为一个数字。但是从公式 {eq}`eq:elpd_practice` 和 {eq}`eq:elpd_loo_cv` 可以看到， LOO 是对逐点值求和得到的，每个观测值对应一个。因此，我们还可以执行 *局部的* 比较，可以将 ELPD 的每个值视为一个*模型在预测特定观测值时的* 难度指示器。
@@ -839,9 +844,9 @@ idatas_cmp["mC"] = idataC
 逐观测点的 ELPD 差。被标记的点对应于 ELPD 差为两倍标准差的观测值。所有 $3$ 个示例中的差都很小，尤其是在 `mB` 和 `mC` 之间。正值表示第一个模型比第二个模型更好地解释了观测结果。
 ```
 
-(k-paretto)= 
+(k-paretto)=
 
-### 2.5.4 帕累托形状参数 $\hat \kappa$ 
+### 2.5.4 帕累托形状参数 $\hat \kappa$
 
 用 LOO 近似计算 $\text{ELPD}_\text{LOO-CV}$ 涉及帕累托分布的计算（ 参见 {ref}`loo_depth` ），其主要目的是获得更稳健的估计，衍生效应是帕累托分布的 $\hat \kappa$ 参数还可以用于检测影响力较大的观测点，即能够指示出那些 *如果不参与拟合就会严重影响预测分布的* 观测值。通常较高的 $\hat \kappa$ 值可能表明数据或模型存在问题，尤其是当 $\hat \kappa > 0.7$ 时 {cite:p}`vehtari_pareto_2019, gabry_visualization_2017` 。此时建议 {cite:p}`loo_glossary`：
 
@@ -870,7 +875,7 @@ idatas_cmp["mC"] = idataC
 被模型 `mA` 、`mB` 和 `mC` 拟合的观测值的核密度估计曲线。底部每条黑色竖线代表一个观测点。被标记的观测点与 {numref}`fig:elpd_dummy` 中突出显示的观测点相同，但观测 $78$ 以粗体标记，仅在 {numref}`fig:loo_k_dummy` 中突出显示。
 ```
 
-(interpreting-p_loo-when-pareto-hat-kappa-is-large)= 
+(interpreting-p_loo-when-pareto-hat-kappa-is-large)=
 
 ### 2.5.5 当帕累托参数 $\hat \kappa$ 较大时解读 `p_loo`
 
@@ -884,7 +889,7 @@ idatas_cmp["mC"] = idataC
 
 你可以尝试修复模型错误指定的一些启发式方法：为模型添加更多结构。例如，添加非线性组件、使用不同的似然（例如，用 `NegativeBinomial` 这种过度分散的似然代替 `Poisson` ）、使用混合似然等。
 
-(loo-pit)= 
+(loo-pit)=
 
 ### 2.5.6 LOO -- 概率积分变换（ LOO-PIT ）
 
@@ -896,7 +901,7 @@ idatas_cmp["mC"] = idataC
 
 LOO-PIT 通过将观测数据 $y$ 与后验预测数据 $\tilde y$ 比较获得，该比较是逐点进行的。有：
 
-```{math} 
+```{math}
 p_i = P(\tilde y_i \leq y_i \mid y_{-i})
 ```
 
@@ -913,9 +918,9 @@ p_i = P(\tilde y_i \leq y_i \mid y_{-i})
 黑线是 LOO-PIT 的核密度估计曲线，即小于或等于观测数据的预测值的比例，根据每次观测计算。白线表示预期的均匀分布，灰带表示数据集（大小与所用数据集相同）的预期偏差。
 ```
 
-(model_averaging)= 
+(model_averaging)=
 
-## 2.6 模型平均 
+## 2.6 模型平均
 
 模型平均可以被视为针对模型不确定性的贝叶斯，因为模型也和参数一样具有不确定性。如果我们不能确切地认定 *a* 模型就是那个想要的模型（通常不能），那么就应该以某种方式将这种不确定性考虑到模型分析中。处理模型不确定性的方法之一是对所有模型进行加权平均，将更大的权重赋予似乎能更好解释或预测数据的模型。
 
@@ -927,10 +932,10 @@ p_i = P(\tilde y_i \leq y_i \mid y_{-i})
 
 直接计算边缘似然存在困难，因此有人提出了另外一种赋权方法，即使用 LOO 来估计模型的权重。可以使用以下公式：
 
-```{math} 
+```{math}
 :label: eq_pseudo_avg
 
-w_i = \frac {e^{-\Delta_i }} {\sum_j^k e^{-\Delta_j }} 
+w_i = \frac {e^{-\Delta_i }} {\sum_j^k e^{-\Delta_j }}
 ```
 
 其中 $\Delta_i$ 是排序后的第 $i$ 个 LOO 值与最大 LOO 值之差。此处假设使用对数尺度，这也是 ArviZ 的默认值。
@@ -941,10 +946,10 @@ w_i = \frac {e^{-\Delta_i }} {\sum_j^k e^{-\Delta_j }}
 
 模型平均的另一个选择是堆叠多个预测分布 {cite:p}`yao_stacking_2018`。其主要思想是将多个模型组合在一个 **元模型（ Meta-Model ）** 中，使元模型和 *真实* 生成模型之间的散度最小化。当使用对数评分规则时，这等效于计算：
 
-```{math} 
-:label: eq_stacking 
+```{math}
+:label: eq_stacking
 
-\max_{n} \frac{1}{n} \sum_{i=1}^{n}log\sum_{j=1}^{k} w_j p(y_i \mid y_{-i}, M_j) 
+\max_{n} \frac{1}{n} \sum_{i=1}^{n}log\sum_{j=1}^{k} w_j p(y_i \mid y_{-i}, M_j)
 ```
 其中 $n$ 是数据点数量，$k$ 是模型数量。为了能够强制求解，我们将 $w$ 限制为 $w_j \ge 0$ 和 $\sum_{j=1}^{k} w_j = 1$。 $p(y_i \mid y_{-i}, M_j)$ 是 $M_j$ 模型的留一法预测分布。前面已经谈到过，该预测分布的计算成本过高，在实践中可以使用 LOO 来近似。
 
@@ -952,14 +957,14 @@ w_i = \frac {e^{-\Delta_i }} {\sum_j^k e^{-\Delta_j }}
 
 函数 `pm.sample_posterior_predictive_w(.)` 输入参数为轨迹列表和权重列表，从而能够让我们轻松生成加权的后验预测样本。权重可以采用多种方式获取，但使用 `az.compare(., method="stacking")` 计算的权重，可能更有意义。
 
-(exercises2)= 
-## 2.7 练习 
+(exercises2)=
+## 习题
 
 **2E1.** Using your own words, what are the main differences between prior predictive checks and posterior predictive checks? How are these empirical evaluations related to Equations [eq:prior_pred_dist](eq:prior_pred_dist) and [eq:post_pred_dist](eq:post_pred_dist).
 
 **2E2.** Using your own words explain: ESS, $\hat R$ and MCSE. Focus your explanation on what these quantities are measuring and what potential issue with MCMC they are identifying.
 
-**2E3.** ArviZ includes precomputed InferenceData objects for a few models. We are going to load an InferenceData object generated from a classical example in Bayesian statistic, the eight schools model {cite:p}`rubin_1981`. The InferenceData object includes prior samples, prior predictive samples and posterior samples. We can load the InferenceData object using the command `az.load_arviz_data("centered_eight")`. Use ArviZ to: 
+**2E3.** ArviZ includes precomputed InferenceData objects for a few models. We are going to load an InferenceData object generated from a classical example in Bayesian statistic, the eight schools model {cite:p}`rubin_1981`. The InferenceData object includes prior samples, prior predictive samples and posterior samples. We can load the InferenceData object using the command `az.load_arviz_data("centered_eight")`. Use ArviZ to:
 
 1.  List all the groups available on the InferenceData object.
 
@@ -971,29 +976,29 @@ w_i = \frac {e^{-\Delta_i }} {\sum_j^k e^{-\Delta_j }}
 
 5. Calculate the estimated mean of the parameters, and the Highest   Density Intervals.
 
-If necessary check the ArviZ documentation to help you do these tasks <https://arviz-devs.github.io/arviz/> 
+If necessary check the ArviZ documentation to help you do these tasks <https://arviz-devs.github.io/arviz/>
 
-**2E4.** Load `az.load_arviz_data("non_centered_eight")`, which is a reparametrized version of the "centered_eight" model in the previous exercise. Use ArviZ to assess the MCMC sampling convergence for both models by using: 
+**2E4.** Load `az.load_arviz_data("non_centered_eight")`, which is a reparametrized version of the "centered_eight" model in the previous exercise. Use ArviZ to assess the MCMC sampling convergence for both models by using:
 
-1.  Autocorrelation plots 
+1.  Autocorrelation plots
 
 2.  Rank plots.
 
 3. $\hat R$ values.
 
-Focus on the plots for the mu and tau parameters. What do these three different diagnostics show? Compare these to the InferenceData results loaded from `az.load_arviz_data("centered_eight")`. Do all three diagnostics tend to agree on which model is preferred? Which one of the models has better convergence diagnostics? 
+Focus on the plots for the mu and tau parameters. What do these three different diagnostics show? Compare these to the InferenceData results loaded from `az.load_arviz_data("centered_eight")`. Do all three diagnostics tend to agree on which model is preferred? Which one of the models has better convergence diagnostics?
 
-**2E5.** InferenceData object can store statistics related to the sampling algorithm. You will find them in the `sample_stats` group, including divergences (`diverging`): 
+**2E5.** InferenceData object can store statistics related to the sampling algorithm. You will find them in the `sample_stats` group, including divergences (`diverging`):
 
 1.  Count the number of divergences for "centered_eight" and   "non_centered_eight" models.
 
 2. Use `az.plot_parallel` to identify where the divergences tend to   concentrate in the parameter space.
 
-**2E6.** In the GitHub repository we have included an InferenceData object with a Poisson model and one with a NegativeBinomial, both models are fitted to the same dataset. Use `az.load_arviz_data(.)` to load them, and then use ArviZ functions to answer the following questions: 
+**2E6.** In the GitHub repository we have included an InferenceData object with a Poisson model and one with a NegativeBinomial, both models are fitted to the same dataset. Use `az.load_arviz_data(.)` to load them, and then use ArviZ functions to answer the following questions:
 
-1.  Which model provides a better fit to the data? Use the functions   `az.compare(.)` and `az.plot_compare(.)` 
+1.  Which model provides a better fit to the data? Use the functions   `az.compare(.)` and `az.plot_compare(.)`
 
-2.  Explain why one model provides a better fit than the other. Use   `az.plot_ppc(.)` and `az.plot_loo_pit(.)` 
+2.  Explain why one model provides a better fit than the other. Use   `az.plot_ppc(.)` and `az.plot_loo_pit(.)`
 
 3.  Compare both models in terms of their pointwise ELPD values.
 
@@ -1001,13 +1006,13 @@ Identify the 5 observations with the largest (absolute) difference.
 
 Which model is predicting them better? For which model p_loo is   closer to the actual number of parameters? Could you explain why?   Hint: the Poisson model has a single parameter that controls both   the variance and mean. Instead, the NegativeBinomial has two   parameters.
 
-4. Diagnose LOO using the $\hat \kappa$ values. Is there any reason to   be concerned about the accuracy of LOO for this particular case? 
+4. Diagnose LOO using the $\hat \kappa$ values. Is there any reason to   be concerned about the accuracy of LOO for this particular case?
 
 **2E7.** Reproduce {numref}`fig:posterior_predictive_many_examples`, but using `az.plot_loo(ecdf=True)` in place of `az.plot_bpv(.)`. Interpret the results. Hint: when using the option `ecdf=True`, instead of the LOO-PIT KDE you will get a plot of the difference between the LOO-PIT Empirical Cumulative Distribution Function (ECDF) and the Uniform CDF. The ideal plot will be one with a difference of zero.
 
-**2E8.** In your own words explain why MCMC posterior estimation techniques need convergence diagnostics. In particular contrast these to the conjugate methods described in Section {ref}`conjugate_priors` which do not need those diagnostics. What is different about the two inference methods? 
+**2E8.** In your own words explain why MCMC posterior estimation techniques need convergence diagnostics. In particular contrast these to the conjugate methods described in Section {ref}`conjugate_priors` which do not need those diagnostics. What is different about the two inference methods?
 
-**2E9.** Visit the ArviZ plot gallery at <https://arviz-devs.github.io/arviz/examples/index.html>. What diagnoses can you find there that are not covered in this chapter? From the documentation what is this diagnostic assessing? 
+**2E9.** Visit the ArviZ plot gallery at <https://arviz-devs.github.io/arviz/examples/index.html>. What diagnoses can you find there that are not covered in this chapter? From the documentation what is this diagnostic assessing?
 
 **2E10.** List some plots and numerical quantities that are useful at each step during the Bayesian workflow (shown visually in {numref}`fig:BayesianWorkflow`). Explain how they work and what they are assessing. Feel free to use anything you have seen in this chapter or in the ArviZ documentation.
 
@@ -1033,7 +1038,7 @@ with pm.Model() as model:
 
 +++
 
-1.  Generate and plot the prior predictive distribution. How reasonable   it looks to you? 
+1.  Generate and plot the prior predictive distribution. How reasonable   it looks to you?
 
 2.  Use your knowledge of sports in order to refine the prior choice.
 
@@ -1051,15 +1056,15 @@ Hint: You can parameterize the Gamma distribution using the rate and   shape par
 
 Use `pm.sample(., step=pm.Metropolis())` (Metropolis-Hastings sampler) and `pm.sample(.)` (the standard sampler). Compare the results in terms of the ESS, $\hat R$, autocorrelation, trace plots and rank plots.
 
-Reading the PyMC3 logging statements what sampler is autoassigned? What is your conclusion about this sampler performance compared to Metropolis-Hastings? 
+Reading the PyMC3 logging statements what sampler is autoassigned? What is your conclusion about this sampler performance compared to Metropolis-Hastings?
 
 **2M14.** Generate your own example of a synthetic posterior with convergence issues, let us call it `bad_chains3`.
 
-1. Explain why the synthetic posterior you generated is "bad". What   about it would we not want to see in an actual modeling scenario? 
+1. Explain why the synthetic posterior you generated is "bad". What   about it would we not want to see in an actual modeling scenario?
 
 2.  Run the same diagnostics we run in the book for `bad_chains0` and   `bad_chains1`. Compare your results with those in the book and   explain the differences and similarities.
 
-3. Did the results of the diagnostics from the previous point made you   reconsider why `bad_chains3` is a "bad chain"? 
+3. Did the results of the diagnostics from the previous point made you   reconsider why `bad_chains3` is a "bad chain"?
 
 **2H15.** Generate a random sample using `np.random.binomial(n=1, p=0.5, size=200)` and fit it using a Beta-Binomial model.
 
@@ -1077,29 +1082,29 @@ Reading the PyMC3 logging statements what sampler is autoassigned? What is your 
 
 **2H16.** Use PyMC3 to write a model with Normal likelihood. Use the following random samples as data and the following priors for the mean. Fix the standard deviation parameter in the likelihood at 1.
 
-1. A random sample of size 200 from a $\mathcal{N}(0,1)$ and prior   distribution $\mathcal{N}(0,20)$ 
+1. A random sample of size 200 from a $\mathcal{N}(0,1)$ and prior   distribution $\mathcal{N}(0,20)$
 
-2.  A random sample of size 2 from a $\mathcal{N}(0,1)$ and prior   distribution $\mathcal{N}(0,20)$ 
+2.  A random sample of size 2 from a $\mathcal{N}(0,1)$ and prior   distribution $\mathcal{N}(0,20)$
 
-3.  A random sample of size 200 from a $\mathcal{N}(0,1)$ and prior   distribution $\mathcal{N}(20 1)$ 
+3.  A random sample of size 200 from a $\mathcal{N}(0,1)$ and prior   distribution $\mathcal{N}(20 1)$
 
-4.  A random sample of size 200 from a $\mathcal{U}(0,1)$ and prior   distribution $\mathcal{N}(10, 20)$ 
+4.  A random sample of size 200 from a $\mathcal{U}(0,1)$ and prior   distribution $\mathcal{N}(10, 20)$
 
-5.  A random sample of size 200 from a $\mathcal{HN}(0,1)$ and a prior   distribution $\mathcal{N}(10,20)$ 
+5.  A random sample of size 200 from a $\mathcal{HN}(0,1)$ and a prior   distribution $\mathcal{N}(10,20)$
 
 Assess convergence by running the same diagnostics we run in the book for `bad_chains0` and `bad_chains1`. Compare your results with those in the book and explain the differences and similarities.
 
-**2H17.** Each of the four sections in this chapter, prior predictive checks, posterior predictive checks, numerical inference diagnostics, and model comparison, detail a specific step in the Bayesian workflow. In your own words explain what the purpose of each step is, and conversely what is lacking if the step is omitted. What does each tell us about our statistical models? 
+**2H17.** Each of the four sections in this chapter, prior predictive checks, posterior predictive checks, numerical inference diagnostics, and model comparison, detail a specific step in the Bayesian workflow. In your own words explain what the purpose of each step is, and conversely what is lacking if the step is omitted. What does each tell us about our statistical models?
 
-+++
+## 参考文献
 
-[^1]: <https://www.countbayesie.com/blog/2015/2/18/bayes-theorem-with-lego> 
+[^1]: <https://www.countbayesie.com/blog/2015/2/18/bayes-theorem-with-lego>
 
 [^2]: We are omitting tasks related to obtaining the data in the first   place, but experimental design can be as critical if not more than   other aspects in the statistical analysis, see Chapter   [9](chap10).
 
-[^3]: <https://arviz-devs.github.io/arviz/> 
+[^3]: <https://arviz-devs.github.io/arviz/>
 
-[^4]: This example has been adapted from   <https://mc-stan.org/users/documentation/case-studies/golf.html> and   <https://docs.pymc.io/notebooks/putting_workflow.html> 
+[^4]: This example has been adapted from   <https://mc-stan.org/users/documentation/case-studies/golf.html> and   <https://docs.pymc.io/notebooks/putting_workflow.html>
 
 [^5]: The example has been adapted from {cite:p}`Gelman2020`.
 
@@ -1109,7 +1114,7 @@ Assess convergence by running the same diagnostics we run in the book for `bad_c
 
 [^8]: Unless you realize you need to collect data again, but that is   another story.
 
-[^9]: Try <https://www.timeanddate.com/sun/ecuador/quito> 
+[^9]: Try <https://www.timeanddate.com/sun/ecuador/quito>
 
 [^10]: Do not confuse with the standard deviation of the MCSE for the   mean.
 
